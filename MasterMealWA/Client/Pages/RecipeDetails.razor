@@ -1,0 +1,33 @@
+﻿@page "/recipe/details/{id}"
+@inject HttpClient Http 
+<MudText Typo="Typo.h1">Recipe</MudText>
+@if (recipe is null)
+{
+    <MudOverlay>
+
+        <MudText>Loading....</MudText>
+    </MudOverlay>
+}
+            else
+            {
+                <MudText>@recipe.Name</MudText>
+                <MudList>
+                    @foreach (var step in recipe.Steps)
+                    {
+                        <MudListItem>
+                            @step.Text
+                        </MudListItem>
+                    }
+                </MudList>
+            }
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+    private Recipe recipe;
+    protected override async Task OnInitializedAsync()
+    {
+        recipe = await Http.GetFromJsonAsync<Recipe>($"Api/recipes/{Id}");
+        base.OnInitialized();
+    }
+}
