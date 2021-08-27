@@ -36,10 +36,10 @@ namespace MasterMealWA.Server.Controllers
         public async Task<ActionResult<Recipe>> GetRecipe(int id)
         {
             var recipe = await _context.Recipe.Include(r => r.Steps)
-                                              //.Include(r => r.Supplies)
-                                              //.Include(r => r.Type)
-                                              //.Include(r => r.Ingredients)
-                                              //.ThenInclude(r => r.Ingredient)
+                                              .Include(r => r.Supplies)
+                                              .Include(r => r.Type)
+                                              .Include(r => r.Ingredients)
+                                              .ThenInclude(r => r.Ingredient)
                                               .FirstOrDefaultAsync(r=>r.Id == id);
 
             if (recipe == null)
