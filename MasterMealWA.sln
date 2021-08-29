@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31624.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MasterMealWA.Server", "MasterMealWA\Server\MasterMealWA.Server.csproj", "{8D61207B-5EA9-4F03-A170-2177BE4CBCF0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MasterMealWA.Server", "MasterMealWA\Server\MasterMealWA.Server.csproj", "{8D61207B-5EA9-4F03-A170-2177BE4CBCF0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MasterMealWA.Client", "MasterMealWA\Client\MasterMealWA.Client.csproj", "{57F761D1-135D-460D-A18A-C19DE8F7BD6B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MasterMealWA.Client", "MasterMealWA\Client\MasterMealWA.Client.csproj", "{57F761D1-135D-460D-A18A-C19DE8F7BD6B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MasterMealWA.Shared", "MasterMealWA\Shared\MasterMealWA.Shared.csproj", "{A34FAF91-BA9C-4497-8392-AD1C549A961C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MasterMealWA.Shared", "MasterMealWA\Shared\MasterMealWA.Shared.csproj", "{A34FAF91-BA9C-4497-8392-AD1C549A961C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
