@@ -17,6 +17,7 @@ else
     <MudText>@recipe.Name</MudText>
     <MudText>@recipe.CookingTime</MudText>
     <MudText>@recipe.Servings</MudText>
+    <MudLink Href="@($"/recipe/details/{recipe.Id}")">Details</MudLink>
     <MudButton @onclick='()=>nav.NavigateTo($"/recipe/details/{recipe.Id}")'>Details</MudButton>
 </MudCard>
     }
