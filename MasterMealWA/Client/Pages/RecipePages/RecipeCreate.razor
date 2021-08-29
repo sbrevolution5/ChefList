@@ -1,6 +1,6 @@
 ﻿@page "/recipe/create"
 @inject HttpClient Http
-<h3>RecipeCreate</h3>
+<MudText Typo="Typo.h3">RecipeCreate</MudText>
 <EditForm Model="@recipe" OnValidSubmit="CreateRecipe">
     <DataAnnotationsValidator />
     <MudGrid>
@@ -44,53 +44,43 @@
                     </MudSelect>
                 }
             </MudCardContent>
-            <MudCard>
-                <MudCardHeader>Ingredients</MudCardHeader>
-                <MudCardContent>
-                    @foreach (var ingredient in recipe.Ingredients)
-                    {
-                        @*<QIngredientCreate qIngredient="@ingredient" />*@
-                        <button class="btn btn-danger" @onclick="(()=>recipe.Ingredients.Remove(ingredient))">Remove</button>
-                    }
-                    <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Ingredients.Add(new())" />
-                </MudCardContent>
-            </MudCard>
-            <MudCard>
-                <MudCardHeader>Supplies</MudCardHeader>
-                <MudCardContent>
-                    @foreach (var supply in recipe.Supplies)
-                    {
-                        @*<SupplyPicker supply="@supply" />*@
-                        <button class="btn btn-danger" @onclick="(()=>recipe.Supplies.Remove(supply))">Remove</button>
-                    }
-                    <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Supplies.Add(new())" />
-                </MudCardContent>
-            </MudCard>
+        </MudCard>
+        <MudCard>
+            <MudCardHeader>Ingredients</MudCardHeader>
+            <MudCardContent>
+                @foreach (var ingredient in recipe.Ingredients)
+                {
+                    @*<QIngredientCreate qIngredient="@ingredient" />*@
+                    <button class="btn btn-danger" @onclick="(()=>recipe.Ingredients.Remove(ingredient))">Remove</button>
+                }
+                <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Ingredients.Add(new())" />
+            </MudCardContent>
+        </MudCard>
+        <MudCard>
+            <MudCardHeader>Supplies</MudCardHeader>
+            <MudCardContent>
+                @foreach (var supply in recipe.Supplies)
+                {
+                    @*<SupplyPicker supply="@supply" />*@
+                    <button class="btn btn-danger" @onclick="(()=>recipe.Supplies.Remove(supply))">Remove</button>
+                }
+                <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Supplies.Add(new())" />
+            </MudCardContent>
+        </MudCard>
 
-            <MudCard>
-                <MudCardHeader>Steps</MudCardHeader>
-                <MudCardContent>
-                    @foreach (var step in recipe.Steps)
-                    {
-                        <MudTextField Label="Text Step" HelperText="What do you do in this step?" @bind-Value="step.Text" For="@(()=> step.Text)" />
-                        <button class="btn btn-danger" @onclick="(()=>recipe.Steps.Remove(step))">Remove</button>
-                    }
-                    <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Steps.Add(new())" />
+        <MudCard>
+            <MudCardHeader>Steps</MudCardHeader>
+            <MudCardContent>
+                @foreach (var step in recipe.Steps)
+                {
+                    <MudTextField Label="Text Step" HelperText="What do you do in this step?" @bind-Value="step.Text" For="@(()=> step.Text)" />
+                    <button class="btn btn-danger" @onclick="(()=>recipe.Steps.Remove(step))">Remove</button>
+                }
+                <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Steps.Add(new())" />
 
-                </MudCardContent>
-            </MudCard>
+            </MudCardContent>
         </MudCard>
     </MudGrid>
-
-    <div class="row">
-        <div class="col">
-            <div class="form-group">
-                <label>Image:</label>
-                @*<InputFile @bind-Value="imageFile" class="form-control" />*@
-                <p>Image will be cropped down to 128x128, distortion may occur.</p>
-            </div>
-        </div>
-    </div>
 
 </EditForm>
 
