@@ -3,7 +3,7 @@
 <MudDialog>
     <DialogContent>
 
-    <EditForm OnValidSubmit="CreateIngredient"> </EditForm>
+        @*<EditForm OnValidSubmit="CreateIngredient"> </EditForm>*@
     </DialogContent>
     <DialogActions>
 
@@ -11,6 +11,12 @@
 </MudDialog>
 @code {
     private Ingredient ingredient { get; set; }
+    private List<IngredientType> types { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        types = await _api.GetAllIngredientTypesAsync();
+        return base.OnInitializedAsync();
+    }
     public async Task CreateIngredient()
     {
         await _api.CreateNewIngredientAsync(ingredient);
