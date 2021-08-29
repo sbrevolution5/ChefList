@@ -22,20 +22,20 @@ namespace MasterMealWA.Client.Services.Interfaces
         Task UpdateIngredientTypeAsync(IngredientType ingredientType);
         Task UpdateShoppingListAsync(ShoppingList shoppingList);
         Task UpdateSupplyAsync(Supply supply);
-        Task DeleteRecipeAsync(Recipe recipe);
-        Task DeleteRecipeTypeAsync(RecipeType type);
-        Task DeleteMealAsync(Meal meal);
-        Task DeleteIngredientAsync(Ingredient ingredient);
-        Task DeleteIngredientTypeAsync(IngredientType ingredientType);
-        Task DeleteShoppingListAsync(ShoppingList shoppingList);
-        Task DeleteSupplyAsync(Supply supply);
-        Task GetRecipeAsync(Recipe recipe);
-        Task GetRecipeTypeAsync(RecipeType type);
-        Task GetMealAsync(Meal meal);
-        Task GetIngredientAsync(Ingredient ingredient);
-        Task GetIngredientTypeAsync(IngredientType ingredientType);
-        Task GetShoppingListAsync(ShoppingList shoppingList);
-        Task GetSupplyAsync(Supply supply);
+        Task DeleteRecipeAsync(int id);
+        Task DeleteRecipeTypeAsync(int id);
+        Task DeleteMealAsync(int id);
+        Task DeleteIngredientAsync(int id);
+        Task DeleteIngredientTypeAsync(int id);
+        Task DeleteShoppingListAsync(int id);
+        Task DeleteSupplyAsync(int id);
+        Task GetRecipeAsync(int id);
+        Task GetRecipeTypeAsync(int id);
+        Task GetMealAsync(int id);
+        Task GetIngredientAsync(int id);
+        Task GetIngredientTypeAsync(int id);
+        Task GetShoppingListAsync(int id);
+        Task GetSupplyAsync(int id);
         
     }
 }
