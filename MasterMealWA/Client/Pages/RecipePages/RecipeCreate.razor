@@ -1,0 +1,147 @@
+﻿<h3>RecipeCreate</h3>
+<EditForm Model="@recipe">
+    <Microsoft.AspNetCore.Components.Forms.ValidationSummary />
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                <label>Name:</label>
+                <InputText @bind-Value="recipe.Name" class="form-control" />
+
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                <label>Recipe Source:</label>
+                <InputText @bind-Value="recipe.RecipeSource" class="form-control" />
+                <small class="text-muted">Where the recipe came from, if it is not a personal recipe</small>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                <label>Source URL:</label>
+                <InputText @bind-Value="recipe.RecipeSourceUrl" class="form-control" />
+
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                <label>Image:</label>
+                <InputFile @bind-Value="imageFile" class="form-control" />
+                <p>Image will be cropped down to 128x128, distortion may occur.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                <label>Description:</label>
+                <InputTextArea @bind-Value="recipe.Description" class="form-control" />
+
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                <label>Cooking Time:</label>
+                <InputNumber @bind-Value="recipe.CookingTime" TValue="int" class="form-control" />
+
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                <label>Servings:</label>
+                <InputNumber @bind-Value="recipe.Servings" TValue="int" class="form-control" />
+
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                <label>Recipe Type</label>
+                @if (Types == null)
+                {
+                    <p>loading...</p>}
+                else
+                {
+                    <InputSelect @bind-Value="recipe.TypeId" TValue="int" class="form-control selectpicker">
+                        <option value="" hidden>Select a Type</option>
+                        @foreach (RecipeType type in Types)
+                        {
+                            <option value="@type.Id">@type.Name</option>
+                        }
+                    </InputSelect>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                <label class="col-form-label">Ingredients</label>
+                <button @onclick="AddIngredient" class="btn btn-success">Add Ingredient</button>
+                @foreach (var ingredient in ingredients)
+                {
+                    <QIngredientCreate qIngredient="@ingredient" />
+                    <button class="btn btn-danger" @onclick="(()=>RemoveIngredient(ingredient))">Remove</button>
+                }
+
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                <label>Supplies</label>
+                <ul>
+                    @foreach (var supply in supplies)
+                    {
+                        <li>
+
+                            <SupplyPicker supply="@supply" />
+                            <button class="btn btn-danger" @onclick="(()=>RemoveSupply(supply))">Remove</button>
+                        </li>
+                    }
+                </ul>
+                <button @onclick="AddSupply" class="btn btn-success">Add Supply</button>
+
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                <label>Steps</label>
+                <ol>
+                    @foreach (var step in steps)
+                    {
+                        <li>
+                            <InputTextArea @bind-Value="step.Text" class="form-control"></InputTextArea>
+                            @*<StepInput />*@
+                            <button class="btn btn-danger" @onclick="(()=>steps.Remove(step))">Remove</button>
+                        </li>
+                    }
+                </ol>
+
+                <button @onclick="AddStep" class="btn btn-success">Add Step</button>
+            </div>
+        </div>
+    </div>
+
+    <button @onclick="SaveRecipe" class="btn btn-success">Save</button>
+</EditForm>
+
+@code {
+    public Recipe recipe { get; set; }
+    public List<RecipeType> types { get; set; }
+}
