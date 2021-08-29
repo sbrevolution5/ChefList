@@ -178,39 +178,46 @@ namespace MasterMealWA.Client.Services
             return supply;
         }
 
-        public Task UpdateIngredientAsync(Ingredient ingredient)
+        public async Task UpdateIngredientAsync(Ingredient ingredient)
         {
-            throw new NotImplementedException();
+            await _http.PutAsJsonAsync("api/ingredients", ingredient);
+
         }
 
-        public Task UpdateIngredientTypeAsync(IngredientType ingredientType)
+        public async Task UpdateIngredientTypeAsync(IngredientType ingredientType)
         {
-            throw new NotImplementedException();
+            await _http.PutAsJsonAsync("api/ingredienttypes", ingredientType);
+
         }
 
-        public Task UpdateMealAsync(Meal meal)
+        public async Task UpdateMealAsync(Meal meal)
         {
-            throw new NotImplementedException();
+            await _http.PutAsJsonAsync("api/meals", meal);
+
         }
 
-        public Task UpdateRecipeAsync(Recipe recipe)
+        public async Task UpdateRecipeAsync(Recipe recipe)
         {
-            throw new NotImplementedException();
+            await _http.PutAsJsonAsync("api/recipes", recipe);
+
         }
 
-        public Task UpdateRecipeTypeAsync(RecipeType type)
+        public async Task UpdateRecipeTypeAsync(RecipeType type)
         {
-            throw new NotImplementedException();
+            await _http.PutAsJsonAsync("api/recipetypes", type);
+
         }
 
-        public Task UpdateShoppingListAsync(ShoppingList shoppingList)
+        public async Task UpdateShoppingListAsync(ShoppingList shoppingList)
         {
-            throw new NotImplementedException();
+            await _http.PutAsJsonAsync("api/shoppinglists", shoppingList);
+
         }
 
-        public Task UpdateSupplyAsync(Supply supply)
+        public async Task UpdateSupplyAsync(Supply supply)
         {
-            throw new NotImplementedException();
+            await _http.PutAsJsonAsync("api/supplies", supply);
+
         }
     }
 }
