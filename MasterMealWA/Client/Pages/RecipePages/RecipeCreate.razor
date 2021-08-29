@@ -3,38 +3,84 @@
 <h3>RecipeCreate</h3>
 <EditForm Model="@recipe" OnValidSubmit="CreateRecipe">
     <DataAnnotationsValidator />
-    <MudCard>
-        <MudCardContent>
-            <MudTextField Label="Title" HelperText="The name of the recipe" @bind-Value="recipe.Name" For="@(()=> recipe.Name)" />
-            <MudTextField Label="Description" HelperText="The description of the recipe" @bind-Value="recipe.Description" For="@(()=> recipe.Description)" />
-            <MudTextField Label="Source" HelperText="Where did you get the recipe?  (if its personal, leave blank)" @bind-Value="recipe.RecipeSource" For="@(()=> recipe.RecipeSource)" />
-            <MudTextField Label="Source Link" HelperText="Link to the page you found this recipe on" @bind-Value="recipe.RecipeSourceUrl" For="@(()=> recipe.RecipeSourceUrl)" />
-            <MudNumericField Label="Cooking Time" HelperText="Estimated minutes to cook recipe" @bind-Value="recipe.CookingTime" For="@(()=> recipe.CookingTime)" />
-            <MudNumericField Label="Servings" HelperText="How many people the recipe Serves" @bind-Value="recipe.Servings" For="@(()=> recipe.Servings)" />
-            @if (Types == null)
-            {
-                <p>loading...</p>}
-            else
-            {
-                <MudSelect @bind-Value="recipe.TypeId"  T="int" Label="Recipe Type">
-                    @foreach (RecipeType type in Types)
-                    {
-                        <MudSelectItem Value="@type.Id">@type.Name</MudSelectItem>
-                    }
-                </MudSelect>
-            }
-        </MudCardContent>
-        <MudCard>
-            <MudCardHeader>Ingredients</MudCardHeader>
-            <MudCardContent></MudCardContent>
-        </MudCard>
-        <MudCard>
-            <MudCardHeader>Steps</MudCardHeader>
-            <MudCardContent>
+    <MudGrid>
 
+        <MudCard>
+            <MudCardContent>
+                <MudTextField Label="Title" HelperText="The name of the recipe" @bind-Value="recipe.Name" For="@(()=> recipe.Name)" />
+                <MudTextField Label="Description" HelperText="The description of the recipe" @bind-Value="recipe.Description" For="@(()=> recipe.Description)" />
+                <InputFile id="fileInput" OnChange="UploadFiles" hidden />
+                <MudFab HtmlTag="label"
+                        Color="Color.Secondary"
+                        Icon="@Icons.Filled.Image"
+                        Label="Load picture"
+                        for="fileInput" />
+                @if (files != null)
+                {
+                    <MudText Typo="@Typo.h6">@files.Count() File@(files.Count() == 1 ? "" : "s"):</MudText>
+                    <MudList>
+                        @foreach (var file in files)
+                        {
+                            <MudListItem Icon="@Icons.Filled.AttachFile" @key="@file">
+                                @file.Name <code>@file.Size bytes</code>
+                            </MudListItem>
+                        }
+                    </MudList>
+                }
+                <MudTextField Label="Source" HelperText="Where did you get the recipe?  (if its personal, leave blank)" @bind-Value="recipe.RecipeSource" For="@(()=> recipe.RecipeSource)" />
+                <MudTextField Label="Source Link" HelperText="Link to the page you found this recipe on" @bind-Value="recipe.RecipeSourceUrl" For="@(()=> recipe.RecipeSourceUrl)" />
+                <MudNumericField Label="Cooking Time" HelperText="Estimated minutes to cook recipe" @bind-Value="recipe.CookingTime" For="@(()=> recipe.CookingTime)" />
+                <MudNumericField Label="Servings" HelperText="How many people the recipe Serves" @bind-Value="recipe.Servings" For="@(()=> recipe.Servings)" />
+                @if (Types == null)
+                {
+                    <p>loading...</p>}
+                else
+                {
+                    <MudSelect @bind-Value="recipe.TypeId" T="int" Label="Recipe Type">
+                        @foreach (RecipeType type in Types)
+                        {
+                            <MudSelectItem Value="@type.Id">@type.Name</MudSelectItem>
+                        }
+                    </MudSelect>
+                }
             </MudCardContent>
+            <MudCard>
+                <MudCardHeader>Ingredients</MudCardHeader>
+                <MudCardContent>
+                    @foreach (var ingredient in recipe.Ingredients)
+                    {
+                        @*<QIngredientCreate qIngredient="@ingredient" />*@
+                        <button class="btn btn-danger" @onclick="(()=>recipe.Ingredients.Remove(ingredient))">Remove</button>
+                    }
+                    <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Ingredients.Add(new())" />
+                </MudCardContent>
+            </MudCard>
+            <MudCard>
+                <MudCardHeader>Supplies</MudCardHeader>
+                <MudCardContent>
+                    @foreach (var supply in recipe.Supplies)
+                    {
+                        @*<SupplyPicker supply="@supply" />*@
+                        <button class="btn btn-danger" @onclick="(()=>recipe.Supplies.Remove(supply))">Remove</button>
+                    }
+                    <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Supplies.Add(new())" />
+                </MudCardContent>
+            </MudCard>
+
+            <MudCard>
+                <MudCardHeader>Steps</MudCardHeader>
+                <MudCardContent>
+                    @foreach (var step in recipe.Steps)
+                    {
+                        <MudTextField Label="Text Step" HelperText="What do you do in this step?" @bind-Value="step.Text" For="@(()=> step.Text)" />
+                        <button class="btn btn-danger" @onclick="(()=>recipe.Steps.Remove(step))">Remove</button>
+                    }
+                    <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Steps.Add(new())" />
+
+                </MudCardContent>
+            </MudCard>
         </MudCard>
-    </MudCard>
+    </MudGrid>
 
     <div class="row">
         <div class="col">
@@ -42,65 +88,6 @@
                 <label>Image:</label>
                 @*<InputFile @bind-Value="imageFile" class="form-control" />*@
                 <p>Image will be cropped down to 128x128, distortion may occur.</p>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <div class="form-group">
-
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <div class="form-group">
-                <label class="col-form-label">Ingredients</label>
-                <button @onclick="()=>recipe.Ingredients.Add(new())" class="btn btn-success">Add Ingredient</button>
-                @foreach (var ingredient in recipe.Ingredients)
-                {
-                    @*<QIngredientCreate qIngredient="@ingredient" />*@
-                    <button class="btn btn-danger" @onclick="(()=>recipe.Ingredients.Remove(ingredient))">Remove</button>
-                }
-
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <div class="form-group">
-                <label>Supplies</label>
-                <ul>
-                    @foreach (var supply in recipe.Supplies)
-                    {
-                        <li>
-
-                            @*<SupplyPicker supply="@supply" />*@
-                            <button class="btn btn-danger" @onclick="(()=>recipe.Supplies.Remove(supply))">Remove</button>
-                        </li>
-                    }
-                </ul>
-                <button @onclick="()=> recipe.Supplies.Add(new())" class="btn btn-success">Add Supply</button>
-
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <div class="form-group">
-                <label>Steps</label>
-                <ol>
-                    @foreach (var step in recipe.Steps)
-                    {
-                        <li>
-                            <InputTextArea @bind-Value="step.Text" class="form-control"></InputTextArea>
-                            @*<StepInput />*@
-                            <button class="btn btn-danger" @onclick="(()=>recipe.Steps.Remove(step))">Remove</button>
-                        </li>
-                    }
-                </ol>
-
-                <button @onclick="()=>recipe.Steps.Add(new())" class="btn btn-success">Add Step</button>
             </div>
         </div>
     </div>
@@ -117,10 +104,19 @@
             ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve,
             PropertyNamingPolicy = null
         };
-        Types = await Http.GetFromJsonAsync<List<RecipeType>>("Api/RecipeTypes",options);
+        Types = await Http.GetFromJsonAsync<List<RecipeType>>("Api/RecipeTypes", options);
     }
     public void CreateRecipe()
     {
         throw new NotImplementedException();
+    }
+    IList<IBrowserFile> files = new List<IBrowserFile>();
+    private void UploadFiles(InputFileChangeEventArgs e)
+    {
+        foreach (var file in e.GetMultipleFiles())
+        {
+            files.Add(file);
+        }
+        //TODO upload the files to the server
     }
 }
