@@ -2,16 +2,23 @@
 @using MasterMealWA.Client.Services.Interfaces
 @inject IApiService _api
 <h3>IngredientIndex</h3>
-<MudList>
+@if (Ingredients is null)
+{
 
-    @foreach (var ingredient in Ingredients)
-    {
-        <MudListItem>@ingredient.Name</MudListItem>
-    }
-</MudList>
-<MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" />
+}
+else
+{
+    <MudList>
+
+        @foreach (var ingredient in Ingredients)
+        {
+            <MudListItem>@ingredient.Name</MudListItem>
+        }
+    </MudList>
+    <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" />
+}
 @code {
-    public List<Ingredient> Ingredients { get; set; } = new();
+    public List<Ingredient> Ingredients { get; set; }
     protected override async Task OnInitializedAsync()
     {
         Ingredients = await _api.GetAllIngredientsAsync();
