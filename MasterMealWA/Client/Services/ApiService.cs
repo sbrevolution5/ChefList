@@ -53,44 +53,45 @@ namespace MasterMealWA.Client.Services
             await _http.PostAsJsonAsync("api/ShoppingLists", shoppingList);
         }
 
-        public Task CreateNewSupplyAsync(Supply supply)
+        public async Task CreateNewSupplyAsync(Supply supply)
         {
-            throw new NotImplementedException();
+            await _http.PostAsJsonAsync("api/Supplies", supply);
+
         }
 
-        public Task DeleteIngredientAsync(int id)
+        public async Task DeleteIngredientAsync(int id)
         {
-            throw new NotImplementedException();
+            await _http.DeleteAsync($"api/ingredients/{id}");
         }
 
-        public Task DeleteIngredientTypeAsync(int id)
+        public async Task DeleteIngredientTypeAsync(int id)
         {
-            throw new NotImplementedException();
+            await _http.DeleteAsync($"api/ingredienttypes/{id}");
         }
 
-        public Task DeleteMealAsync(int id)
+        public async Task DeleteMealAsync(int id)
         {
-            throw new NotImplementedException();
+            await _http.DeleteAsync($"api/meals/{id}");
         }
 
-        public Task DeleteRecipeAsync(int id)
+        public async Task DeleteRecipeAsync(int id)
         {
-            throw new NotImplementedException();
+            await _http.DeleteAsync($"api/recipes/{id}");
         }
 
-        public Task DeleteRecipeTypeAsync(int id)
+        public async Task DeleteRecipeTypeAsync(int id)
         {
-            throw new NotImplementedException();
+            await _http.DeleteAsync($"api/recipetypes/{id}");
         }
 
-        public Task DeleteShoppingListAsync(int id)
+        public async Task DeleteShoppingListAsync(int id)
         {
-            throw new NotImplementedException();
+            await _http.DeleteAsync($"api/shoppinglists/{id}");
         }
 
-        public Task DeleteSupplyAsync(int id)
+        public async Task DeleteSupplyAsync(int id)
         {
-            throw new NotImplementedException();
+            await _http.DeleteAsync($"api/supplies/{id}");
         }
 
         public async Task<List<Ingredient>> GetAllIngredientsAsync()
