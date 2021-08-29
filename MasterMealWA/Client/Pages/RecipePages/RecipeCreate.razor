@@ -1,15 +1,15 @@
-﻿<h3>RecipeCreate</h3>
-<EditForm Model="@recipe">
-    <Microsoft.AspNetCore.Components.Forms.ValidationSummary />
-    <div class="row">
-        <div class="col">
-            <div class="form-group">
-                <label>Name:</label>
-                <InputText @bind-Value="recipe.Name" class="form-control" />
-
-            </div>
-        </div>
-    </div>
+﻿@page "/recipe/create"
+<h3>RecipeCreate</h3>
+<EditForm Model="@recipe" OnValidSubmit="CreateRecipe">
+    <DataAnnotationsValidator/>
+    <MudCard>
+        <MudCardContent>
+            <MudTextField Label="Title" HelperText="The name of the recipe" @bind-Value="recipe.Name" For="@(()=> recipe.Name)"/>
+            <MudTextField Label="Description" HelperText="The description of the recipe" @bind-Value="recipe.Description" For="@(()=> recipe.Description)"/>
+            <MudTextField Label="Source" HelperText="Where did you get the recipe?  (if its personal, leave blank)" @bind-Value="recipe.RecipeSource" For="@(()=> recipe.RecipeSource)"/>
+            <MudTextField Label="Source Link" HelperText="Link to the page you found this recipe on" @bind-Value="recipe.RecipeSourceUrl" For="@(()=> recipe.RecipeSourceUrl)"/>
+        </MudCardContent>
+    </MudCard>
     <div class="row">
         <div class="col">
             <div class="form-group">
@@ -32,7 +32,7 @@
         <div class="col">
             <div class="form-group">
                 <label>Image:</label>
-                <InputFile @bind-Value="imageFile" class="form-control" />
+                @*<InputFile @bind-Value="imageFile" class="form-control" />*@
                 <p>Image will be cropped down to 128x128, distortion may occur.</p>
             </div>
         </div>
@@ -89,11 +89,11 @@
         <div class="col">
             <div class="form-group">
                 <label class="col-form-label">Ingredients</label>
-                <button @onclick="AddIngredient" class="btn btn-success">Add Ingredient</button>
-                @foreach (var ingredient in ingredients)
+                <button @onclick="()=>recipe.Ingredients.Add(new())" class="btn btn-success">Add Ingredient</button>
+                @foreach (var ingredient in recipe.Ingredients)
                 {
-                    <QIngredientCreate qIngredient="@ingredient" />
-                    <button class="btn btn-danger" @onclick="(()=>RemoveIngredient(ingredient))">Remove</button>
+                    @*<QIngredientCreate qIngredient="@ingredient" />*@
+                    <button class="btn btn-danger" @onclick="(()=>recipe.Ingredients.Remove(ingredient))">Remove</button>
                 }
 
             </div>
@@ -104,16 +104,16 @@
             <div class="form-group">
                 <label>Supplies</label>
                 <ul>
-                    @foreach (var supply in supplies)
+                    @foreach (var supply in recipe.Supplies)
                     {
                         <li>
 
-                            <SupplyPicker supply="@supply" />
-                            <button class="btn btn-danger" @onclick="(()=>RemoveSupply(supply))">Remove</button>
+                            @*<SupplyPicker supply="@supply" />*@
+                            <button class="btn btn-danger" @onclick="(()=>recipe.Supplies.Remove(supply))">Remove</button>
                         </li>
                     }
                 </ul>
-                <button @onclick="AddSupply" class="btn btn-success">Add Supply</button>
+                <button @onclick="()=> recipe.Supplies.Add(new())" class="btn btn-success">Add Supply</button>
 
             </div>
         </div>
@@ -123,25 +123,28 @@
             <div class="form-group">
                 <label>Steps</label>
                 <ol>
-                    @foreach (var step in steps)
+                    @foreach (var step in recipe.Steps)
                     {
                         <li>
                             <InputTextArea @bind-Value="step.Text" class="form-control"></InputTextArea>
                             @*<StepInput />*@
-                            <button class="btn btn-danger" @onclick="(()=>steps.Remove(step))">Remove</button>
+                            <button class="btn btn-danger" @onclick="(()=>recipe.Steps.Remove(step))">Remove</button>
                         </li>
                     }
                 </ol>
 
-                <button @onclick="AddStep" class="btn btn-success">Add Step</button>
+                <button @onclick="()=>recipe.Steps.Add(new())" class="btn btn-success">Add Step</button>
             </div>
         </div>
     </div>
 
-    <button @onclick="SaveRecipe" class="btn btn-success">Save</button>
 </EditForm>
 
 @code {
-    public Recipe recipe { get; set; }
-    public List<RecipeType> types { get; set; }
+    public Recipe recipe { get; set; } = new();
+    public List<RecipeType> Types { get; set; }
+    public void CreateRecipe()
+    {
+        throw new NotImplementedException();
+    }
 }
