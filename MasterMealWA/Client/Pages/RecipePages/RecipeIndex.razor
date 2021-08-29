@@ -13,13 +13,20 @@ else
     @foreach (var recipe in recipes)
     {
 
-<MudCard>
-    <MudText>@recipe.Name</MudText>
-    <MudText>@recipe.CookingTime</MudText>
-    <MudText>@recipe.Servings</MudText>
-    <MudButton @onclick='()=>nav.NavigateTo($"/recipe/details/{recipe.Id}")'>Details</MudButton>
-</MudCard>
+        <MudCard>
+            <MudCardHeader>
+
+                <MudText>@recipe.Name</MudText>
+            </MudCardHeader>
+            <MudCardContent>
+
+                <MudText>@recipe.CookingTime</MudText>
+                <MudText>@recipe.Servings</MudText>
+                <MudButton @onclick='()=>nav.NavigateTo($"/recipe/details/{recipe.Id}")'>Details</MudButton>
+            </MudCardContent>
+        </MudCard>
     }
+    <MudFab Icon="@Icons.Material.Filled.Add" Color="Color.Primary" Label="Add Recipe" aria-label="add recipe" @onclick='()=>nav.NavigateTo("/recipe/create")' />
 }
 @code {
     private List<Recipe> recipes;
