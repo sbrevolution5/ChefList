@@ -1,5 +1,16 @@
 ﻿<h3>QIngredientCreate</h3>
-
+<MudForm>
+    <MudSelect @bind-Value="qingredient.IngredientId" T="int">
+        @foreach (var ingredient in ingredientList)
+        {
+            <MudSelectItem Value="@ingredient.Id">@ingredient.Name</MudSelectItem>
+        }
+    </MudSelect>
+</MudForm>
 @code {
+    [Parameter]
+    public List<Ingredient> ingredientList { get; set; }
+    [Parameter]
+    public QIngredient qingredient { get; set; }
 
 }
