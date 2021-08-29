@@ -93,39 +93,46 @@ namespace MasterMealWA.Client.Services
             throw new NotImplementedException();
         }
 
-        public Task GetIngredientAsync(int id)
+        public async Task<Ingredient> GetIngredientAsync(int id)
         {
-            throw new NotImplementedException();
+            var ing = await _http.GetFromJsonAsync<Ingredient>($"api/ingredients/{id}", _options);
+            return ing;
         }
 
-        public Task GetIngredientTypeAsync(int id)
+        public async Task<IngredientType> GetIngredientTypeAsync(int id)
         {
-            throw new NotImplementedException();
+            var ingType = await _http.GetFromJsonAsync<IngredientType>($"api/IngredientTypes/{id}", _options);
+            return ingType;
         }
 
-        public Task GetMealAsync(int id)
+        public async Task<Meal> GetMealAsync(int id)
         {
-            throw new NotImplementedException();
+            var meal=await _http.GetFromJsonAsync<Meal>($"api/Meals/{id}", _options);
+            return meal;
         }
 
-        public Task GetRecipeAsync(int id)
+        public async Task<Recipe> GetRecipeAsync(int id)
         {
-            throw new NotImplementedException();
+            var recipe = await _http.GetFromJsonAsync<Recipe>($"api/recipes/{id}", _options);
+            return recipe;
         }
 
-        public Task GetRecipeTypeAsync(int id)
+        public async Task<RecipeType> GetRecipeTypeAsync(int id)
         {
-            throw new NotImplementedException();
+            var type = await _http.GetFromJsonAsync<RecipeType>($"api/recipetypes/{id}", _options);
+            return type;
         }
 
-        public Task GetShoppingListAsync(int id)
+        public async Task<ShoppingList> GetShoppingListAsync(int id)
         {
-            throw new NotImplementedException();
+            var list = await _http.GetFromJsonAsync<ShoppingList>($"api/shoppingLists/{id}", _options);
+            return list;
         }
 
-        public Task GetSupplyAsync(int id)
+        public async Task<Supply> GetSupplyAsync(int id)
         {
-            throw new NotImplementedException();
+            var supply = await _http.GetFromJsonAsync<Supply>($"api/supplies/{id}", _options);
+            return supply;
         }
 
         public Task UpdateIngredientAsync(Ingredient ingredient)
