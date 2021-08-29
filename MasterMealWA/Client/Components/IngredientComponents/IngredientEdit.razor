@@ -22,33 +22,33 @@
             @foreach (MeasurementType measure in Enum.GetValues(typeof(MeasurementType)))
             {
 
-                <MudSelectItem Value="@measure"> @measure  </MudSelectItem>
+                <MudSelectItem Value="@measure">@measure</MudSelectItem>
             }
         </MudSelect>
         @*<EditForm OnValidSubmit="CreateIngredient"> </EditForm>*@
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Cancel</MudButton>
-        <MudButton Color="Color.Success" OnClick="CreateIngredient">Save</MudButton>
+        <MudButton Color="Color.Success" OnClick="EditIngredient">Save</MudButton>
     </DialogActions>
 </MudDialog>
 @code {
     [CascadingParameter]
     MudDialogInstance MudDialog { get; set; }
-    private Ingredient ingredient { get; set; } = new();
+    [Parameter]
+    public Ingredient ingredient { get; set; }
     private List<IngredientType> types { get; set; }
     protected override async Task OnInitializedAsync()
     {
-        ingredient.TypeId = 1;
         types = await _api.GetAllIngredientTypesAsync();
     }
     public void Cancel()
     {
         MudDialog.Cancel();
     }
-    public async Task CreateIngredient()
+    public async Task EditIngredient()
     {
-        await _api.CreateNewIngredientAsync(ingredient);
+        await _api.UpdateIngredientAsync(ingredient);
         MudDialog.Close(DialogResult.Ok(ingredient));
     }
 }

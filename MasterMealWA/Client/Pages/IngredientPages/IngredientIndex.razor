@@ -12,7 +12,11 @@ else
 
         @foreach (var ingredient in Ingredients)
         {
-            <MudListItem>@ingredient.Name</MudListItem>
+            <MudListItem>@ingredient.Name
+        <MudButtonGroup>
+            <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" OnClick="@(()=>EditIngredient(ingredient))"></MudIconButton>
+        </MudButtonGroup>
+        </MudListItem>
         }
     </MudList>
     <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" OnClick="NewIngredient"/>
@@ -27,6 +31,16 @@ else
     public async Task NewIngredient()
     {
         var dialog = _dialogService.Show<IngredientCreate>("New Ingredient");
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            Ingredients = await _api.GetAllIngredientsAsync();
+        }
+    }
+    public async Task EditIngredient(Ingredient ingredient)
+    {
+        var parameters = new DialogParameters { ["Ingredient"] = ingredient };
+        var dialog = _dialogService.Show<IngredientEdit>("Edit Ingredient",parameters);
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
