@@ -4,30 +4,27 @@
     <DataAnnotationsValidator/>
     <MudCard>
         <MudCardContent>
-            <MudTextField Label="Title" HelperText="The name of the recipe" @bind-Value="recipe.Name" For="@(()=> recipe.Name)"/>
-            <MudTextField Label="Description" HelperText="The description of the recipe" @bind-Value="recipe.Description" For="@(()=> recipe.Description)"/>
-            <MudTextField Label="Source" HelperText="Where did you get the recipe?  (if its personal, leave blank)" @bind-Value="recipe.RecipeSource" For="@(()=> recipe.RecipeSource)"/>
-            <MudTextField Label="Source Link" HelperText="Link to the page you found this recipe on" @bind-Value="recipe.RecipeSourceUrl" For="@(()=> recipe.RecipeSourceUrl)"/>
+            <MudTextField Label="Title" HelperText="The name of the recipe" @bind-Value="recipe.Name" For="@(()=> recipe.Name)" />
+            <MudTextField Label="Description" HelperText="The description of the recipe" @bind-Value="recipe.Description" For="@(()=> recipe.Description)" />
+            <MudTextField Label="Source" HelperText="Where did you get the recipe?  (if its personal, leave blank)" @bind-Value="recipe.RecipeSource" For="@(()=> recipe.RecipeSource)" />
+            <MudTextField Label="Source Link" HelperText="Link to the page you found this recipe on" @bind-Value="recipe.RecipeSourceUrl" For="@(()=> recipe.RecipeSourceUrl)" />
+            <MudNumericField Label="Cooking Time" HelperText="Estimated minutes to cook recipe" @bind-Value="recipe.CookingTime" For="@(()=> recipe.CookingTime)" />
+            <MudNumericField Label="Servings" HelperText="How many people the recipe Serves" @bind-Value="recipe.Servings" For="@(()=> recipe.Servings)" />
+            @if (Types == null)
+            {
+                <p>loading...</p>}
+            else
+            {
+                <MudSelect @bind-Value="recipe.TypeId" T="int" Label="RecipeType">
+                    @foreach (RecipeType type in Types)
+                    {
+                        <MudSelectItem Value="@type.Id">@type.Name</MudSelectItem>
+                    }
+                </MudSelect>
+            }
         </MudCardContent>
     </MudCard>
-    <div class="row">
-        <div class="col">
-            <div class="form-group">
-                <label>Recipe Source:</label>
-                <InputText @bind-Value="recipe.RecipeSource" class="form-control" />
-                <small class="text-muted">Where the recipe came from, if it is not a personal recipe</small>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <div class="form-group">
-                <label>Source URL:</label>
-                <InputText @bind-Value="recipe.RecipeSourceUrl" class="form-control" />
-
-            </div>
-        </div>
-    </div>
+    
     <div class="row">
         <div class="col">
             <div class="form-group">
@@ -37,51 +34,10 @@
             </div>
         </div>
     </div>
-
     <div class="row">
         <div class="col">
             <div class="form-group">
-                <label>Description:</label>
-                <InputTextArea @bind-Value="recipe.Description" class="form-control" />
-
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <div class="form-group">
-                <label>Cooking Time:</label>
-                <InputNumber @bind-Value="recipe.CookingTime" TValue="int" class="form-control" />
-
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <div class="form-group">
-                <label>Servings:</label>
-                <InputNumber @bind-Value="recipe.Servings" TValue="int" class="form-control" />
-
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <div class="form-group">
-                <label>Recipe Type</label>
-                @if (Types == null)
-                {
-                    <p>loading...</p>}
-                else
-                {
-                    <InputSelect @bind-Value="recipe.TypeId" TValue="int" class="form-control selectpicker">
-                        <option value="" hidden>Select a Type</option>
-                        @foreach (RecipeType type in Types)
-                        {
-                            <option value="@type.Id">@type.Name</option>
-                        }
-                    </InputSelect>
-                }
+               
             </div>
         </div>
     </div>

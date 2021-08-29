@@ -1,6 +1,6 @@
 ﻿@inherits LayoutComponentBase
 
-<MudThemeProvider Theme="currentTheme"/>
+<MudThemeProvider Theme="currentTheme" />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
@@ -16,7 +16,13 @@
         <NavMenu />
     </MudDrawer>
     <MudMainContent>
-        @Body
+
+        <MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.False">
+            <MudGrid>
+                @Body
+            </MudGrid>
+        </MudContainer>
+
     </MudMainContent>
 </MudLayout>
 @code {
