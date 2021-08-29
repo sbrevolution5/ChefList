@@ -1,0 +1,12 @@
+﻿@inject IApiService _api
+@inject NavigationManager _nav
+<h3>IngredientCreate</h3>
+<EditForm OnValidSubmit="CreateIngredient"> </EditForm>
+@code {
+    private Ingredient ingredient { get; set; }
+    public async Task CreateIngredient()
+    {
+        await _api.CreateNewIngredientAsync(ingredient);
+        _nav.NavigateTo("ingredients/index");
+    }
+}
