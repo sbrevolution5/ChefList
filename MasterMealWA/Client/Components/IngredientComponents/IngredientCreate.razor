@@ -2,7 +2,29 @@
 @inject NavigationManager _nav
 <MudDialog>
     <DialogContent>
+        <MudTextField Label="Ingredient Name" @bind-Value="ingredient.Name"></MudTextField>
+        @if (types is null)
+        {
+            <MudText>Loading Types...</MudText>
+        }
+        else
+        {
 
+            <MudSelect Label="Ingredient Type" HelperText="Where you'd find the ingredient while shopping'" @bind-Value="ingredient.TypeId">
+                @foreach (var type in types)
+                    {
+
+                    <MudSelectItem Value="@type.Id">@type.Name</MudSelectItem>
+                    }
+            </MudSelect>
+        }
+        <MudSelect @bind-Value="ingredient.MeasurementType" Label="Measurement Type">
+            @foreach (MeasurementType measure in Enum.GetValues(typeof(MeasurementType)))
+            {
+
+                <MudSelectItem Value="@measure"> @measure  </MudSelectItem>
+            }
+        </MudSelect>
         @*<EditForm OnValidSubmit="CreateIngredient"> </EditForm>*@
     </DialogContent>
     <DialogActions>
@@ -10,12 +32,12 @@
     </DialogActions>
 </MudDialog>
 @code {
-    private Ingredient ingredient { get; set; }
+    private Ingredient ingredient { get; set; } = new();
     private List<IngredientType> types { get; set; }
     protected override async Task OnInitializedAsync()
     {
+        ingredient.TypeId = 1;
         types = await _api.GetAllIngredientTypesAsync();
-        return base.OnInitializedAsync();
     }
     public async Task CreateIngredient()
     {
