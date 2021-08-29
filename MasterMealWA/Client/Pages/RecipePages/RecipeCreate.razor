@@ -1,7 +1,8 @@
 ﻿@page "/recipe/create"
+@inject HttpClient Http
 <h3>RecipeCreate</h3>
 <EditForm Model="@recipe" OnValidSubmit="CreateRecipe">
-    <DataAnnotationsValidator/>
+    <DataAnnotationsValidator />
     <MudCard>
         <MudCardContent>
             <MudTextField Label="Title" HelperText="The name of the recipe" @bind-Value="recipe.Name" For="@(()=> recipe.Name)" />
@@ -15,7 +16,7 @@
                 <p>loading...</p>}
             else
             {
-                <MudSelect @bind-Value="recipe.TypeId" T="int" Label="RecipeType">
+                <MudSelect @bind-Value="recipe.TypeId"  T="int" Label="Recipe Type">
                     @foreach (RecipeType type in Types)
                     {
                         <MudSelectItem Value="@type.Id">@type.Name</MudSelectItem>
@@ -23,8 +24,18 @@
                 </MudSelect>
             }
         </MudCardContent>
+        <MudCard>
+            <MudCardHeader>Ingredients</MudCardHeader>
+            <MudCardContent></MudCardContent>
+        </MudCard>
+        <MudCard>
+            <MudCardHeader>Steps</MudCardHeader>
+            <MudCardContent>
+
+            </MudCardContent>
+        </MudCard>
     </MudCard>
-    
+
     <div class="row">
         <div class="col">
             <div class="form-group">
@@ -37,7 +48,7 @@
     <div class="row">
         <div class="col">
             <div class="form-group">
-               
+
             </div>
         </div>
     </div>
@@ -99,6 +110,15 @@
 @code {
     public Recipe recipe { get; set; } = new();
     public List<RecipeType> Types { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        var options = new JsonSerializerOptions()
+        {
+            ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve,
+            PropertyNamingPolicy = null
+        };
+        Types = await Http.GetFromJsonAsync<List<RecipeType>>("Api/RecipeTypes",options);
+    }
     public void CreateRecipe()
     {
         throw new NotImplementedException();
