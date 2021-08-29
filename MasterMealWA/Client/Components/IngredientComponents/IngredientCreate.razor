@@ -1,7 +1,14 @@
 ﻿@inject IApiService _api
 @inject NavigationManager _nav
-<h3>IngredientCreate</h3>
-<EditForm OnValidSubmit="CreateIngredient"> </EditForm>
+<MudDialog>
+    <DialogContent>
+
+    <EditForm OnValidSubmit="CreateIngredient"> </EditForm>
+    </DialogContent>
+    <DialogActions>
+
+    </DialogActions>
+</MudDialog>
 @code {
     private Ingredient ingredient { get; set; }
     public async Task CreateIngredient()

@@ -1,6 +1,6 @@
 ﻿@page "/ingredients"
 @inject IApiService _api
-
+@inject IDialogService _dialogService
 <h3>IngredientIndex</h3>
 @if (Ingredients is null)
 {
@@ -15,7 +15,7 @@ else
             <MudListItem>@ingredient.Name</MudListItem>
         }
     </MudList>
-    <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" />
+    <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" OnClick="NewIngredient"/>
 }
 @code {
     public List<Ingredient> Ingredients { get; set; }
@@ -23,5 +23,14 @@ else
     {
         Ingredients = await _api.GetAllIngredientsAsync();
         base.OnInitialized();
+    }
+    public async Task NewIngredient()
+    {
+        var dialog = _dialogService.Show<IngredientCreate>("New Ingredient");
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            Ingredients = await _api.GetAllIngredientsAsync();
+        }
     }
 }
