@@ -93,6 +93,48 @@ namespace MasterMealWA.Client.Services
             throw new NotImplementedException();
         }
 
+        public async Task<List<Ingredient>> GetAllIngredientsAsync()
+        {
+            var list = await _http.GetFromJsonAsync<List<Ingredient>>("api/ingredients");
+            return list;
+        }
+
+        public async Task<List<IngredientType>> GetAllIngredientTypesAsync()
+        {
+            var list = await _http.GetFromJsonAsync<List<IngredientType>>("api/ingredientTypes");
+            return list;
+        }
+
+        public async Task<List<Meal>> GetAllMealsAsync()
+        {
+            var list = await _http.GetFromJsonAsync<List<Meal>>("api/meals");
+            return list;
+        }
+
+        public async Task<List<Recipe>> GetAllRecipesAsync()
+        {
+            var list = await _http.GetFromJsonAsync<List<Recipe>>("api/recipes");
+            return list;
+        }
+
+        public async Task<List<RecipeType>> GetAllRecipeTypesAsync()
+        {
+            var list = await _http.GetFromJsonAsync<List<RecipeType>>("api/recipeTypes");
+            return list;
+        }
+
+        public async Task<List<ShoppingList>> GetAllShoppingListsAsync()
+        {
+            var list = await _http.GetFromJsonAsync<List<ShoppingList>>("api/shoppingLists");
+            return list;
+        }
+
+        public async Task<List<Supply>> GetAllSuppliesAsync()
+        {
+            var list = await _http.GetFromJsonAsync<List<Supply>>("api/supplies");
+            return list;
+        }
+
         public async Task<Ingredient> GetIngredientAsync(int id)
         {
             var ing = await _http.GetFromJsonAsync<Ingredient>($"api/ingredients/{id}", _options);
