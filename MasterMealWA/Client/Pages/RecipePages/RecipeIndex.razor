@@ -1,4 +1,4 @@
-﻿@page "/recipe"
+﻿@page "/recipes"
 @inject HttpClient Http
 @inject NavigationManager nav
 @if (recipes is null)
@@ -16,11 +16,11 @@ else
         <MudText>@recipe.Name</MudText>
         <MudText>@recipe.CookingTime</MudText>
         <MudText>@recipe.Servings</MudText>
-        <MudLink Href="@($"/recipe/details/{recipe.Id}")">Details</MudLink>
+        <MudLink Href="@($"/recipes/details/{recipe.Id}")">Details</MudLink>
       </MudCard>
 
     }
-    <MudFab Icon="@Icons.Material.Filled.Add" Color="Color.Primary" Label="Add Recipe" aria-label="add recipe" @onclick='()=>nav.NavigateTo("/recipe/create")' />
+    <MudFab Icon="@Icons.Material.Filled.Add" Color="Color.Primary" Label="Add Recipe" aria-label="add recipe" @onclick='()=>nav.NavigateTo("/recipes/create")' />
 }
 @code {
     private List<Recipe> recipes;

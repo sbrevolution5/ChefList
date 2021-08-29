@@ -1,11 +1,12 @@
-﻿@using MasterMealWA.Client.Services.Interfaces
+﻿@page "/ingredients"
+@using MasterMealWA.Client.Services.Interfaces
 @inject IApiService _api
 <h3>IngredientIndex</h3>
 <MudList>
 
     @foreach (var ingredient in Ingredients)
     {
-        <MudListItem></MudListItem>
+        <MudListItem>@ingredient.Name</MudListItem>
     }
 </MudList>
 <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" />
