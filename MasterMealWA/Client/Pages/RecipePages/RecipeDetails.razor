@@ -1,0 +1,60 @@
+﻿@page "/recipe/details/{id}"
+@inject HttpClient Http
+<MudText Typo="Typo.h1">Recipe</MudText>
+@if (recipe is null)
+{
+    <MudOverlay>
+
+        <MudText>Loading....</MudText>
+    </MudOverlay>
+}
+else
+{
+    <MudText>@recipe.Name</MudText>
+    <MudText>@recipe.Description</MudText>
+    <MudList>
+        @foreach (var step in recipe.Steps.OrderBy(s=>s.StepNumber))
+        {
+            <MudListItem>
+                @step.Text
+            </MudListItem>
+        }
+    </MudList>
+    @foreach (var ingredient in recipe.Ingredients)
+    {
+        <div class="card">
+
+            <div class="card-body">
+                <h4 class="card-title">@ingredient.Ingredient.Name</h4>
+                <p class="card-text">@ingredient.Quantity</p>
+                <p class="card-text">@ingredient.Notes</p>
+            </div>
+        </div>
+    }
+    @foreach (var supply in recipe.Supplies)
+    {
+        //card with supply
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">@supply.Name</h4>
+                @*<p class="card-text">Text</p>*@
+            </div>
+        </div>
+    }
+}
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+    private Recipe recipe;
+    protected override async Task OnInitializedAsync()
+    {
+        var options = new JsonSerializerOptions()
+        {
+            ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve,
+            PropertyNamingPolicy = null
+        };
+        recipe = await Http.GetFromJsonAsync<Recipe>($"Api/recipes/{Id}", options);
+        base.OnInitialized();
+    }
+}

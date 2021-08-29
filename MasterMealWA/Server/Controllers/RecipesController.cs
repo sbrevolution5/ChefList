@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MasterMealWA.Server.Data;
 using MasterMealWA.Shared.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MasterMealWA.Server.Controllers
 {
@@ -23,6 +24,7 @@ namespace MasterMealWA.Server.Controllers
 
         // GET: api/Recipes
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Recipe>>> GetRecipe()
         {
             return await _context.Recipe.ToListAsync();
@@ -30,9 +32,15 @@ namespace MasterMealWA.Server.Controllers
 
         // GET: api/Recipes/5
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<Recipe>> GetRecipe(int id)
         {
-            var recipe = await _context.Recipe.FindAsync(id);
+            var recipe = await _context.Recipe.Include(r => r.Steps)
+                                              .Include(r => r.Supplies)
+                                              .Include(r => r.Type)
+                                              .Include(r => r.Ingredients)
+                                              .ThenInclude(r => r.Ingredient)
+                                              .FirstOrDefaultAsync(r=>r.Id == id);
 
             if (recipe == null)
             {

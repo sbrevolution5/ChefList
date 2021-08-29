@@ -1,0 +1,36 @@
+﻿@page "/recipe"
+@inject HttpClient Http
+@inject NavigationManager nav
+@if (recipes is null)
+{
+    <MudOverlay>
+
+        <MudText>Loading....</MudText>
+    </MudOverlay>
+}
+else
+{
+    @foreach (var recipe in recipes)
+    {
+
+<MudCard>
+    <MudText>@recipe.Name</MudText>
+    <MudText>@recipe.CookingTime</MudText>
+    <MudText>@recipe.Servings</MudText>
+    <MudButton @onclick='()=>nav.NavigateTo($"/recipe/details/{recipe.Id}")'>Details</MudButton>
+</MudCard>
+    }
+}
+@code {
+    private List<Recipe> recipes;
+    protected override async Task OnInitializedAsync()
+    {
+        var options = new JsonSerializerOptions()
+        {
+            ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve,
+            PropertyNamingPolicy = null
+        };
+        recipes = await Http.GetFromJsonAsync<List<Recipe>>("Api/recipes", options);
+        base.OnInitialized();
+    }
+}
