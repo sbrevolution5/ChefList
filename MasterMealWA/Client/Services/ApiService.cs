@@ -3,40 +3,54 @@ using MasterMealWA.Shared.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Json;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace MasterMealWA.Client.Services
 {
     public class ApiService : IApiService
     {
-        public Task CreateNewIngredientAsync(Ingredient ingredient)
+        private readonly HttpClient _http;
+        private readonly JsonSerializerOptions _options = new()
         {
-            throw new NotImplementedException();
+            ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve,
+            PropertyNamingPolicy = null
+        };
+        public ApiService(HttpClient http)
+        {
+            _http = http;
         }
 
-        public Task CreateNewIngredientTypeAsync(IngredientType ingredientType)
+        public async Task CreateNewIngredientAsync(Ingredient ingredient)
         {
-            throw new NotImplementedException();
+            await _http.PostAsJsonAsync("api/ingredients", ingredient);
         }
 
-        public Task CreateNewMealAsync(Meal meal)
+        public async Task CreateNewIngredientTypeAsync(IngredientType ingredientType)
         {
-            throw new NotImplementedException();
+            await _http.PostAsJsonAsync("api/ingredientTypes", ingredientType);
         }
 
-        public Task CreateNewRecipeAsync(Recipe recipe)
+        public async Task CreateNewMealAsync(Meal meal)
         {
-            throw new NotImplementedException();
+            await _http.PostAsJsonAsync("api/meals", meal);
         }
 
-        public Task CreateNewRecipeTypeAsync(RecipeType type)
+        public async Task CreateNewRecipeAsync(Recipe recipe)
         {
-            throw new NotImplementedException();
+            await _http.PostAsJsonAsync("api/recipes", recipe);
         }
 
-        public Task CreateNewShoppingListAsync(ShoppingList shoppingList)
+        public async Task CreateNewRecipeTypeAsync(RecipeType type)
         {
-            throw new NotImplementedException();
+            await _http.PostAsJsonAsync("api/recipeTypes", type);
+        }
+
+        public async Task CreateNewShoppingListAsync(ShoppingList shoppingList)
+        {
+            await _http.PostAsJsonAsync("api/ShoppingLists", shoppingList);
         }
 
         public Task CreateNewSupplyAsync(Supply supply)
@@ -44,72 +58,72 @@ namespace MasterMealWA.Client.Services
             throw new NotImplementedException();
         }
 
-        public Task DeleteIngredientAsync(Ingredient ingredient)
+        public Task DeleteIngredientAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task DeleteIngredientTypeAsync(IngredientType ingredientType)
+        public Task DeleteIngredientTypeAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task DeleteMealAsync(Meal meal)
+        public Task DeleteMealAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task DeleteRecipeAsync(Recipe recipe)
+        public Task DeleteRecipeAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task DeleteRecipeTypeAsync(RecipeType type)
+        public Task DeleteRecipeTypeAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task DeleteShoppingListAsync(ShoppingList shoppingList)
+        public Task DeleteShoppingListAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task DeleteSupplyAsync(Supply supply)
+        public Task DeleteSupplyAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task GetIngredientAsync(Ingredient ingredient)
+        public Task GetIngredientAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task GetIngredientTypeAsync(IngredientType ingredientType)
+        public Task GetIngredientTypeAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task GetMealAsync(Meal meal)
+        public Task GetMealAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task GetRecipeAsync(Recipe recipe)
+        public Task GetRecipeAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task GetRecipeTypeAsync(RecipeType type)
+        public Task GetRecipeTypeAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task GetShoppingListAsync(ShoppingList shoppingList)
+        public Task GetShoppingListAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task GetSupplyAsync(Supply supply)
+        public Task GetSupplyAsync(int id)
         {
             throw new NotImplementedException();
         }
