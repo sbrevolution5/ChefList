@@ -25,7 +25,6 @@
 
   <ItemGroup>
     <Folder Include="Components\IngredientComponenets\" />
-    <Folder Include="Pages\IngredientPages\" />
     <Folder Include="Pages\SupplyPages\" />
   </ItemGroup>
 

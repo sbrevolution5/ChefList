@@ -1,0 +1,19 @@
+﻿@using MasterMealWA.Client.Services.Interfaces
+@inject IApiService _api
+<h3>IngredientIndex</h3>
+<MudList>
+
+    @foreach (var ingredient in Ingredients)
+    {
+        <MudListItem></MudListItem>
+    }
+</MudList>
+<MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" />
+@code {
+    public List<Ingredient> Ingredients { get; set; } = new();
+    protected override async Task OnInitializedAsync()
+    {
+        Ingredients = await _api.GetAllIngredientsAsync();
+        base.OnInitialized();
+    }
+}
