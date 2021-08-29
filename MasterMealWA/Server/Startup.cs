@@ -44,7 +44,7 @@ namespace MasterMealWA.Server
             services.AddControllersWithViews().AddJsonOptions(options=> 
             {
                 options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
-                options.JsonSerializerOptions.PropertyNamingPolicy = null;
+                options.JsonSerializerOptions.PropertyNamingPolicy=null;
             });
             services.AddRazorPages();
         }
