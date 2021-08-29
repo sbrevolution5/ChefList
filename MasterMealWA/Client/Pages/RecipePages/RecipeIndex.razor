@@ -26,6 +26,7 @@ else
             </MudCardContent>
         </MudCard>
     }
+    <MudFab Icon="@Icons.Material.Filled.Add" Color="Color.Primary" Label="Add Recipe" aria-label="add recipe" @onclick='()=>nav.NavigateTo("/recipe/create")' />
 }
 @code {
     private List<Recipe> recipes;
