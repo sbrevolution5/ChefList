@@ -25,7 +25,7 @@ namespace MasterMealWA.Shared.Models
         public string RecipeSource { get; set; } = "";
         public string RecipeSourceUrl { get; set; } = "";
         //Many to many, Not virtual!
-        public ICollection<Supply> Supplies { get; set; } = new List<Supply>();
+        public ICollection<Supply> Supplies { get; set; } = new HashSet<Supply>();
         [NotMapped]
         public float AvgRating
         {

@@ -35,7 +35,7 @@ namespace MasterMealWA.Server
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
-            services.AddIdentity<ApplicationUser,IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true).AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddIdentityServer()
@@ -53,10 +53,10 @@ namespace MasterMealWA.Server
             services.AddScoped<IRecipeService, RecipeService>();
             services.AddScoped<ISupplyService, SupplyService>();
 
-            services.AddControllersWithViews().AddJsonOptions(options=> 
+            services.AddControllersWithViews().AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
-                options.JsonSerializerOptions.PropertyNamingPolicy=null;
+                options.JsonSerializerOptions.PropertyNamingPolicy = null;
             });
             services.AddRazorPages();
         }
