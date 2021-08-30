@@ -105,7 +105,7 @@ namespace MasterMealWA.Server.Controllers
             //    await context.SaveChangesAsync();
             //    imageId = dBImage.Id;
             //}
-            //recipe.ImageId = imageId;
+            recipe.ImageId = 1;
             _context.Add(recipe);
             await _context.SaveChangesAsync();
             foreach (var step in recipe.Steps)
