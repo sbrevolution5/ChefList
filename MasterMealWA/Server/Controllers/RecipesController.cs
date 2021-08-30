@@ -106,10 +106,20 @@ namespace MasterMealWA.Server.Controllers
             //    imageId = dBImage.Id;
             //}
             recipe.ImageId = 1;
+            //var allSupplies = await _context.Supply.ToListAsync();
+            //var supplies = recipe.Supplies;
+            //recipe.Supplies.Clear();
+            //foreach (var sup in supplies)
+            //{
+            //    var thisSupply = allSupplies.Where(s => s.Id == sup.Id).FirstOrDefault();
+            //    thisSupply.Recipes.Add(recipe);
+            //    recipe.Supplies.Add(thisSupply);
+            //    _context.Update(thisSupply);
+            //}
             _context.Add(recipe);
             foreach (var ingredient in recipe.Ingredients)
             {
-                //ingredient.RecipeId = recipe.Id;
+                ingredient.RecipeId = recipe.Id;
                 if (ingredient.MeasurementType == MeasurementType.Volume)
                 {
                     ingredient.MassMeasurementUnit = null;

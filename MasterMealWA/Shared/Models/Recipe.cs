@@ -8,10 +8,6 @@ namespace MasterMealWA.Shared.Models
 {
     public class Recipe
     {
-        public Recipe()
-        {
-            this.Supplies = new HashSet<Supply>();
-        }
         public int Id { get; set; }
         public virtual ICollection<QIngredient> Ingredients { get; set; } = new HashSet<QIngredient>();
         public virtual ICollection<Step> Steps { get; set; } = new HashSet<Step>();
