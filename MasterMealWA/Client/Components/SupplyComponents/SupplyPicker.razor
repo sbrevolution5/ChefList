@@ -1,8 +1,8 @@
-﻿<MudSelect Label="Supply" T="Supply" @bind-Value="supply">
+﻿<MudSelect Label="Supply" T="int" @bind-Value="supply.Id">
     @foreach (var sup in supplyList)
     {
 
-    <MudSelectItem Value="sup">@sup.Name</MudSelectItem>
+    <MudSelectItem Value="sup.Id">@sup.Name</MudSelectItem>
     }
 </MudSelect>
 

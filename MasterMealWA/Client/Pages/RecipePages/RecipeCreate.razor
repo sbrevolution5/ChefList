@@ -68,7 +68,7 @@
             <MudCard>
                 <MudCardHeader>Supplies</MudCardHeader>
                 <MudCardContent>
-                    @foreach (var supply in recipe.Supplies)
+                    @foreach (Supply supply in recipe.Supplies)
                     {
                         <SupplyPicker supply="@supply" supplyList="@supplyList"/>
                         <button class="btn btn-danger" @onclick="(()=>recipe.Supplies.Remove(supply))">Remove</button>
