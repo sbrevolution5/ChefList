@@ -107,7 +107,7 @@ namespace MasterMealWA.Server.Controllers
             //}
             recipe.ImageId = 1;
             //var allSupplies = await _context.Supply.ToListAsync();
-            //var supplies = recipe.Supplies;
+            //List<Supply> supplies = recipe.Supplies.ToList();
             //recipe.Supplies.Clear();
             //foreach (var sup in supplies)
             //{

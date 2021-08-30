@@ -1,8 +1,8 @@
-﻿<MudSelect Label="Supply" T="int" @bind-Value="supply.Id">
-    @foreach (var sup in supplyList)
+﻿<MudSelect Label="Supply" T="Supply" @bind-Value="@supply" ToStringFunc="@converter">
+    @foreach (Supply sup in supplyList)
     {
 
-    <MudSelectItem Value="sup.Id">@sup.Name</MudSelectItem>
+    <MudSelectItem Value="sup"></MudSelectItem>
     }
 </MudSelect>
 
@@ -11,4 +11,5 @@
     public Supply supply { get; set; }
     [Parameter]
     public List<Supply> supplyList { get; set; }
+    Func<Supply, string> converter = s => s?.Name;
 }

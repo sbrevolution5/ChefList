@@ -70,7 +70,7 @@
                 <MudCardContent>
                     @foreach (Supply supply in recipe.Supplies)
                     {
-                        <SupplyPicker supply="@supply" supplyList="@supplyList"/>
+                        <SupplyPicker supply="supply" supplyList="supplyList"></SupplyPicker>
                         <button class="btn btn-danger" @onclick="(()=>recipe.Supplies.Remove(supply))">Remove</button>
                     }
                     <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Supplies.Add(new())" />
@@ -98,9 +98,11 @@
     public Recipe recipe { get; set; } = new();
     public List<RecipeType> Types { get; set; }
     public List<Ingredient> ingredients { get; set; }
+    public List<Supply> recipeSupplies { get; set; }
     public List<Supply> supplyList { get; set; }
     protected override async Task OnInitializedAsync()
     {
+        recipeSupplies = new List<Supply>();
         Types = await _api.GetAllRecipeTypesAsync();
         ingredients = await _api.GetAllIngredientsAsync();
         supplyList = await _api.GetAllSuppliesAsync();
@@ -108,6 +110,7 @@
     }
     public async Task CreateRecipeAsync()
     {
+        recipe.Supplies = recipeSupplies;
         await _api.CreateNewRecipeAsync(recipe);
     }
     IList<IBrowserFile> files = new List<IBrowserFile>();
