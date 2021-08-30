@@ -1,0 +1,14 @@
+﻿<MudSelect Label="Supply" T="Supply" @bind-Value="supply">
+    @foreach (var sup in supplyList)
+    {
+
+    <MudSelectItem Value="sup">@sup.Name</MudSelectItem>
+    }
+</MudSelect>
+
+@code {
+    [Parameter]
+    public Supply supply { get; set; }
+    [Parameter]
+    public List<Supply> supplyList { get; set; }
+}
