@@ -41,6 +41,7 @@ namespace MasterMealWA.Server.Controllers
         {
             var recipe = await _context.Recipe.Include(r => r.Steps)
                                               .Include(r => r.Supplies)
+                                              .ThenInclude(q=>q.Supply)
                                               .Include(r => r.Type)
                                               .Include(r => r.Ingredients)
                                               .ThenInclude(r => r.Ingredient)
@@ -140,6 +141,11 @@ namespace MasterMealWA.Server.Controllers
                     ingredient.Quantity = _measurementService.DecodeUnitMeasurement(ingredient.NumberOfUnits);
                 }
                 _context.Add(ingredient);
+            }
+            foreach (var supply in recipe.Supplies)
+            {
+                supply.RecipeId = recipe.Id;
+                _context.Add(supply);
             }
             foreach (var step in recipe.Steps)
             {

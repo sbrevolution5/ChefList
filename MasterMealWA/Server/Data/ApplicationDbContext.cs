@@ -30,6 +30,7 @@ namespace MasterMealWA.Server.Data
         public DbSet<Supply> Supply { get; set; }
         public DbSet<IngredientType> IngredientType { get; set; }
         public DbSet<DBImage> DBImage { get; set; }
+        public DbSet<QSupply> QSupply { get; set; }
         public DbSet<MasterMealWA.Shared.Models.Chef> Chef { get; set; }
         public DbSet<MasterMealWA.Shared.Models.ShoppingIngredient> ShoppingIngredient { get; set; }
         public DbSet<MasterMealWA.Shared.Models.ShoppingList> ShoppingList { get; set; }
