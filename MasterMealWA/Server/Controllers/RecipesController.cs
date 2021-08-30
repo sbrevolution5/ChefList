@@ -8,6 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using MasterMealWA.Server.Data;
 using MasterMealWA.Shared.Models;
 using Microsoft.AspNetCore.Authorization;
+using MasterMealWA.Shared.Enums;
+using MasterMealWA.Server.Services.Interfaces;
+using SixLabors.ImageSharp;
 
 namespace MasterMealWA.Server.Controllers
 {
@@ -16,10 +19,11 @@ namespace MasterMealWA.Server.Controllers
     public class RecipesController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-
-        public RecipesController(ApplicationDbContext context)
+        private readonly IMeasurementService _measurementService;
+        public RecipesController(ApplicationDbContext context, IMeasurementService measurementService)
         {
             _context = context;
+            _measurementService = measurementService;
         }
 
         // GET: api/Recipes
@@ -40,7 +44,7 @@ namespace MasterMealWA.Server.Controllers
                                               .Include(r => r.Type)
                                               .Include(r => r.Ingredients)
                                               .ThenInclude(r => r.Ingredient)
-                                              .FirstOrDefaultAsync(r=>r.Id == id);
+                                              .FirstOrDefaultAsync(r => r.Id == id);
 
             if (recipe == null)
             {
@@ -86,9 +90,54 @@ namespace MasterMealWA.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<Recipe>> PostRecipe(Recipe recipe)
         {
-            _context.Recipe.Add(recipe);
-            await _context.SaveChangesAsync();
 
+            //int imageId = 1;
+            //if (recipe.Image is not null)
+            //{
+            //    using var image = Image.Load(recipe.Image.OpenReadStream());
+            //    var imageBytes = await _fileService.ConvertFileToByteArrayAsync(image, imageFile.ContentType);
+            //    DBImage dBImage = new()
+            //    {
+            //        ContentType = imageFile.ContentType,
+            //        ImageData = imageBytes
+            //    };
+            //    context.Add(dBImage);
+            //    await context.SaveChangesAsync();
+            //    imageId = dBImage.Id;
+            //}
+            //recipe.ImageId = imageId;
+            _context.Add(recipe);
+            await _context.SaveChangesAsync();
+            foreach (var step in recipe.Steps)
+            {
+                step.RecipeId = recipe.Id;
+                _context.Add(step);
+            }
+            foreach (var ingredient in recipe.Ingredients)
+            {
+                ingredient.RecipeId = recipe.Id;
+                if (ingredient.MeasurementType == MeasurementType.Volume)
+                {
+                    ingredient.MassMeasurementUnit = null;
+                    ingredient.NumberOfUnits = _measurementService.EncodeVolumeMeasurement(ingredient.QuantityNumber, ingredient.Fraction, ingredient.VolumeMeasurementUnit.Value);
+                    ingredient.Quantity = _measurementService.DecodeVolumeMeasurement(ingredient.NumberOfUnits);
+                }
+                else if (ingredient.MeasurementType == MeasurementType.Mass)
+                {
+                    ingredient.VolumeMeasurementUnit = null;
+                    ingredient.NumberOfUnits = _measurementService.EncodeMassMeasurement(ingredient.QuantityNumber, ingredient.Fraction, ingredient.MassMeasurementUnit.Value);
+                    ingredient.Quantity = _measurementService.DecodeMassMeasurement(ingredient.NumberOfUnits);
+                }
+                else if (ingredient.MeasurementType == MeasurementType.Count)
+                {
+                    ingredient.VolumeMeasurementUnit = null;
+                    ingredient.MassMeasurementUnit = null;
+                    ingredient.NumberOfUnits = _measurementService.EncodeUnitMeasurement(ingredient.QuantityNumber, ingredient.Fraction);
+                    ingredient.Quantity = _measurementService.DecodeUnitMeasurement(ingredient.NumberOfUnits);
+                }
+                _context.Add(ingredient);
+            }
+            await _context.SaveChangesAsync();
             return CreatedAtAction("GetRecipe", new { id = recipe.Id }, recipe);
         }
 
