@@ -1,0 +1,51 @@
+﻿@page "/supplies"
+@inject IApiService _api
+@inject IDialogService _dialogService
+<h3>Supplies</h3>
+@if (Supplies is null)
+{
+    <MudText>Loading...</MudText>
+}
+else
+{
+    <MudList>
+
+        @foreach (var supply in Supplies)
+        {
+            <MudListItem>
+                @supply.Name
+            <MudButtonGroup>
+                <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" OnClick="@(()=>EditSupply(supply))"></MudIconButton>
+            </MudButtonGroup>
+        </MudListItem>
+    }
+    </MudList>
+    <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" OnClick="NewSupply" />
+}
+@code {
+    public List<Supply> Supplies { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        Supplies = await _api.GetAllSuppliesAsync();
+        base.OnInitialized();
+    }
+    public async Task NewSupply()
+    {
+        var dialog = _dialogService.Show<IngredientCreate>("New Supply");
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            Supplies = await _api.GetAllSuppliesAsync();
+        }
+    }
+    public async Task EditSupply(Supply supply)
+    {
+        var parameters = new DialogParameters { ["Supply"] = supply};
+        var dialog = _dialogService.Show<IngredientEdit>("Edit Supply", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            Supplies = await _api.GetAllSuppliesAsync();
+        }
+    }
+}
