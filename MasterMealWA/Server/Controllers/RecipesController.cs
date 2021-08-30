@@ -107,15 +107,9 @@ namespace MasterMealWA.Server.Controllers
             //}
             recipe.ImageId = 1;
             _context.Add(recipe);
-            await _context.SaveChangesAsync();
-            foreach (var step in recipe.Steps)
-            {
-                step.RecipeId = recipe.Id;
-                _context.Add(step);
-            }
             foreach (var ingredient in recipe.Ingredients)
             {
-                ingredient.RecipeId = recipe.Id;
+                //ingredient.RecipeId = recipe.Id;
                 if (ingredient.MeasurementType == MeasurementType.Volume)
                 {
                     ingredient.MassMeasurementUnit = null;
@@ -136,6 +130,11 @@ namespace MasterMealWA.Server.Controllers
                     ingredient.Quantity = _measurementService.DecodeUnitMeasurement(ingredient.NumberOfUnits);
                 }
                 _context.Add(ingredient);
+            }
+            foreach (var step in recipe.Steps)
+            {
+                step.RecipeId = recipe.Id;
+                _context.Add(step);
             }
             await _context.SaveChangesAsync();
             return CreatedAtAction("GetRecipe", new { id = recipe.Id }, recipe);
