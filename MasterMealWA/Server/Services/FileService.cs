@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Http;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 
-namespace JamesonBugTracker.Services
+namespace MasterMealWA.Server.Services
 {
 
     public class FileService : IFileService

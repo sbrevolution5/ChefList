@@ -1,7 +1,7 @@
 ﻿@page "/recipes/create"
 @inject HttpClient Http
 @inject IApiService _api
-<EditForm Model="@recipe" OnValidSubmit="CreateRecipe">
+<EditForm Model="@recipe" OnValidSubmit="CreateRecipeAsync">
     <DataAnnotationsValidator />
     <MudGrid>
 
@@ -59,7 +59,7 @@
                 <MudCardContent>
                     @foreach (var ingredient in recipe.Ingredients)
                     {
-                        <QIngredientCreate qIngredient="@ingredient" ingredientList="ingredients"/>
+                        <QIngredientCreate qIngredient="@ingredient" ingredientList="ingredients" />
                         <button class="btn btn-danger" @onclick="(()=>recipe.Ingredients.Remove(ingredient))">Remove</button>
                     }
                     <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Ingredients.Add(new())" />
@@ -70,7 +70,7 @@
                 <MudCardContent>
                     @foreach (var supply in recipe.Supplies)
                     {
-                        @*<SupplyPicker supply="@supply" />*@
+                        <SupplyPicker supply="supply" supplyList="supplyList"></SupplyPicker>
                         <button class="btn btn-danger" @onclick="(()=>recipe.Supplies.Remove(supply))">Remove</button>
                     }
                     <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Supplies.Add(new())" />
@@ -94,20 +94,20 @@
     </MudGrid>
     <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Save Recipe</MudButton>
 </EditForm>
-
-@code {
+@code{
     public Recipe recipe { get; set; } = new();
     public List<RecipeType> Types { get; set; }
     public List<Ingredient> ingredients { get; set; }
+    public List<Supply> supplyList { get; set; }
     protected override async Task OnInitializedAsync()
     {
         Types = await _api.GetAllRecipeTypesAsync();
         ingredients = await _api.GetAllIngredientsAsync();
-
+        supplyList = await _api.GetAllSuppliesAsync();
     }
-    public void CreateRecipe()
+    public async Task CreateRecipeAsync()
     {
-        throw new NotImplementedException();
+        await _api.CreateNewRecipeAsync(recipe);
     }
     IList<IBrowserFile> files = new List<IBrowserFile>();
     private void UploadFiles(InputFileChangeEventArgs e)
@@ -117,9 +117,5 @@
             files.Add(file);
         }
         //TODO upload the files to the server
-    }
-    private async Task OnValidSubmit(EditContext context)
-    {
-        await Http.PostAsJsonAsync<Recipe>("Api/recipes",recipe);
     }
 }

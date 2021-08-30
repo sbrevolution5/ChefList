@@ -263,7 +263,7 @@ namespace MasterMealWA.Server.Data
             beefIng.Add(NewQIngredient("Hot Sauce", 1, Fraction.NoFraction, VolumeMeasurementUnit.Teaspoon, ing, beefTostada.Id));
             beefIng.Add(NewQIngredient("Chili Powder", 1, Fraction.NoFraction, VolumeMeasurementUnit.Teaspoon, ing, beefTostada.Id));
             beefIng.Add(NewQIngredient("Southwest Spice Blend", 1, Fraction.NoFraction, VolumeMeasurementUnit.Tablespoon, ing, beefTostada.Id));
-            var beefSupplies = new List<Supply>();
+            var beefSupplies = new List<QSupply>();
             beefSupplies.Add(await AddSupplyAsync("Large Pan", sup, beefTostada.Id, context));
             beefSupplies.Add(await AddSupplyAsync("Baking Sheet", sup, beefTostada.Id, context));
             beefSupplies.Add(await AddSupplyAsync("Small Bowl", sup, beefTostada.Id, context));
@@ -317,7 +317,7 @@ namespace MasterMealWA.Server.Data
             anchIng.Add(NewQIngredient("Ketchup", 2, Fraction.NoFraction, VolumeMeasurementUnit.Tablespoon, ing, anchoBBQ.Id));
             anchIng.Add(NewQIngredient("Ancho Chili Powder", 1, Fraction.NoFraction, VolumeMeasurementUnit.Teaspoon, ing, anchoBBQ.Id));
             anchIng.Add(NewQIngredient("Cornstarch", 1, Fraction.NoFraction, VolumeMeasurementUnit.Tablespoon, ing, anchoBBQ.Id));
-            var anchSupplies = new List<Supply>();
+            var anchSupplies = new List<QSupply>();
             anchSupplies.Add(await AddSupplyAsync("Large Pan", sup, anchoBBQ.Id, context));
             anchSupplies.Add(await AddSupplyAsync("Baking Sheet", sup, anchoBBQ.Id, context));
             anchSupplies.Add(await AddSupplyAsync("Small Bowl", sup, anchoBBQ.Id, context));
@@ -414,11 +414,16 @@ namespace MasterMealWA.Server.Data
             return step;
         }
 
-        private static async Task<Supply> AddSupplyAsync(string v, List<Supply> sup, int rId, ApplicationDbContext context)
+        private static async Task<QSupply> AddSupplyAsync(string v, List<Supply> sup, int rId, ApplicationDbContext context)
         {
-            Supply supply = sup.Where(s => s.Name == v).FirstOrDefault();
-            Recipe rec = await context.Recipe.Where(r => r.Id == rId).FirstOrDefaultAsync();
-            supply.Recipes.Add(rec);
+            Supply rootSupply = sup.Where(s => s.Name == v).FirstOrDefault();
+            QSupply supply = new()
+            {
+                Quantity = 1,
+                SupplyId = rootSupply.Id,
+                RecipeId = rId
+            };
+
             await context.SaveChangesAsync();
             return supply;
         }

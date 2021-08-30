@@ -6,8 +6,8 @@
             <MudSelectItem Value="@ingredient.Id">@ingredient.Name</MudSelectItem>
         }
     </MudSelect>
-    <MudNumericField Label="Number" T="int"></MudNumericField>
-    <MudSelect Label="Fraction" T="Fraction">
+    <MudNumericField Label="Number" T="int" @bind-Value="qingredient.QuantityNumber"></MudNumericField>
+    <MudSelect Label="Fraction" T="Fraction" @bind-Value="qingredient.Fraction">
         @foreach (Fraction frac in Enum.GetValues(typeof(Fraction)))
         {
             <MudSelectItem Value="@frac">@frac</MudSelectItem>
@@ -15,8 +15,8 @@
     </MudSelect>
     @if (measurementType == MeasurementType.Volume)
     {
-        <MudSelect Label="Volume Measurement" T="VolumeMeasurementUnit">
-            @foreach (VolumeMeasurementUnit measure in Enum.GetValues(typeof(VolumeMeasurementUnit)))
+        <MudSelect Label="Volume Measurement" T="VolumeMeasurementUnit?" @bind-Value="qingredient.VolumeMeasurementUnit">
+            @foreach (VolumeMeasurementUnit? measure in Enum.GetValues(typeof(VolumeMeasurementUnit)))
             {
                 <MudSelectItem Value="@measure">@measure</MudSelectItem>
             }
@@ -24,8 +24,8 @@
     }
     else if (measurementType == MeasurementType.Mass)
     {
-        <MudSelect Label="Mass Measurement" T="MassMeasurementUnit">
-            @foreach (MassMeasurementUnit measure in Enum.GetValues(typeof(MassMeasurementUnit)))
+        <MudSelect Label="Mass Measurement" T="MassMeasurementUnit?" @bind-Value="qingredient.MassMeasurementUnit">
+            @foreach (MassMeasurementUnit? measure in Enum.GetValues(typeof(MassMeasurementUnit)))
             {
                 <MudSelectItem Value="@measure">@measure</MudSelectItem>
             }
