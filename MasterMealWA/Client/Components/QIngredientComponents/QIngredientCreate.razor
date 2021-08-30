@@ -8,7 +8,7 @@
     </MudSelect>
     <MudNumericField Label="Number" T="int"></MudNumericField>
     <MudSelect Label="Fraction" T="Fraction">
-        @foreach (var frac in Enum.GetValues(typeof(Fraction)))
+        @foreach (Fraction frac in Enum.GetValues(typeof(Fraction)))
         {
             <MudSelectItem Value="@frac">@frac</MudSelectItem>
         }
@@ -16,7 +16,7 @@
     @if (measurementType == MeasurementType.Volume)
     {
         <MudSelect Label="Volume Measurement" T="VolumeMeasurementUnit">
-            @foreach (var measure in Enum.GetValues(typeof(VolumeMeasurementUnit)))
+            @foreach (VolumeMeasurementUnit measure in Enum.GetValues(typeof(VolumeMeasurementUnit)))
             {
                 <MudSelectItem Value="@measure">@measure</MudSelectItem>
             }
@@ -25,7 +25,7 @@
     else if (measurementType == MeasurementType.Mass)
     {
         <MudSelect Label="Mass Measurement" T="MassMeasurementUnit">
-            @foreach (var measure in Enum.GetValues(typeof(MassMeasurementUnit)))
+            @foreach (MassMeasurementUnit measure in Enum.GetValues(typeof(MassMeasurementUnit)))
             {
                 <MudSelectItem Value="@measure">@measure</MudSelectItem>
             }

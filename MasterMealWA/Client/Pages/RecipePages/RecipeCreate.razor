@@ -1,5 +1,6 @@
 ﻿@page "/recipes/create"
 @inject HttpClient Http
+@inject IApiService _api
 <EditForm Model="@recipe" OnValidSubmit="CreateRecipe">
     <DataAnnotationsValidator />
     <MudGrid>
@@ -58,7 +59,7 @@
                 <MudCardContent>
                     @foreach (var ingredient in recipe.Ingredients)
                     {
-                        @*<QIngredientCreate qIngredient="@ingredient" />*@
+                        <QIngredientCreate qIngredient="@ingredient" ingredientList="ingredients"/>
                         <button class="btn btn-danger" @onclick="(()=>recipe.Ingredients.Remove(ingredient))">Remove</button>
                     }
                     <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Ingredients.Add(new())" />
@@ -97,14 +98,12 @@
 @code {
     public Recipe recipe { get; set; } = new();
     public List<RecipeType> Types { get; set; }
+    public List<Ingredient> ingredients { get; set; }
     protected override async Task OnInitializedAsync()
     {
-        var options = new JsonSerializerOptions()
-        {
-            ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve,
-            PropertyNamingPolicy = null
-        };
-        Types = await Http.GetFromJsonAsync<List<RecipeType>>("Api/RecipeTypes", options);
+        Types = await _api.GetAllRecipeTypesAsync();
+        ingredients = await _api.GetAllIngredientsAsync();
+
     }
     public void CreateRecipe()
     {
@@ -120,7 +119,7 @@
         //TODO upload the files to the server
     }
     private async Task OnValidSubmit(EditContext context)
-        {
+    {
         await Http.PostAsJsonAsync<Recipe>("Api/recipes",recipe);
-        }
+    }
 }
