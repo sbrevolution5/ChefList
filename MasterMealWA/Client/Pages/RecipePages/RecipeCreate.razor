@@ -83,8 +83,8 @@
                 <MudCardContent>
                     @foreach (var step in recipe.Steps)
                     {
-                        <MudTextField Label="Text Step" HelperText="What do you do in this step?" @bind-Value="step.Text" For="@(()=> step.Text)" />
-                        <button class="btn btn-danger" @onclick="(()=>recipe.Steps.Remove(step))">Remove</button>
+                        <StepCreate step="step"></StepCreate>
+                        <MudButton class="btn btn-danger" @onclick="(()=>recipe.Steps.Remove(step))">Remove</MudButton>
                     }
                     <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Steps.Add(new())" />
 
