@@ -110,18 +110,6 @@
         await _api.CreateNewRecipeAsync(recipe);
     }
     IList<IBrowserFile> files = new List<IBrowserFile>();
-    //private void FillInSupplyId(Recipe recipe)
-    //{
-    //    List<Supply> newList = new();
-    //    foreach (var supply in recipe.Supplies)
-    //    {
-    //        if (supply.Name is null)
-    //        {
-    //            newList.Add(supplyList.Where(s => s.Id == supply.Id).First());
-    //        }
-    //    }
-    //    recipe.Supplies = newList;
-    //}
     private void UploadFiles(InputFileChangeEventArgs e)
     {
         foreach (var file in e.GetMultipleFiles())

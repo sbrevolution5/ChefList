@@ -92,7 +92,7 @@ namespace MasterMealWA.Server.Controllers
         public async Task<ActionResult<Recipe>> PostRecipe(Recipe recipe)
         {
 
-            //int imageId = 1;
+            int imageId = 1;
             //if (recipe.Image is not null)
             //{
             //    using var image = Image.Load(recipe.Image.OpenReadStream());
@@ -106,17 +106,7 @@ namespace MasterMealWA.Server.Controllers
             //    await context.SaveChangesAsync();
             //    imageId = dBImage.Id;
             //}
-            recipe.ImageId = 1;
-            //var allSupplies = await _context.Supply.ToListAsync();
-            //List<Supply> supplies = recipe.Supplies.ToList();
-            //recipe.Supplies.Clear();
-            //foreach (var sup in supplies)
-            //{
-            //    var thisSupply = allSupplies.Where(s => s.Id == sup.Id).FirstOrDefault();
-            //    thisSupply.Recipes.Add(recipe);
-            //    recipe.Supplies.Add(thisSupply);
-            //    _context.Update(thisSupply);
-            //}
+            recipe.ImageId = imageId;
             _context.Add(recipe);
             foreach (var ingredient in recipe.Ingredients)
             {
