@@ -1,0 +1,7 @@
+﻿<MudTextField Label="Step Text" @bind-Value="@step.Text"></MudTextField>
+<MudNumericField Label="Step number" @bind-Value="step.StepNumber"></MudNumericField>
+
+@code {
+    [Parameter]
+    public Step step { get; set;}
+}
