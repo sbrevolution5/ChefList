@@ -96,43 +96,43 @@ namespace MasterMealWA.Client.Services
 
         public async Task<List<Ingredient>> GetAllIngredientsAsync()
         {
-            var list = await _http.GetFromJsonAsync<List<Ingredient>>("api/ingredients");
+            var list = await _http.GetFromJsonAsync<List<Ingredient>>("api/ingredients",_options);
             return list;
         }
 
         public async Task<List<IngredientType>> GetAllIngredientTypesAsync()
         {
-            var list = await _http.GetFromJsonAsync<List<IngredientType>>("api/ingredientTypes");
+            var list = await _http.GetFromJsonAsync<List<IngredientType>>("api/ingredientTypes", _options);
             return list;
         }
 
         public async Task<List<Meal>> GetAllMealsAsync()
         {
-            var list = await _http.GetFromJsonAsync<List<Meal>>("api/meals");
+            var list = await _http.GetFromJsonAsync<List<Meal>>("api/meals",_options);
             return list;
         }
 
         public async Task<List<Recipe>> GetAllRecipesAsync()
         {
-            var list = await _http.GetFromJsonAsync<List<Recipe>>("api/recipes");
+            var list = await _http.GetFromJsonAsync<List<Recipe>>("api/recipes", _options);
             return list;
         }
 
         public async Task<List<RecipeType>> GetAllRecipeTypesAsync()
         {
-            var list = await _http.GetFromJsonAsync<List<RecipeType>>("api/recipeTypes");
+            var list = await _http.GetFromJsonAsync<List<RecipeType>>("api/recipeTypes", _options);
             return list;
         }
 
         public async Task<List<ShoppingList>> GetAllShoppingListsAsync()
         {
-            var list = await _http.GetFromJsonAsync<List<ShoppingList>>("api/shoppingLists");
+            var list = await _http.GetFromJsonAsync<List<ShoppingList>>("api/shoppingLists", _options);
             return list;
         }
 
         public async Task<List<Supply>> GetAllSuppliesAsync()
         {
-            var list = await _http.GetFromJsonAsync<List<Supply>>("api/supplies");
+            var list = await _http.GetFromJsonAsync<List<Supply>>("api/supplies", _options);
             return list;
         }
 

@@ -1,0 +1,56 @@
+﻿<h3>QIngredientCreate</h3>
+<MudForm>
+    <MudSelect Value="qingredient.IngredientId" T="int" ValueChanged="@((int id)=>MeasureChange(id))">
+        @foreach (var ingredient in ingredientList)
+        {
+            <MudSelectItem Value="@ingredient.Id">@ingredient.Name</MudSelectItem>
+        }
+    </MudSelect>
+    <MudNumericField Label="Number" T="int"></MudNumericField>
+    <MudSelect Label="Fraction" T="Fraction">
+        @foreach (Fraction frac in Enum.GetValues(typeof(Fraction)))
+        {
+            <MudSelectItem Value="@frac">@frac</MudSelectItem>
+        }
+    </MudSelect>
+    @if (measurementType == MeasurementType.Volume)
+    {
+        <MudSelect Label="Volume Measurement" T="VolumeMeasurementUnit">
+            @foreach (VolumeMeasurementUnit measure in Enum.GetValues(typeof(VolumeMeasurementUnit)))
+            {
+                <MudSelectItem Value="@measure">@measure</MudSelectItem>
+            }
+        </MudSelect>
+    }
+    else if (measurementType == MeasurementType.Mass)
+    {
+        <MudSelect Label="Mass Measurement" T="MassMeasurementUnit">
+            @foreach (MassMeasurementUnit measure in Enum.GetValues(typeof(MassMeasurementUnit)))
+            {
+                <MudSelectItem Value="@measure">@measure</MudSelectItem>
+            }
+        </MudSelect>
+    }
+    else if (measurementType == MeasurementType.Count)
+    {
+
+    }
+    else
+    {
+        <MudText>Please select an ingredient</MudText>
+    }
+</MudForm>
+@code {
+    [Parameter]
+    public List<Ingredient> ingredientList { get; set; }
+    [Parameter]
+    public QIngredient qingredient { get; set; }
+    public MeasurementType measurementType { get; set; }
+    public void MeasureChange(int id)
+    {
+        qingredient.IngredientId = id;
+        measurementType = ingredientList.FirstOrDefault(i => i.Id == id).MeasurementType;
+        qingredient.MeasurementType = measurementType;
+        return;
+    }
+}

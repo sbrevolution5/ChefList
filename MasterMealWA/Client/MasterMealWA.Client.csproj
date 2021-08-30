@@ -23,4 +23,8 @@
     <ProjectReference Include="..\Shared\MasterMealWA.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Pages\SupplyPages\" />
+  </ItemGroup>
+
 </Project>
