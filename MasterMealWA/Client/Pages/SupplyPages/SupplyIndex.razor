@@ -31,7 +31,7 @@ else
     }
     public async Task NewSupply()
     {
-        var dialog = _dialogService.Show<IngredientCreate>("New Supply");
+        var dialog = _dialogService.Show<SupplyCreate>("New Supply");
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
@@ -41,7 +41,7 @@ else
     public async Task EditSupply(Supply supply)
     {
         var parameters = new DialogParameters { ["Supply"] = supply};
-        var dialog = _dialogService.Show<IngredientEdit>("Edit Supply", parameters);
+        var dialog = _dialogService.Show<SupplyEdit>("Edit Supply", parameters);
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
