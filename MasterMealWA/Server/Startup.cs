@@ -1,5 +1,7 @@
 using MasterMealWA.Server.Data;
 using MasterMealWA.Server.Models;
+using MasterMealWA.Server.Services;
+using MasterMealWA.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -40,6 +42,15 @@ namespace MasterMealWA.Server
 
             services.AddAuthentication()
                 .AddIdentityServerJwt();
+            services.AddScoped<IMeasurementService, MeasurementService>();
+            services.AddScoped<IFileService, FileService>();
+            services.AddScoped<IIngredientService, IngredientService>();
+            services.AddScoped<ICommentService, CommentService>();
+            services.AddScoped<IRatingService, RatingService>();
+            services.AddScoped<IShoppingService, ShoppingService>();
+            services.AddScoped<IMealService, MealService>();
+            services.AddScoped<IRecipeService, RecipeService>();
+            services.AddScoped<ISupplyService, SupplyService>();
 
             services.AddControllersWithViews().AddJsonOptions(options=> 
             {
