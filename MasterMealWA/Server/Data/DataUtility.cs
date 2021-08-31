@@ -436,6 +436,7 @@ namespace MasterMealWA.Server.Data
                 IngredientId = ingId,
                 MeasurementType = MeasurementType.Count,
                 QuantityNumber = count,
+                NumberOfUnits = _measurementService.EncodeUnitMeasurement(count, Fraction.NoFraction)
             };
             qing.RecipeId = rId;
             return qing;

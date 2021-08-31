@@ -1,0 +1,37 @@
+﻿@page "/ShoppingLists"
+@inject IApiService _api
+@inject IDialogService _dialogService
+
+<MudText Typo="Typo.h1">Shopping lists</MudText>
+@if (shoppingLists is null)
+{
+    <MudText>Loading...</MudText>
+}
+else
+{
+<MudList>
+    @foreach (var item in shoppingLists)
+    {
+        <MudListItem>@item.Name</MudListItem>
+        <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Icon="@Icons.Material.Filled.List" Link=@($"shoppinglists/details/{item.Id}")></MudIconButton>
+    }
+</MudList>
+}
+<MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" OnClick="NewList" />
+@code {
+    public List<ShoppingList> shoppingLists { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        shoppingLists = await _api.GetAllShoppingListsAsync();
+    }
+    public async Task NewList()
+    {
+        var dialog = _dialogService.Show<ListCreate>("New List");
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            shoppingLists = await _api.GetAllShoppingListsAsync();
+        }
+    }
+
+}

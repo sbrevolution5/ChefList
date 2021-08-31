@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MasterMealWA.Server.Data;
 using MasterMealWA.Shared.Models;
+using MasterMealWA.Shared.Models.Dtos;
+using MasterMealWA.Server.Services.Interfaces;
 
 namespace MasterMealWA.Server.Controllers
 {
@@ -15,10 +17,12 @@ namespace MasterMealWA.Server.Controllers
     public class ShoppingListsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly IShoppingService _shoppingService;
 
-        public ShoppingListsController(ApplicationDbContext context)
+        public ShoppingListsController(ApplicationDbContext context, IShoppingService shoppingService)
         {
             _context = context;
+            _shoppingService = shoppingService;
         }
 
         // GET: api/ShoppingLists
@@ -32,7 +36,7 @@ namespace MasterMealWA.Server.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ShoppingList>> GetShoppingList(int id)
         {
-            var shoppingList = await _context.ShoppingList.FindAsync(id);
+            var shoppingList = await _context.ShoppingList.Include(l=> l.ShoppingIngredients).ThenInclude(s=>s.Ingredient).Where(l => l.Id == id).FirstOrDefaultAsync();
 
             if (shoppingList == null)
             {
@@ -76,12 +80,11 @@ namespace MasterMealWA.Server.Controllers
         // POST: api/ShoppingLists
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<ShoppingList>> PostShoppingList(ShoppingList shoppingList)
+        public async Task<ActionResult<ShoppingList>> PostShoppingList(ListCreateDto shoppingList)
         {
-            _context.ShoppingList.Add(shoppingList);
-            await _context.SaveChangesAsync();
+            var list = await _shoppingService.CreateShoppingListForDateRangeAsync(shoppingList.EndDate, shoppingList.StartDate);
 
-            return CreatedAtAction("GetShoppingList", new { id = shoppingList.Id }, shoppingList);
+            return CreatedAtAction("GetShoppingList", new { id = list.Id }, list);
         }
 
         // DELETE: api/ShoppingLists/5

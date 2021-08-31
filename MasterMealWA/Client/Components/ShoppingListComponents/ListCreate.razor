@@ -1,0 +1,33 @@
+﻿@inject IApiService _api
+@using MasterMealWA.Shared.Models.Dtos
+<MudDialog>
+    <DialogContent>
+        <MudDatePicker Label="Start Date" HelperText="The first date you are shopping for" @bind-Date="startDate"></MudDatePicker>
+        <MudDatePicker Label="End Date" HelperText="The last date you are shopping for." @bind-Date="endDate"></MudDatePicker>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Success" OnClick="CreateList">Create</MudButton>
+    </DialogActions>
+</MudDialog>
+@code {
+    [CascadingParameter]
+    public MudDialogInstance MudDialog { get; set; }
+    public ShoppingList list { get; set; } = new();
+    public DateTime? startDate { get; set; } = DateTime.Today;
+    public DateTime? endDate { get; set; } = DateTime.Today.AddDays(7);
+    public void Cancel()
+    {
+        MudDialog.Cancel();
+    }
+    public async Task CreateList()
+    {
+        ListCreateDto dto = new()
+        {
+            StartDate = startDate.Value,
+            EndDate = endDate.Value
+        };
+        await _api.CreateNewShoppingListAsync(dto);
+        MudDialog.Close(DialogResult.Ok(dto));
+    }
+}

@@ -30,6 +30,7 @@ namespace MasterMealWA.Server.Services
                                                   .Where(m => m.Date >= StartDate && m.Date <= EndDate)
                                                   .ToListAsync();
             ShoppingList list = CreateShoppingListFromMealsAsync(meals);
+            list.Name = $"Meals before {EndDate.ToShortDateString()}";
             _context.Add(list);
             await _context.SaveChangesAsync();
             return list;
@@ -63,10 +64,10 @@ namespace MasterMealWA.Server.Services
         private ShoppingIngredient CreateOneShoppingIngredientFromMultipleQIngredients(List<QIngredient> listOfOneIngredient)
         {
             List<string> notes = new();
-            int totalQuantity = 0; //TODO this needs to be changed to correct measurement
+            int totalQuantity = 0;
             foreach (var qingredient in listOfOneIngredient)
             {
-                totalQuantity +=qingredient.NumberOfUnits;
+                totalQuantity += qingredient.NumberOfUnits;
                 //If string has Notes (it always has shopping notes due to quantity)
                 if (!string.IsNullOrWhiteSpace(qingredient.Notes) )
                 {
@@ -85,14 +86,14 @@ namespace MasterMealWA.Server.Services
             if (measure == MeasurementType.Volume)
             {
 
-                result.QuantityString = _measurementService.DecodeVolumeMeasurement(totalQuantity);
+                result.QuantityString = _measurementService.DecodeVolumeMeasurement(totalQuantity) + " " + ingredient.Name;
             }else if (measure == MeasurementType.Mass)
             {
-                result.QuantityString = _measurementService.DecodeVolumeMeasurement(totalQuantity);
+                result.QuantityString = _measurementService.DecodeVolumeMeasurement(totalQuantity) + " " + ingredient.Name;
             }
             else if (measure == MeasurementType.Count)
             {
-                result.QuantityString = $"{totalQuantity} {ingredient.Name}";
+                result.QuantityString = $"{_measurementService.DecodeUnitMeasurement(totalQuantity)} {ingredient.Name}";
             }
             _context.Add(result);
             return result;
