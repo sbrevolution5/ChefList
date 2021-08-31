@@ -1,0 +1,26 @@
+﻿@page "/ShoppingLists"
+@inject IApiService _api
+
+<MudText Typo="Typo.h1">Shopping lists</MudText>
+@if (shoppingLists is null)
+{
+    <MudText>Loading...</MudText>
+}
+else
+{
+<MudList>
+    @foreach (var item in shoppingLists)
+    {
+        <MudListItem>@item.Name</MudListItem>
+        <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Icon="@Icons.Material.Filled.List" Link=@($"shoppinglists/details/{item.Id}")></MudIconButton>
+    }
+</MudList>
+}
+@code {
+    public List<ShoppingList> shoppingLists { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        shoppingLists = await _api.GetAllShoppingListsAsync();
+    }
+
+}

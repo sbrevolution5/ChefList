@@ -30,6 +30,7 @@ namespace MasterMealWA.Server.Services
                                                   .Where(m => m.Date >= StartDate && m.Date <= EndDate)
                                                   .ToListAsync();
             ShoppingList list = CreateShoppingListFromMealsAsync(meals);
+            list.Name = $"Meals before {EndDate.ToShortDateString()}";
             _context.Add(list);
             await _context.SaveChangesAsync();
             return list;
