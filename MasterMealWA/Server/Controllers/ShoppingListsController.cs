@@ -82,10 +82,9 @@ namespace MasterMealWA.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<ShoppingList>> PostShoppingList(ListCreateDto shoppingList)
         {
-            _context.ShoppingList.Add(shoppingList);
-            await _context.SaveChangesAsync();
+            var list = await _shoppingService.CreateShoppingListForDateRangeAsync(shoppingList.EndDate, shoppingList.StartDate);
 
-            return CreatedAtAction("GetShoppingList", new { id = shoppingList.Id }, shoppingList);
+            return CreatedAtAction("GetShoppingList", new { id = list.Id }, list);
         }
 
         // DELETE: api/ShoppingLists/5
