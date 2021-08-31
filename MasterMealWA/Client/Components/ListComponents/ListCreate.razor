@@ -1,5 +1,11 @@
-﻿<h3>ListCreate</h3>
+﻿@inject IApiService _api
 
 @code {
+    public ShoppingList list { get; set; } = new();
+    public DateTime? startDate { get; set; } 
+    public DateTime? endDate { get; set; }
+    public void CreateList()
+        {
 
+        }
 }
