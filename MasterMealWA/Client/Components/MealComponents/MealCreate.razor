@@ -1,0 +1,51 @@
+﻿@inject IApiService _api
+<h3>MealCreate</h3>
+@if (recipes == null || meal == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+
+    <EditForm Model="@meal">
+        <div class="row">
+            <div class="col">
+                <label>Date of Meal</label>
+                <InputDate @bind-Value="meal.Date" class="form-control">
+
+                </InputDate>
+                <label>Recipe</label>
+                <InputSelect @bind-Value="meal.RecipeId" class="form-control selectpicker">
+                    <option value="">Select a Recipe</option>
+                    @foreach (var recipe in recipes)
+                        {
+                        <option value="@recipe.Id">@recipe.Name</option>
+                        }
+                </InputSelect>
+
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col">
+
+                <button type="submit" class="btn btn-success">Schedule Meal</button>
+            </div>
+        </div>
+    </EditForm>
+}
+@code {
+    [Parameter]
+    public Recipe recipe { get; set; }
+    private Meal meal;
+    private List<Recipe> recipes;
+    protected override async Task OnInitializedAsync()
+    {
+        meal = new()
+        {
+            RecipeId = recipe.Id,
+            Date = DateTime.Today
+        };
+        recipes = await _api.GetAllRecipesAsync();
+    }
+}

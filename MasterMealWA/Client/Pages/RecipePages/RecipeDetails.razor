@@ -1,5 +1,7 @@
 ﻿@page "/recipes/details/{id}"
 @inject HttpClient Http
+@inject IDialogService _dialogService
+
 <MudText Typo="Typo.h1">Recipe</MudText>
 @if (recipe is null)
 {
@@ -13,7 +15,7 @@ else
     <MudText>@recipe.Name</MudText>
     <MudText>@recipe.Description</MudText>
     <MudList>
-        @foreach (var step in recipe.Steps.OrderBy(s=>s.StepNumber))
+        @foreach (var step in recipe.Steps.OrderBy(s => s.StepNumber))
         {
             <MudListItem>
                 @step.Text
@@ -47,6 +49,15 @@ else
     [Parameter]
     public string Id { get; set; }
     private Recipe recipe;
+    public async Task AddMeal()
+    {
+        var dialog = _dialogService.Show<MealCreate>("New Ingredient");
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            Ingredients = await _api.GetAllIngredientsAsync();
+        }
+    }
     protected override async Task OnInitializedAsync()
     {
         var options = new JsonSerializerOptions()
