@@ -28,35 +28,34 @@ namespace MasterMealWA.Server.Services
                                                   .ThenInclude(q => q.Ingredient)
                                                   .Where(m => m.Date >= StartDate && m.Date <= EndDate)
                                                   .ToListAsync();
-            ShoppingList list = await CreateShoppingListFromMealsAsync(meals);
+            ShoppingList list = CreateShoppingListFromMealsAsync(meals);
             return list;
         }
-        private Task<ShoppingList> CreateShoppingListFromMealsAsync(List<Meal> meals)
+        private ShoppingList CreateShoppingListFromMealsAsync(List<Meal> meals)
         {
-            throw new NotImplementedException();
-        }
-        private List<QIngredient> CreateListOfQIngredientsForShopping(List<Meal> meals)
-        {
-            //First list is all qingredients from meal.Recipes
             List<QIngredient> qIngredients = new();
             foreach (var meal in meals)
             {
-                foreach (var qIngredient in meal.Recipe.Ingredients)
-                {
-                    qIngredients.Add(qIngredient);
-                }
+                qIngredients.AddRange(meal.Recipe.Ingredients);
             }
-            //None are combined yet, to preserve the shopping notes for each Recipe
-            //ordered to make it easier to parse in next step
-            return qIngredients.OrderByDescending(q=>q.IngredientId).ToList();
+            List<ShoppingIngredient> list = CreateShoppingIngredientsFromQIngredients(qIngredients.OrderByDescending(q => q.IngredientId).ToList());
+            ShoppingList dbList = new();
+            dbList.ShoppingIngredients = list;
+            return dbList;
         }
 
         private List<ShoppingIngredient> CreateShoppingIngredientsFromQIngredients(List<QIngredient> allIngredients)
         {
-            //All ingredients that are the same Id need to be combined, and removed from the list until list is empty.  
-            //For each unique IngredientId, make a new list.  
-            //pass new list to method
-            throw new NotImplementedException();
+            //All ingredients that are the same Id need to be combined, and removed from the list until list is empty.
+            var resultList = new List<ShoppingIngredient>();
+            var uniqueList = allIngredients.Select(i => i.IngredientId).Distinct().ToList();
+            foreach (var item in uniqueList)
+            {
+                List<QIngredient> thisIngredientList = allIngredients.Where(i => i.IngredientId == item).ToList();
+                var shopIng = CreateOneShoppingIngredientFromMultipleQIngredients(thisIngredientList);
+                resultList.Add(shopIng);
+            }
+            return resultList;
         }
         private ShoppingIngredient CreateOneShoppingIngredientFromMultipleQIngredients(List<QIngredient> listOfOneIngredient)
         {
