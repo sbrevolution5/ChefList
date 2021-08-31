@@ -1,0 +1,31 @@
+﻿@page "/shoppinglists/details/{id}"
+@inject IApiService _api
+
+@if (list is null)
+{
+    <MudText>Loading...</MudText>
+}
+else
+{
+    <MudText Typo="Typo.h1">@list.Name</MudText>
+    <MudList>
+        @foreach (var item in list.ShoppingIngredients)
+        {
+            <MudListItem>
+                <MudText>
+                    @item.QuantityString
+                </MudText>
+            </MudListItem>
+
+        }
+    </MudList>
+}
+@code {
+    [Parameter]
+    public string id { get; set; }
+    public ShoppingList list { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        list = await _api.GetShoppingListAsync(Convert.ToInt32(id));
+    }
+}
