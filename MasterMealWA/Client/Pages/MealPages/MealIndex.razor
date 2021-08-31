@@ -1,0 +1,28 @@
+﻿@page "/meals"
+@inject IApiService _api
+<MudText Typo="Typo.h1">Meals</MudText>
+@if (meals is null)
+{
+
+}
+else
+{
+    <MudTimeline>
+        @foreach (var meal in meals.OrderByDescending(m => m.Date))
+        {
+
+            <MudTimelineItem>
+                <MudText>@meal.Recipe.Name</MudText>
+            </MudTimelineItem>
+        }
+    </MudTimeline>
+}
+@code {
+    public List<Meal> meals { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        meals = await _api.GetAllMealsAsync();
+        await base.OnInitializedAsync();
+    }
+
+}
