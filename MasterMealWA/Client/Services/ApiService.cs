@@ -1,5 +1,6 @@
 ﻿using MasterMealWA.Client.Services.Interfaces;
 using MasterMealWA.Shared.Models;
+using MasterMealWA.Shared.Models.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -207,9 +208,9 @@ namespace MasterMealWA.Client.Services
 
         }
 
-        public async Task UpdateShoppingListAsync(ShoppingList shoppingList)
+        public async Task UpdateShoppingListAsync(ListCreateDto dto)
         {
-            await _http.PutAsJsonAsync("api/shoppinglists", shoppingList);
+            await _http.PutAsJsonAsync("api/shoppinglists", dto);
 
         }
 

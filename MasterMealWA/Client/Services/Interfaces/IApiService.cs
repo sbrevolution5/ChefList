@@ -1,4 +1,5 @@
 ﻿using MasterMealWA.Shared.Models;
+using MasterMealWA.Shared.Models.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,7 @@ namespace MasterMealWA.Client.Services.Interfaces
         Task UpdateMealAsync(Meal meal);
         Task UpdateIngredientAsync(Ingredient ingredient);
         Task UpdateIngredientTypeAsync(IngredientType ingredientType);
-        Task UpdateShoppingListAsync(ShoppingList shoppingList);
+        Task UpdateShoppingListAsync(ListCreateDto dto);
         Task UpdateSupplyAsync(Supply supply);
         Task DeleteRecipeAsync(int id);
         Task DeleteRecipeTypeAsync(int id);
