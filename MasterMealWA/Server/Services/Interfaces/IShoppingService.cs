@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MasterMealWA.Server.Services.Interfaces
 {
-    interface IShoppingService
+    public interface IShoppingService
     {
         public Task<ShoppingList> CreateShoppingListForDateRangeAsync(DateTime EndDate, DateTime StartDate);
 

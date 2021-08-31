@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MasterMealWA.Server.Data;
 using MasterMealWA.Shared.Models;
+using MasterMealWA.Shared.Models.Dtos;
+using MasterMealWA.Server.Services.Interfaces;
 
 namespace MasterMealWA.Server.Controllers
 {
@@ -15,10 +17,12 @@ namespace MasterMealWA.Server.Controllers
     public class ShoppingListsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly IShoppingService _shoppingService;
 
-        public ShoppingListsController(ApplicationDbContext context)
+        public ShoppingListsController(ApplicationDbContext context, IShoppingService shoppingService)
         {
             _context = context;
+            _shoppingService = shoppingService;
         }
 
         // GET: api/ShoppingLists
@@ -76,7 +80,7 @@ namespace MasterMealWA.Server.Controllers
         // POST: api/ShoppingLists
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<ShoppingList>> PostShoppingList(ShoppingList shoppingList)
+        public async Task<ActionResult<ShoppingList>> PostShoppingList(ListCreateDto shoppingList)
         {
             _context.ShoppingList.Add(shoppingList);
             await _context.SaveChangesAsync();
