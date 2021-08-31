@@ -32,7 +32,7 @@ namespace MasterMealWA.Server.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ShoppingList>> GetShoppingList(int id)
         {
-            var shoppingList = await _context.ShoppingList.FindAsync(id);
+            var shoppingList = await _context.ShoppingList.Include(l=> l.ShoppingIngredients).ThenInclude(s=>s.Ingredient).Where(l => l.Id == id).FirstOrDefaultAsync();
 
             if (shoppingList == null)
             {
