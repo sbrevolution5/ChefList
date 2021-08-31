@@ -49,9 +49,9 @@ namespace MasterMealWA.Client.Services
             await _http.PostAsJsonAsync("api/recipeTypes", type);
         }
 
-        public async Task CreateNewShoppingListAsync(ShoppingList shoppingList)
+        public async Task CreateNewShoppingListAsync(ListCreateDto dto)
         {
-            await _http.PostAsJsonAsync("api/ShoppingLists", shoppingList);
+            await _http.PostAsJsonAsync("api/ShoppingLists", dto);
         }
 
         public async Task CreateNewSupplyAsync(Supply supply)
