@@ -1,0 +1,42 @@
+﻿@inject IApiService _api
+<MudDialog>
+    <DialogContent>
+
+        @if (recipes == null || meal == null)
+        {
+            <p>Loading...</p>
+        }
+        else
+        {
+            <MudText>@meal.Recipe.Name</MudText>
+            <MudText>@meal.Date.ToShortDateString()</MudText>
+        }
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Success" OnClick="ConfirmDelete">Delete Meal</MudButton>
+    </DialogActions>
+</MudDialog>
+@code {
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; }
+    public Recipe recipe { get; set; }
+    [Parameter]
+    public Meal meal { get; set; }
+    private List<Recipe> recipes;
+    protected override async Task OnInitializedAsync()
+    {
+
+        recipes = await _api.GetAllRecipesAsync();
+        recipe = recipes.Where(r => r.Id == meal.RecipeId).FirstOrDefault();
+    }
+    public async Task ConfirmDelete()
+    {
+        await _api.DeleteMealAsync(meal.Id);
+        MudDialog.Close(DialogResult.Ok(meal));
+    }
+    public void Cancel()
+    {
+        MudDialog.Cancel();
+    }
+}
