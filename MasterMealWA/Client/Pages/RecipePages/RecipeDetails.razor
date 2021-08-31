@@ -13,39 +13,62 @@
 }
 else
 {
-    <MudText>@recipe.Name</MudText>
-    <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Icon="@Icons.Material.Filled.CalendarToday" OnClick="AddMeal"></MudIconButton>
+    <MudCard>
 
-    <MudText>@recipe.Description</MudText>
-    <MudList>
-        @foreach (var step in recipe.Steps.OrderBy(s => s.StepNumber))
-        {
-            <MudListItem>
-                @step.Text
-            </MudListItem>
+
+        <MudText>@recipe.Name</MudText>
+        <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Icon="@Icons.Material.Filled.CalendarToday" OnClick="AddMeal"></MudIconButton>
+
+        <MudText>@recipe.Description</MudText>
+    </MudCard>
+    <MudCard>
+
+        <MudList>
+            @foreach (var step in recipe.Steps.OrderBy(s => s.StepNumber))
+            {
+                <MudListItem>
+                    <MudPaper>
+                        <MudText>@step.StepNumber. @step.Text</MudText>
+                    </MudPaper>
+                </MudListItem>
+            }
+        </MudList>
+    </MudCard>
+    <MudCard>
+        <MudCardHeader>
+
+            <MudText Typo="Typo.h3">Ingredients</MudText>
+        </MudCardHeader>
+        <MudCardContent>
+
+            @foreach (var ingredient in recipe.Ingredients)
+            {
+                <MudPaper>
+
+                    <MudText Class="h4">
+                        @ingredient.Ingredient.Name
+                </MudText>
+                <MudText>@ingredient.Quantity</MudText>
+                <MudText>@ingredient.Notes</MudText>
+            </MudPaper>
         }
-    </MudList>
-    @foreach (var ingredient in recipe.Ingredients)
-    {
-        <div class="card">
+        </MudCardContent>
+    </MudCard>
+    <MudCard>
+        <MudCardHeader>
 
-            <div class="card-body">
-                <h4 class="card-title">@ingredient.Ingredient.Name</h4>
-                <p class="card-text">@ingredient.Quantity</p>
-                <p class="card-text">@ingredient.Notes</p>
-            </div>
-        </div>
-    }
-    @foreach (var supply in recipe.Supplies)
-    {
-        //card with supply
-        <div class="card">
-            <div class="card-body">
-                <h4 class="card-title">@supply.Supply.Name</h4>
-                @*<p class="card-text">Text</p>*@
-            </div>
-        </div>
-    }
+            <MudText Typo="Typo.h3">Ingredients</MudText>
+        </MudCardHeader>
+        <MudCardContent>
+
+            @foreach (var supply in recipe.Supplies)
+            {
+                <MudPaper>
+                    <MudText Class="h4">@supply.Quantity @supply.Supply.Name</MudText>
+                </MudPaper>
+            }
+        </MudCardContent>
+    </MudCard>
 }
 
 @code {
@@ -55,7 +78,7 @@ else
     public async Task AddMeal()
     {
         var parameters = new DialogParameters { ["recipe"] = recipe };
-        var dialog = _dialogService.Show<MealCreate>("Schedule Meal",parameters);
+        var dialog = _dialogService.Show<MealCreate>("Schedule Meal", parameters);
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
