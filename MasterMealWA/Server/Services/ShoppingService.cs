@@ -31,6 +31,7 @@ namespace MasterMealWA.Server.Services
                                                   .ToListAsync();
             ShoppingList list = CreateShoppingListFromMealsAsync(meals);
             list.Name = $"Meals before {EndDate.ToShortDateString()}";
+            list.Created = DateTime.Now;
             _context.Add(list);
             await _context.SaveChangesAsync();
             return list;
