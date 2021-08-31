@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using MasterMealWA.Shared.Enums;
 
 namespace MasterMealWA.Server.Services
 {
@@ -70,13 +71,27 @@ namespace MasterMealWA.Server.Services
                     notes.Add(qingredient.ShoppingNotes);
                 }
             }
+
+            Ingredient ingredient = listOfOneIngredient.First().Ingredient;
             ShoppingIngredient result = new()
             {
-                QuantityString =  _measurementService.DecodeVolumeMeasurement(totalQuantity),
                 IngredientId = listOfOneIngredient.First().IngredientId,
+                Ingredient = ingredient,
                 Notes = notes
             };
+            var measure = ingredient.MeasurementType;
+            if (measure == MeasurementType.Volume)
+            {
 
+                result.QuantityString = _measurementService.DecodeVolumeMeasurement(totalQuantity);
+            }else if (measure == MeasurementType.Mass)
+            {
+                result.QuantityString = _measurementService.DecodeVolumeMeasurement(totalQuantity);
+            }
+            else if (measure == MeasurementType.Count)
+            {
+                result.QuantityString = $"{totalQuantity} {ingredient.Name}";
+            }
             return result;
         }
 
