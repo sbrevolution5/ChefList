@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using MasterMealWA.Shared.Enums;
 
 namespace MasterMealWA.Server.Services
 {
@@ -19,23 +21,46 @@ namespace MasterMealWA.Server.Services
             _measurementService = measurementService;
         }
 
-        public List<QIngredient> CreateListOfQIngredientsForShopping(List<Meal> meals)
+        public async Task<ShoppingList> CreateShoppingListForDateRangeAsync(DateTime EndDate, DateTime StartDate)
         {
-            //First list is all qingredients from meal.Recipes
+            //Get Meals that are in date range, including recipe, qingredients, ingredients
+            List<Meal> meals = await _context.Meal.Include(m => m.Recipe)
+                                                  .ThenInclude(r => r.Ingredients)
+                                                  .ThenInclude(q => q.Ingredient)
+                                                  .Where(m => m.Date >= StartDate && m.Date <= EndDate)
+                                                  .ToListAsync();
+            ShoppingList list = CreateShoppingListFromMealsAsync(meals);
+            _context.Add(list);
+            await _context.SaveChangesAsync();
+            return list;
+        }
+        private ShoppingList CreateShoppingListFromMealsAsync(List<Meal> meals)
+        {
             List<QIngredient> qIngredients = new();
             foreach (var meal in meals)
             {
-                foreach (var qIngredient in meal.Recipe.Ingredients)
-                {
-                    qIngredients.Add(qIngredient);
-                }
+                qIngredients.AddRange(meal.Recipe.Ingredients);
             }
-            //None are combined yet, to preserve the shopping notes for each Recipe
-            //ordered to make it easier to parse in next step
-            return qIngredients.OrderByDescending(q=>q.IngredientId).ToList();
+            List<ShoppingIngredient> list = CreateShoppingIngredientsFromQIngredients(qIngredients.OrderByDescending(q => q.IngredientId).ToList());
+            ShoppingList dbList = new();
+            dbList.ShoppingIngredients = list;
+            return dbList;
         }
 
-        public ShoppingIngredient CreateOneShoppingIngredientFromMultipleQIngredients(List<QIngredient> listOfOneIngredient)
+        private List<ShoppingIngredient> CreateShoppingIngredientsFromQIngredients(List<QIngredient> allIngredients)
+        {
+            //All ingredients that are the same Id need to be combined, and removed from the list until list is empty.
+            var resultList = new List<ShoppingIngredient>();
+            var uniqueList = allIngredients.Select(i => i.IngredientId).Distinct().ToList();
+            foreach (var item in uniqueList)
+            {
+                List<QIngredient> thisIngredientList = allIngredients.Where(i => i.IngredientId == item).ToList();
+                var shopIng = CreateOneShoppingIngredientFromMultipleQIngredients(thisIngredientList);
+                resultList.Add(shopIng);
+            }
+            return resultList;
+        }
+        private ShoppingIngredient CreateOneShoppingIngredientFromMultipleQIngredients(List<QIngredient> listOfOneIngredient)
         {
             List<string> notes = new();
             int totalQuantity = 0; //TODO this needs to be changed to correct measurement
@@ -48,26 +73,32 @@ namespace MasterMealWA.Server.Services
                     notes.Add(qingredient.ShoppingNotes);
                 }
             }
+
+            Ingredient ingredient = listOfOneIngredient.First().Ingredient;
             ShoppingIngredient result = new()
             {
-                Measurement =  _measurementService.DecodeVolumeMeasurement(totalQuantity),
                 IngredientId = listOfOneIngredient.First().IngredientId,
+                Ingredient = ingredient,
                 Notes = notes
             };
+            var measure = ingredient.MeasurementType;
+            if (measure == MeasurementType.Volume)
+            {
 
+                result.QuantityString = _measurementService.DecodeVolumeMeasurement(totalQuantity);
+            }else if (measure == MeasurementType.Mass)
+            {
+                result.QuantityString = _measurementService.DecodeVolumeMeasurement(totalQuantity);
+            }
+            else if (measure == MeasurementType.Count)
+            {
+                result.QuantityString = $"{totalQuantity} {ingredient.Name}";
+            }
+            _context.Add(result);
             return result;
         }
 
-        public List<ShoppingIngredient> CreateShoppingIngredientFromQIngredients(List<QIngredient> allIngredients)
-        {
-            //All ingredients that are the same Id need to be combined, and removed from the list until list is empty.  
-            //pass to subfunction to combine
-            throw new NotImplementedException();
-        }
 
-        public Task<ShoppingList> CreateShoppingListFromMealsAsync(List<Meal> meals)
-        {
-            throw new NotImplementedException();
-        }
+
     }
 }
