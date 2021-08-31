@@ -43,6 +43,7 @@ else
         {
 
             _snackbar.Add("Meal planned!");
+            meals = await _api.GetAllMealsAsync();
         }
     }
     public async Task EditMeal(Meal meal)

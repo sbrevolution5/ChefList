@@ -35,12 +35,16 @@
     private List<Recipe> recipes;
     protected override async Task OnInitializedAsync()
     {
+        recipes = await _api.GetAllRecipesAsync();
+        if (recipe is null)
+        {
+            recipe = recipes.FirstOrDefault();
+        }
         meal = new()
         {
             RecipeId = recipe.Id,
             Date = DateTime.Today
         };
-        recipes = await _api.GetAllRecipesAsync();
     }
     public async Task CreateMeal()
     {
