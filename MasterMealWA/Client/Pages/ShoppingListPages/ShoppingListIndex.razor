@@ -10,10 +10,11 @@
 else
 {
 <MudList>
-    @foreach (var item in shoppingLists)
+    @foreach (var list in shoppingLists)
     {
-        <MudListItem>@item.Name</MudListItem>
-        <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Icon="@Icons.Material.Filled.List" Link=@($"shoppinglists/details/{item.Id}")></MudIconButton>
+        <MudListItem>@list.Name</MudListItem>
+        <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Icon="@Icons.Material.Filled.List" Link=@($"shoppinglists/details/{list.Id}")></MudIconButton>
+        <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="()=>DeleteList(list)"></MudIconButton>
     }
 </MudList>
 }
@@ -27,6 +28,16 @@ else
     public async Task NewList()
     {
         var dialog = _dialogService.Show<ListCreate>("New List");
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            shoppingLists = await _api.GetAllShoppingListsAsync();
+        }
+    }
+    public async Task DeleteList(ShoppingList list)
+    {
+        var parameters = new DialogParameters { ["list"] = list};
+        var dialog = _dialogService.Show<ListDelete>("Are you sure you want to delete this list?", parameters);
         var result = await dialog.Result;
         if (!result.Cancelled)
         {

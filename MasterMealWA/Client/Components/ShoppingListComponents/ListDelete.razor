@@ -1,0 +1,35 @@
+﻿@inject IApiService _api
+<MudDialog>
+    <DialogContent>
+
+        @if (list is null)
+        {
+            <p>Loading...</p>
+        }
+        else
+        {
+            <MudText>@list.Name</MudText>
+            @*<MudText>@list.ShoppingIngredients.Count()</MudText>*@
+        }
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Success" OnClick="ConfirmDelete">Delete List</MudButton>
+    </DialogActions>
+</MudDialog>
+@code {
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; }
+    [Parameter]
+    public ShoppingList list { get; set; }
+    
+    public async Task ConfirmDelete()
+    {
+        await _api.DeleteShoppingListAsync(list.Id);
+        MudDialog.Close(DialogResult.Ok(list));
+    }
+    public void Cancel()
+    {
+        MudDialog.Cancel();
+    }
+}
