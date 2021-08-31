@@ -1,6 +1,7 @@
 ﻿@page "/recipes/edit/{id}"
 @inject HttpClient Http
 @inject IApiService _api
+@inject NavigationManager nav
 @if (recipe is null)
 {
     <MudText>Loading...</MudText>
@@ -118,6 +119,7 @@ else
     public async Task CreateRecipeAsync()
     {
         await _api.UpdateRecipeAsync(recipe);
+        nav.NavigateTo($"/recipes/details/{recipe.Id}");
     }
     IList<IBrowserFile> files = new List<IBrowserFile>();
     private void UploadFiles(InputFileChangeEventArgs e)
