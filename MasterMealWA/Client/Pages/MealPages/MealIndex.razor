@@ -1,6 +1,9 @@
 ﻿@page "/meals"
 @inject IApiService _api
+@inject DialogService _dialogService
+@inject SnackbarService _snackbar
 <MudText Typo="Typo.h1">Meals</MudText>
+<MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.CalendarToday" aria-label="add" OnClick="AddMeal" />
 @if (meals is null)
 {
 
@@ -16,7 +19,6 @@ else
                     <MudText>@meal.Recipe.Name</MudText>
                 </ItemOpposite>
                 <ItemContent>
-
                     <MudText>@meal.Date.ToShortDateString()</MudText>
                 </ItemContent>
             </MudTimelineItem>
@@ -29,6 +31,17 @@ else
     {
         meals = await _api.GetAllMealsAsync();
         await base.OnInitializedAsync();
+    }
+    public async Task AddMeal()
+    {
+        var parameters = new DialogParameters { ["recipe"] = null };
+        var dialog = _dialogService.Show<MealCreate>("Schedule Meal", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+
+            _snackbar.Add("Meal planned!");
+        }
     }
 
 }
