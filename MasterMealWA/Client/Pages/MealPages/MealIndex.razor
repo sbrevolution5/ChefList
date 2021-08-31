@@ -20,6 +20,8 @@ else
                 </ItemOpposite>
                 <ItemContent>
                     <MudText>@meal.Date.ToShortDateString()</MudText>
+                    <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="()=>EditMeal(meal)"></MudIconButton>
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="()=>DeleteMeal(meal)"></MudIconButton>
                 </ItemContent>
             </MudTimelineItem>
         }
@@ -43,5 +45,24 @@ else
             _snackbar.Add("Meal planned!");
         }
     }
-
+    public async Task EditMeal(Meal meal)
+    {
+        var parameters = new DialogParameters { ["meal"] = meal };
+        var dialog = _dialogService.Show<MealEdit>("Edit Meal", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            meals = await _api.GetAllMealsAsync();
+        }
+    }
+    public async Task DeleteMeal(Meal meal)
+    {
+        var parameters = new DialogParameters { ["meal"] = meal };
+        var dialog = _dialogService.Show<MealDelete>("Are you sure you want to delete this meal?", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            meals = await _api.GetAllMealsAsync();
+        }
+    }
 }

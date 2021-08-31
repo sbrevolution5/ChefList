@@ -28,19 +28,21 @@
 @code {
     [CascadingParameter]
     MudDialogInstance MudDialog { get; set; }
-    [Parameter]
     public Recipe recipe { get; set; }
     private DateTime? mealdate { get; set; } = DateTime.Today;
-    private Meal meal;
+    [Parameter]
+    public Meal meal { get; set; }
     private List<Recipe> recipes;
     protected override async Task OnInitializedAsync()
     {
+
+        recipes = await _api.GetAllRecipesAsync();
+        recipe = recipes.FirstOrDefault();
         meal = new()
         {
             RecipeId = recipe.Id,
             Date = DateTime.Today
         };
-        recipes = await _api.GetAllRecipesAsync();
     }
     public async Task CreateMeal()
     {
