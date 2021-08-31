@@ -19,6 +19,16 @@ namespace MasterMealWA.Server.Services
             _measurementService = measurementService;
         }
 
+        public Task<ShoppingList> CreateShoppingListForDateRangeAsync(DateTime EndDate, DateTime StartDate)
+        {
+            //Get Meals that are in date range, including recipe, qingredients, ingredients
+            
+            throw new NotImplementedException();
+        }
+        public Task<ShoppingList> CreateShoppingListFromMealsAsync(List<Meal> meals)
+        {
+            throw new NotImplementedException();
+        }
         public List<QIngredient> CreateListOfQIngredientsForShopping(List<Meal> meals)
         {
             //First list is all qingredients from meal.Recipes
@@ -35,6 +45,13 @@ namespace MasterMealWA.Server.Services
             return qIngredients.OrderByDescending(q=>q.IngredientId).ToList();
         }
 
+        public List<ShoppingIngredient> CreateShoppingIngredientsFromQIngredients(List<QIngredient> allIngredients)
+        {
+            //All ingredients that are the same Id need to be combined, and removed from the list until list is empty.  
+            //For each unique IngredientId, make a new list.  
+            //pass new list to method
+            throw new NotImplementedException();
+        }
         public ShoppingIngredient CreateOneShoppingIngredientFromMultipleQIngredients(List<QIngredient> listOfOneIngredient)
         {
             List<string> notes = new();
@@ -58,16 +75,7 @@ namespace MasterMealWA.Server.Services
             return result;
         }
 
-        public List<ShoppingIngredient> CreateShoppingIngredientFromQIngredients(List<QIngredient> allIngredients)
-        {
-            //All ingredients that are the same Id need to be combined, and removed from the list until list is empty.  
-            //pass to subfunction to combine
-            throw new NotImplementedException();
-        }
 
-        public Task<ShoppingList> CreateShoppingListFromMealsAsync(List<Meal> meals)
-        {
-            throw new NotImplementedException();
-        }
+
     }
 }
