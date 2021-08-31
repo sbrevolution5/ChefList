@@ -14,6 +14,8 @@
 else
 {
     <MudText>@recipe.Name</MudText>
+    <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Icon="@Icons.Material.Filled.CalendarToday" OnClick="AddMeal"></MudIconButton>
+
     <MudText>@recipe.Description</MudText>
     <MudList>
         @foreach (var step in recipe.Steps.OrderBy(s => s.StepNumber))
@@ -52,12 +54,13 @@ else
     private Recipe recipe;
     public async Task AddMeal()
     {
-        var dialog = _dialogService.Show<MealCreate>("New Ingredient");
+        var parameters = new DialogParameters { ["recipe"] = recipe };
+        var dialog = _dialogService.Show<MealCreate>("Schedule Meal",parameters);
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
 
-        snackbar.Add("Meal planned!");
+            snackbar.Add("Meal planned!");
         }
     }
     protected override async Task OnInitializedAsync()
