@@ -72,7 +72,7 @@ namespace MasterMealWA.Server.Services
             }
             ShoppingIngredient result = new()
             {
-                Measurement =  _measurementService.DecodeVolumeMeasurement(totalQuantity),
+                QuantityString =  _measurementService.DecodeVolumeMeasurement(totalQuantity),
                 IngredientId = listOfOneIngredient.First().IngredientId,
                 Notes = notes
             };
