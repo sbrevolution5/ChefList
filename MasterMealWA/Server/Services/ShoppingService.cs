@@ -30,6 +30,8 @@ namespace MasterMealWA.Server.Services
                                                   .Where(m => m.Date >= StartDate && m.Date <= EndDate)
                                                   .ToListAsync();
             ShoppingList list = CreateShoppingListFromMealsAsync(meals);
+            _context.Add(list);
+            await _context.SaveChangesAsync();
             return list;
         }
         private ShoppingList CreateShoppingListFromMealsAsync(List<Meal> meals)
@@ -92,6 +94,7 @@ namespace MasterMealWA.Server.Services
             {
                 result.QuantityString = $"{totalQuantity} {ingredient.Name}";
             }
+            _context.Add(result);
             return result;
         }
 
