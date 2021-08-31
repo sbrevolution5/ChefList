@@ -66,6 +66,17 @@ namespace MasterMealWA.Server.Controllers
             }
 
             _context.Entry(recipe).State = EntityState.Modified;
+            foreach (var step in recipe.Steps)
+            {
+                _context.Entry(step).State = EntityState.Modified;
+            }
+            foreach (var ingredient in recipe.Ingredients)
+            {
+                _context.Entry(ingredient).State = EntityState.Modified;
+            }foreach (var supply in recipe.Supplies)
+            {
+                _context.Entry(supply).State = EntityState.Modified;
+            }
 
             try
             {

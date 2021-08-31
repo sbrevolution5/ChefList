@@ -282,7 +282,7 @@ namespace MasterMealWA.Server.Data
             beefSteps.Add(AddStep("Drizzle tortillas with 1 TBS olive oil; brush or rub to coat all over.Arrange on a baking sheet.Gently prick each tortilla in a few places with a fork.", 8, beefTostada.Id));
             beefSteps.Add(AddStep("Bake on top rack, flipping halfway through, until lightly golden, 4 - 5 minutes per side.", 9, beefTostada.Id));
             beefSteps.Add(AddStep("Serve and top with pico de gallo and lime crema", 10, beefTostada.Id));
-            //beefTostada.Supplies =beefSupplies;
+            beefTostada.Supplies =beefSupplies;
             await context.AddRangeAsync(beefSteps);
             await context.AddRangeAsync(beefIng);
             await context.SaveChangesAsync();
@@ -335,7 +335,7 @@ namespace MasterMealWA.Server.Data
             anchSteps.Add(AddStep("Add BBQ sauce mixture to pan. Cook, stirring, until sauce has thickened and beef is cooked through, 2-3 minutes. Taste and season with salt and pepper.", 8, anchoBBQ.Id));
             anchSteps.Add(AddStep("While filling cooks, toast buns until golden brown.", 9, anchoBBQ.Id));
             anchSteps.Add(AddStep("Serve meat on buns, topped with pickle ", 10, anchoBBQ.Id));
-            //anchoBBQ.Supplies = anchSupplies;
+            anchoBBQ.Supplies = anchSupplies;
             await context.AddRangeAsync(anchSteps);
             await context.AddRangeAsync(anchIng);
             await context.SaveChangesAsync();
@@ -416,14 +416,13 @@ namespace MasterMealWA.Server.Data
 
         private static async Task<QSupply> AddSupplyAsync(string v, List<Supply> sup, int rId, ApplicationDbContext context)
         {
-            Supply rootSupply = sup.Where(s => s.Name == v).FirstOrDefault();
+            Supply supplyRoot = sup.Where(s => s.Name == v).FirstOrDefault();
             QSupply supply = new()
             {
-                Quantity = 1,
-                SupplyId = rootSupply.Id,
-                RecipeId = rId
+                Quantity= 1,
+                RecipeId = rId,
+                SupplyId = supplyRoot.Id
             };
-
             await context.SaveChangesAsync();
             return supply;
         }
