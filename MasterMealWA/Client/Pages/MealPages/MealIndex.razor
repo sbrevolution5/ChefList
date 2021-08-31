@@ -12,7 +12,13 @@ else
         {
 
             <MudTimelineItem>
-                <MudText>@meal.Recipe.Name</MudText>
+                <ItemOpposite>
+                    <MudText>@meal.Recipe.Name</MudText>
+                </ItemOpposite>
+                <ItemContent>
+
+                    <MudText>@meal.Date.ToShortDateString()</MudText>
+                </ItemContent>
             </MudTimelineItem>
         }
     </MudTimeline>
