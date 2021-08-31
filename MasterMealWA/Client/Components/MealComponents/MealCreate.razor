@@ -1,40 +1,33 @@
 ﻿@inject IApiService _api
-<h3>MealCreate</h3>
-@if (recipes == null || meal == null)
-{
-    <p>Loading...</p>
-}
-else
-{
+<MudDialog>
+    <DialogContent>
 
-    <EditForm Model="@meal">
-        <div class="row">
-            <div class="col">
-                <label>Date of Meal</label>
-                <InputDate @bind-Value="meal.Date" class="form-control">
+        @if (recipes == null || meal == null)
+        {
+            <p>Loading...</p>
+        }
+        else
+        {
+            <MudDatePicker Label="Date" HelperText="When do you plan to have the meal?" @bind-Date="meal.Date"></MudDatePicker>
+            <MudSelect Label="Recipe" @bind-Value="meal.RecipeId" HelperText="Which meal are you eating?">
+                @foreach (var recipe in recipes)
+                    {
 
-                </InputDate>
-                <label>Recipe</label>
-                <InputSelect @bind-Value="meal.RecipeId" class="form-control selectpicker">
-                    <option value="">Select a Recipe</option>
-                    @foreach (var recipe in recipes)
-                        {
-                        <option value="@recipe.Id">@recipe.Name</option>
-                        }
-                </InputSelect>
-
-            </div>
-
-        </div>
-        <div class="row">
-            <div class="col">
-
-                <button type="submit" class="btn btn-success">Schedule Meal</button>
-            </div>
-        </div>
-    </EditForm>
-}
+                    <MudSelectItem Value="recipe.Id">
+                        @recipe.Name
+                    </MudSelectItem>
+                    }
+            </MudSelect>
+        }
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Success" OnClick="CreateMeal">Save</MudButton>
+    </DialogActions>
+</MudDialog>
 @code {
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; }
     [Parameter]
     public Recipe recipe { get; set; }
     private Meal meal;
@@ -47,5 +40,14 @@ else
             Date = DateTime.Today
         };
         recipes = await _api.GetAllRecipesAsync();
+    }
+    public async Task CreateMeal()
+    {
+        await _api.CreateNewMealAsync(meal);
+        MudDialog.Close(DialogResult.Ok(meal));
+    }
+    public void Cancel()
+    {
+        MudDialog.Cancel();
     }
 }
