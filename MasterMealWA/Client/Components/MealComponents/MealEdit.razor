@@ -42,7 +42,7 @@
     public async Task EditMeal()
     {
         meal.Date = mealdate.Value;
-        meal.ImageId = recipes.Where(r => recipe.Id == meal.RecipeId).FirstOrDefault().ImageId;
+        meal.ImageId = recipes.Where(r => r.Id == meal.RecipeId).FirstOrDefault().ImageId;
         await _api.UpdateMealAsync(meal);
         MudDialog.Close(DialogResult.Ok(meal));
     }
