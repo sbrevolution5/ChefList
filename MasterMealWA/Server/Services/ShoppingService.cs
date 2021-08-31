@@ -64,7 +64,7 @@ namespace MasterMealWA.Server.Services
         private ShoppingIngredient CreateOneShoppingIngredientFromMultipleQIngredients(List<QIngredient> listOfOneIngredient)
         {
             List<string> notes = new();
-            int totalQuantity = 0; //TODO this needs to be changed to correct measurement
+            int totalQuantity = 0;
             foreach (var qingredient in listOfOneIngredient)
             {
                 totalQuantity += qingredient.NumberOfUnits;
@@ -93,7 +93,7 @@ namespace MasterMealWA.Server.Services
             }
             else if (measure == MeasurementType.Count)
             {
-                result.QuantityString = $"{totalQuantity} {ingredient.Name}";
+                result.QuantityString = $"{_measurementService.DecodeUnitMeasurement(totalQuantity)} {ingredient.Name}";
             }
             _context.Add(result);
             return result;
