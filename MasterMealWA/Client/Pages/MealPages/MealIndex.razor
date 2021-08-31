@@ -1,0 +1,69 @@
+﻿@page "/meals"
+@inject IApiService _api
+@inject IDialogService _dialogService
+@inject ISnackbar _snackbar
+<MudText Typo="Typo.h1">Meals</MudText>
+<MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.CalendarToday" aria-label="add" OnClick="AddMeal" />
+@if (meals is null)
+{
+
+}
+else
+{
+    <MudTimeline>
+        @foreach (var meal in meals.OrderByDescending(m => m.Date))
+        {
+
+            <MudTimelineItem>
+                <ItemOpposite>
+                    <MudText>@meal.Recipe.Name</MudText>
+                </ItemOpposite>
+                <ItemContent>
+                    <MudText>@meal.Date.ToShortDateString()</MudText>
+                    <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="()=>EditMeal(meal)"></MudIconButton>
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="()=>DeleteMeal(meal)"></MudIconButton>
+                </ItemContent>
+            </MudTimelineItem>
+        }
+    </MudTimeline>
+}
+@code {
+    public List<Meal> meals { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        meals = await _api.GetAllMealsAsync();
+        await base.OnInitializedAsync();
+    }
+    public async Task AddMeal()
+    {
+        var parameters = new DialogParameters { ["recipe"] = null };
+        var dialog = _dialogService.Show<MealCreate>("Schedule Meal", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+
+            _snackbar.Add("Meal planned!");
+            meals = await _api.GetAllMealsAsync();
+        }
+    }
+    public async Task EditMeal(Meal meal)
+    {
+        var parameters = new DialogParameters { ["meal"] = meal };
+        var dialog = _dialogService.Show<MealEdit>("Edit Meal", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            meals = await _api.GetAllMealsAsync();
+        }
+    }
+    public async Task DeleteMeal(Meal meal)
+    {
+        var parameters = new DialogParameters { ["meal"] = meal };
+        var dialog = _dialogService.Show<MealDelete>("Are you sure you want to delete this meal?", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            meals = await _api.GetAllMealsAsync();
+        }
+    }
+}

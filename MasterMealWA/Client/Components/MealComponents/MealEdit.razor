@@ -22,35 +22,28 @@
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Cancel</MudButton>
-        <MudButton Color="Color.Success" OnClick="CreateMeal">Save</MudButton>
+        <MudButton Color="Color.Success" OnClick="EditMeal">Save Changes</MudButton>
     </DialogActions>
 </MudDialog>
 @code {
     [CascadingParameter]
     MudDialogInstance MudDialog { get; set; }
-    [Parameter]
     public Recipe recipe { get; set; }
     private DateTime? mealdate { get; set; } = DateTime.Today;
-    private Meal meal;
+    [Parameter]
+    public Meal meal { get; set; }
     private List<Recipe> recipes;
     protected override async Task OnInitializedAsync()
     {
+
         recipes = await _api.GetAllRecipesAsync();
-        if (recipe is null)
-        {
-            recipe = recipes.FirstOrDefault();
-        }
-        meal = new()
-        {
-            RecipeId = recipe.Id,
-            Date = DateTime.Today
-        };
+        recipe = recipes.Where(r => r.Id == meal.RecipeId).FirstOrDefault();
     }
-    public async Task CreateMeal()
+    public async Task EditMeal()
     {
         meal.Date = mealdate.Value;
         meal.ImageId = recipes.Where(r => r.Id == meal.RecipeId).FirstOrDefault().ImageId;
-        await _api.CreateNewMealAsync(meal);
+        await _api.UpdateMealAsync(meal);
         MudDialog.Close(DialogResult.Ok(meal));
     }
     public void Cancel()
