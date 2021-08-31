@@ -1,6 +1,7 @@
 ﻿@page "/recipes/details/{id}"
 @inject HttpClient Http
 @inject IDialogService _dialogService
+@inject ISnackbar snackbar
 
 <MudText Typo="Typo.h1">Recipe</MudText>
 @if (recipe is null)
@@ -55,7 +56,8 @@ else
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-            Ingredients = await _api.GetAllIngredientsAsync();
+
+        snackbar.Add("Meal planned!");
         }
     }
     protected override async Task OnInitializedAsync()
