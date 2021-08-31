@@ -2,38 +2,31 @@
 <MudDialog>
     <DialogContent>
 
-        @if (recipes == null || meal == null)
+        @if (list is null)
         {
             <p>Loading...</p>
         }
         else
         {
-            <MudText>@meal.Recipe.Name</MudText>
-            <MudText>@meal.Date.ToShortDateString()</MudText>
+            <MudText>@list.Name</MudText>
+            <MudText>@list.ShoppingIngredients.Count()</MudText>
         }
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Cancel</MudButton>
-        <MudButton Color="Color.Success" OnClick="ConfirmDelete">Delete Meal</MudButton>
+        <MudButton Color="Color.Success" OnClick="ConfirmDelete">Delete List</MudButton>
     </DialogActions>
 </MudDialog>
 @code {
     [CascadingParameter]
     MudDialogInstance MudDialog { get; set; }
-    public Recipe recipe { get; set; }
     [Parameter]
-    public Meal meal { get; set; }
-    private List<Recipe> recipes;
-    protected override async Task OnInitializedAsync()
-    {
-
-        recipes = await _api.GetAllRecipesAsync();
-        recipe = recipes.Where(r => r.Id == meal.RecipeId).FirstOrDefault();
-    }
+    public ShoppingList list { get; set; }
+    
     public async Task ConfirmDelete()
     {
-        await _api.DeleteMealAsync(meal.Id);
-        MudDialog.Close(DialogResult.Ok(meal));
+        await _api.DeleteShoppingListAsync(list.Id);
+        MudDialog.Close(DialogResult.Ok(list));
     }
     public void Cancel()
     {
