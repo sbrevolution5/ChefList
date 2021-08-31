@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace MasterMealWA.Server.Services
 {
@@ -19,11 +20,16 @@ namespace MasterMealWA.Server.Services
             _measurementService = measurementService;
         }
 
-        public Task<ShoppingList> CreateShoppingListForDateRangeAsync(DateTime EndDate, DateTime StartDate)
+        public async Task<ShoppingList> CreateShoppingListForDateRangeAsync(DateTime EndDate, DateTime StartDate)
         {
             //Get Meals that are in date range, including recipe, qingredients, ingredients
-            
-            throw new NotImplementedException();
+            List<Meal> meals = await _context.Meal.Include(m => m.Recipe)
+                                                  .ThenInclude(r => r.Ingredients)
+                                                  .ThenInclude(q => q.Ingredient)
+                                                  .Where(m => m.Date >= StartDate && m.Date <= EndDate)
+                                                  .ToListAsync();
+            ShoppingList list = await CreateShoppingListFromMealsAsync(meals);
+            return list;
         }
         public Task<ShoppingList> CreateShoppingListFromMealsAsync(List<Meal> meals)
         {
