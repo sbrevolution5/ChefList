@@ -67,7 +67,7 @@ namespace MasterMealWA.Server.Services
             int totalQuantity = 0; //TODO this needs to be changed to correct measurement
             foreach (var qingredient in listOfOneIngredient)
             {
-                totalQuantity +=qingredient.NumberOfUnits;
+                totalQuantity += qingredient.NumberOfUnits;
                 //If string has Notes (it always has shopping notes due to quantity)
                 if (!string.IsNullOrWhiteSpace(qingredient.Notes) )
                 {
