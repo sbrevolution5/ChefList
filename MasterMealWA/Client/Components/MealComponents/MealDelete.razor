@@ -8,28 +8,19 @@
         }
         else
         {
-            <MudDatePicker Label="Date" HelperText="When do you plan to have the meal?" @bind-Date="mealdate"></MudDatePicker>
-            <MudSelect Label="Recipe" @bind-Value="meal.RecipeId" HelperText="Which meal are you eating?">
-                @foreach (var recipe in recipes)
-                    {
-
-                    <MudSelectItem Value="recipe.Id">
-                        @recipe.Name
-                    </MudSelectItem>
-                    }
-            </MudSelect>
+            <MudText>@meal.Recipe.Name</MudText>
+            <MudText>@meal.Date.ToShortDateString()</MudText>
         }
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Cancel</MudButton>
-        <MudButton Color="Color.Success" OnClick="CreateMeal">Save</MudButton>
+        <MudButton Color="Color.Success" OnClick="ConfirmDelete">Delete Meal</MudButton>
     </DialogActions>
 </MudDialog>
 @code {
     [CascadingParameter]
     MudDialogInstance MudDialog { get; set; }
     public Recipe recipe { get; set; }
-    private DateTime? mealdate { get; set; } = DateTime.Today;
     [Parameter]
     public Meal meal { get; set; }
     private List<Recipe> recipes;
@@ -39,11 +30,9 @@
         recipes = await _api.GetAllRecipesAsync();
         recipe = recipes.Where(r=> r.Id == meal.RecipeId).FirstOrDefault();
     }
-    public async Task CreateMeal()
+    public async Task ConfirmDelete()
     {
-        meal.Date = mealdate.Value;
-        meal.ImageId = recipes.Where(r => recipe.Id == meal.RecipeId).FirstOrDefault().ImageId;
-        await _api.UpdateMealAsync(meal);
+        await _api.DeleteMealAsync(meal.Id);
         MudDialog.Close(DialogResult.Ok(meal));
     }
     public void Cancel()
