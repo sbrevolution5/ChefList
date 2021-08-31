@@ -31,11 +31,11 @@ namespace MasterMealWA.Server.Services
             ShoppingList list = await CreateShoppingListFromMealsAsync(meals);
             return list;
         }
-        public Task<ShoppingList> CreateShoppingListFromMealsAsync(List<Meal> meals)
+        private Task<ShoppingList> CreateShoppingListFromMealsAsync(List<Meal> meals)
         {
             throw new NotImplementedException();
         }
-        public List<QIngredient> CreateListOfQIngredientsForShopping(List<Meal> meals)
+        private List<QIngredient> CreateListOfQIngredientsForShopping(List<Meal> meals)
         {
             //First list is all qingredients from meal.Recipes
             List<QIngredient> qIngredients = new();
@@ -51,14 +51,14 @@ namespace MasterMealWA.Server.Services
             return qIngredients.OrderByDescending(q=>q.IngredientId).ToList();
         }
 
-        public List<ShoppingIngredient> CreateShoppingIngredientsFromQIngredients(List<QIngredient> allIngredients)
+        private List<ShoppingIngredient> CreateShoppingIngredientsFromQIngredients(List<QIngredient> allIngredients)
         {
             //All ingredients that are the same Id need to be combined, and removed from the list until list is empty.  
             //For each unique IngredientId, make a new list.  
             //pass new list to method
             throw new NotImplementedException();
         }
-        public ShoppingIngredient CreateOneShoppingIngredientFromMultipleQIngredients(List<QIngredient> listOfOneIngredient)
+        private ShoppingIngredient CreateOneShoppingIngredientFromMultipleQIngredients(List<QIngredient> listOfOneIngredient)
         {
             List<string> notes = new();
             int totalQuantity = 0; //TODO this needs to be changed to correct measurement
