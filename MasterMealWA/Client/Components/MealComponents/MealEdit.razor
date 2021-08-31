@@ -22,7 +22,7 @@
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Cancel</MudButton>
-        <MudButton Color="Color.Success" OnClick="CreateMeal">Save</MudButton>
+        <MudButton Color="Color.Success" OnClick="EditMeal">Save Changes</MudButton>
     </DialogActions>
 </MudDialog>
 @code {
@@ -37,14 +37,9 @@
     {
 
         recipes = await _api.GetAllRecipesAsync();
-        recipe = recipes.FirstOrDefault();
-        meal = new()
-        {
-            RecipeId = recipe.Id,
-            Date = DateTime.Today
-        };
+        recipe = recipes.Where(r => r.Id == meal.RecipeId).FirstOrDefault();
     }
-    public async Task CreateMeal()
+    public async Task EditMeal()
     {
         meal.Date = mealdate.Value;
         meal.ImageId = recipes.Where(r => recipe.Id == meal.RecipeId).FirstOrDefault().ImageId;
