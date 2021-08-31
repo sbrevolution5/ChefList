@@ -1,7 +1,7 @@
 ﻿@page "/meals"
 @inject IApiService _api
 @inject DialogService _dialogService
-@inject SnackbarService _snackbar
+@inject ISnackbar _snackbar
 <MudText Typo="Typo.h1">Meals</MudText>
 <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.CalendarToday" aria-label="add" OnClick="AddMeal" />
 @if (meals is null)
