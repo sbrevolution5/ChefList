@@ -1,4 +1,5 @@
 ﻿using MasterMealWA.Shared.Models;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -8,9 +9,8 @@ using System.Threading.Tasks;
 
 namespace MasterMealWA.Shared.Models
 {
-    public class Chef 
+    public class Chef :IdentityUser
     {
-        public Guid Id { get; set; }
         [Required]
         public string FirstName { get; set; }
         [Required]

@@ -2,6 +2,7 @@ using MasterMealWA.Server.Data;
 using MasterMealWA.Server.Models;
 using MasterMealWA.Server.Services;
 using MasterMealWA.Server.Services.Interfaces;
+using MasterMealWA.Shared.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -35,14 +36,11 @@ namespace MasterMealWA.Server
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
-            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true).AddRoles<IdentityRole>()
+            services.AddDefaultIdentity<Chef>(options => options.SignIn.RequireConfirmedAccount = true).AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddIdentityServer()
-                .AddApiAuthorization<ApplicationUser, ApplicationDbContext>(options => {
-                    options.IdentityResources["openid"].UserClaims.Add("id");
-                    options.ApiResources.Single().UserClaims.Add("id");
-                });
+                .AddApiAuthorization<Chef, ApplicationDbContext>();
 
             services.AddAuthentication()
                 .AddIdentityServerJwt();
