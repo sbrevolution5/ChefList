@@ -41,14 +41,20 @@ else
                 <MudGrid>
 
                     <MudItem xs="6">
-                        <MudPaper Elevation="2" Height="181px">
+                        <MudCard Elevation="2">
 
-                        <MudText>@recipe.Description</MudText>
-                        <MudText>
-                            Source:
-                            <MudLink Href="@recipe.RecipeSourceUrl">@recipe.RecipeSource</MudLink>
-                        </MudText>
-                        </MudPaper>
+                            <MudCardContent>
+
+                                <MudText>@recipe.Description</MudText>
+                            </MudCardContent>
+                            <MudCardActions>
+
+                                <MudText Class="d-flex justify-center mt-4">
+                                    Source:
+                                    <MudLink Href="@recipe.RecipeSourceUrl">@recipe.RecipeSource</MudLink>
+                                </MudText>
+                            </MudCardActions>
+                        </MudCard>
                     </MudItem>
                     <MudItem xs="6">
 
