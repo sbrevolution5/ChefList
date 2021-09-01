@@ -10,6 +10,7 @@ using MasterMealWA.Shared.Models;
 using MasterMealWA.Shared.Models.Dtos;
 using MasterMealWA.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace MasterMealWA.Server.Controllers
 {
@@ -20,11 +21,14 @@ namespace MasterMealWA.Server.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IShoppingService _shoppingService;
+        private readonly UserManager<Chef> _userManager;
 
-        public ShoppingListsController(ApplicationDbContext context, IShoppingService shoppingService)
+
+        public ShoppingListsController(ApplicationDbContext context, IShoppingService shoppingService, UserManager<Chef> userManager)
         {
             _context = context;
             _shoppingService = shoppingService;
+            _userManager = userManager;
         }
 
         // GET: api/ShoppingLists
