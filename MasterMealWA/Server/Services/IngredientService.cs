@@ -1,6 +1,5 @@
 ﻿using MasterMealWA.Server.Data;
 using MasterMealWA.Shared.Enums;
-using MasterMealWA.Server.Models;
 using MasterMealWA.Server.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;

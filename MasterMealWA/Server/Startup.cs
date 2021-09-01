@@ -1,5 +1,4 @@
 using MasterMealWA.Server.Data;
-using MasterMealWA.Server.Models;
 using MasterMealWA.Server.Services;
 using MasterMealWA.Server.Services.Interfaces;
 using MasterMealWA.Shared.Models;

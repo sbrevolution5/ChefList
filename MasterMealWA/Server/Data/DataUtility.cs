@@ -12,7 +12,6 @@ using MasterMealWA.Shared.Enums;
 using MasterMealWA.Server.Services;
 using System.Diagnostics;
 using MasterMealWA.Server.Data;
-using MasterMealWA.Server.Models;
 
 namespace MasterMealWA.Server.Data
 {
@@ -75,7 +74,8 @@ namespace MasterMealWA.Server.Data
                 Debug.WriteLine("***********************************");
                 throw;
             }
-        }private static async Task SeedModeratorUserAsync(UserManager<Chef> userManager, RoleManager<IdentityRole> roleManager)
+        }
+        private static async Task SeedModeratorUserAsync(UserManager<Chef> userManager, RoleManager<IdentityRole> roleManager)
         {
             //Seed Default Admin User
             var defaultUser = new Chef
@@ -107,7 +107,8 @@ namespace MasterMealWA.Server.Data
                 Debug.WriteLine("***********************************");
                 throw;
             }
-        }private static async Task SeedRegularUserAsync(UserManager<Chef> userManager, RoleManager<IdentityRole> roleManager)
+        }
+        private static async Task SeedRegularUserAsync(UserManager<Chef> userManager, RoleManager<IdentityRole> roleManager)
         {
             //Seed Default Admin User
             var defaultUser = new Chef
