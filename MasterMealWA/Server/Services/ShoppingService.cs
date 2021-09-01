@@ -21,7 +21,7 @@ namespace MasterMealWA.Server.Services
             _measurementService = measurementService;
         }
 
-        public async Task<ShoppingList> CreateShoppingListForDateRangeAsync(DateTime EndDate, DateTime StartDate)
+        public async Task<ShoppingList> CreateShoppingListForDateRangeAsync(DateTime EndDate, DateTime StartDate,string userId)
         {
             //Get Meals that are in date range, including recipe, qingredients, ingredients
             List<Meal> meals = await _context.Meal.Include(m => m.Recipe)
@@ -30,6 +30,7 @@ namespace MasterMealWA.Server.Services
                                                   .Where(m => m.Date >= StartDate && m.Date <= EndDate)
                                                   .ToListAsync();
             ShoppingList list = CreateShoppingListFromMealsAsync(meals);
+            list.ChefId = userId;
             list.Name = $"Meals before {EndDate.ToShortDateString()}";
             list.Created = DateTime.Now;
             _context.Add(list);

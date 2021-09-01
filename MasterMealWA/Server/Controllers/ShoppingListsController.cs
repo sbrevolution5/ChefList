@@ -92,8 +92,9 @@ namespace MasterMealWA.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<ShoppingList>> PostShoppingList(ListCreateDto shoppingList)
         {
-            var list = await _shoppingService.CreateShoppingListForDateRangeAsync(shoppingList.EndDate, shoppingList.StartDate);
+
             var userId = _userManager.GetUserId(User);
+            var list = await _shoppingService.CreateShoppingListForDateRangeAsync(shoppingList.EndDate, shoppingList.StartDate,userId);
             return CreatedAtAction("GetShoppingList", new { id = list.Id }, list);
         }
 
