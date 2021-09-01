@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using MasterMealWA.Shared.Enums;
 using MasterMealWA.Server.Services.Interfaces;
 using SixLabors.ImageSharp;
+using Microsoft.AspNetCore.Identity;
 
 namespace MasterMealWA.Server.Controllers
 {
@@ -20,10 +21,12 @@ namespace MasterMealWA.Server.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IMeasurementService _measurementService;
-        public RecipesController(ApplicationDbContext context, IMeasurementService measurementService)
+        private readonly UserManager<Chef> _userManager;
+        public RecipesController(ApplicationDbContext context, IMeasurementService measurementService, UserManager<Chef> userManager)
         {
             _context = context;
             _measurementService = measurementService;
+            _userManager = userManager;
         }
 
         // GET: api/Recipes
@@ -118,6 +121,7 @@ namespace MasterMealWA.Server.Controllers
             //    imageId = dBImage.Id;
             //}
             recipe.ImageId = imageId;
+            recipe.AuthorId = _userManager.GetUserId(User);
             _context.Add(recipe);
             foreach (var ingredient in recipe.Ingredients)
             {
