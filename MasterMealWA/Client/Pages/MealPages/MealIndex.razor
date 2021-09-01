@@ -31,7 +31,7 @@ else
     public List<Meal> meals { get; set; }
     protected override async Task OnInitializedAsync()
     {
-        meals = await _api.GetAllMealsAsync();
+        meals = await _api.GetMyMealsAsync();
         await base.OnInitializedAsync();
     }
     public async Task AddMeal()
@@ -43,7 +43,7 @@ else
         {
 
             _snackbar.Add("Meal planned!");
-            meals = await _api.GetAllMealsAsync();
+            meals = await _api.GetMyMealsAsync();
         }
     }
     public async Task EditMeal(Meal meal)
@@ -53,7 +53,7 @@ else
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-            meals = await _api.GetAllMealsAsync();
+            meals = await _api.GetMyMealsAsync();
         }
     }
     public async Task DeleteMeal(Meal meal)
@@ -63,7 +63,7 @@ else
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-            meals = await _api.GetAllMealsAsync();
+            meals = await _api.GetMyMealsAsync();
         }
     }
 }
