@@ -219,5 +219,11 @@ namespace MasterMealWA.Client.Services
             await _http.PutAsJsonAsync("api/supplies", supply);
 
         }
+
+        public async Task<List<Recipe>> GetMyRecipesAsync()
+        {
+            var result = await _http.GetFromJsonAsync<List<Recipe>>("api/recipes/myrecipes", _options);
+            return result;
+        }
     }
 }
