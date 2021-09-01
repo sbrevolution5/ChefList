@@ -35,7 +35,9 @@ namespace MasterMealWA.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ShoppingList>>> GetShoppingList()
         {
-            return await _context.ShoppingList.ToListAsync();
+            var userId = _userManager.GetUserId(User);
+
+            return await _context.ShoppingList.Where(s => s.ChefId == userId).ToListAsync();
         }
 
         // GET: api/ShoppingLists/5
@@ -43,8 +45,9 @@ namespace MasterMealWA.Server.Controllers
         public async Task<ActionResult<ShoppingList>> GetShoppingList(int id)
         {
             var shoppingList = await _context.ShoppingList.Include(l => l.ShoppingIngredients).ThenInclude(s => s.Ingredient).Where(l => l.Id == id).FirstOrDefaultAsync();
+            var userId = _userManager.GetUserId(User);
 
-            if (shoppingList == null)
+            if (shoppingList == null || shoppingList.ChefId != userId)
             {
                 return NotFound();
             }
