@@ -19,16 +19,32 @@ else
         <MudText Typo="Typo.h2">@recipe.Name</MudText>
 
         <MudCard>
-            <MudSkeleton SkeletonType="SkeletonType.Rectangle" Animation="Animation.Wave" Height="375px" />
-            @*<MudCardMedia Image="@_fileService"></MudCardMedia>*@
+            @if (String.IsNullOrWhiteSpace(imageData))
+            {
 
-            <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Icon="@Icons.Material.Filled.CalendarToday" OnClick="AddMeal"></MudIconButton>
+                <MudSkeleton SkeletonType="SkeletonType.Rectangle" Animation="Animation.Wave" Height="375px" />
+            }
+            else
+            {
+                @*<MudCardMedia Image="@_fileService"></MudCardMedia>*@
 
-            <MudText>@recipe.Description</MudText>
-            <MudText>
-                Source: 
-                <MudLink Href="@recipe.RecipeSourceUrl">@recipe.RecipeSource</MudLink>
-            </MudText>
+            }
+            <MudCardActions>
+                <MudButtonGroup Color="Color.Primary" OverrideStyles="false">
+
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.CalendarToday" OnClick="AddMeal">Schedule Meal</MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Warning" StartIcon="@Icons.Material.Filled.Edit" OnClick="AddMeal">Schedule Meal</MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.Delete" OnClick="AddMeal">Delete Recipe</MudButton>
+                </MudButtonGroup>
+            </MudCardActions>
+            <MudCardContent>
+
+                <MudText>@recipe.Description</MudText>
+                <MudText>
+                    Source:
+                    <MudLink Href="@recipe.RecipeSourceUrl">@recipe.RecipeSource</MudLink>
+                </MudText>
+            </MudCardContent>
         </MudCard>
     </MudItem>
     <MudItem xs="4">
@@ -88,10 +104,11 @@ else
     [Parameter]
     public string Id { get; set; }
     private Recipe recipe;
+    private string imageData { get; set; }
     private List<BreadcrumbItem> crumbList = new()
     {
-            new BreadcrumbItem("Recipes", href: "/recipes")
-        };
+        new BreadcrumbItem("Recipes", href: "/recipes")
+    };
     public async Task AddMeal()
     {
         var parameters = new DialogParameters { ["recipe"] = recipe };
