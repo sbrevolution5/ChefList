@@ -9,11 +9,13 @@ using MasterMealWA.Server.Data;
 using MasterMealWA.Shared.Models;
 using MasterMealWA.Shared.Models.Dtos;
 using MasterMealWA.Server.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MasterMealWA.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ShoppingListsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;

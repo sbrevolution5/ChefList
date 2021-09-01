@@ -17,6 +17,7 @@ namespace MasterMealWA.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class RecipesController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
