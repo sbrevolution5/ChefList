@@ -30,7 +30,8 @@ namespace MasterMealWA.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Meal>>> GetMeal()
         {
-            return await _context.Meal.Include(m => m.Recipe).ToListAsync();
+            var userId = _userManager.GetUserId(User);
+            return await _context.Meal.Include(m => m.Recipe).Where(m=>m.ChefId == userId).ToListAsync();
         }
 
         // GET: api/Meals/5
@@ -38,8 +39,9 @@ namespace MasterMealWA.Server.Controllers
         public async Task<ActionResult<Meal>> GetMeal(int id)
         {
             var meal = await _context.Meal.FindAsync(id);
+            var userId = _userManager.GetUserId(User);
 
-            if (meal == null)
+            if (meal == null || meal.ChefId != userId)
             {
                 return NotFound();
             }
