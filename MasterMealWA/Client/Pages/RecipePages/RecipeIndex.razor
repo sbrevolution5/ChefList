@@ -1,5 +1,6 @@
-﻿@page "/recipes"
+﻿@page "/recipes/{mine?}"
 @inject HttpClient Http
+@inject IApiService _api
 @inject NavigationManager nav
 @if (recipes is null)
 {
@@ -12,18 +13,20 @@ else
 {
     @foreach (var recipe in recipes)
     {
-<MudCard>
-    <MudText>@recipe.Name</MudText>
-    <MudText>@recipe.CookingTime</MudText>
-    <MudText>@recipe.Servings</MudText>
-    <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Link=@($"/recipes/edit/{recipe.Id}")></MudIconButton>
-    <MudLink Href="@($"/recipes/details/{recipe.Id}")">Details</MudLink>
-</MudCard>
+        <MudCard>
+            <MudText>@recipe.Name</MudText>
+            <MudText>@recipe.CookingTime</MudText>
+            <MudText>@recipe.Servings</MudText>
+            <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Link=@($"/recipes/edit/{recipe.Id}")></MudIconButton>
+            <MudLink Href="@($"/recipes/details/{recipe.Id}")">Details</MudLink>
+        </MudCard>
 
     }
     <MudFab Icon="@Icons.Material.Filled.Add" Color="Color.Primary" Label="Add Recipe" aria-label="add recipe" @onclick='()=>nav.NavigateTo("/recipes/create")' />
 }
 @code {
+    [Parameter]
+    public string mine { get; set; }
     private List<Recipe> recipes;
     protected override async Task OnInitializedAsync()
     {
@@ -32,7 +35,16 @@ else
             ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve,
             PropertyNamingPolicy = null
         };
-        recipes = await Http.GetFromJsonAsync<List<Recipe>>("Api/recipes", options);
+        if (mine == "myrecipes")
+        {
+
+            recipes = await _api.GetMyRecipesAsync();
+        }
+        else
+        {
+
+            recipes = await _api.GetAllRecipesAsync();
+        }
         base.OnInitialized();
     }
 }
