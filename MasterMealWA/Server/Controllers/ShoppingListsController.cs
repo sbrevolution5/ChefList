@@ -60,7 +60,8 @@ namespace MasterMealWA.Server.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutShoppingList(int id, ShoppingList shoppingList)
         {
-            if (id != shoppingList.Id)
+            var userId = _userManager.GetUserId(User);
+            if (id != shoppingList.Id||shoppingList.ChefId != userId)
             {
                 return BadRequest();
             }
@@ -92,7 +93,7 @@ namespace MasterMealWA.Server.Controllers
         public async Task<ActionResult<ShoppingList>> PostShoppingList(ListCreateDto shoppingList)
         {
             var list = await _shoppingService.CreateShoppingListForDateRangeAsync(shoppingList.EndDate, shoppingList.StartDate);
-
+            var userId = _userManager.GetUserId(User);
             return CreatedAtAction("GetShoppingList", new { id = list.Id }, list);
         }
 
