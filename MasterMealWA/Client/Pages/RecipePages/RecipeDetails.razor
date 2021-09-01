@@ -76,32 +76,41 @@ else
         <MudCard>
             <MudTabs>
                 <MudTabPanel Text="Ingredients">
-                    @foreach (var ingredient in recipe.Ingredients)
-                    {
-                        <MudPaper>
+                    <MudList>
+                        @foreach (var ingredient in recipe.Ingredients)
+                        {<MudListItem>
+                                <MudPaper Elevation="2">
 
-                            <MudText Class="h4">
-                                @ingredient.Ingredient.Name
-                            </MudText>
-                            <MudText>@ingredient.Quantity</MudText>
-                            <MudText>@ingredient.Notes</MudText>
-                        </MudPaper>
-                    }
+                                    <MudText Class="h4">
+                                        @ingredient.Ingredient.Name
+                                    </MudText>
+                                    <MudText>@ingredient.Quantity</MudText>
+                                    <MudText>@ingredient.Notes</MudText>
+                                </MudPaper>
+                            </MudListItem>
+                        }
+                    </MudList>
                 </MudTabPanel>
                 <MudTabPanel Text="Supplies">
-                    @foreach (var supply in recipe.Supplies)
-                    {
-                        <MudPaper>
-                            <MudText Class="h4">@supply.Quantity @supply.Supply.Name</MudText>
-                        </MudPaper>
-                    }
+                    <MudList>
+
+                        @foreach (var supply in recipe.Supplies)
+                        {
+                            <MudListItem>
+
+                                <MudPaper Elevation="2">
+                                    <MudText Class="h4">@supply.Quantity @supply.Supply.Name</MudText>
+                                </MudPaper>
+                            </MudListItem>
+                        }
+                    </MudList>
                 </MudTabPanel>
                 <MudTabPanel Text="Steps">
                     <MudList>
                         @foreach (var step in recipe.Steps.OrderBy(s => s.StepNumber))
                         {
                             <MudListItem>
-                                <MudPaper>
+                                <MudPaper Elevation="2">
                                     <MudText>@step.StepNumber. @step.Text</MudText>
                                 </MudPaper>
                             </MudListItem>
@@ -109,7 +118,7 @@ else
                     </MudList>
                 </MudTabPanel>
             </MudTabs>
-            
+
         </MudCard>
     </MudItem>
 }
