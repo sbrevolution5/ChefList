@@ -39,7 +39,10 @@ namespace MasterMealWA.Server
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddIdentityServer()
-                .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
+                .AddApiAuthorization<ApplicationUser, ApplicationDbContext>(options => {
+                    options.IdentityResources["openid"].UserClaims.Add("id");
+                    options.ApiResources.Single().UserClaims.Add("id");
+                });
 
             services.AddAuthentication()
                 .AddIdentityServerJwt();
