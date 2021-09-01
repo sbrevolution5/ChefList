@@ -1,11 +1,10 @@
 ﻿@page "/recipes/details/{id}"
 @inject HttpClient Http
 @inject IDialogService _dialogService
-@inject ISnackbar snackbar 
+@inject ISnackbar snackbar
 
 <MudItem xs="12">
     <MudBreadcrumbs Items="crumbList"></MudBreadcrumbs>
-    <MudText Typo="Typo.caption">Recipe</MudText>
 </MudItem>
 @if (recipe is null)
 {
@@ -17,16 +16,20 @@
 else
 {
     <MudItem xs="8">
-            <MudText Typo="Typo.h2">@recipe.Name</MudText>
-        
-            <MudCard>
-                <MudSkeleton SkeletonType="SkeletonType.Rectangle" Animation="Animation.Wave" Height="250px" />
-                @*<MudCardMedia Image="@_fileService"></MudCardMedia>*@
+        <MudText Typo="Typo.h2">@recipe.Name</MudText>
 
-                <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Icon="@Icons.Material.Filled.CalendarToday" OnClick="AddMeal"></MudIconButton>
+        <MudCard>
+            <MudSkeleton SkeletonType="SkeletonType.Rectangle" Animation="Animation.Wave" Height="375px" />
+            @*<MudCardMedia Image="@_fileService"></MudCardMedia>*@
 
-                <MudText>@recipe.Description</MudText>
-            </MudCard>
+            <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Icon="@Icons.Material.Filled.CalendarToday" OnClick="AddMeal"></MudIconButton>
+
+            <MudText>@recipe.Description</MudText>
+            <MudText>
+                Source: 
+                <MudLink Href="@recipe.RecipeSourceUrl">@recipe.RecipeSource</MudLink>
+            </MudText>
+        </MudCard>
     </MudItem>
     <MudItem xs="4">
 
@@ -87,8 +90,8 @@ else
     private Recipe recipe;
     private List<BreadcrumbItem> crumbList = new()
     {
-        new BreadcrumbItem("Recipes", href: "/recipes")
-    };
+            new BreadcrumbItem("Recipes", href: "/recipes")
+        };
     public async Task AddMeal()
     {
         var parameters = new DialogParameters { ["recipe"] = recipe };
