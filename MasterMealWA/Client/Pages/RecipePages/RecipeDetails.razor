@@ -3,7 +3,9 @@
 @inject IDialogService _dialogService
 @inject ISnackbar snackbar
 
-<MudText Typo="Typo.h1">Recipe</MudText>
+<MudItem xs="12">
+    <MudBreadcrumbs Items="crumbList"></MudBreadcrumbs>
+</MudItem>
 @if (recipe is null)
 {
     <MudOverlay>
@@ -13,49 +15,135 @@
 }
 else
 {
-    <MudText>@recipe.Name</MudText>
-    <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Icon="@Icons.Material.Filled.CalendarToday" OnClick="AddMeal"></MudIconButton>
+    <MudItem xs="8">
+        <MudText Typo="Typo.h2">@recipe.Name</MudText>
 
-    <MudText>@recipe.Description</MudText>
-    <MudList>
-        @foreach (var step in recipe.Steps.OrderBy(s => s.StepNumber))
-        {
-            <MudListItem>
-                @step.Text
-            </MudListItem>
-        }
-    </MudList>
-    @foreach (var ingredient in recipe.Ingredients)
-    {
-        <div class="card">
+        <MudCard>
+            @if (String.IsNullOrWhiteSpace(imageData))
+            {
 
-            <div class="card-body">
-                <h4 class="card-title">@ingredient.Ingredient.Name</h4>
-                <p class="card-text">@ingredient.Quantity</p>
-                <p class="card-text">@ingredient.Notes</p>
-            </div>
-        </div>
-    }
-    @foreach (var supply in recipe.Supplies)
-    {
-        //card with supply
-        <div class="card">
-            <div class="card-body">
-                <h4 class="card-title">@supply.Supply.Name</h4>
-                @*<p class="card-text">Text</p>*@
-            </div>
-        </div>
-    }
+                <MudSkeleton SkeletonType="SkeletonType.Rectangle" Animation="Animation.Wave" Height="375px" />
+            }
+            else
+            {
+                @*<MudCardMedia Image="@_fileService"></MudCardMedia>*@
+
+            }
+            <MudCardActions>
+                <MudButtonGroup Color="Color.Primary" OverrideStyles="false">
+
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.CalendarToday" OnClick="AddMeal">Schedule Meal</MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Warning" StartIcon="@Icons.Material.Filled.Edit" OnClick="AddMeal">Schedule Meal</MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.Delete" OnClick="AddMeal">Delete Recipe</MudButton>
+                </MudButtonGroup>
+            </MudCardActions>
+            <MudCardContent>
+                <MudGrid>
+
+                    <MudItem xs="6">
+                        <MudCard Elevation="2">
+
+                            <MudCardContent>
+
+                                <MudText>@recipe.Description</MudText>
+                            </MudCardContent>
+                            <MudCardActions>
+
+                                <MudText Class="d-flex justify-center mt-4">
+                                    Source:
+                                    <MudLink Href="@recipe.RecipeSourceUrl">@recipe.RecipeSource</MudLink>
+                                </MudText>
+                            </MudCardActions>
+                        </MudCard>
+                    </MudItem>
+                    <MudItem xs="6">
+
+                        <MudSimpleTable Elevation="2">
+                            <tbody>
+                                <tr>
+                                    <td>Serves:</td>
+                                    <td>@recipe.Servings</td>
+                                </tr>
+                                <tr>
+                                    <td>Time To Cook:</td>
+                                    <td>@recipe.CookingTime</td>
+                                </tr>
+                                <tr>
+                                    <td>Recipe Type:</td>
+                                    <td>@recipe.Type.Name</td>
+                                </tr>
+                            </tbody>
+                        </MudSimpleTable>
+                    </MudItem>
+                </MudGrid>
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+    <MudItem xs="4">
+
+        <MudCard>
+            <MudTabs>
+                <MudTabPanel Text="Ingredients">
+                    <MudList>
+                        @foreach (var ingredient in recipe.Ingredients)
+                        {<MudListItem>
+                                <MudPaper Elevation="2">
+
+                                    <MudText Class="h4">
+                                        @ingredient.Ingredient.Name
+                                    </MudText>
+                                    <MudText>@ingredient.Quantity</MudText>
+                                    <MudText>@ingredient.Notes</MudText>
+                                </MudPaper>
+                            </MudListItem>
+                        }
+                    </MudList>
+                </MudTabPanel>
+                <MudTabPanel Text="Supplies">
+                    <MudList>
+
+                        @foreach (var supply in recipe.Supplies)
+                        {
+                            <MudListItem>
+
+                                <MudPaper Elevation="2">
+                                    <MudText Class="h4">@supply.Quantity @supply.Supply.Name</MudText>
+                                </MudPaper>
+                            </MudListItem>
+                        }
+                    </MudList>
+                </MudTabPanel>
+                <MudTabPanel Text="Steps">
+                    <MudList>
+                        @foreach (var step in recipe.Steps.OrderBy(s => s.StepNumber))
+                        {
+                            <MudListItem>
+                                <MudPaper Elevation="2">
+                                    <MudText>@step.StepNumber. @step.Text</MudText>
+                                </MudPaper>
+                            </MudListItem>
+                        }
+                    </MudList>
+                </MudTabPanel>
+            </MudTabs>
+
+        </MudCard>
+    </MudItem>
 }
 
 @code {
     [Parameter]
     public string Id { get; set; }
     private Recipe recipe;
+    private string imageData { get; set; }
+    private List<BreadcrumbItem> crumbList = new()
+    {
+            new BreadcrumbItem("Recipes", href: "/recipes")
+        };
     public async Task AddMeal()
     {
         var parameters = new DialogParameters { ["recipe"] = recipe };
-        var dialog = _dialogService.Show<MealCreate>("Schedule Meal",parameters);
+        var dialog = _dialogService.Show<MealCreate>("Schedule Meal", parameters);
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
