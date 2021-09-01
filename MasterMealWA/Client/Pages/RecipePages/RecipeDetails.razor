@@ -2,7 +2,7 @@
 @inject HttpClient Http
 @inject IDialogService _dialogService
 @inject ISnackbar snackbar
-@inject AuthenticationStateProvider _authState
+@inject IUserService _userService
 <MudItem xs="12">
     <MudBreadcrumbs Items="crumbList"></MudBreadcrumbs>
 </MudItem>
@@ -15,9 +15,6 @@
 }
 else
 {
-    <MudText>
-        @userId
-    </MudText>
     <MudItem xs="8">
         <MudText Typo="Typo.h2">@recipe.Name</MudText>
 
@@ -33,12 +30,20 @@ else
 
             }
             <MudCardActions>
-                <MudButtonGroup Color="Color.Primary" OverrideStyles="false">
+                @if (userId == recipe.AuthorId)
+                {
 
+                    <MudButtonGroup Color="Color.Primary" OverrideStyles="false">
+
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.CalendarToday" OnClick="AddMeal">Schedule Meal</MudButton>
+                        <MudButton Variant="Variant.Filled" Color="Color.Warning" StartIcon="@Icons.Material.Filled.Edit" OnClick="AddMeal">Edit Meal</MudButton>
+                        <MudButton Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.Delete" OnClick="AddMeal">Delete Recipe</MudButton>
+                    </MudButtonGroup>
+                }
+                else
+                {
                     <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.CalendarToday" OnClick="AddMeal">Schedule Meal</MudButton>
-                    <MudButton Variant="Variant.Filled" Color="Color.Warning" StartIcon="@Icons.Material.Filled.Edit" OnClick="AddMeal">Schedule Meal</MudButton>
-                    <MudButton Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.Delete" OnClick="AddMeal">Delete Recipe</MudButton>
-                </MudButtonGroup>
+                }
             </MudCardActions>
             <MudCardContent>
                 <MudGrid>
@@ -157,7 +162,7 @@ else
     }
     protected override async Task OnInitializedAsync()
     {
-        userId = (await _authState.GetAuthenticationStateAsync()).User.FindFirst(c => c.Type == "sub")?.Value;
+        userId = await _userService.GetUserIdAsync();
         var options = new JsonSerializerOptions()
         {
             ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve,
