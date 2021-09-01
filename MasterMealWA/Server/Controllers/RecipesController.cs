@@ -38,6 +38,15 @@ namespace MasterMealWA.Server.Controllers
             var userId = _userManager.GetUserId(User);
             return await _context.Recipe.Where(r=>!r.IsPrivate || r.AuthorId == userId).ToListAsync();
         }
+        // GET: api/Recipes
+        [HttpGet]
+        [Route("api/[controller]/myrecipes")]
+        [AllowAnonymous]
+        public async Task<ActionResult<IEnumerable<Recipe>>> GetMyRecipes()
+        {
+            var userId = _userManager.GetUserId(User);
+            return await _context.Recipe.Where(r=> r.AuthorId == userId).ToListAsync();
+        }
 
         // GET: api/Recipes/5
         [HttpGet("{id}")]

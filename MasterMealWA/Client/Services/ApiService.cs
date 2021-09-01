@@ -97,7 +97,7 @@ namespace MasterMealWA.Client.Services
 
         public async Task<List<Ingredient>> GetAllIngredientsAsync()
         {
-            var list = await _http.GetFromJsonAsync<List<Ingredient>>("api/ingredients",_options);
+            var list = await _http.GetFromJsonAsync<List<Ingredient>>("api/ingredients", _options);
             return list;
         }
 
@@ -109,7 +109,7 @@ namespace MasterMealWA.Client.Services
 
         public async Task<List<Meal>> GetMyMealsAsync()
         {
-            var list = await _http.GetFromJsonAsync<List<Meal>>("api/meals",_options);
+            var list = await _http.GetFromJsonAsync<List<Meal>>("api/meals", _options);
             return list;
         }
 
@@ -151,7 +151,7 @@ namespace MasterMealWA.Client.Services
 
         public async Task<Meal> GetMealAsync(int id)
         {
-            var meal=await _http.GetFromJsonAsync<Meal>($"api/Meals/{id}", _options);
+            var meal = await _http.GetFromJsonAsync<Meal>($"api/Meals/{id}", _options);
             return meal;
         }
 
@@ -198,7 +198,7 @@ namespace MasterMealWA.Client.Services
 
         public async Task UpdateRecipeAsync(Recipe recipe)
         {
-            await _http.PutAsJsonAsync($"api/recipes/{recipe.Id}", recipe,_options);
+            await _http.PutAsJsonAsync($"api/recipes/{recipe.Id}", recipe, _options);
 
         }
 
@@ -222,8 +222,17 @@ namespace MasterMealWA.Client.Services
 
         public async Task<List<Recipe>> GetMyRecipesAsync()
         {
-            var result = await _http.GetFromJsonAsync<List<Recipe>>("api/recipes/myrecipes", _options);
-            return result;
+            try
+            {
+
+                var result = await _http.GetFromJsonAsync<List<Recipe>>("api/recipes/myrecipes", _options);
+                return result;
+            }
+            catch (Exception)
+            {
+
+                return new List<Recipe>();
+            }
         }
     }
 }

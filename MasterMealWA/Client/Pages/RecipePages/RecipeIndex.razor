@@ -28,14 +28,29 @@ else
     [Parameter]
     public string mine { get; set; }
     private List<Recipe> recipes;
+    protected override async Task OnParametersSetAsync()
+    {
+        mine = mine ?? "";
+        if (mine.ToLower() == "myrecipes")
+        {
+
+            recipes = await _api.GetMyRecipesAsync();
+        }
+        else
+        {
+
+            recipes = await _api.GetAllRecipesAsync();
+        }
+    }
     protected override async Task OnInitializedAsync()
     {
+        mine = mine ?? "";
         var options = new JsonSerializerOptions()
         {
             ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve,
             PropertyNamingPolicy = null
         };
-        if (mine == "myrecipes")
+        if (mine.ToLower() == "myrecipes")
         {
 
             recipes = await _api.GetMyRecipesAsync();
