@@ -12,7 +12,6 @@ using MasterMealWA.Shared.Enums;
 using MasterMealWA.Server.Services;
 using System.Diagnostics;
 using MasterMealWA.Server.Data;
-using MasterMealWA.Server.Models;
 
 namespace MasterMealWA.Server.Data
 {
@@ -28,22 +27,24 @@ namespace MasterMealWA.Server.Data
             //Service: An instance of RoleManager
             var roleManagerSvc = svcProvider.GetRequiredService<RoleManager<IdentityRole>>();
             //Service: An instance of the UserManager
-            var userManagerSvc = svcProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var userManagerSvc = svcProvider.GetRequiredService<UserManager<Chef>>();
             //TsTEP 1: This is the programmatic equivalent to Update-Database
             await dbContextSvc.Database.MigrateAsync();
             await SeedDefaultImagesAsync(dbContextSvc);
             await SeedRolesAsync(userManagerSvc, roleManagerSvc);
             await SeedAdminUserAsync(userManagerSvc, roleManagerSvc);
+            await SeedModeratorUserAsync(userManagerSvc, roleManagerSvc);
+            await SeedRegularUserAsync(userManagerSvc, roleManagerSvc);
             await SeedRecipeTypesAsync(dbContextSvc);
             await SeedIngredientTypesAsync(dbContextSvc);
             await SeedIngredientsAsync(dbContextSvc);
             await SeedSuppliesAsync(dbContextSvc);
             await SeedRecipesAsync(dbContextSvc, userManagerSvc);
         }
-        private static async Task SeedAdminUserAsync(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        private static async Task SeedAdminUserAsync(UserManager<Chef> userManager, RoleManager<IdentityRole> roleManager)
         {
             //Seed Default Admin User
-            var defaultUser = new ApplicationUser
+            var defaultUser = new Chef
             {
                 UserName = "sethbcoding@gmail.com",
                 DisplayName = "sethbcoding@gmail.com",
@@ -61,6 +62,8 @@ namespace MasterMealWA.Server.Data
                 {
                     await userManager.CreateAsync(defaultUser, "Abc&123!");
                     await userManager.AddToRoleAsync(defaultUser, UserRoles.Admin.ToString());
+                    await userManager.AddToRoleAsync(defaultUser, UserRoles.Moderator.ToString());
+                    await userManager.AddToRoleAsync(defaultUser, UserRoles.User.ToString());
                 }
             }
             catch (Exception ex)
@@ -72,11 +75,78 @@ namespace MasterMealWA.Server.Data
                 throw;
             }
         }
-        public static async Task SeedRolesAsync(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        private static async Task SeedModeratorUserAsync(UserManager<Chef> userManager, RoleManager<IdentityRole> roleManager)
+        {
+            //Seed Default Admin User
+            var defaultUser = new Chef
+            {
+                UserName = "softballcc11@yahoo.com",
+                DisplayName = "softballcc11@yahoo.com",
+                Email = "softballcc11@yahoo.com",
+                FirstName = "Cydney",
+                LastName = "Burleson",
+                ScreenName = "CydModerator",
+                EmailConfirmed = true,
+                ImageId = 2,
+            };
+            try
+            {
+                var user = await userManager.FindByEmailAsync(defaultUser.Email);
+                if (user == null)
+                {
+                    await userManager.CreateAsync(defaultUser, "Abc&123!");
+                    await userManager.AddToRoleAsync(defaultUser, UserRoles.Moderator.ToString());
+                    await userManager.AddToRoleAsync(defaultUser, UserRoles.User.ToString());
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("*************  ERROR  *************");
+                Debug.WriteLine("Error Seeding Default Moderator User.");
+                Debug.WriteLine(ex.Message);
+                Debug.WriteLine("***********************************");
+                throw;
+            }
+        }
+        private static async Task SeedRegularUserAsync(UserManager<Chef> userManager, RoleManager<IdentityRole> roleManager)
+        {
+            //Seed Default Admin User
+            var defaultUser = new Chef
+            {
+                UserName = "sbrevolution5@aim.com",
+                DisplayName = "sbrevolution5@aim.com",
+                Email = "sbrevolution5@aim.com",
+                FirstName = "Seth",
+                LastName = "Burleson",
+                ScreenName = "sbrevolution5",
+                EmailConfirmed = true,
+                ImageId = 2,
+            };
+            try
+            {
+                var user = await userManager.FindByEmailAsync(defaultUser.Email);
+                if (user == null)
+                {
+                    await userManager.CreateAsync(defaultUser, "Abc&123!");
+                    await userManager.AddToRoleAsync(defaultUser, UserRoles.User.ToString());
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("*************  ERROR  *************");
+                Debug.WriteLine("Error Seeding Default User.");
+                Debug.WriteLine(ex.Message);
+                Debug.WriteLine("***********************************");
+                throw;
+            }
+        }
+        public static async Task SeedRolesAsync(UserManager<Chef> userManager, RoleManager<IdentityRole> roleManager)
         {
             //Seed Roles
             await roleManager.CreateAsync(new IdentityRole(UserRoles.Admin.ToString()));
             await roleManager.CreateAsync(new IdentityRole(UserRoles.User.ToString()));
+            await roleManager.CreateAsync(new IdentityRole(UserRoles.Moderator.ToString()));
+
 
         }
         private static async Task SeedDefaultImagesAsync(ApplicationDbContext context)
@@ -219,7 +289,7 @@ namespace MasterMealWA.Server.Data
             return sup;
         }
 
-        private static async Task SeedRecipesAsync(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        private static async Task SeedRecipesAsync(ApplicationDbContext context, UserManager<Chef> userManager)
         {
             if ((await context.Recipe.ToListAsync()).Count < 1)
             {
@@ -233,7 +303,7 @@ namespace MasterMealWA.Server.Data
             }
         }
 
-        private static async Task SeedBeefTostadaAsync(ApplicationDbContext context, List<RecipeType> types, List<Ingredient> ing, ApplicationUser admin, List<Supply> sup)
+        private static async Task SeedBeefTostadaAsync(ApplicationDbContext context, List<RecipeType> types, List<Ingredient> ing, Chef admin, List<Supply> sup)
         {
             #region BeefTostada
             var beefTostada = new Recipe()
@@ -289,7 +359,7 @@ namespace MasterMealWA.Server.Data
             #endregion
         }
 
-        private static async Task SeeedAnchoBBQ(ApplicationDbContext context, List<RecipeType> types, List<Ingredient> ing, ApplicationUser admin, List<Supply> sup)
+        private static async Task SeeedAnchoBBQ(ApplicationDbContext context, List<RecipeType> types, List<Ingredient> ing, Chef admin, List<Supply> sup)
         {
             #region AnchoBBQ
             var anchoBBQ = new Recipe()
@@ -342,7 +412,7 @@ namespace MasterMealWA.Server.Data
             #endregion
         }
 
-        private static async Task SeedBuffChickenAsync(ApplicationDbContext context, List<RecipeType> types, List<Ingredient> ing, ApplicationUser admin, List<Supply> sup)
+        private static async Task SeedBuffChickenAsync(ApplicationDbContext context, List<RecipeType> types, List<Ingredient> ing, Chef admin, List<Supply> sup)
         {
             #region Buffalochicken
             var buffaloChk = new Recipe()

@@ -9,27 +9,35 @@ using MasterMealWA.Server.Data;
 using MasterMealWA.Shared.Models;
 using MasterMealWA.Shared.Models.Dtos;
 using MasterMealWA.Server.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace MasterMealWA.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ShoppingListsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
         private readonly IShoppingService _shoppingService;
+        private readonly UserManager<Chef> _userManager;
 
-        public ShoppingListsController(ApplicationDbContext context, IShoppingService shoppingService)
+
+        public ShoppingListsController(ApplicationDbContext context, IShoppingService shoppingService, UserManager<Chef> userManager)
         {
             _context = context;
             _shoppingService = shoppingService;
+            _userManager = userManager;
         }
 
         // GET: api/ShoppingLists
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ShoppingList>>> GetShoppingList()
         {
-            return await _context.ShoppingList.ToListAsync();
+            var userId = _userManager.GetUserId(User);
+
+            return await _context.ShoppingList.Where(s => s.ChefId == userId).ToListAsync();
         }
 
         // GET: api/ShoppingLists/5
@@ -37,8 +45,9 @@ namespace MasterMealWA.Server.Controllers
         public async Task<ActionResult<ShoppingList>> GetShoppingList(int id)
         {
             var shoppingList = await _context.ShoppingList.Include(l => l.ShoppingIngredients).ThenInclude(s => s.Ingredient).Where(l => l.Id == id).FirstOrDefaultAsync();
+            var userId = _userManager.GetUserId(User);
 
-            if (shoppingList == null)
+            if (shoppingList == null || shoppingList.ChefId != userId)
             {
                 return NotFound();
             }
@@ -51,7 +60,8 @@ namespace MasterMealWA.Server.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutShoppingList(int id, ShoppingList shoppingList)
         {
-            if (id != shoppingList.Id)
+            var userId = _userManager.GetUserId(User);
+            if (id != shoppingList.Id||shoppingList.ChefId != userId)
             {
                 return BadRequest();
             }
@@ -82,8 +92,9 @@ namespace MasterMealWA.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<ShoppingList>> PostShoppingList(ListCreateDto shoppingList)
         {
-            var list = await _shoppingService.CreateShoppingListForDateRangeAsync(shoppingList.EndDate, shoppingList.StartDate);
 
+            var userId = _userManager.GetUserId(User);
+            var list = await _shoppingService.CreateShoppingListForDateRangeAsync(shoppingList.EndDate, shoppingList.StartDate,userId);
             return CreatedAtAction("GetShoppingList", new { id = list.Id }, list);
         }
 

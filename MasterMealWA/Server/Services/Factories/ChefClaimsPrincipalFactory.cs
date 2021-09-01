@@ -1,5 +1,4 @@
-﻿using MasterMealWA.Server.Models;
-using MasterMealWA.Shared.Models;
+﻿using MasterMealWA.Shared.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using System;
