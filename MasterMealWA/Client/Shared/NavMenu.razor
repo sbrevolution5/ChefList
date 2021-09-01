@@ -1,12 +1,14 @@
 ﻿<MudNavMenu>
+    <MudText Typo="Typo.h6">ChefList</MudText>
+    <MudDivider Class="my-2"></MudDivider>
     <MudNavLink Href="/dashboard">Dashboard</MudNavLink>
-    <MudNavGroup Title="Recipes" Expanded="true">
+    <MudNavGroup Title="Recipes" Icon="@Icons.Material.Filled.Restaurant" Expanded="true">
 
-        <MudNavLink Href="/recipes">All recipes</MudNavLink>
-        <MudNavLink Href="/recipes/My">My Recipes</MudNavLink>
+        <MudNavLink Href="/recipes" Icon="@Icons.Material.Filled.People">All recipes</MudNavLink>
+        <MudNavLink Href="/recipes/My"Icon="@Icons.Material.Filled.Person">My Recipes</MudNavLink>
     </MudNavGroup>
-    <MudNavLink Href="/ingredients">Ingredients</MudNavLink>
-    <MudNavLink Href="/supplies">Supplies</MudNavLink>
-    <MudNavLink Href="/meals">Meals</MudNavLink>
-    <MudNavLink Href="/shoppinglists">Shopping Lists</MudNavLink>
+    <MudNavLink Href="/ingredients" Icon="@Icons.Material.Filled.LunchDining">Ingredients</MudNavLink>
+    <MudNavLink Href="/supplies" Icon="@Icons.Material.Filled.RestaurantMenu">Supplies</MudNavLink>
+    <MudNavLink Href="/meals" Icon="@Icons.Material.Filled.DinnerDining">Meals</MudNavLink>
+    <MudNavLink Href="/shoppinglists"Icon="@Icons.Material.Filled.Checklist">Shopping Lists</MudNavLink>
 </MudNavMenu>
