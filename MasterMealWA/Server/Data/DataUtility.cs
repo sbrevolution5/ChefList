@@ -34,6 +34,8 @@ namespace MasterMealWA.Server.Data
             await SeedDefaultImagesAsync(dbContextSvc);
             await SeedRolesAsync(userManagerSvc, roleManagerSvc);
             await SeedAdminUserAsync(userManagerSvc, roleManagerSvc);
+            await SeedModeratorUserAsync(userManagerSvc, roleManagerSvc);
+            await SeedRegularUserAsync(userManagerSvc, roleManagerSvc);
             await SeedRecipeTypesAsync(dbContextSvc);
             await SeedIngredientTypesAsync(dbContextSvc);
             await SeedIngredientsAsync(dbContextSvc);
@@ -68,6 +70,67 @@ namespace MasterMealWA.Server.Data
             {
                 Debug.WriteLine("*************  ERROR  *************");
                 Debug.WriteLine("Error Seeding Default Admin User.");
+                Debug.WriteLine(ex.Message);
+                Debug.WriteLine("***********************************");
+                throw;
+            }
+        }private static async Task SeedModeratorUserAsync(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        {
+            //Seed Default Admin User
+            var defaultUser = new ApplicationUser
+            {
+                UserName = "softballcc11@yahoo.com",
+                DisplayName = "softballcc11@yahoo.com",
+                Email = "softballcc11@yahoo.com",
+                FirstName = "Cydney",
+                LastName = "Burleson",
+                ScreenName = "CydModerator",
+                EmailConfirmed = true,
+                ImageId = 2,
+            };
+            try
+            {
+                var user = await userManager.FindByEmailAsync(defaultUser.Email);
+                if (user == null)
+                {
+                    await userManager.CreateAsync(defaultUser, "Abc&123!");
+                    await userManager.AddToRoleAsync(defaultUser, UserRoles.Moderator.ToString());
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("*************  ERROR  *************");
+                Debug.WriteLine("Error Seeding Default Moderator User.");
+                Debug.WriteLine(ex.Message);
+                Debug.WriteLine("***********************************");
+                throw;
+            }
+        }private static async Task SeedRegularUserAsync(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        {
+            //Seed Default Admin User
+            var defaultUser = new ApplicationUser
+            {
+                UserName = "sbrevolution5@aim.com",
+                DisplayName = "sbrevolution5@aim.com",
+                Email = "sbrevolution5@aim.com",
+                FirstName = "Seth",
+                LastName = "Burleson",
+                ScreenName = "sbrevolution5",
+                EmailConfirmed = true,
+                ImageId = 2,
+            };
+            try
+            {
+                var user = await userManager.FindByEmailAsync(defaultUser.Email);
+                if (user == null)
+                {
+                    await userManager.CreateAsync(defaultUser, "Abc&123!");
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("*************  ERROR  *************");
+                Debug.WriteLine("Error Seeding Default User.");
                 Debug.WriteLine(ex.Message);
                 Debug.WriteLine("***********************************");
                 throw;
