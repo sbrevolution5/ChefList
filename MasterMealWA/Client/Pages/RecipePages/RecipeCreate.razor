@@ -50,6 +50,9 @@
                         </MudSelect>
                     }
                 </MudCardContent>
+                <MudCardActions>
+                    <MudCheckBox @bind-Checked="recipe.IsPrivate" Label="Hide Recipe from public search"></MudCheckBox>
+                </MudCardActions>
             </MudCard>
         </MudItem>
         <MudItem xs="4">
