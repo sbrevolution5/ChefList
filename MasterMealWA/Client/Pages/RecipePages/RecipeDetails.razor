@@ -38,12 +38,36 @@ else
                 </MudButtonGroup>
             </MudCardActions>
             <MudCardContent>
+                <MudGrid>
 
-                <MudText>@recipe.Description</MudText>
-                <MudText>
-                    Source:
-                    <MudLink Href="@recipe.RecipeSourceUrl">@recipe.RecipeSource</MudLink>
-                </MudText>
+                    <MudItem xs="6">
+
+                        <MudText>@recipe.Description</MudText>
+                        <MudText>
+                            Source:
+                            <MudLink Href="@recipe.RecipeSourceUrl">@recipe.RecipeSource</MudLink>
+                        </MudText>
+                    </MudItem>
+                    <MudItem xs="6">
+
+                        <MudSimpleTable>
+                            <tbody>
+                                <tr>
+                                    <td>Serves:</td>
+                                    <td>@recipe.Servings</td>
+                                </tr>
+                                <tr>
+                                    <td>Time To Cook:</td>
+                                    <td>@recipe.CookingTime</td>
+                                </tr>
+                                <tr>
+                                    <td>Recipe Type:</td>
+                                    <td>@recipe.Type.Name</td>
+                                </tr>
+                            </tbody>
+                        </MudSimpleTable>
+                    </MudItem>
+                </MudGrid>
             </MudCardContent>
         </MudCard>
     </MudItem>
@@ -107,8 +131,8 @@ else
     private string imageData { get; set; }
     private List<BreadcrumbItem> crumbList = new()
     {
-        new BreadcrumbItem("Recipes", href: "/recipes")
-    };
+            new BreadcrumbItem("Recipes", href: "/recipes")
+        };
     public async Task AddMeal()
     {
         var parameters = new DialogParameters { ["recipe"] = recipe };
