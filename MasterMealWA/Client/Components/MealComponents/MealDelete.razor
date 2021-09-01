@@ -1,4 +1,5 @@
 ﻿@inject IApiService _api
+@attribute [Authorize(Roles = ("Admin,Moderator"))]
 <MudDialog>
     <DialogContent>
 
@@ -28,7 +29,7 @@
     {
 
         recipes = await _api.GetAllRecipesAsync();
-        recipe = recipes.Where(r=> r.Id == meal.RecipeId).FirstOrDefault();
+        recipe = recipes.Where(r => r.Id == meal.RecipeId).FirstOrDefault();
     }
     public async Task ConfirmDelete()
     {

@@ -61,6 +61,7 @@ namespace MasterMealWA.Server.Data
                 {
                     await userManager.CreateAsync(defaultUser, "Abc&123!");
                     await userManager.AddToRoleAsync(defaultUser, UserRoles.Admin.ToString());
+                    await userManager.AddToRoleAsync(defaultUser, UserRoles.Moderator.ToString());
                 }
             }
             catch (Exception ex)
@@ -77,6 +78,8 @@ namespace MasterMealWA.Server.Data
             //Seed Roles
             await roleManager.CreateAsync(new IdentityRole(UserRoles.Admin.ToString()));
             await roleManager.CreateAsync(new IdentityRole(UserRoles.User.ToString()));
+            await roleManager.CreateAsync(new IdentityRole(UserRoles.Moderator.ToString()));
+
 
         }
         private static async Task SeedDefaultImagesAsync(ApplicationDbContext context)
