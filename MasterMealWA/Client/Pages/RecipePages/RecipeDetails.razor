@@ -2,7 +2,7 @@
 @inject HttpClient Http
 @inject IDialogService _dialogService
 @inject ISnackbar snackbar
-
+@inject IUserService _userService
 <MudItem xs="12">
     <MudBreadcrumbs Items="crumbList"></MudBreadcrumbs>
 </MudItem>
@@ -30,12 +30,20 @@ else
 
             }
             <MudCardActions>
-                <MudButtonGroup Color="Color.Primary" OverrideStyles="false">
+                @if (userId == recipe.AuthorId)
+                {
 
+                    <MudButtonGroup Color="Color.Primary" OverrideStyles="false">
+
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.CalendarToday" OnClick="AddMeal">Schedule Meal</MudButton>
+                        <MudButton Variant="Variant.Filled" Color="Color.Warning" StartIcon="@Icons.Material.Filled.Edit" OnClick="AddMeal">Edit Meal</MudButton>
+                        <MudButton Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.Delete" OnClick="AddMeal">Delete Recipe</MudButton>
+                    </MudButtonGroup>
+                }
+                else
+                {
                     <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.CalendarToday" OnClick="AddMeal">Schedule Meal</MudButton>
-                    <MudButton Variant="Variant.Filled" Color="Color.Warning" StartIcon="@Icons.Material.Filled.Edit" OnClick="AddMeal">Schedule Meal</MudButton>
-                    <MudButton Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.Delete" OnClick="AddMeal">Delete Recipe</MudButton>
-                </MudButtonGroup>
+                }
             </MudCardActions>
             <MudCardContent>
                 <MudGrid>
@@ -136,6 +144,7 @@ else
     public string Id { get; set; }
     private Recipe recipe;
     private string imageData { get; set; }
+    private string userId { get; set; }
     private List<BreadcrumbItem> crumbList = new()
     {
             new BreadcrumbItem("Recipes", href: "/recipes")
@@ -147,12 +156,12 @@ else
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-
             snackbar.Add("Meal planned!");
         }
     }
     protected override async Task OnInitializedAsync()
     {
+        userId = await _userService.GetUserIdAsync();
         var options = new JsonSerializerOptions()
         {
             ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve,
