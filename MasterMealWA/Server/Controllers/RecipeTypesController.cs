@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MasterMealWA.Server.Data;
 using MasterMealWA.Shared.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MasterMealWA.Server.Controllers
 {

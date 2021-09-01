@@ -23,7 +23,7 @@ else
     public List<ShoppingList> shoppingLists { get; set; }
     protected override async Task OnInitializedAsync()
     {
-        shoppingLists = await _api.GetAllShoppingListsAsync();
+        shoppingLists = await _api.GetMyShoppingListsAsync();
     }
     public async Task NewList()
     {
@@ -31,7 +31,7 @@ else
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-            shoppingLists = await _api.GetAllShoppingListsAsync();
+            shoppingLists = await _api.GetMyShoppingListsAsync();
         }
     }
     public async Task DeleteList(ShoppingList list)
@@ -41,7 +41,7 @@ else
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-            shoppingLists = await _api.GetAllShoppingListsAsync();
+            shoppingLists = await _api.GetMyShoppingListsAsync();
         }
     }
 
