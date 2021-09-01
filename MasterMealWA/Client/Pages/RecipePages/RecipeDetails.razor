@@ -2,8 +2,6 @@
 @inject HttpClient Http
 @inject IDialogService _dialogService
 @inject ISnackbar snackbar
-@using Microsoft.AspNetCore.Identity
-@inject UserManager<Chef> _userManager
 @inject AuthenticationStateProvider _authState
 <MudItem xs="12">
     <MudBreadcrumbs Items="crumbList"></MudBreadcrumbs>
@@ -18,7 +16,7 @@
 else
 {
     <MudText>
-        @_userManager.GetUserId(authState.User)
+        @userId
     </MudText>
     <MudItem xs="8">
         <MudText Typo="Typo.h2">@recipe.Name</MudText>
@@ -141,14 +139,13 @@ else
     public string Id { get; set; }
     private Recipe recipe;
     private string imageData { get; set; }
-    private AuthenticationState authState { get; set; }
+    private string userId { get; set; }
     private List<BreadcrumbItem> crumbList = new()
     {
             new BreadcrumbItem("Recipes", href: "/recipes")
         };
     public async Task AddMeal()
     {
-        authState = await _authState.GetAuthenticationStateAsync();
         var parameters = new DialogParameters { ["recipe"] = recipe };
         var dialog = _dialogService.Show<MealCreate>("Schedule Meal", parameters);
         var result = await dialog.Result;
@@ -160,6 +157,7 @@ else
     }
     protected override async Task OnInitializedAsync()
     {
+        userId = (await _authState.GetAuthenticationStateAsync()).User.FindFirst(c => c.Type == "sub")?.Value;
         var options = new JsonSerializerOptions()
         {
             ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve,
