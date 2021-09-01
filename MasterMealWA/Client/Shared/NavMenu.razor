@@ -1,6 +1,10 @@
 ﻿<MudNavMenu>
     <MudNavLink Href="/dashboard">Dashboard</MudNavLink>
-    <MudNavLink Href="/recipes">Recipes</MudNavLink>
+    <MudNavGroup Title="Recipes" Expanded="true">
+
+        <MudNavLink Href="/recipes">All recipes</MudNavLink>
+        <MudNavLink Href="/recipes/My">My Recipes</MudNavLink>
+    </MudNavGroup>
     <MudNavLink Href="/ingredients">Ingredients</MudNavLink>
     <MudNavLink Href="/supplies">Supplies</MudNavLink>
     <MudNavLink Href="/meals">Meals</MudNavLink>
