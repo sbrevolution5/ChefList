@@ -64,6 +64,7 @@ namespace MasterMealWA.Server.Data
                     await userManager.CreateAsync(defaultUser, "Abc&123!");
                     await userManager.AddToRoleAsync(defaultUser, UserRoles.Admin.ToString());
                     await userManager.AddToRoleAsync(defaultUser, UserRoles.Moderator.ToString());
+                    await userManager.AddToRoleAsync(defaultUser, UserRoles.User.ToString());
                 }
             }
             catch (Exception ex)
@@ -95,6 +96,7 @@ namespace MasterMealWA.Server.Data
                 {
                     await userManager.CreateAsync(defaultUser, "Abc&123!");
                     await userManager.AddToRoleAsync(defaultUser, UserRoles.Moderator.ToString());
+                    await userManager.AddToRoleAsync(defaultUser, UserRoles.User.ToString());
                 }
             }
             catch (Exception ex)
@@ -125,6 +127,7 @@ namespace MasterMealWA.Server.Data
                 if (user == null)
                 {
                     await userManager.CreateAsync(defaultUser, "Abc&123!");
+                    await userManager.AddToRoleAsync(defaultUser, UserRoles.User.ToString());
                 }
             }
             catch (Exception ex)
