@@ -107,7 +107,7 @@ namespace MasterMealWA.Client.Services
             return list;
         }
 
-        public async Task<List<Meal>> GetAllMealsAsync()
+        public async Task<List<Meal>> GetMyMealsAsync()
         {
             var list = await _http.GetFromJsonAsync<List<Meal>>("api/meals",_options);
             return list;
@@ -125,7 +125,7 @@ namespace MasterMealWA.Client.Services
             return list;
         }
 
-        public async Task<List<ShoppingList>> GetAllShoppingListsAsync()
+        public async Task<List<ShoppingList>> GetMyShoppingListsAsync()
         {
             var list = await _http.GetFromJsonAsync<List<ShoppingList>>("api/shoppingLists", _options);
             return list;
