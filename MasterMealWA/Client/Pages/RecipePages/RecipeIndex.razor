@@ -60,7 +60,7 @@
     else
     {
         <MudGrid>
-            @foreach (var recipe in recipes)
+            @foreach (var recipe in pageRecipes)
             {
                 <MudItem xs="4">
 
@@ -99,12 +99,13 @@
             }
         </MudGrid>
     }
-    <MudPagination Rectangular="true" Variant="Variant.Text" Count="@pageCount" />
+    <MudPagination Rectangular="true" Variant="Variant.Text" SelectedChanged="(int p)=>ChangePage(p)" Count="@pageCount" />
 </MudItem>
 @code {
     [Parameter]
     public string mine { get; set; }
     private List<Recipe> recipes;
+    private List<Recipe> pageRecipes { get; set; }
     private List<RecipeType> RecipeTypes { get; set; }
     private bool mySupplies { get; set; }
     private bool myRecipes { get; set; }
@@ -139,6 +140,7 @@
             PropertyNamingPolicy = null
         };
         await GetRecipesAsync();
+        ChangePage(1);
         RecipeTypes = await _api.GetAllRecipeTypesAsync();
         base.OnInitialized();
     }
@@ -155,5 +157,9 @@
             recipes = await _api.GetAllRecipesAsync();
         }
         pageCount = (recipes.Count / 6)+1;
+    }
+    private void ChangePage(int page)
+    {
+        pageRecipes = recipes.OrderBy(r => r.Id).Skip((page-1) * 6).Take(6).ToList();
     }
 }
