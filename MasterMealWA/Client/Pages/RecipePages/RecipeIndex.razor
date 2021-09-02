@@ -6,8 +6,8 @@
 <MudItem xs="3">
     <MudFab Icon="@Icons.Material.Filled.Add" Color="Color.Primary" Label="Add Recipe" aria-label="add recipe" @onclick='()=>nav.NavigateTo("/recipes/create")' />
     <MudPaper Width="250px" Class="py-3" Square="true">
-        <MudExpansionPanels MultiExpansion="true">
-            
+        <MudExpansionPanels MultiExpansion="true" Elevation="2">
+
             <MudExpansionPanel Text="Author" IsInitiallyExpanded="true">
                 <MudSwitch Label="Only My Recipes" @bind-Checked="myRecipes"></MudSwitch>
             </MudExpansionPanel>
@@ -48,7 +48,7 @@
         </MudExpansionPanels>
     </MudPaper>
 </MudItem>
-    
+
 <MudItem xs="9">
     @if (recipes is null)
     {
@@ -64,7 +64,7 @@
             {
                 <MudItem xs="4">
 
-                    <MudCard>
+                    <MudCard Elevation="2">
 
                         <MudSkeleton SkeletonType="SkeletonType.Rectangle" Animation="Animation.Wave" Height="200px" />
                         <MudCardContent>
@@ -73,6 +73,11 @@
                             <MudText Typo="Typo.caption">@recipe.Author.DisplayName</MudText>
                             <MudText>Cooking time: @recipe.CookingTime</MudText>
                             <MudText>Servings: @recipe.Servings</MudText>
+                            @if (recipe.Ratings.Count > 1)
+                            {
+
+                                <MudRating ReadOnly="true" SelectedValue="@Convert.ToInt32(recipe.AvgRating)"></MudRating>
+                            }
                             @if (!string.IsNullOrWhiteSpace(recipe.RecipeSource))
                             {
                                 @if (!string.IsNullOrWhiteSpace(recipe.RecipeSourceUrl))
@@ -99,6 +104,7 @@
             }
         </MudGrid>
     }
+    <MudDivider></MudDivider>
     <MudPagination Rectangular="true" Variant="Variant.Text" SelectedChanged="(int p)=>ChangePage(p)" Count="@pageCount" />
 </MudItem>
 @code {
@@ -156,10 +162,10 @@
 
             recipes = await _api.GetAllRecipesAsync();
         }
-        pageCount = (recipes.Count / 6)+1;
+        pageCount = (recipes.Count / 6) + 1;
     }
     private void ChangePage(int page)
     {
-        pageRecipes = recipes.OrderBy(r => r.Id).Skip((page-1) * 6).Take(6).ToList();
+        pageRecipes = recipes.OrderBy(r => r.Id).Skip((page - 1) * 6).Take(6).ToList();
     }
 }
