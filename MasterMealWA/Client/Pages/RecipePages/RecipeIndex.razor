@@ -8,13 +8,13 @@
         <MudExpansionPanels MultiExpansion="true">
             @*
             *@
-            <MudExpansionPanel Text="Author">
+            <MudExpansionPanel Text="Author"IsExpanded="true">
                 <MudSwitch Label="Only My Recipes" @bind-Checked="myRecipes"></MudSwitch>
             </MudExpansionPanel>
-            <MudExpansionPanel Text="Supplies">
+            <MudExpansionPanel Text="Supplies" IsExpanded="true">
                 <MudSwitch Disabled="true" Label="I have Supplies" @bind-Checked="mySupplies"></MudSwitch>
             </MudExpansionPanel>
-            <MudExpansionPanel Text="Categories">
+            <MudExpansionPanel Text="Categories"IsExpanded="true">
                 <MudChipSet MultiSelection="true" Filter="true">
                     @if (RecipeTypes is not null)
                     {
@@ -26,7 +26,7 @@
                     }
                 </MudChipSet>
             </MudExpansionPanel>
-            <MudExpansionPanel Text="Rating">
+            <MudExpansionPanel Text="Rating" IsExpanded="true">
                 <div class="d-flex flex-column align-center">
                     <MudRating @bind-SelectedValue="selectedRating" HoveredValueChanged="HandleHoveredValueChanged" />
                     <MudText Typo="Typo.subtitle2" Class="deep-purple-text mt-2">@RatingText</MudText>
@@ -35,7 +35,7 @@
 
 
             </MudExpansionPanel>
-            <MudExpansionPanel Text="CookingTime">
+            <MudExpansionPanel Text="CookingTime" IsExpanded="true">
                 <MudSwitch Disabled="true" Label="FilterByTime" @bind-Checked="timeFilter"></MudSwitch>
 
                 <MudItem xs="12">
