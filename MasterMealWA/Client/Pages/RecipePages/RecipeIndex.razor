@@ -4,17 +4,18 @@
 @inject NavigationManager nav
 
 <MudItem xs="3">
+    <MudFab Icon="@Icons.Material.Filled.Add" Color="Color.Primary" Label="Add Recipe" aria-label="add recipe" @onclick='()=>nav.NavigateTo("/recipes/create")' />
     <MudPaper Width="250px" Class="py-3" Square="true">
         <MudExpansionPanels MultiExpansion="true">
             @*
             *@
-            <MudExpansionPanel Text="Author"IsExpanded="true">
+            <MudExpansionPanel Text="Author" IsExpanded="true">
                 <MudSwitch Label="Only My Recipes" @bind-Checked="myRecipes"></MudSwitch>
             </MudExpansionPanel>
             <MudExpansionPanel Text="Supplies" IsExpanded="true">
                 <MudSwitch Disabled="true" Label="I have Supplies" @bind-Checked="mySupplies"></MudSwitch>
             </MudExpansionPanel>
-            <MudExpansionPanel Text="Categories"IsExpanded="true">
+            <MudExpansionPanel Text="Categories" IsExpanded="true">
                 <MudChipSet MultiSelection="true" Filter="true">
                     @if (RecipeTypes is not null)
                     {
@@ -59,18 +60,22 @@
     }
     else
     {
-        @foreach (var recipe in recipes)
-        {
-            <MudCard>
-                <MudText>@recipe.Name</MudText>
-                <MudText>@recipe.CookingTime</MudText>
-                <MudText>@recipe.Servings</MudText>
-                <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Link=@($"/recipes/edit/{recipe.Id}")></MudIconButton>
-                <MudLink Href="@($"/recipes/details/{recipe.Id}")">Details</MudLink>
-            </MudCard>
+        <MudGrid>
+            @foreach (var recipe in recipes)
+            {
+                <MudItem xs="4">
 
-        }
-        <MudFab Icon="@Icons.Material.Filled.Add" Color="Color.Primary" Label="Add Recipe" aria-label="add recipe" @onclick='()=>nav.NavigateTo("/recipes/create")' />
+                    <MudCard>
+                        <MudText>@recipe.Name</MudText>
+                        <MudText>@recipe.CookingTime</MudText>
+                        <MudText>@recipe.Servings</MudText>
+                        <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Link=@($"/recipes/edit/{recipe.Id}")></MudIconButton>
+                        <MudLink Href="@($"/recipes/details/{recipe.Id}")">Details</MudLink>
+                    </MudCard>
+                </MudItem>
+
+            }
+        </MudGrid>
     }
 </MudItem>
 @code {
