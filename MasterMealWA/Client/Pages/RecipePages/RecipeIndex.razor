@@ -12,11 +12,30 @@
             <MudExpansionPanel Text="Supplies">
                 <MudSwitch Disabled="true" Label="I have Supplies" @bind-Checked="mySupplies"></MudSwitch>
             </MudExpansionPanel>
-            <MudExpansionPanel Text="Panel Three">
-                Panel Three Content
+            <MudExpansionPanel Text="Categories">
+                <MudChipSet MultiSelection="true" Filter="true">
+                    @if (RecipeTypes is null)
+                    {
+                        <MudText>Loading...</MudText>
+                    }
+                    @foreach (var category in RecipeTypes)
+                    {
+
+                        <MudChip Text="@category.Name"></MudChip>
+                    }
+                </MudChipSet>
             </MudExpansionPanel>
-            <MudExpansionPanel Text="Panel Four">
-                Panel Four Content
+            <MudExpansionPanel Text="Rating">
+                <div class="d-flex flex-column align-center">
+                    <MudRating @bind-SelectedValue="selectedRating" HoveredValueChanged="HandleHoveredValueChanged" />
+                    <MudText Typo="Typo.subtitle2" Class="deep-purple-text mt-2">@RatingText</MudText>
+                </div>
+
+
+
+            </MudExpansionPanel>
+            <MudExpansionPanel Text="CookingTime">
+                <
             </MudExpansionPanel>
         </MudExpansionPanels>
     </MudPaper>
@@ -50,8 +69,25 @@
     [Parameter]
     public string mine { get; set; }
     private List<Recipe> recipes;
+    private List<RecipeType> RecipeTypes { get; set; }
     private bool mySupplies { get; set; }
     private bool myRecipes { get; set; }
+    private int MinRating { get; set; }
+    private int MaxRating { get; set; }
+    private int selectedRating = 0;
+    private int? activeRating;
+
+    private void HandleHoveredValueChanged(int? val) => activeRating = val;
+
+    private string RatingText => (activeRating ?? selectedRating) switch
+    {
+        1 => "1 Star or more",
+        2 => "2 Stars or more",
+        3 => "3 Stars or more",
+        4 => "4 Stars or more",
+        5 => "5 Stars",
+        _ => "Any Rating"
+    };
     protected override async Task OnParametersSetAsync()
     {
         mine = mine ?? "";
@@ -84,6 +120,7 @@
 
             recipes = await _api.GetAllRecipesAsync();
         }
+        RecipeTypes = await _api.GetAllRecipeTypesAsync();
         base.OnInitialized();
     }
 }
