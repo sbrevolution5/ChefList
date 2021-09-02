@@ -49,6 +49,7 @@
         </MudExpansionPanels>
     </MudPaper>
 </MudItem>
+    
 <MudItem xs="9">
 
     @if (recipes is null)
@@ -63,30 +64,34 @@
         <MudGrid>
             @foreach (var recipe in recipes)
             {
-                <MudItem xs="4">
+                    <MudItem xs="4">
 
                     <MudCard>
+
+                            <MudSkeleton SkeletonType="SkeletonType.Rectangle" Animation="Animation.Wave" Height="200px" />
                         <MudCardContent>
 
                             <MudText>@recipe.Name</MudText>
                             <MudText Typo="Typo.caption">@recipe.Author.DisplayName</MudText>
                             <MudText>Cooking time: @recipe.CookingTime</MudText>
                             <MudText>Servings: @recipe.Servings</MudText>
+                @*
                             @if (!string.IsNullOrWhiteSpace(recipe.RecipeSource))
                             {
-                                <MudText>
-                                    Source:
-                                    @if (!string.IsNullOrWhiteSpace(recipe.RecipeSourceUrl))
-                                    {
+                                @if (!string.IsNullOrWhiteSpace(recipe.RecipeSourceUrl))
+                                {
+                                    <MudText>
+                                        Source:
 
-                                    <MudLink Href="@recipe.RecipeSourceUrl">@recipe.RecipeSource</MudLink>
-                                    }
-                                    else
-                                    {
-                                    @recipe.RecipeSource
-                                    }
-                                </MudText>
+                                        <MudLink Href="@recipe.RecipeSourceUrl">@recipe.RecipeSource</MudLink>
+                                    </MudText>
+                                }
+                                else
+                                {
+                                    <MudText>Source: @recipe.RecipeSource</MudText>
+                                }
                             }
+                    *@
                         </MudCardContent>
                         <MudCardActions>
                             <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Link=@($"/recipes/edit/{recipe.Id}")></MudIconButton>
@@ -107,10 +112,8 @@
     private bool mySupplies { get; set; }
     private bool myRecipes { get; set; }
     private bool timeFilter { get; set; }
-    private int minTime { get; set; }
-    private int maxTime { get; set; }
-    private int MinRating { get; set; }
-    private int MaxRating { get; set; }
+    private int minTime { get; set; } = 0;
+    private int maxTime { get; set; } = 60;
     private int selectedRating = 0;
     private int? activeRating;
 
