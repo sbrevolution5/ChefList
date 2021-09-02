@@ -66,11 +66,18 @@
                 <MudItem xs="4">
 
                     <MudCard>
-                        <MudText>@recipe.Name</MudText>
-                        <MudText>@recipe.CookingTime</MudText>
-                        <MudText>@recipe.Servings</MudText>
-                        <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Link=@($"/recipes/edit/{recipe.Id}")></MudIconButton>
-                        <MudLink Href="@($"/recipes/details/{recipe.Id}")">Details</MudLink>
+                        <MudCardContent>
+
+                            <MudText>@recipe.Name</MudText>
+                            <MudText Typo="Typo.caption">@recipe.Author.DisplayName</MudText>
+                            <MudText>Cooking time: @recipe.CookingTime</MudText>
+                            <MudText>Servings: @recipe.Servings</MudText>
+                            <MudText>Source: <MudLink Href="@recipe.RecipeSourceUrl">@recipe.RecipeSource</MudLink></MudText>
+                        </MudCardContent>
+                        <MudCardActions>
+                            <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Link=@($"/recipes/edit/{recipe.Id}")></MudIconButton>
+                            <MudLink Href="@($"/recipes/details/{recipe.Id}")">Details</MudLink>
+                        </MudCardActions>
                     </MudCard>
                 </MudItem>
 
