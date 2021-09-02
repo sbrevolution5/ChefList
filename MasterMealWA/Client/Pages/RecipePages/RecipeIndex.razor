@@ -72,7 +72,21 @@
                             <MudText Typo="Typo.caption">@recipe.Author.DisplayName</MudText>
                             <MudText>Cooking time: @recipe.CookingTime</MudText>
                             <MudText>Servings: @recipe.Servings</MudText>
-                            <MudText>Source: <MudLink Href="@recipe.RecipeSourceUrl">@recipe.RecipeSource</MudLink></MudText>
+                            @if (!string.IsNullOrWhiteSpace(recipe.RecipeSource))
+                            {
+                                <MudText>
+                                    Source:
+                                    @if (!string.IsNullOrWhiteSpace(recipe.RecipeSourceUrl))
+                                    {
+
+                                    <MudLink Href="@recipe.RecipeSourceUrl">@recipe.RecipeSource</MudLink>
+                                    }
+                                    else
+                                    {
+                                    @recipe.RecipeSource
+                                    }
+                                </MudText>
+                            }
                         </MudCardContent>
                         <MudCardActions>
                             <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Link=@($"/recipes/edit/{recipe.Id}")></MudIconButton>
