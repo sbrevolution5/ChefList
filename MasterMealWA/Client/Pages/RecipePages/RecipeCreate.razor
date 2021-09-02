@@ -1,6 +1,7 @@
 ﻿@page "/recipes/create"
 @inject HttpClient Http
 @inject IApiService _api
+@inject IUserService _userService
 <EditForm Model="@recipe" OnValidSubmit="CreateRecipeAsync">
     <DataAnnotationsValidator />
     <MudGrid>
@@ -110,6 +111,7 @@
     }
     public async Task CreateRecipeAsync()
     {
+        recipe.AuthorId = await _userService.GetUserIdAsync();
         await _api.CreateNewRecipeAsync(recipe);
     }
     IList<IBrowserFile> files = new List<IBrowserFile>();
