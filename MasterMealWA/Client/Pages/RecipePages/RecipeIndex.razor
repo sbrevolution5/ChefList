@@ -6,6 +6,8 @@
 <MudItem xs="3">
     <MudPaper Width="250px" Class="py-3" Square="true">
         <MudExpansionPanels MultiExpansion="true">
+            @*
+            *@
             <MudExpansionPanel Text="Author">
                 <MudSwitch Label="Only My Recipes" @bind-Checked="myRecipes"></MudSwitch>
             </MudExpansionPanel>
@@ -14,14 +16,13 @@
             </MudExpansionPanel>
             <MudExpansionPanel Text="Categories">
                 <MudChipSet MultiSelection="true" Filter="true">
-                    @if (RecipeTypes is null)
+                    @if (RecipeTypes is not null)
                     {
-                        <MudText>Loading...</MudText>
-                    }
-                    @foreach (var category in RecipeTypes)
-                    {
+                        @foreach (var category in RecipeTypes)
+                        {
 
-                        <MudChip Text="@category.Name"></MudChip>
+                            <MudChip Text="@category.Name"></MudChip>
+                        }
                     }
                 </MudChipSet>
             </MudExpansionPanel>
@@ -37,10 +38,10 @@
             <MudExpansionPanel Text="CookingTime">
                 <MudSwitch Disabled="true" Label="FilterByTime" @bind-Checked="timeFilter"></MudSwitch>
 
-                <MudItem xs="12" sm="6" md="4">
+                <MudItem xs="12">
                     <MudNumericField @bind-Value="minTime" Label="Min Cooking Time" Variant="Variant.Text" Min="0" Max="60" />
                 </MudItem>
-                <MudItem xs="12" sm="6" md="4">
+                <MudItem xs="12">
                     <MudNumericField @bind-Value="maxTime" Label="Max cooking time" Variant="Variant.Text" Min="0" Max="60" />
                 </MudItem>
             </MudExpansionPanel>
