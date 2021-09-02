@@ -5,19 +5,20 @@
 
 <MudItem xs="3">
     <MudPaper Width="250px" Class="py-3" Square="true">
-        <MudNavMenu>
-            <MudText Typo="Typo.h6" Class="px-4">My Application</MudText>
-            <MudText Typo="Typo.body2" Class="px-4 mud-text-secondary">Secondary Text</MudText>
-            <MudDivider Class="my-2" />
-            <MudNavLink Href="/dashboard">Dashboard</MudNavLink>
-            <MudNavLink Href="/servers">Servers</MudNavLink>
-            <MudNavLink Href="/billing" Disabled="true">Billing</MudNavLink>
-            <MudNavGroup Title="Settings" Expanded="true">
-                <MudNavLink Href="/users">Users</MudNavLink>
-                <MudNavLink Href="/security">Security</MudNavLink>
-            </MudNavGroup>
-            <MudNavLink Href="/about">About</MudNavLink>
-        </MudNavMenu>
+        <MudExpansionPanels MultiExpansion="true">
+            <MudExpansionPanel Text="Author">
+                <MudSwitch Label="Only My Recipes" @bind-Checked="myRecipes"></MudSwitch>
+            </MudExpansionPanel>
+            <MudExpansionPanel Text="Supplies">
+                <MudSwitch Disabled="true" Label="I have Supplies" @bind-Checked="mySupplies"></MudSwitch>
+            </MudExpansionPanel>
+            <MudExpansionPanel Text="Panel Three">
+                Panel Three Content
+            </MudExpansionPanel>
+            <MudExpansionPanel Text="Panel Four">
+                Panel Four Content
+            </MudExpansionPanel>
+        </MudExpansionPanels>
     </MudPaper>
 </MudItem>
 <MudItem xs="9">
@@ -49,6 +50,8 @@
     [Parameter]
     public string mine { get; set; }
     private List<Recipe> recipes;
+    private bool mySupplies { get; set; }
+    private bool myRecipes { get; set; }
     protected override async Task OnParametersSetAsync()
     {
         mine = mine ?? "";
