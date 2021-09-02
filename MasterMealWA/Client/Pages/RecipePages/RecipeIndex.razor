@@ -7,15 +7,14 @@
     <MudFab Icon="@Icons.Material.Filled.Add" Color="Color.Primary" Label="Add Recipe" aria-label="add recipe" @onclick='()=>nav.NavigateTo("/recipes/create")' />
     <MudPaper Width="250px" Class="py-3" Square="true">
         <MudExpansionPanels MultiExpansion="true">
-            @*
-            *@
-            <MudExpansionPanel Text="Author" IsExpanded="true">
+            
+            <MudExpansionPanel Text="Author" IsInitiallyExpanded="true">
                 <MudSwitch Label="Only My Recipes" @bind-Checked="myRecipes"></MudSwitch>
             </MudExpansionPanel>
-            <MudExpansionPanel Text="Supplies" IsExpanded="true">
+            <MudExpansionPanel Text="Supplies" IsInitiallyExpanded="true">
                 <MudSwitch Disabled="true" Label="I have Supplies" @bind-Checked="mySupplies"></MudSwitch>
             </MudExpansionPanel>
-            <MudExpansionPanel Text="Categories" IsExpanded="true">
+            <MudExpansionPanel Text="Categories" IsInitiallyExpanded="true">
                 <MudChipSet MultiSelection="true" Filter="true">
                     @if (RecipeTypes is not null)
                     {
@@ -27,7 +26,7 @@
                     }
                 </MudChipSet>
             </MudExpansionPanel>
-            <MudExpansionPanel Text="Rating" IsExpanded="true">
+            <MudExpansionPanel Text="Rating" IsInitiallyExpanded="true">
                 <div class="d-flex flex-column align-center">
                     <MudRating @bind-SelectedValue="selectedRating" HoveredValueChanged="HandleHoveredValueChanged" />
                     <MudText Typo="Typo.subtitle2" Class="deep-purple-text mt-2">@RatingText</MudText>
@@ -36,7 +35,7 @@
 
 
             </MudExpansionPanel>
-            <MudExpansionPanel Text="CookingTime" IsExpanded="true">
+            <MudExpansionPanel Text="CookingTime" IsInitiallyExpanded="true">
                 <MudSwitch Disabled="true" Label="FilterByTime" @bind-Checked="timeFilter"></MudSwitch>
 
                 <MudItem xs="12">
