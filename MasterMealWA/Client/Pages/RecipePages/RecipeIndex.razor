@@ -2,28 +2,49 @@
 @inject HttpClient Http
 @inject IApiService _api
 @inject NavigationManager nav
-@if (recipes is null)
-{
-    <MudOverlay>
 
-        <MudText>Loading....</MudText>
-    </MudOverlay>
-}
-else
-{
-    @foreach (var recipe in recipes)
+<MudItem xs="3">
+    <MudPaper Width="250px" Class="py-3" Square="true">
+        <MudNavMenu>
+            <MudText Typo="Typo.h6" Class="px-4">My Application</MudText>
+            <MudText Typo="Typo.body2" Class="px-4 mud-text-secondary">Secondary Text</MudText>
+            <MudDivider Class="my-2" />
+            <MudNavLink Href="/dashboard">Dashboard</MudNavLink>
+            <MudNavLink Href="/servers">Servers</MudNavLink>
+            <MudNavLink Href="/billing" Disabled="true">Billing</MudNavLink>
+            <MudNavGroup Title="Settings" Expanded="true">
+                <MudNavLink Href="/users">Users</MudNavLink>
+                <MudNavLink Href="/security">Security</MudNavLink>
+            </MudNavGroup>
+            <MudNavLink Href="/about">About</MudNavLink>
+        </MudNavMenu>
+    </MudPaper>
+</MudItem>
+<MudItem xs="9">
+
+    @if (recipes is null)
     {
-        <MudCard>
-            <MudText>@recipe.Name</MudText>
-            <MudText>@recipe.CookingTime</MudText>
-            <MudText>@recipe.Servings</MudText>
-            <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Link=@($"/recipes/edit/{recipe.Id}")></MudIconButton>
-            <MudLink Href="@($"/recipes/details/{recipe.Id}")">Details</MudLink>
-        </MudCard>
+        <MudOverlay>
 
+            <MudText>Loading....</MudText>
+        </MudOverlay>
     }
-    <MudFab Icon="@Icons.Material.Filled.Add" Color="Color.Primary" Label="Add Recipe" aria-label="add recipe" @onclick='()=>nav.NavigateTo("/recipes/create")' />
-}
+    else
+    {
+        @foreach (var recipe in recipes)
+        {
+            <MudCard>
+                <MudText>@recipe.Name</MudText>
+                <MudText>@recipe.CookingTime</MudText>
+                <MudText>@recipe.Servings</MudText>
+                <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Link=@($"/recipes/edit/{recipe.Id}")></MudIconButton>
+                <MudLink Href="@($"/recipes/details/{recipe.Id}")">Details</MudLink>
+            </MudCard>
+
+        }
+        <MudFab Icon="@Icons.Material.Filled.Add" Color="Color.Primary" Label="Add Recipe" aria-label="add recipe" @onclick='()=>nav.NavigateTo("/recipes/create")' />
+    }
+</MudItem>
 @code {
     [Parameter]
     public string mine { get; set; }
