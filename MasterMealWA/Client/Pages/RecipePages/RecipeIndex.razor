@@ -50,7 +50,6 @@
 </MudItem>
     
 <MudItem xs="9">
-
     @if (recipes is null)
     {
         <MudOverlay>
@@ -63,11 +62,11 @@
         <MudGrid>
             @foreach (var recipe in recipes)
             {
-                    <MudItem xs="4">
+                <MudItem xs="4">
 
                     <MudCard>
 
-                            <MudSkeleton SkeletonType="SkeletonType.Rectangle" Animation="Animation.Wave" Height="200px" />
+                        <MudSkeleton SkeletonType="SkeletonType.Rectangle" Animation="Animation.Wave" Height="200px" />
                         <MudCardContent>
 
                             <MudText>@recipe.Name</MudText>
@@ -100,6 +99,7 @@
             }
         </MudGrid>
     }
+    <MudPagination Rectangular="true" Variant="Variant.Text" Count="@pageCount" />
 </MudItem>
 @code {
     [Parameter]
@@ -113,7 +113,7 @@
     private int maxTime { get; set; } = 60;
     private int selectedRating = 0;
     private int? activeRating;
-
+    private int pageCount { get; set; } = 0;
     private void HandleHoveredValueChanged(int? val) => activeRating = val;
 
     private string RatingText => (activeRating ?? selectedRating) switch
@@ -128,16 +128,7 @@
     protected override async Task OnParametersSetAsync()
     {
         mine = mine ?? "";
-        if (mine.ToLower() == "myrecipes")
-        {
-
-            recipes = await _api.GetMyRecipesAsync();
-        }
-        else
-        {
-
-            recipes = await _api.GetAllRecipesAsync();
-        }
+        await GetRecipesAsync();
     }
     protected override async Task OnInitializedAsync()
     {
@@ -147,6 +138,12 @@
             ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve,
             PropertyNamingPolicy = null
         };
+        await GetRecipesAsync();
+        RecipeTypes = await _api.GetAllRecipeTypesAsync();
+        base.OnInitialized();
+    }
+    private async Task GetRecipesAsync()
+    {
         if (mine.ToLower() == "myrecipes")
         {
 
@@ -157,7 +154,6 @@
 
             recipes = await _api.GetAllRecipesAsync();
         }
-        RecipeTypes = await _api.GetAllRecipeTypesAsync();
-        base.OnInitialized();
+        pageCount = (recipes.Count / 6)+1;
     }
 }
