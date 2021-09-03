@@ -98,13 +98,14 @@ namespace MasterMealWA.Server.Services
 
         public async Task<List<Recipe>> GetUserRecipesByTypeAsync(string userId, int typeId)
         {
-            var Recipes = await _context.Recipe
-                                    .Include(r => r.Ingredients)
-                                    .ThenInclude(i => i.Ingredient)
-                                    .Include(r => r.Tags)
-                                    .Include(r => r.Author)
-                                    .Where(r => r.AuthorId == userId && r.TypeId == typeId).ToListAsync();
-            return Recipes;
+            throw new NotImplementedException();
+            //var Recipes = await _context.Recipe
+            //                        .Include(r => r.Ingredients)
+            //                        .ThenInclude(i => i.Ingredient)
+            //                        .Include(r => r.Tags)
+            //                        .Include(r => r.Author)
+            //                        .Where(r => r.AuthorId == userId && r.TypeId == typeId).ToListAsync();
+            //return Recipes;
         }
 
         public async Task<List<Recipe>> GetUserRecipesWithNoRating(string userId)

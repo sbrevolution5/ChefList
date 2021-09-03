@@ -185,23 +185,25 @@ namespace MasterMealWA.Server.Data
         {
             if ((await context.IngredientType.ToListAsync()).Count() < 1)
             {
-                var types = new List<IngredientType>();
-                types.Add(NewType("Dairy"));
-                types.Add(NewType("Meat"));
-                types.Add(NewType("Cold Products"));
-                types.Add(NewType("Frozen Products"));
-                types.Add(NewType("Produce"));
-                types.Add(NewType("Bread"));
-                types.Add(NewType("Spice"));
-                types.Add(NewType("Breadcrumb"));
-                types.Add(NewType("Oil"));
-                types.Add(NewType("Baking Needs"));
-                types.Add(NewType("Deli Meat"));
-                types.Add(NewType("Condiments and Sauces"));
-                types.Add(NewType("Cheese"));
-                types.Add(NewType("Canned Good"));
-                types.Add(NewType("Soup"));
-                types.Add(NewType("Pasta"));
+                var types = new List<IngredientType>
+                {
+                    NewType("Dairy"),
+                    NewType("Meat"),
+                    NewType("Cold Products"),
+                    NewType("Frozen Products"),
+                    NewType("Produce"),
+                    NewType("Bread"),
+                    NewType("Spice"),
+                    NewType("Breadcrumb"),
+                    NewType("Oil"),
+                    NewType("Baking Needs"),
+                    NewType("Deli Meat"),
+                    NewType("Condiments and Sauces"),
+                    NewType("Cheese"),
+                    NewType("Canned Good"),
+                    NewType("Soup"),
+                    NewType("Pasta")
+                };
                 await context.AddRangeAsync(types);
                 await context.SaveChangesAsync();
             }
@@ -263,18 +265,20 @@ namespace MasterMealWA.Server.Data
         {
             if ((await context.Supply.ToListAsync()).Count < 1)
             {
-                var supplies = new List<Supply>();
-                supplies.Add(NewSupply("Large Pan"));
-                supplies.Add(NewSupply("Baking Sheet"));
-                supplies.Add(NewSupply("Small Bowl"));
-                supplies.Add(NewSupply("Medium Bowl"));
-                supplies.Add(NewSupply("Olive Oil"));
-                supplies.Add(NewSupply("Salt And Pepper"));
-                supplies.Add(NewSupply("Strainer"));
-                supplies.Add(NewSupply("Paper Towels"));
-                supplies.Add(NewSupply("Large Bowl"));
-                supplies.Add(NewSupply("Medium Pot"));
-                supplies.Add(NewSupply("Potato Masher"));
+                var supplies = new List<Supply>
+                {
+                    NewSupply("Large Pan"),
+                    NewSupply("Baking Sheet"),
+                    NewSupply("Small Bowl"),
+                    NewSupply("Medium Bowl"),
+                    NewSupply("Olive Oil"),
+                    NewSupply("Salt And Pepper"),
+                    NewSupply("Strainer"),
+                    NewSupply("Paper Towels"),
+                    NewSupply("Large Bowl"),
+                    NewSupply("Medium Pot"),
+                    NewSupply("Potato Masher")
+                };
                 await context.AddRangeAsync(supplies);
                 await context.SaveChangesAsync();
             }
@@ -314,44 +318,50 @@ namespace MasterMealWA.Server.Data
                 AuthorId = admin.Id,
                 Servings = 2,
                 CookingTime = 30,
-                TypeId = types.Where(t => t.Name == "Mexican").First().Id,
                 ImageId = 1
             };
+            beefTostada.Tags.Add(types.Where(t => t.Name == "Mexican").First());
             await context.AddAsync(beefTostada);
             await context.SaveChangesAsync();
-            var beefIng = new List<QIngredient>();
-            beefIng.Add(NewQIngredient("Roma Tomato", 1, ing, beefTostada.Id));
-            beefIng.Add(NewQIngredient("Yellow Onion", 1, ing, beefTostada.Id));
-            beefIng.Add(NewQIngredient("Green Bell Pepper", 1, ing, beefTostada.Id));
-            beefIng.Add(NewQIngredient("Lime", 1, ing, beefTostada.Id));
-            beefIng.Add(NewQIngredient("Beef Stock Concentrate", 1, ing, beefTostada.Id));
-            beefIng.Add(NewQIngredient("Flour Tortillas", 6, ing, beefTostada.Id));
-            beefIng.Add(NewQIngredient("Ground Beef", 10, Fraction.NoFraction, MassMeasurementUnit.ounce, ing, beefTostada.Id));
-            beefIng.Add(NewQIngredient("Sour Cream", 4, Fraction.NoFraction, VolumeMeasurementUnit.Tablespoon, ing, beefTostada.Id));
-            beefIng.Add(NewQIngredient("Mexican Cheese (Shredded)", 0, Fraction.Half, VolumeMeasurementUnit.Cup, ing, beefTostada.Id));
-            beefIng.Add(NewQIngredient("Cilantro", 0, Fraction.Half, VolumeMeasurementUnit.Ounce, ing, beefTostada.Id));
-            beefIng.Add(NewQIngredient("Hot Sauce", 1, Fraction.NoFraction, VolumeMeasurementUnit.Teaspoon, ing, beefTostada.Id));
-            beefIng.Add(NewQIngredient("Chili Powder", 1, Fraction.NoFraction, VolumeMeasurementUnit.Teaspoon, ing, beefTostada.Id));
-            beefIng.Add(NewQIngredient("Southwest Spice Blend", 1, Fraction.NoFraction, VolumeMeasurementUnit.Tablespoon, ing, beefTostada.Id));
-            var beefSupplies = new List<QSupply>();
-            beefSupplies.Add(await AddSupplyAsync("Large Pan", sup, beefTostada.Id, context));
-            beefSupplies.Add(await AddSupplyAsync("Baking Sheet", sup, beefTostada.Id, context));
-            beefSupplies.Add(await AddSupplyAsync("Small Bowl", sup, beefTostada.Id, context));
-            beefSupplies.Add(await AddSupplyAsync("Medium Bowl", sup, beefTostada.Id, context));
-            beefSupplies.Add(await AddSupplyAsync("Olive Oil", sup, beefTostada.Id, context));
-            beefSupplies.Add(await AddSupplyAsync("Salt And Pepper", sup, beefTostada.Id, context));
+            var beefIng = new List<QIngredient>
+            {
+                NewQIngredient("Roma Tomato", 1, ing, beefTostada.Id),
+                NewQIngredient("Yellow Onion", 1, ing, beefTostada.Id),
+                NewQIngredient("Green Bell Pepper", 1, ing, beefTostada.Id),
+                NewQIngredient("Lime", 1, ing, beefTostada.Id),
+                NewQIngredient("Beef Stock Concentrate", 1, ing, beefTostada.Id),
+                NewQIngredient("Flour Tortillas", 6, ing, beefTostada.Id),
+                NewQIngredient("Ground Beef", 10, Fraction.NoFraction, MassMeasurementUnit.ounce, ing, beefTostada.Id),
+                NewQIngredient("Sour Cream", 4, Fraction.NoFraction, VolumeMeasurementUnit.Tablespoon, ing, beefTostada.Id),
+                NewQIngredient("Mexican Cheese (Shredded)", 0, Fraction.Half, VolumeMeasurementUnit.Cup, ing, beefTostada.Id),
+                NewQIngredient("Cilantro", 0, Fraction.Half, VolumeMeasurementUnit.Ounce, ing, beefTostada.Id),
+                NewQIngredient("Hot Sauce", 1, Fraction.NoFraction, VolumeMeasurementUnit.Teaspoon, ing, beefTostada.Id),
+                NewQIngredient("Chili Powder", 1, Fraction.NoFraction, VolumeMeasurementUnit.Teaspoon, ing, beefTostada.Id),
+                NewQIngredient("Southwest Spice Blend", 1, Fraction.NoFraction, VolumeMeasurementUnit.Tablespoon, ing, beefTostada.Id)
+            };
+            var beefSupplies = new List<QSupply>
+            {
+                await AddSupplyAsync("Large Pan", sup, beefTostada.Id, context),
+                await AddSupplyAsync("Baking Sheet", sup, beefTostada.Id, context),
+                await AddSupplyAsync("Small Bowl", sup, beefTostada.Id, context),
+                await AddSupplyAsync("Medium Bowl", sup, beefTostada.Id, context),
+                await AddSupplyAsync("Olive Oil", sup, beefTostada.Id, context),
+                await AddSupplyAsync("Salt And Pepper", sup, beefTostada.Id, context)
+            };
 
-            var beefSteps = new List<Step>();
-            beefSteps.Add(AddStep("Preheat Oven to 450F.", 1, beefTostada.Id));
-            beefSteps.Add(AddStep("Dice tomato. Roughly chop cilantro. Halve and peel onion; thinly slice one half. Finely chop remaining onion until you have 2 TBS. Quarter lime. Halve, core, and thinly slice bell pepper into strips.", 2, beefTostada.Id));
-            beefSteps.Add(AddStep("In a medium bowl, combine tomato, cilantro, chopped onion, juice from half the lime, and a pinch of salt and pepper.", 3, beefTostada.Id));
-            beefSteps.Add(AddStep("In a small bowl, combine sour cream with as much hot sauce as you like.Stir in water 1 tsp.at a time until mixture reaches a drizzling consistency.Season with salt.", 4, beefTostada.Id));
-            beefSteps.Add(AddStep("Heat a drizzle of olive oil in a large pan over medium - high heat.Add beef, Southwest Spice, chili powder, and a few big pinches of salt.Cook, breaking up meat into pieces, until browned, 4 - 5 minutes.", 5, beefTostada.Id));
-            beefSteps.Add(AddStep("Once beef is browned, add bell pepper, sliced onion, and a pinch of salt to pan.Cook, stirring, until veggies are tender and beef is cooked through, 5 - 7 minutes. ", 6, beefTostada.Id));
-            beefSteps.Add(AddStep("Add stock concentrate and ¼ cup water.Simmer until thickened, 1 - 2 minutes.Season with salt; remove pan from heat and set aside.", 7, beefTostada.Id));
-            beefSteps.Add(AddStep("Drizzle tortillas with 1 TBS olive oil; brush or rub to coat all over.Arrange on a baking sheet.Gently prick each tortilla in a few places with a fork.", 8, beefTostada.Id));
-            beefSteps.Add(AddStep("Bake on top rack, flipping halfway through, until lightly golden, 4 - 5 minutes per side.", 9, beefTostada.Id));
-            beefSteps.Add(AddStep("Serve and top with pico de gallo and lime crema", 10, beefTostada.Id));
+            var beefSteps = new List<Step>
+            {
+                AddStep("Preheat Oven to 450F.", 1, beefTostada.Id),
+                AddStep("Dice tomato. Roughly chop cilantro. Halve and peel onion; thinly slice one half. Finely chop remaining onion until you have 2 TBS. Quarter lime. Halve, core, and thinly slice bell pepper into strips.", 2, beefTostada.Id),
+                AddStep("In a medium bowl, combine tomato, cilantro, chopped onion, juice from half the lime, and a pinch of salt and pepper.", 3, beefTostada.Id),
+                AddStep("In a small bowl, combine sour cream with as much hot sauce as you like.Stir in water 1 tsp.at a time until mixture reaches a drizzling consistency.Season with salt.", 4, beefTostada.Id),
+                AddStep("Heat a drizzle of olive oil in a large pan over medium - high heat.Add beef, Southwest Spice, chili powder, and a few big pinches of salt.Cook, breaking up meat into pieces, until browned, 4 - 5 minutes.", 5, beefTostada.Id),
+                AddStep("Once beef is browned, add bell pepper, sliced onion, and a pinch of salt to pan.Cook, stirring, until veggies are tender and beef is cooked through, 5 - 7 minutes. ", 6, beefTostada.Id),
+                AddStep("Add stock concentrate and ¼ cup water.Simmer until thickened, 1 - 2 minutes.Season with salt; remove pan from heat and set aside.", 7, beefTostada.Id),
+                AddStep("Drizzle tortillas with 1 TBS olive oil; brush or rub to coat all over.Arrange on a baking sheet.Gently prick each tortilla in a few places with a fork.", 8, beefTostada.Id),
+                AddStep("Bake on top rack, flipping halfway through, until lightly golden, 4 - 5 minutes per side.", 9, beefTostada.Id),
+                AddStep("Serve and top with pico de gallo and lime crema", 10, beefTostada.Id)
+            };
             beefTostada.Supplies =beefSupplies;
             await context.AddRangeAsync(beefSteps);
             await context.AddRangeAsync(beefIng);
@@ -376,35 +386,41 @@ namespace MasterMealWA.Server.Data
             await context.AddAsync(anchoBBQ);
             await context.SaveChangesAsync();
 
-            var anchIng = new List<QIngredient>();
-            anchIng.Add(NewQIngredient("Yellow Onion", 1, ing, anchoBBQ.Id));
-            anchIng.Add(NewQIngredient("Gold Potatoes", 6, ing, anchoBBQ.Id));
-            anchIng.Add(NewQIngredient("Dill Pickle", 2, ing, anchoBBQ.Id));
-            anchIng.Add(NewQIngredient("Beef Stock Concentrate", 1, ing, anchoBBQ.Id));
-            anchIng.Add(NewQIngredient("Potato Buns", 2, ing, anchoBBQ.Id));
-            anchIng.Add(NewQIngredient("Ground Beef", 10, Fraction.NoFraction, MassMeasurementUnit.ounce, ing, anchoBBQ.Id));
-            anchIng.Add(NewQIngredient("BBQ Sauce", 4, Fraction.NoFraction, VolumeMeasurementUnit.Tablespoon, ing, anchoBBQ.Id));
-            anchIng.Add(NewQIngredient("Ketchup", 2, Fraction.NoFraction, VolumeMeasurementUnit.Tablespoon, ing, anchoBBQ.Id));
-            anchIng.Add(NewQIngredient("Ancho Chili Powder", 1, Fraction.NoFraction, VolumeMeasurementUnit.Teaspoon, ing, anchoBBQ.Id));
-            anchIng.Add(NewQIngredient("Cornstarch", 1, Fraction.NoFraction, VolumeMeasurementUnit.Tablespoon, ing, anchoBBQ.Id));
-            var anchSupplies = new List<QSupply>();
-            anchSupplies.Add(await AddSupplyAsync("Large Pan", sup, anchoBBQ.Id, context));
-            anchSupplies.Add(await AddSupplyAsync("Baking Sheet", sup, anchoBBQ.Id, context));
-            anchSupplies.Add(await AddSupplyAsync("Small Bowl", sup, anchoBBQ.Id, context));
-            anchSupplies.Add(await AddSupplyAsync("Olive Oil", sup, anchoBBQ.Id, context));
-            anchSupplies.Add(await AddSupplyAsync("Salt And Pepper", sup, anchoBBQ.Id, context));
+            var anchIng = new List<QIngredient>
+            {
+                NewQIngredient("Yellow Onion", 1, ing, anchoBBQ.Id),
+                NewQIngredient("Gold Potatoes", 6, ing, anchoBBQ.Id),
+                NewQIngredient("Dill Pickle", 2, ing, anchoBBQ.Id),
+                NewQIngredient("Beef Stock Concentrate", 1, ing, anchoBBQ.Id),
+                NewQIngredient("Potato Buns", 2, ing, anchoBBQ.Id),
+                NewQIngredient("Ground Beef", 10, Fraction.NoFraction, MassMeasurementUnit.ounce, ing, anchoBBQ.Id),
+                NewQIngredient("BBQ Sauce", 4, Fraction.NoFraction, VolumeMeasurementUnit.Tablespoon, ing, anchoBBQ.Id),
+                NewQIngredient("Ketchup", 2, Fraction.NoFraction, VolumeMeasurementUnit.Tablespoon, ing, anchoBBQ.Id),
+                NewQIngredient("Ancho Chili Powder", 1, Fraction.NoFraction, VolumeMeasurementUnit.Teaspoon, ing, anchoBBQ.Id),
+                NewQIngredient("Cornstarch", 1, Fraction.NoFraction, VolumeMeasurementUnit.Tablespoon, ing, anchoBBQ.Id)
+            };
+            var anchSupplies = new List<QSupply>
+            {
+                await AddSupplyAsync("Large Pan", sup, anchoBBQ.Id, context),
+                await AddSupplyAsync("Baking Sheet", sup, anchoBBQ.Id, context),
+                await AddSupplyAsync("Small Bowl", sup, anchoBBQ.Id, context),
+                await AddSupplyAsync("Olive Oil", sup, anchoBBQ.Id, context),
+                await AddSupplyAsync("Salt And Pepper", sup, anchoBBQ.Id, context)
+            };
 
-            var anchSteps = new List<Step>();
-            anchSteps.Add(AddStep("Preheat oven to 450°.", 1, anchoBBQ.Id));
-            anchSteps.Add(AddStep("Cut potatoes into ¼-inch-thick rounds. Toss on a baking sheet with a large drizzle of oil, salt, and pepper.", 2, anchoBBQ.Id));
-            anchSteps.Add(AddStep("Roast on top rack until lightly browned and tender, 18-20 minutes.", 3, anchoBBQ.Id));
-            anchSteps.Add(AddStep(" While potatoes roast, half, peel, and dice onion. Thinly slice pickle into rounds. Halve buns.", 4, anchoBBQ.Id));
-            anchSteps.Add(AddStep("In a small bowl, combing BBQ Sauce, ketchup, chili powder, stock concentrate, half the cornstarch, and 1 TBS water.", 5, anchoBBQ.Id));
-            anchSteps.Add(AddStep("Heat a drizzle of oil in a large pan over medium-high heat. Add onion; cook stirring, until softened, 4-5 minutes.", 6, anchoBBQ.Id));
-            anchSteps.Add(AddStep("Add beef; season with salt and pepper. Cook breaking up meat into pieces, until browned, 3-5 minutes.", 7, anchoBBQ.Id));
-            anchSteps.Add(AddStep("Add BBQ sauce mixture to pan. Cook, stirring, until sauce has thickened and beef is cooked through, 2-3 minutes. Taste and season with salt and pepper.", 8, anchoBBQ.Id));
-            anchSteps.Add(AddStep("While filling cooks, toast buns until golden brown.", 9, anchoBBQ.Id));
-            anchSteps.Add(AddStep("Serve meat on buns, topped with pickle ", 10, anchoBBQ.Id));
+            var anchSteps = new List<Step>
+            {
+                AddStep("Preheat oven to 450°.", 1, anchoBBQ.Id),
+                AddStep("Cut potatoes into ¼-inch-thick rounds. Toss on a baking sheet with a large drizzle of oil, salt, and pepper.", 2, anchoBBQ.Id),
+                AddStep("Roast on top rack until lightly browned and tender, 18-20 minutes.", 3, anchoBBQ.Id),
+                AddStep(" While potatoes roast, half, peel, and dice onion. Thinly slice pickle into rounds. Halve buns.", 4, anchoBBQ.Id),
+                AddStep("In a small bowl, combing BBQ Sauce, ketchup, chili powder, stock concentrate, half the cornstarch, and 1 TBS water.", 5, anchoBBQ.Id),
+                AddStep("Heat a drizzle of oil in a large pan over medium-high heat. Add onion; cook stirring, until softened, 4-5 minutes.", 6, anchoBBQ.Id),
+                AddStep("Add beef; season with salt and pepper. Cook breaking up meat into pieces, until browned, 3-5 minutes.", 7, anchoBBQ.Id),
+                AddStep("Add BBQ sauce mixture to pan. Cook, stirring, until sauce has thickened and beef is cooked through, 2-3 minutes. Taste and season with salt and pepper.", 8, anchoBBQ.Id),
+                AddStep("While filling cooks, toast buns until golden brown.", 9, anchoBBQ.Id),
+                AddStep("Serve meat on buns, topped with pickle ", 10, anchoBBQ.Id)
+            };
             anchoBBQ.Supplies = anchSupplies;
             await context.AddRangeAsync(anchSteps);
             await context.AddRangeAsync(anchIng);
@@ -423,22 +439,25 @@ namespace MasterMealWA.Server.Data
                 AuthorId = admin.Id,
                 Servings = 2,
                 CookingTime = 35,
-                TypeId = types.Where(t => t.Name == "Chicken").FirstOrDefault().Id,
+
                 ImageId = 1
             };
+            buffaloChk.Tags.Add(types.Where(t => t.Name == "Chicken").First());
             await context.AddAsync(buffaloChk);
             await context.SaveChangesAsync();
-            var buffIng = new List<QIngredient>();
-            buffIng.Add(NewQIngredient("Scallions", 2, ing, buffaloChk.Id));
-            buffIng.Add(NewQIngredient("Gold Potatoes", 6, ing, buffaloChk.Id));
-            buffIng.Add(NewQIngredient("Chicken Breast", 10, Fraction.NoFraction, MassMeasurementUnit.ounce, ing, buffaloChk.Id));
-            buffIng.Add(NewQIngredient("Sour Cream", 4, Fraction.NoFraction, VolumeMeasurementUnit.Tablespoon, ing, buffaloChk.Id));
-            buffIng.Add(NewQIngredient("Butter", 3, Fraction.NoFraction, VolumeMeasurementUnit.Tablespoon, ing, buffaloChk.Id));
-            buffIng.Add(NewQIngredient("Montrey Jack (Shredded)", 0, Fraction.OneQuarter, VolumeMeasurementUnit.Cup, ing, buffaloChk.Id));
-            buffIng.Add(NewQIngredient("Panko Breadcrumbs", 0, Fraction.OneQuarter, VolumeMeasurementUnit.Cup, ing, buffaloChk.Id));
-            buffIng.Add(NewQIngredient("Honey", 2, Fraction.NoFraction, VolumeMeasurementUnit.Teaspoon, ing, buffaloChk.Id));
-            buffIng.Add(NewQIngredient("Green Beans", 6, Fraction.NoFraction, VolumeMeasurementUnit.Ounce, ing, buffaloChk.Id));
-            buffIng.Add(NewQIngredient("Franks Seasoning Blend", 1, Fraction.NoFraction, VolumeMeasurementUnit.Teaspoon, ing, buffaloChk.Id));
+            var buffIng = new List<QIngredient>
+            {
+                NewQIngredient("Scallions", 2, ing, buffaloChk.Id),
+                NewQIngredient("Gold Potatoes", 6, ing, buffaloChk.Id),
+                NewQIngredient("Chicken Breast", 10, Fraction.NoFraction, MassMeasurementUnit.ounce, ing, buffaloChk.Id),
+                NewQIngredient("Sour Cream", 4, Fraction.NoFraction, VolumeMeasurementUnit.Tablespoon, ing, buffaloChk.Id),
+                NewQIngredient("Butter", 3, Fraction.NoFraction, VolumeMeasurementUnit.Tablespoon, ing, buffaloChk.Id),
+                NewQIngredient("Montrey Jack (Shredded)", 0, Fraction.OneQuarter, VolumeMeasurementUnit.Cup, ing, buffaloChk.Id),
+                NewQIngredient("Panko Breadcrumbs", 0, Fraction.OneQuarter, VolumeMeasurementUnit.Cup, ing, buffaloChk.Id),
+                NewQIngredient("Honey", 2, Fraction.NoFraction, VolumeMeasurementUnit.Teaspoon, ing, buffaloChk.Id),
+                NewQIngredient("Green Beans", 6, Fraction.NoFraction, VolumeMeasurementUnit.Ounce, ing, buffaloChk.Id),
+                NewQIngredient("Franks Seasoning Blend", 1, Fraction.NoFraction, VolumeMeasurementUnit.Teaspoon, ing, buffaloChk.Id)
+            };
 
 
             buffaloChk.Supplies.Add(await AddSupplyAsync("Large Bowl", sup, buffaloChk.Id, context));
@@ -451,20 +470,22 @@ namespace MasterMealWA.Server.Data
             buffaloChk.Supplies.Add(await AddSupplyAsync("Olive Oil", sup, buffaloChk.Id, context));
             buffaloChk.Supplies.Add(await AddSupplyAsync("Salt And Pepper", sup, buffaloChk.Id, context));
 
-            var buffSteps = new List<Step>();
-            buffSteps.Add(AddStep("Preheat oven to 425°.", 1, buffaloChk.Id));
-            buffSteps.Add(AddStep("Trim and thinly slice scallions, separating whites from greens", 2, buffaloChk.Id));
-            buffSteps.Add(AddStep("In a small bowl, combine half the sour cream, ½ tsp Frank’s Seasoning, and a big pinch of salt. Stir in water 1 tsp at a time until mixture reaches drizzling consistency", 3, buffaloChk.Id));
-            buffSteps.Add(AddStep("Place 1 TBS butter in a medium bowl, microwave until melted. Stir in panko, Monterey Jack, remaining Frank’s Seasoning, and a big pinch of salt and pepper.", 4, buffaloChk.Id));
-            buffSteps.Add(AddStep("Dice potatoes in ½-inch pieces. Place in a medium pot with enough salted water to cover by 2 inches. Bring to a boil; cook until tender, 15-20 minutes. Reserve ½ cup potato cooking liquid, then drain", 5, buffaloChk.Id));
-            buffSteps.Add(AddStep("Add a drizzle of oil and scallion whites to empty pot over low heat; cook until softened, 1 minute.", 6, buffaloChk.Id));
-            buffSteps.Add(AddStep("Return potatoes to pot; mash with remaining sour cream and 1 TBS butter until smooth and creamy, adding splashes of reserved potato cooking liquid as needed.Season with salt and pepper. Keep covered off heat.", 7, buffaloChk.Id));
-            buffSteps.Add(AddStep("While potatoes cook, pat chicken dry with paper towels and season all over with salt and pepper.Place on one side of a lightly oiled baking sheet.", 8, buffaloChk.Id));
-            buffSteps.Add(AddStep("Mound tops of chicken with panko mixture, pressing firmly to adhere to top. ", 9, buffaloChk.Id));
-            buffSteps.Add(AddStep("Toss green beans on opposite side of sheet from chicken with a large drizzle of oil and a pinch of salt & pepper.", 10, buffaloChk.Id));
-            buffSteps.Add(AddStep("Roast on top rack until chicken is golden brown and cooked through and green beans are tender, 15 - 18 minutes.", 11, buffaloChk.Id));
-            buffSteps.Add(AddStep("Transfer roasted green beans to a large bowl; add 1 TBS butter and toss until melted.", 12, buffaloChk.Id));
-            buffSteps.Add(AddStep("Drizzle chicken with creamy buffalo sauce and honey.", 13, buffaloChk.Id));
+            var buffSteps = new List<Step>
+            {
+                AddStep("Preheat oven to 425°.", 1, buffaloChk.Id),
+                AddStep("Trim and thinly slice scallions, separating whites from greens", 2, buffaloChk.Id),
+                AddStep("In a small bowl, combine half the sour cream, ½ tsp Frank’s Seasoning, and a big pinch of salt. Stir in water 1 tsp at a time until mixture reaches drizzling consistency", 3, buffaloChk.Id),
+                AddStep("Place 1 TBS butter in a medium bowl, microwave until melted. Stir in panko, Monterey Jack, remaining Frank’s Seasoning, and a big pinch of salt and pepper.", 4, buffaloChk.Id),
+                AddStep("Dice potatoes in ½-inch pieces. Place in a medium pot with enough salted water to cover by 2 inches. Bring to a boil; cook until tender, 15-20 minutes. Reserve ½ cup potato cooking liquid, then drain", 5, buffaloChk.Id),
+                AddStep("Add a drizzle of oil and scallion whites to empty pot over low heat; cook until softened, 1 minute.", 6, buffaloChk.Id),
+                AddStep("Return potatoes to pot; mash with remaining sour cream and 1 TBS butter until smooth and creamy, adding splashes of reserved potato cooking liquid as needed.Season with salt and pepper. Keep covered off heat.", 7, buffaloChk.Id),
+                AddStep("While potatoes cook, pat chicken dry with paper towels and season all over with salt and pepper.Place on one side of a lightly oiled baking sheet.", 8, buffaloChk.Id),
+                AddStep("Mound tops of chicken with panko mixture, pressing firmly to adhere to top. ", 9, buffaloChk.Id),
+                AddStep("Toss green beans on opposite side of sheet from chicken with a large drizzle of oil and a pinch of salt & pepper.", 10, buffaloChk.Id),
+                AddStep("Roast on top rack until chicken is golden brown and cooked through and green beans are tender, 15 - 18 minutes.", 11, buffaloChk.Id),
+                AddStep("Transfer roasted green beans to a large bowl; add 1 TBS butter and toss until melted.", 12, buffaloChk.Id),
+                AddStep("Drizzle chicken with creamy buffalo sauce and honey.", 13, buffaloChk.Id)
+            };
 
             await context.AddRangeAsync(buffSteps);
             await context.AddRangeAsync(buffIng);
@@ -547,36 +568,38 @@ namespace MasterMealWA.Server.Data
         {
             if ((await context.RecipeType.ToListAsync()).Count() < 1)
             {
-                var types = new List<RecipeTag>();
-                types.Add(new()
+                var types = new List<RecipeTag>
                 {
-                    Name = "American"
-                });
-                types.Add(new()
-                {
-                    Name = "Chicken"
-                });
+                    new()
+                    {
+                        Name = "American"
+                    },
+                    new()
+                    {
+                        Name = "Chicken"
+                    },
 
-                types.Add(new()
-                {
-                    Name = "Mexican"
-                });
-                types.Add(new()
-                {
-                    Name = "Seafood"
-                });
-                types.Add(new()
-                {
-                    Name = "Italian"
-                });
-                types.Add(new()
-                {
-                    Name = "Breakfast"
-                });
-                types.Add(new()
-                {
-                    Name = "Asian"
-                });
+                    new()
+                    {
+                        Name = "Mexican"
+                    },
+                    new()
+                    {
+                        Name = "Seafood"
+                    },
+                    new()
+                    {
+                        Name = "Italian"
+                    },
+                    new()
+                    {
+                        Name = "Breakfast"
+                    },
+                    new()
+                    {
+                        Name = "Asian"
+                    }
+                };
                 context.AddRange(types);
                 await context.SaveChangesAsync();
             }
