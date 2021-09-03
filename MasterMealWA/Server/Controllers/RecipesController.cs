@@ -133,8 +133,8 @@ namespace MasterMealWA.Server.Controllers
             //    imageId = dBImage.Id;
             //}
             recipe.ImageId = imageId;
-            
-            _context.Add(recipe);
+            _context.UpdateRange(recipe.Tags);
+            _context.Recipe.Add(recipe);
             foreach (var ingredient in recipe.Ingredients)
             {
                 ingredient.RecipeId = recipe.Id;
