@@ -2,7 +2,9 @@
 @inject HttpClient Http
 @inject IApiService _api
 @inject IUserService _userService
+@inject IFileService _fileService
 @inject NavigationManager nav
+@using MasterMealWA.Shared.Models.Dtos
 <EditForm Model="@recipe" OnValidSubmit="CreateRecipeAsync">
     <DataAnnotationsValidator />
     <MudGrid>
@@ -106,6 +108,7 @@
     public List<Ingredient> ingredients { get; set; }
     public List<Supply> supplyList { get; set; }
     private MudChip[] recipeTags { get; set; }
+    private IBrowserFile bytefile { get; set; }
     protected override async Task OnInitializedAsync()
     {
         Tags = await _api.GetAllRecipeTypesAsync();
@@ -114,8 +117,13 @@
     }
     public async Task CreateRecipeAsync()
     {
-        recipe.Tags = recipeTags.Select(r=>(RecipeTag)r.Tag).ToList();
+        recipe.Tags = recipeTags.Select(r => (RecipeTag)r.Tag).ToList();
         recipe.AuthorId = await _userService.GetUserIdAsync();
+        var dto = new RecipeCreateDto()
+        {
+            Image = await _fileService.ConvertFileToByteArrayAsync(bytefile),
+            Recipe = recipe
+        };
         await _api.CreateNewRecipeAsync(recipe);
         nav.NavigateTo($"/recipes/details/{recipe.Id}");
     }
@@ -125,6 +133,7 @@
         foreach (var file in e.GetMultipleFiles())
         {
             files.Add(file);
+            bytefile = file;
         }
         //TODO upload the files to the server
     }
