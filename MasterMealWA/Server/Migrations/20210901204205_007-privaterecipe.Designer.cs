@@ -4,15 +4,17 @@ using System.Collections.Generic;
 using MasterMealWA.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace MasterMealWA.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210901204205_007-privaterecipe")]
+    partial class _007privaterecipe
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -461,16 +463,21 @@ namespace MasterMealWA.Server.Migrations
                     b.Property<int>("Servings")
                         .HasColumnType("integer");
 
+                    b.Property<int>("TypeId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AuthorId");
 
                     b.HasIndex("ImageId");
 
+                    b.HasIndex("TypeId");
+
                     b.ToTable("Recipe");
                 });
 
-            modelBuilder.Entity("MasterMealWA.Shared.Models.RecipeTag", b =>
+            modelBuilder.Entity("MasterMealWA.Shared.Models.RecipeType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -717,21 +724,6 @@ namespace MasterMealWA.Server.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("RecipeRecipeTag", b =>
-                {
-                    b.Property<int>("RecipesId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("TagsId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("RecipesId", "TagsId");
-
-                    b.HasIndex("TagsId");
-
-                    b.ToTable("RecipeRecipeTag");
-                });
-
             modelBuilder.Entity("MasterMealWA.Shared.Models.Chef", b =>
                 {
                     b.HasOne("MasterMealWA.Shared.Models.DBImage", "Image")
@@ -863,9 +855,17 @@ namespace MasterMealWA.Server.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("MasterMealWA.Shared.Models.RecipeType", "Type")
+                        .WithMany()
+                        .HasForeignKey("TypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Author");
 
                     b.Navigation("Image");
+
+                    b.Navigation("Type");
                 });
 
             modelBuilder.Entity("MasterMealWA.Shared.Models.ShoppingIngredient", b =>
@@ -950,21 +950,6 @@ namespace MasterMealWA.Server.Migrations
                     b.HasOne("MasterMealWA.Shared.Models.Chef", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("RecipeRecipeTag", b =>
-                {
-                    b.HasOne("MasterMealWA.Shared.Models.Recipe", null)
-                        .WithMany()
-                        .HasForeignKey("RecipesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MasterMealWA.Shared.Models.RecipeTag", null)
-                        .WithMany()
-                        .HasForeignKey("TagsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

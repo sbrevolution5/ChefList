@@ -35,7 +35,17 @@ namespace MasterMealWA.Server.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Recipe>>> GetRecipe()
         {
-            return await _context.Recipe.ToListAsync();
+            var userId = _userManager.GetUserId(User);
+            return await _context.Recipe.Include(r=>r.Author).Where(r=>!r.IsPrivate || r.AuthorId == userId).ToListAsync();
+        }
+        // GET: api/Recipes
+        [HttpGet]
+        [Route("api/[controller]/myrecipes")]
+        [AllowAnonymous]
+        public async Task<ActionResult<IEnumerable<Recipe>>> GetMyRecipes()
+        {
+            var userId = _userManager.GetUserId(User);
+            return await _context.Recipe.Include(r => r.Author).Where(r=> r.AuthorId == userId).ToListAsync();
         }
 
         // GET: api/Recipes/5
@@ -49,6 +59,7 @@ namespace MasterMealWA.Server.Controllers
                                               .Include(r => r.Tags)
                                               .Include(r => r.Ingredients)
                                               .ThenInclude(r => r.Ingredient)
+                                              .Include(r=>r.Author)
                                               .FirstOrDefaultAsync(r => r.Id == id);
 
             if (recipe == null)
@@ -122,7 +133,7 @@ namespace MasterMealWA.Server.Controllers
             //    imageId = dBImage.Id;
             //}
             recipe.ImageId = imageId;
-            recipe.AuthorId = _userManager.GetUserId(User);
+            
             _context.Add(recipe);
             foreach (var ingredient in recipe.Ingredients)
             {

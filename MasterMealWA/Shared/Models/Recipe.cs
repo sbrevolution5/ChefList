@@ -23,6 +23,7 @@ namespace MasterMealWA.Shared.Models
         public virtual DBImage Image { get; set; }
         public string RecipeSource { get; set; } = "";
         public string RecipeSourceUrl { get; set; } = "";
+        public bool IsPrivate { get; set; }
         //Many to many, Not virtual!
         public ICollection<QSupply> Supplies { get; set; } = new HashSet<QSupply>();
         [NotMapped]
