@@ -1,4 +1,4 @@
-﻿ musing Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace MasterMealWA.Server.Migrations
 {
