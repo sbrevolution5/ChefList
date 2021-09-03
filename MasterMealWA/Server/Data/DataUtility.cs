@@ -370,9 +370,9 @@ namespace MasterMealWA.Server.Data
                 AuthorId = admin.Id,
                 Servings = 2,
                 CookingTime = 30,
-                TypeId = types.Where(t => t.Name == "American").FirstOrDefault().Id,
                 ImageId = 1
             };
+            anchoBBQ.Tags.Add(types.Where(t => t.Name == "American").FirstOrDefault());
             await context.AddAsync(anchoBBQ);
             await context.SaveChangesAsync();
 

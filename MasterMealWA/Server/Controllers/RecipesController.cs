@@ -46,7 +46,7 @@ namespace MasterMealWA.Server.Controllers
             var recipe = await _context.Recipe.Include(r => r.Steps)
                                               .Include(r => r.Supplies)
                                               .ThenInclude(q=>q.Supply)
-                                              .Include(r => r.Type)
+                                              .Include(r => r.Tags)
                                               .Include(r => r.Ingredients)
                                               .ThenInclude(r => r.Ingredient)
                                               .FirstOrDefaultAsync(r => r.Id == id);
