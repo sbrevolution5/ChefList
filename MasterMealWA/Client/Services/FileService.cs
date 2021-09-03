@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Http;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using Microsoft.AspNetCore.Components.Forms;
+using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.Formats.Png;
 
 namespace MasterMealWA.Client.Services
 {
@@ -30,15 +32,43 @@ namespace MasterMealWA.Client.Services
 
 
         }
-        public async Task<byte[]> ConvertFileToByteArrayAsync(IBrowserFile file)
+        public async Task<byte[]> ConvertFileToByteArrayAsync(IBrowserFile file,string contentType)
         {
             using var mstream = new MemoryStream();
             var stream = file.OpenReadStream();
             await stream.CopyToAsync(mstream);
-            var bytearray = mstream.ToArray();
-            mstream.Close();
-            mstream.Dispose();
-            return bytearray;
+            Image image=null;
+            if (contentType == "image/png")
+            {
+                image = Image.Load(mstream, new PngDecoder());
+
+            }
+            else if (contentType == "image/jpeg")
+            {
+            image = Image.Load(mstream,new JpegDecoder());
+            }
+            image.Mutate(x => x.Resize(new ResizeOptions
+            {
+                Mode = ResizeMode.Min,
+                Size = new Size(128)
+            }));
+
+            MemoryStream memoryStream = new MemoryStream();
+            if (contentType == "image/png")
+            {
+
+                await image.SaveAsPngAsync(memoryStream);
+            }
+            else if (contentType == "image/jpeg")
+            {
+                await image.SaveAsJpegAsync(memoryStream);
+            }
+            var byteFile = memoryStream.ToArray();
+            memoryStream.Close();
+            memoryStream.Dispose();
+
+
+            return byteFile;
         }
         public async Task<byte[]> ConvertFileToByteArrayAsync(Image file, string contentType)
         {

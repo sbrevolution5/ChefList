@@ -24,11 +24,13 @@ namespace MasterMealWA.Server.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IMeasurementService _measurementService;
         private readonly UserManager<Chef> _userManager;
-        public RecipesController(ApplicationDbContext context, IMeasurementService measurementService, UserManager<Chef> userManager)
+        private readonly IFileService _fileService;
+        public RecipesController(ApplicationDbContext context, IMeasurementService measurementService, UserManager<Chef> userManager, IFileService fileService)
         {
             _context = context;
             _measurementService = measurementService;
             _userManager = userManager;
+            _fileService = fileService;
         }
 
         // GET: api/Recipes
@@ -143,7 +145,7 @@ namespace MasterMealWA.Server.Controllers
                 DBImage dBImage = new()
                 {
                     ContentType = dto.ImageContentType,
-                    ImageData = imageData
+                    ImageData = dto.Image
                 };
                 _context.Add(dBImage);
                 await _context.SaveChangesAsync();

@@ -11,7 +11,7 @@ namespace MasterMealWA.Client.Services.Interfaces
     public interface IFileService
     {
         public Task<byte[]> ConvertFileToByteArrayAsync(IFormFile file);
-        public Task<byte[]> ConvertFileToByteArrayAsync(IBrowserFile file);
+        public Task<byte[]> ConvertFileToByteArrayAsync(IBrowserFile file,string contentType);
         public Task<byte[]> ConvertFileToByteArrayAsync(Image file, string contentType);
 
         public string ConvertByteArrayToFile(byte[] fileData, string extension);

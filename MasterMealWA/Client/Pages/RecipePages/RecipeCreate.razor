@@ -122,7 +122,7 @@
         recipe.AuthorId = await _userService.GetUserIdAsync();
         var dto = new RecipeCreateDto()
         {
-            Image = await _fileService.ConvertFileToByteArrayAsync(bytefile),
+            Image = await _fileService.ConvertFileToByteArrayAsync(bytefile, contentType),
             Recipe = recipe,
             ImageContentType = contentType
         };
