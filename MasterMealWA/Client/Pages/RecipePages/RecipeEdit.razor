@@ -49,7 +49,7 @@ else
                             <p>loading...</p>}
                         else
                         {
-                            <MudSelect @bind-Value="recipe.TypeId" T="int" Label="Recipe Type">
+                            <MudSelect @*@bind-Value="recipe.TypeId"*@ T="int" Label="Recipe Type">
                                 @foreach (RecipeTag type in Types)
                                 {
                                     <MudSelectItem Value="@type.Id">@type.Name</MudSelectItem>
