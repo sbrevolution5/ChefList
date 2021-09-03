@@ -39,7 +39,7 @@ namespace MasterMealWA.Client.Services
             await _http.PostAsJsonAsync("api/meals", meal);
         }
 
-        public async Task CreateNewRecipeAsync(Recipe recipe)
+        public async Task CreateNewRecipeAsync(RecipeCreateDto recipe)
         {
             await _http.PostAsJsonAsync("api/recipes", recipe);
         }

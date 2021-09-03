@@ -9,7 +9,7 @@ namespace MasterMealWA.Client.Services.Interfaces
 {
     public interface IApiService
     {
-        Task CreateNewRecipeAsync(Recipe recipe);
+        Task CreateNewRecipeAsync(RecipeCreateDto recipe);
         Task CreateNewRecipeTypeAsync(RecipeTag type);
         Task CreateNewMealAsync(Meal meal);
         Task CreateNewIngredientAsync(Ingredient ingredient);

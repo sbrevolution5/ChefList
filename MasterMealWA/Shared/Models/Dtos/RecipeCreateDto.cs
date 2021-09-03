@@ -10,5 +10,6 @@ namespace MasterMealWA.Shared.Models.Dtos
     {
         public byte[] Image { get; set; }
         public Recipe Recipe { get; set; }
+        public string ImageContentType { get; set; }
     }
 }

@@ -80,7 +80,7 @@ namespace MasterMealWA.Server.Controllers
             var tags = recipeDto.RecipeTags;
             var dbrecipe = await _context.Recipe.Include(r => r.Tags).FirstOrDefaultAsync(r => r.Id == id);
             dbrecipe.Tags.Where(tag => !recipeDto.RecipeTags.Any(id => id.Id == tag.Id)).ToList().ForEach(tag => dbrecipe.Tags.Remove(tag));
-            recipeDto.RecipeTags.Where(id => !dbrecipe.Tags.Any(tag => tag.Id == id.Id)).ToList().ForEach(id => dbrecipe.Tags.Add(_context.RecipeTag.Where(t=> t.Id == id.Id ).First()));
+            recipeDto.RecipeTags.Where(id => !dbrecipe.Tags.Any(tag => tag.Id == id.Id)).ToList().ForEach(id => dbrecipe.Tags.Add(_context.RecipeTag.Where(t => t.Id == id.Id).First()));
             if (id != dbrecipe.Id)
             {
                 return BadRequest();
@@ -93,10 +93,10 @@ namespace MasterMealWA.Server.Controllers
             dbrecipe.Description = recipe.Description;
             dbrecipe.Name = recipe.Name;
             dbrecipe.RecipeSource = recipe.RecipeSource;
-            dbrecipe.RecipeSourceUrl = recipe.RecipeSourceUrl; 
-            dbrecipe.Servings = recipe.Servings; 
-            dbrecipe.CookingTime = recipe.CookingTime; 
-            dbrecipe.ImageId = recipe.ImageId; 
+            dbrecipe.RecipeSourceUrl = recipe.RecipeSourceUrl;
+            dbrecipe.Servings = recipe.Servings;
+            dbrecipe.CookingTime = recipe.CookingTime;
+            dbrecipe.ImageId = recipe.ImageId;
             _context.Entry(dbrecipe).State = EntityState.Modified;
             foreach (var step in dbrecipe.Steps)
             {
@@ -133,23 +133,22 @@ namespace MasterMealWA.Server.Controllers
         // POST: api/Recipes
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Recipe>> PostRecipe(Recipe recipe)
+        public async Task<ActionResult<Recipe>> PostRecipe(RecipeCreateDto dto)
         {
-
+            var recipe = dto.Recipe;
+            var imageData = dto.Image;
             int imageId = 1;
-            //if (recipe.Image is not null)
-            //{
-            //    using var image = Image.Load(recipe.Image.OpenReadStream());
-            //    var imageBytes = await _fileService.ConvertFileToByteArrayAsync(image, imageFile.ContentType);
-            //    DBImage dBImage = new()
-            //    {
-            //        ContentType = imageFile.ContentType,
-            //        ImageData = imageBytes
-            //    };
-            //    context.Add(dBImage);
-            //    await context.SaveChangesAsync();
-            //    imageId = dBImage.Id;
-            //}
+            if (recipe.Image is not null)
+            {
+                DBImage dBImage = new()
+                {
+                    ContentType = dto.ImageContentType,
+                    ImageData = imageData
+                };
+                _context.Add(dBImage);
+                await _context.SaveChangesAsync();
+                imageId = dBImage.Id;
+            }
             recipe.ImageId = imageId;
             _context.UpdateRange(recipe.Tags);
             _context.Recipe.Add(recipe);
