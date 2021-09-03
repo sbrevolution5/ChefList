@@ -1,7 +1,6 @@
 ﻿using MasterMealWA.Client.Services.Interfaces;
 using MasterMealWA.Shared.Models;
 using MasterMealWA.Shared.Models.Dtos;
-using MasterMealWA.Shared.Models.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -197,9 +196,9 @@ namespace MasterMealWA.Client.Services
             await _http.PutAsJsonAsync($"api/meals/{meal.Id}", meal);
         }
 
-        public async Task UpdateRecipeAsync(RecipeEditViewModel recipe)
+        public async Task UpdateRecipeAsync(Recipe recipe)
         {
-            await _http.PutAsJsonAsync($"api/recipes/{recipe.Recipe.Id}", recipe, _options);
+            await _http.PutAsJsonAsync($"api/recipes/{recipe.Id}", recipe, _options);
 
         }
 

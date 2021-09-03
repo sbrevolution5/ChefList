@@ -2,7 +2,7 @@
 @inject HttpClient Http
 @inject IApiService _api
 @inject NavigationManager nav
-@using MasterMealWA.Shared.Models.ViewModel
+@using System.Diagnostics
 @if (recipe is null)
 {
     <MudText>Loading...</MudText>
@@ -121,14 +121,8 @@ else
     }
     public async Task UpdateRecipeAsync()
     {
-        var rTags = recipeTags.Select(r => (RecipeTag)r.Tag).ToList();
-        recipe.Tags = rTags;
-        RecipeEditViewModel vm = new()
-        {
-            Recipe = recipe,
-            Tags = rTags
-        };
-        await _api.UpdateRecipeAsync(vm);
+        recipe.Tags = recipeTags.Select(r => (RecipeTag)r.Tag).ToList();
+        await _api.UpdateRecipeAsync(recipe);
         nav.NavigateTo($"/recipes/details/{recipe.Id}");
     }
     IList<IBrowserFile> files = new List<IBrowserFile>();
