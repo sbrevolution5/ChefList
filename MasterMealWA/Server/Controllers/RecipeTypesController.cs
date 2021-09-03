@@ -25,7 +25,7 @@ namespace MasterMealWA.Server.Controllers
 
         // GET: api/RecipeTypes
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<RecipeType>>> GetRecipeType()
+        public async Task<ActionResult<IEnumerable<RecipeTag>>> GetRecipeType()
         {
             var typelist = await _context.RecipeType.ToListAsync();
             return typelist;
@@ -33,7 +33,7 @@ namespace MasterMealWA.Server.Controllers
 
         // GET: api/RecipeTypes/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<RecipeType>> GetRecipeType(int id)
+        public async Task<ActionResult<RecipeTag>> GetRecipeType(int id)
         {
             var recipeType = await _context.RecipeType.FindAsync(id);
 
@@ -48,7 +48,7 @@ namespace MasterMealWA.Server.Controllers
         // PUT: api/RecipeTypes/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutRecipeType(int id, RecipeType recipeType)
+        public async Task<IActionResult> PutRecipeType(int id, RecipeTag recipeType)
         {
             if (id != recipeType.Id)
             {
@@ -79,7 +79,7 @@ namespace MasterMealWA.Server.Controllers
         // POST: api/RecipeTypes
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<RecipeType>> PostRecipeType(RecipeType recipeType)
+        public async Task<ActionResult<RecipeTag>> PostRecipeType(RecipeTag recipeType)
         {
             _context.RecipeType.Add(recipeType);
             await _context.SaveChangesAsync();

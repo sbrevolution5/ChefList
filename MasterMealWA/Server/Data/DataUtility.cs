@@ -303,7 +303,7 @@ namespace MasterMealWA.Server.Data
             }
         }
 
-        private static async Task SeedBeefTostadaAsync(ApplicationDbContext context, List<RecipeType> types, List<Ingredient> ing, Chef admin, List<Supply> sup)
+        private static async Task SeedBeefTostadaAsync(ApplicationDbContext context, List<RecipeTag> types, List<Ingredient> ing, Chef admin, List<Supply> sup)
         {
             #region BeefTostada
             var beefTostada = new Recipe()
@@ -359,7 +359,7 @@ namespace MasterMealWA.Server.Data
             #endregion
         }
 
-        private static async Task SeeedAnchoBBQ(ApplicationDbContext context, List<RecipeType> types, List<Ingredient> ing, Chef admin, List<Supply> sup)
+        private static async Task SeeedAnchoBBQ(ApplicationDbContext context, List<RecipeTag> types, List<Ingredient> ing, Chef admin, List<Supply> sup)
         {
             #region AnchoBBQ
             var anchoBBQ = new Recipe()
@@ -412,7 +412,7 @@ namespace MasterMealWA.Server.Data
             #endregion
         }
 
-        private static async Task SeedBuffChickenAsync(ApplicationDbContext context, List<RecipeType> types, List<Ingredient> ing, Chef admin, List<Supply> sup)
+        private static async Task SeedBuffChickenAsync(ApplicationDbContext context, List<RecipeTag> types, List<Ingredient> ing, Chef admin, List<Supply> sup)
         {
             #region Buffalochicken
             var buffaloChk = new Recipe()
@@ -547,7 +547,7 @@ namespace MasterMealWA.Server.Data
         {
             if ((await context.RecipeType.ToListAsync()).Count() < 1)
             {
-                var types = new List<RecipeType>();
+                var types = new List<RecipeTag>();
                 types.Add(new()
                 {
                     Name = "American"

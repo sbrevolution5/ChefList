@@ -10,14 +10,14 @@ namespace MasterMealWA.Client.Services.Interfaces
     public interface IApiService
     {
         Task CreateNewRecipeAsync(Recipe recipe);
-        Task CreateNewRecipeTypeAsync(RecipeType type);
+        Task CreateNewRecipeTypeAsync(RecipeTag type);
         Task CreateNewMealAsync(Meal meal);
         Task CreateNewIngredientAsync(Ingredient ingredient);
         Task CreateNewIngredientTypeAsync(IngredientType ingredientType);
         Task CreateNewShoppingListAsync(ListCreateDto dto);
         Task CreateNewSupplyAsync(Supply supply);
         Task UpdateRecipeAsync(Recipe recipe);
-        Task UpdateRecipeTypeAsync(RecipeType type);
+        Task UpdateRecipeTypeAsync(RecipeTag type);
         Task UpdateMealAsync(Meal meal);
         Task UpdateIngredientAsync(Ingredient ingredient);
         Task UpdateIngredientTypeAsync(IngredientType ingredientType);
@@ -31,14 +31,14 @@ namespace MasterMealWA.Client.Services.Interfaces
         Task DeleteShoppingListAsync(int id);
         Task DeleteSupplyAsync(int id);
         Task<Recipe> GetRecipeAsync(int id);
-        Task<RecipeType> GetRecipeTypeAsync(int id);
+        Task<RecipeTag> GetRecipeTypeAsync(int id);
         Task<Meal> GetMealAsync(int id);
         Task<Ingredient> GetIngredientAsync(int id);
         Task<IngredientType> GetIngredientTypeAsync(int id);
         Task<ShoppingList> GetShoppingListAsync(int id);
         Task<Supply> GetSupplyAsync(int id);
         Task<List<Recipe>> GetAllRecipesAsync();
-        Task<List<RecipeType>> GetAllRecipeTypesAsync();
+        Task<List<RecipeTag>> GetAllRecipeTypesAsync();
         Task<List<Meal>> GetMyMealsAsync();
         Task<List<Ingredient>> GetAllIngredientsAsync();
         Task<List<IngredientType>> GetAllIngredientTypesAsync();

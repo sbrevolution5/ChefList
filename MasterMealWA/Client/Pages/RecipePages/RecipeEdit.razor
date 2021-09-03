@@ -50,7 +50,7 @@ else
                         else
                         {
                             <MudSelect @bind-Value="recipe.TypeId" T="int" Label="Recipe Type">
-                                @foreach (RecipeType type in Types)
+                                @foreach (RecipeTag type in Types)
                                 {
                                     <MudSelectItem Value="@type.Id">@type.Name</MudSelectItem>
                                 }
@@ -106,7 +106,7 @@ else
     [Parameter]
     public string id { get; set; }
     public Recipe recipe { get; set; } = new();
-    public List<RecipeType> Types { get; set; }
+    public List<RecipeTag> Types { get; set; }
     public List<Ingredient> ingredients { get; set; }
     public List<Supply> supplyList { get; set; }
     protected override async Task OnInitializedAsync()
