@@ -2,6 +2,7 @@
 @inject HttpClient Http
 @inject IApiService _api
 @inject NavigationManager nav
+@using System.Diagnostics
 @if (recipe is null)
 {
     <MudText>Loading...</MudText>
@@ -44,16 +45,16 @@ else
                         <MudTextField Label="Source Link" HelperText="Link to the page you found this recipe on.  Please prefix with https://" @bind-Value="recipe.RecipeSourceUrl" For="@(()=> recipe.RecipeSourceUrl)" />
                         <MudNumericField Label="Cooking Time" HelperText="Estimated minutes to cook recipe" @bind-Value="recipe.CookingTime" For="@(()=> recipe.CookingTime)" />
                         <MudNumericField Label="Servings" HelperText="How many people the recipe Serves" @bind-Value="recipe.Servings" For="@(()=> recipe.Servings)" />
-                        @if (Types == null)
+                        @if (Tags == null)
                         {
                             <p>loading...</p>}
                         else
                         {
-                            <MudChipSet MultiSelection="true" @bind-SelectedChips="recipeTags">
+                            <MudChipSet MultiSelection="true" @bind-SelectedChips="recipeTags" Filter="true">
 
                                 @foreach (RecipeTag tag in Tags)
                                 {
-                                    <MudChip Tag="tag">@tag.Name</MudChip>
+                                    <MudChip Tag="tag" Default="@(recipe.Tags.Select(t=>t.Id).Contains(tag.Id))">@tag.Name</MudChip>
                                 }
                             </MudChipSet>
                         }
@@ -117,7 +118,6 @@ else
         Tags = await _api.GetAllRecipeTypesAsync();
         ingredients = await _api.GetAllIngredientsAsync();
         supplyList = await _api.GetAllSuppliesAsync();
-
     }
     public async Task UpdateRecipeAsync()
     {

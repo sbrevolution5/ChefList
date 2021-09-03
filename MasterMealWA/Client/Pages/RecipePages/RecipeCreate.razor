@@ -2,6 +2,7 @@
 @inject HttpClient Http
 @inject IApiService _api
 @inject IUserService _userService
+@inject NavigationManager nav
 <EditForm Model="@recipe" OnValidSubmit="CreateRecipeAsync">
     <DataAnnotationsValidator />
     <MudGrid>
@@ -43,7 +44,7 @@
                         <p>loading...</p>}
                     else
                     {
-                        <MudChipSet MultiSelection="true" @bind-SelectedChips="recipeTags">
+                        <MudChipSet MultiSelection="true" @bind-SelectedChips="recipeTags" Filter="true">
 
                             @foreach (RecipeTag tag in Tags)
                             {
@@ -116,6 +117,7 @@
         recipe.Tags = recipeTags.Select(r=>(RecipeTag)r.Tag).ToList();
         recipe.AuthorId = await _userService.GetUserIdAsync();
         await _api.CreateNewRecipeAsync(recipe);
+        nav.NavigateTo($"/recipes/details/{recipe.Id}");
     }
     IList<IBrowserFile> files = new List<IBrowserFile>();
     private void UploadFiles(InputFileChangeEventArgs e)
