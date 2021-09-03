@@ -297,7 +297,7 @@ namespace MasterMealWA.Server.Data
         {
             if ((await context.Recipe.ToListAsync()).Count < 1)
             {
-                var types = await context.RecipeType.ToListAsync();
+                var types = await context.RecipeTag.ToListAsync();
                 var ing = await context.Ingredient.ToListAsync();
                 var admin = await userManager.FindByEmailAsync("Sethbcoding@gmail.com");
                 var sup = await context.Supply.ToListAsync();
@@ -566,7 +566,7 @@ namespace MasterMealWA.Server.Data
         }
         private static async Task SeedRecipeTypesAsync(ApplicationDbContext context)
         {
-            if ((await context.RecipeType.ToListAsync()).Count() < 1)
+            if ((await context.RecipeTag.ToListAsync()).Count() < 1)
             {
                 var types = new List<RecipeTag>
                 {

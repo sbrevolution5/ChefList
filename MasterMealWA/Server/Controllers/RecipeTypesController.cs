@@ -27,7 +27,7 @@ namespace MasterMealWA.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<RecipeTag>>> GetRecipeType()
         {
-            var typelist = await _context.RecipeType.ToListAsync();
+            var typelist = await _context.RecipeTag.ToListAsync();
             return typelist;
         }
 
@@ -35,7 +35,7 @@ namespace MasterMealWA.Server.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<RecipeTag>> GetRecipeType(int id)
         {
-            var recipeType = await _context.RecipeType.FindAsync(id);
+            var recipeType = await _context.RecipeTag.FindAsync(id);
 
             if (recipeType == null)
             {
@@ -81,7 +81,7 @@ namespace MasterMealWA.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<RecipeTag>> PostRecipeType(RecipeTag recipeType)
         {
-            _context.RecipeType.Add(recipeType);
+            _context.RecipeTag.Add(recipeType);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetRecipeType", new { id = recipeType.Id }, recipeType);
@@ -91,13 +91,13 @@ namespace MasterMealWA.Server.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRecipeType(int id)
         {
-            var recipeType = await _context.RecipeType.FindAsync(id);
-            if (recipeType == null)
+            var recipeTag = await _context.RecipeTag.FindAsync(id);
+            if (recipeTag == null)
             {
                 return NotFound();
             }
 
-            _context.RecipeType.Remove(recipeType);
+            _context.RecipeTag.Remove(recipeTag);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -105,7 +105,7 @@ namespace MasterMealWA.Server.Controllers
 
         private bool RecipeTypeExists(int id)
         {
-            return _context.RecipeType.Any(e => e.Id == id);
+            return _context.RecipeTag.Any(e => e.Id == id);
         }
     }
 }

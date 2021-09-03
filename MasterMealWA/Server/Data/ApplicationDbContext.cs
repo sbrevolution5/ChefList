@@ -24,7 +24,7 @@ namespace MasterMealWA.Server.Data
         public DbSet<QIngredient> QIngredient { get; set; }
         public DbSet<Rating> Rating { get; set; }
         public DbSet<Recipe> Recipe { get; set; }
-        public DbSet<RecipeTag> RecipeType { get; set; }
+        public DbSet<RecipeTag> RecipeTag { get; set; }
         public DbSet<Step> Step { get; set; }
         public DbSet<Supply> Supply { get; set; }
         public DbSet<IngredientType> IngredientType { get; set; }
