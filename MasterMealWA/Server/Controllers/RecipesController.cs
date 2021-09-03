@@ -73,13 +73,13 @@ namespace MasterMealWA.Server.Controllers
         // PUT: api/Recipes/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutRecipe(int id, Recipe recipe)
+        public async Task<IActionResult> PutRecipe(int id, RecipeEditDto recipe)
         {
             if (id != recipe.Id)
             {
                 return BadRequest();
             }
-
+            
             _context.Entry(recipe).State = EntityState.Modified;
             foreach (var step in recipe.Steps)
             {
