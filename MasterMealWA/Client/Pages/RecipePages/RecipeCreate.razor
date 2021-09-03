@@ -2,6 +2,7 @@
 @inject HttpClient Http
 @inject IApiService _api
 @inject IUserService _userService
+@inject NavigationManager nav
 <EditForm Model="@recipe" OnValidSubmit="CreateRecipeAsync">
     <DataAnnotationsValidator />
     <MudGrid>
@@ -35,20 +36,21 @@
                         </MudList>
                     }
                     <MudTextField Label="Source" HelperText="Where did you get the recipe?  (if its personal, leave blank)" @bind-Value="recipe.RecipeSource" For="@(()=> recipe.RecipeSource)" />
-                    <MudTextField Label="Source Link" HelperText="Link to the page you found this recipe on" @bind-Value="recipe.RecipeSourceUrl" For="@(()=> recipe.RecipeSourceUrl)" />
+                    <MudTextField Label="Source Link" HelperText="Link to the page you found this recipe on.  Please prefix with https://" @bind-Value="recipe.RecipeSourceUrl" For="@(()=> recipe.RecipeSourceUrl)" />
                     <MudNumericField Label="Cooking Time" HelperText="Estimated minutes to cook recipe" @bind-Value="recipe.CookingTime" For="@(()=> recipe.CookingTime)" />
                     <MudNumericField Label="Servings" HelperText="How many people the recipe Serves" @bind-Value="recipe.Servings" For="@(()=> recipe.Servings)" />
-                    @if (Types == null)
+                    @if (Tags == null)
                     {
                         <p>loading...</p>}
                     else
                     {
-                        <MudSelect @bind-Value="recipe.TypeId" T="int" Label="Recipe Type">
-                            @foreach (RecipeType type in Types)
+                        <MudChipSet MultiSelection="true" @bind-SelectedChips="recipeTags" Filter="true">
+
+                            @foreach (RecipeTag tag in Tags)
                             {
-                                <MudSelectItem Value="@type.Id">@type.Name</MudSelectItem>
+                                <MudChip Tag="tag">@tag.Name</MudChip>
                             }
-                        </MudSelect>
+                        </MudChipSet>
                     }
                 </MudCardContent>
                 <MudCardActions>
@@ -100,19 +102,22 @@
 </EditForm>
 @code{
     public Recipe recipe { get; set; } = new();
-    public List<RecipeType> Types { get; set; }
+    public List<RecipeTag> Tags { get; set; }
     public List<Ingredient> ingredients { get; set; }
     public List<Supply> supplyList { get; set; }
+    private MudChip[] recipeTags { get; set; }
     protected override async Task OnInitializedAsync()
     {
-        Types = await _api.GetAllRecipeTypesAsync();
+        Tags = await _api.GetAllRecipeTypesAsync();
         ingredients = await _api.GetAllIngredientsAsync();
         supplyList = await _api.GetAllSuppliesAsync();
     }
     public async Task CreateRecipeAsync()
     {
+        recipe.Tags = recipeTags.Select(r=>(RecipeTag)r.Tag).ToList();
         recipe.AuthorId = await _userService.GetUserIdAsync();
         await _api.CreateNewRecipeAsync(recipe);
+        nav.NavigateTo($"/recipes/details/{recipe.Id}");
     }
     IList<IBrowserFile> files = new List<IBrowserFile>();
     private void UploadFiles(InputFileChangeEventArgs e)

@@ -44,7 +44,7 @@ namespace MasterMealWA.Client.Services
             await _http.PostAsJsonAsync("api/recipes", recipe);
         }
 
-        public async Task CreateNewRecipeTypeAsync(RecipeType type)
+        public async Task CreateNewRecipeTypeAsync(RecipeTag type)
         {
             await _http.PostAsJsonAsync("api/recipeTypes", type);
         }
@@ -119,9 +119,9 @@ namespace MasterMealWA.Client.Services
             return list;
         }
 
-        public async Task<List<RecipeType>> GetAllRecipeTypesAsync()
+        public async Task<List<RecipeTag>> GetAllRecipeTypesAsync()
         {
-            var list = await _http.GetFromJsonAsync<List<RecipeType>>("api/recipeTypes", _options);
+            var list = await _http.GetFromJsonAsync<List<RecipeTag>>("api/recipeTypes", _options);
             return list;
         }
 
@@ -161,9 +161,9 @@ namespace MasterMealWA.Client.Services
             return recipe;
         }
 
-        public async Task<RecipeType> GetRecipeTypeAsync(int id)
+        public async Task<RecipeTag> GetRecipeTypeAsync(int id)
         {
-            var type = await _http.GetFromJsonAsync<RecipeType>($"api/recipetypes/{id}", _options);
+            var type = await _http.GetFromJsonAsync<RecipeTag>($"api/recipetypes/{id}", _options);
             return type;
         }
 
@@ -196,13 +196,13 @@ namespace MasterMealWA.Client.Services
             await _http.PutAsJsonAsync($"api/meals/{meal.Id}", meal);
         }
 
-        public async Task UpdateRecipeAsync(Recipe recipe)
+        public async Task UpdateRecipeAsync(RecipeEditDto recipe)
         {
             await _http.PutAsJsonAsync($"api/recipes/{recipe.Id}", recipe, _options);
 
         }
 
-        public async Task UpdateRecipeTypeAsync(RecipeType type)
+        public async Task UpdateRecipeTypeAsync(RecipeTag type)
         {
             await _http.PutAsJsonAsync("api/recipetypes", type);
 

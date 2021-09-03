@@ -18,9 +18,8 @@ namespace MasterMealWA.Shared.Models
         public virtual ICollection<Rating> Ratings { get; set; } = new HashSet<Rating>();
         public string AuthorId { get; set; }
         public virtual Chef Author { get; set; }
-        public int TypeId { get; set; }
         public int ImageId { get; set; }
-        public virtual RecipeType Type { get; set; }
+        public ICollection<RecipeTag> Tags { get; set; } = new List<RecipeTag>();
         public virtual DBImage Image { get; set; }
         public string RecipeSource { get; set; } = "";
         public string RecipeSourceUrl { get; set; } = "";
