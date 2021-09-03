@@ -12,6 +12,7 @@ using MasterMealWA.Shared.Enums;
 using MasterMealWA.Server.Services.Interfaces;
 using SixLabors.ImageSharp;
 using Microsoft.AspNetCore.Identity;
+using MasterMealWA.Shared.Models.Dtos;
 
 namespace MasterMealWA.Server.Controllers
 {
@@ -36,7 +37,7 @@ namespace MasterMealWA.Server.Controllers
         public async Task<ActionResult<IEnumerable<Recipe>>> GetRecipe()
         {
             var userId = _userManager.GetUserId(User);
-            return await _context.Recipe.Include(r=>r.Author).Where(r=>!r.IsPrivate || r.AuthorId == userId).ToListAsync();
+            return await _context.Recipe.Include(r => r.Author).Where(r => !r.IsPrivate || r.AuthorId == userId).ToListAsync();
         }
         // GET: api/Recipes
         [HttpGet]
@@ -45,7 +46,7 @@ namespace MasterMealWA.Server.Controllers
         public async Task<ActionResult<IEnumerable<Recipe>>> GetMyRecipes()
         {
             var userId = _userManager.GetUserId(User);
-            return await _context.Recipe.Include(r => r.Author).Where(r=> r.AuthorId == userId).ToListAsync();
+            return await _context.Recipe.Include(r => r.Author).Where(r => r.AuthorId == userId).ToListAsync();
         }
 
         // GET: api/Recipes/5
@@ -55,11 +56,11 @@ namespace MasterMealWA.Server.Controllers
         {
             var recipe = await _context.Recipe.Include(r => r.Steps)
                                               .Include(r => r.Supplies)
-                                              .ThenInclude(q=>q.Supply)
+                                              .ThenInclude(q => q.Supply)
                                               .Include(r => r.Tags)
                                               .Include(r => r.Ingredients)
                                               .ThenInclude(r => r.Ingredient)
-                                              .Include(r=>r.Author)
+                                              .Include(r => r.Author)
                                               .FirstOrDefaultAsync(r => r.Id == id);
 
             if (recipe == null)
@@ -73,22 +74,39 @@ namespace MasterMealWA.Server.Controllers
         // PUT: api/Recipes/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutRecipe(int id, RecipeEditDto recipe)
+        public async Task<IActionResult> PutRecipe(int id, RecipeEditDto recipeDto)
         {
-            if (id != recipe.Id)
+            var recipe = recipeDto.Recipe;
+            var tags = recipeDto.RecipeTags;
+            var dbrecipe = await _context.Recipe.Include(r => r.Tags).FirstOrDefaultAsync(r => r.Id == id);
+            dbrecipe.Tags.Where(tag => !recipeDto.RecipeTags.Any(id => id.Id == tag.Id)).ToList().ForEach(tag => dbrecipe.Tags.Remove(tag));
+            recipeDto.RecipeTags.Where(id => !dbrecipe.Tags.Any(tag => tag.Id == id.Id)).ToList().ForEach(id => dbrecipe.Tags.Add(_context.RecipeTag.Where(t=> t.Id == id.Id ).First()));
+            if (id != dbrecipe.Id)
             {
                 return BadRequest();
             }
-            
-            _context.Entry(recipe).State = EntityState.Modified;
-            foreach (var step in recipe.Steps)
+
+            dbrecipe.AuthorId = recipe.AuthorId;
+            dbrecipe.Steps = recipe.Steps;
+            dbrecipe.Ingredients = recipe.Ingredients;
+            dbrecipe.Supplies = recipe.Supplies;
+            dbrecipe.Description = recipe.Description;
+            dbrecipe.Name = recipe.Name;
+            dbrecipe.RecipeSource = recipe.RecipeSource;
+            dbrecipe.RecipeSourceUrl = recipe.RecipeSourceUrl; 
+            dbrecipe.Servings = recipe.Servings; 
+            dbrecipe.CookingTime = recipe.CookingTime; 
+            dbrecipe.ImageId = recipe.ImageId; 
+            _context.Entry(dbrecipe).State = EntityState.Modified;
+            foreach (var step in dbrecipe.Steps)
             {
                 _context.Entry(step).State = EntityState.Modified;
             }
-            foreach (var ingredient in recipe.Ingredients)
+            foreach (var ingredient in dbrecipe.Ingredients)
             {
                 _context.Entry(ingredient).State = EntityState.Modified;
-            }foreach (var supply in recipe.Supplies)
+            }
+            foreach (var supply in dbrecipe.Supplies)
             {
                 _context.Entry(supply).State = EntityState.Modified;
             }

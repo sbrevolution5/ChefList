@@ -2,7 +2,7 @@
 @inject HttpClient Http
 @inject IApiService _api
 @inject NavigationManager nav
-@using System.Diagnostics
+@using MasterMealWA.Shared.Models.Dtos
 @if (recipe is null)
 {
     <MudText>Loading...</MudText>
@@ -121,8 +121,15 @@ else
     }
     public async Task UpdateRecipeAsync()
     {
-        recipe.Tags = recipeTags.Select(r => (RecipeTag)r.Tag).ToList();
-        await _api.UpdateRecipeAsync(recipe);
+        var Tags = recipeTags.Select(r => (RecipeTag)r.Tag).ToList();
+        var fakeRecipe = recipe;
+        RecipeEditDto dto = new()
+        {
+            Recipe = fakeRecipe,
+            RecipeTags = Tags,
+            Id = recipe.Id,
+        };
+        await _api.UpdateRecipeAsync(dto);
         nav.NavigateTo($"/recipes/details/{recipe.Id}");
     }
     IList<IBrowserFile> files = new List<IBrowserFile>();

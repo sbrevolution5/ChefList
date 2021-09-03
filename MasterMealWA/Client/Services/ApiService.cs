@@ -196,7 +196,7 @@ namespace MasterMealWA.Client.Services
             await _http.PutAsJsonAsync($"api/meals/{meal.Id}", meal);
         }
 
-        public async Task UpdateRecipeAsync(Recipe recipe)
+        public async Task UpdateRecipeAsync(RecipeEditDto recipe)
         {
             await _http.PutAsJsonAsync($"api/recipes/{recipe.Id}", recipe, _options);
 
