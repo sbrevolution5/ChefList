@@ -71,8 +71,14 @@
                             <MudItem xs="12">
 
                                 <MudCard Elevation="2">
-                                    <QIngredientCreate qIngredient="@ingredient" ingredientList="ingredients" />
-                                    <MudButton Color="Color.Error" @onclick="(()=>recipe.Ingredients.Remove(ingredient))">Remove</MudButton>
+                                    <MudCardContent>
+
+                                        <QIngredientCreate qIngredient="@ingredient" ingredientList="ingredients" />
+                                    </MudCardContent>
+                                    <MudCardActions>
+
+                                        <MudButton Color="Color.Error" @onclick="(()=>recipe.Ingredients.Remove(ingredient))">Remove</MudButton>
+                                    </MudCardActions>
                                 </MudCard>
                             </MudItem>
                         }
@@ -91,8 +97,14 @@
                             <MudItem xs="12">
 
                                 <MudCard Elevation="2">
-                                    <SupplyPicker supply="supply" supplyList="supplyList"></SupplyPicker>
-                                    <MudButton Color="Color.Error" @onclick="(()=>recipe.Supplies.Remove(supply))">Remove</MudButton>
+                                    <MudCardContent>
+
+                                        <SupplyPicker supply="supply" supplyList="supplyList"></SupplyPicker>
+                                    </MudCardContent>
+                                    <MudCardActions>
+
+                                        <MudButton Color="Color.Error" @onclick="(()=>recipe.Supplies.Remove(supply))">Remove</MudButton>
+                                    </MudCardActions>
                                 </MudCard>
                             </MudItem>
                         }
