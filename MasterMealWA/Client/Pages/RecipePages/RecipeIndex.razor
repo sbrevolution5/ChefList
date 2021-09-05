@@ -2,7 +2,7 @@
 @inject HttpClient Http
 @inject IApiService _api
 @inject NavigationManager nav
-
+@inject IImageReader _imageReader
 <MudItem xs="3">
     <MudFab Icon="@Icons.Material.Filled.Add" Color="Color.Primary" Label="Add Recipe" aria-label="add recipe" @onclick='()=>nav.NavigateTo("/recipes/create")' />
     <MudPaper Width="250px" Class="py-3" Square="true">
@@ -65,8 +65,7 @@
                 <MudItem xs="4">
 
                     <MudCard Elevation="2">
-
-                        <MudSkeleton SkeletonType="SkeletonType.Rectangle" Animation="Animation.Wave" Height="200px" />
+                        <MudCardMedia Image="@(_imageReader.ReadImageData(recipe.Image.ImageData, recipe.Image.ContentType))"></MudCardMedia>
                         <MudCardContent>
 
                             <MudText>@recipe.Name</MudText>
