@@ -39,7 +39,7 @@ namespace MasterMealWA.Client.Services
             await _http.PostAsJsonAsync("api/meals", meal);
         }
 
-        public async Task CreateNewRecipeAsync(RecipeCreateDto recipe)
+        public async Task CreateNewRecipeAsync(Recipe recipe)
         {
             await _http.PostAsJsonAsync("api/recipes", recipe);
         }
@@ -232,6 +232,20 @@ namespace MasterMealWA.Client.Services
             {
 
                 return new List<Recipe>();
+            }
+        }
+
+        public async Task<int> UploadImageAsync(MultipartFormDataContent content)
+        {
+            try
+            {
+                var result = await _http.PostAsync("api/dbimages", content);
+                return Convert.ToInt32(await result.Content.ReadAsStringAsync());
+            }
+            catch (Exception)
+            {
+
+                throw;
             }
         }
     }

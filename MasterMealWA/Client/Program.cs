@@ -27,7 +27,6 @@ namespace MasterMealWA.Client
             // Supply HttpClient instances that include access tokens when making requests to the server project
             builder.Services.AddScoped<IApiService, ApiService>();
             builder.Services.AddScoped<IUserService, UserService>();
-            builder.Services.AddScoped<IFileService, FileService>();
             builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("MasterMealWA.ServerAPI"));
             builder.Services.AddMudServices();
             builder.Services.AddApiAuthorization();

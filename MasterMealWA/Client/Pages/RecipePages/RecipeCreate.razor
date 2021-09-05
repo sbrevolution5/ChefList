@@ -2,7 +2,6 @@
 @inject HttpClient Http
 @inject IApiService _api
 @inject IUserService _userService
-@inject IFileService _fileService
 @inject NavigationManager nav
 @using System.Net.Http.Headers
 @using MasterMealWA.Shared.Models.Dtos
@@ -117,18 +116,14 @@
         Tags = await _api.GetAllRecipeTypesAsync();
         ingredients = await _api.GetAllIngredientsAsync();
         supplyList = await _api.GetAllSuppliesAsync();
+        ImgId = 1;
     }
     public async Task CreateRecipeAsync()
     {
         recipe.Tags = recipeTags.Select(r => (RecipeTag)r.Tag).ToList();
         recipe.AuthorId = await _userService.GetUserIdAsync();
-        var dto = new RecipeCreateDto()
-        {
-            Image = await _fileService.ConvertFileToByteArrayAsync(bytefile, contentType),
-            Recipe = recipe,
-            ImageContentType = contentType
-        };
-        await _api.CreateNewRecipeAsync(dto);
+        recipe.ImageId = ImgId;
+        await _api.CreateNewRecipeAsync(recipe);
         nav.NavigateTo($"/recipes/details/{recipe.Id}");
     }
     IList<IBrowserFile> files = new List<IBrowserFile>();
@@ -147,11 +142,11 @@
                     var content = new MultipartFormDataContent();
                     content.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data");
                     content.Add(new StreamContent(ms, Convert.ToInt32(resizedFile.Size)), "image", imageFile.Name);
-                    ImgId = await _api.UploadImage(content);
-                    await OnChange.InvokeAsync(ImgUrl);
+                    ImgId = await _api.UploadImageAsync(content);
+                    //await OnChange.InvokeAsync(ImgUrl);
                 }
             }
         }
     }
-    }
+}
 }

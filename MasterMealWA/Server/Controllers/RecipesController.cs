@@ -135,23 +135,8 @@ namespace MasterMealWA.Server.Controllers
         // POST: api/Recipes
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Recipe>> PostRecipe(RecipeCreateDto dto)
+        public async Task<ActionResult<Recipe>> PostRecipe(Recipe recipe)
         {
-            var recipe = dto.Recipe;
-            var imageData = dto.Image;
-            int imageId = 1;
-            if (recipe.Image is not null)
-            {
-                DBImage dBImage = new()
-                {
-                    ContentType = dto.ImageContentType,
-                    ImageData = dto.Image
-                };
-                _context.Add(dBImage);
-                await _context.SaveChangesAsync();
-                imageId = dBImage.Id;
-            }
-            recipe.ImageId = imageId;
             _context.UpdateRange(recipe.Tags);
             _context.Recipe.Add(recipe);
             foreach (var ingredient in recipe.Ingredients)
