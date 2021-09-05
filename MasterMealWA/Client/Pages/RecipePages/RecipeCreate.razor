@@ -124,7 +124,7 @@
         recipe.AuthorId = await _userService.GetUserIdAsync();
         recipe.ImageId = ImgId;
         await _api.CreateNewRecipeAsync(recipe);
-        nav.NavigateTo($"/recipes/details/{recipe.Id}");
+        nav.NavigateTo($"/recipe");
     }
     IList<IBrowserFile> files = new List<IBrowserFile>();
     private async Task UploadFiles(InputFileChangeEventArgs e)
