@@ -32,8 +32,8 @@
             </MudExpansionPanel>
             <MudExpansionPanel Text="Rating" IsInitiallyExpanded="true">
                 <div class="d-flex flex-column align-center">
-                    <MudRating @bind-SelectedValue="selectedRating" HoveredValueChanged="HandleHoveredValueChanged" />
-                    <MudText Typo="Typo.subtitle2" Class="deep-purple-text mt-2">@RatingText</MudText>
+                    <MudRating Color="Color.Secondary" @bind-SelectedValue="selectedRating" HoveredValueChanged="HandleHoveredValueChanged" />
+                    <MudText Typo="Typo.subtitle2" Class="mt-2">@RatingText</MudText>
                 </div>
 
 
