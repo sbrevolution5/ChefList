@@ -24,15 +24,15 @@ else
                 <MudCard>
                     <MudCardContent>
                         <MudGrid>
-                            <MudItem>
+                            <MudItem xs="12">
 
                                 <MudTextField Label="Title" HelperText="The name of the recipe" @bind-Value="recipe.Name" For="@(()=> recipe.Name)" />
                             </MudItem>
-                            <MudItem>
+                            <MudItem xs="12">
 
                                 <MudTextField Label="Description" HelperText="The description of the recipe" @bind-Value="recipe.Description" For="@(()=> recipe.Description)" />
                             </MudItem>
-                            <MudItem>
+                            <MudItem xs="12">
 
                                 <InputFile id="fileInput" OnChange="UploadFiles" hidden />
                                 <MudFab HtmlTag="label"
@@ -53,11 +53,11 @@ else
                                     </MudList>
                                 }
                             </MudItem>
-                            <MudItem>
+                            <MudItem xs="12">
 
                                 <MudTextField Label="Source" HelperText="Where did you get the recipe?  (if its personal, leave blank)" @bind-Value="recipe.RecipeSource" For="@(()=> recipe.RecipeSource)" />
                             </MudItem>
-                            <MudItem>
+                            <MudItem xs="12">
 
                                 <MudTextField Label="Source Link" HelperText="Link to the page you found this recipe on.  Please prefix with https://" @bind-Value="recipe.RecipeSourceUrl" For="@(()=> recipe.RecipeSourceUrl)" />
                             </MudItem>
