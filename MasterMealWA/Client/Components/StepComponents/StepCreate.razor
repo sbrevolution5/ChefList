@@ -4,4 +4,14 @@
 @code {
     [Parameter]
     public Step step { get; set;}
+    [Parameter]
+    public int? numDefault { get; set;}
+    protected override void OnInitialized()
+    {
+        if (numDefault is not null)
+        {
+            step.StepNumber = numDefault.Value;
+        }
+        base.OnInitialized();
+    }
 }
