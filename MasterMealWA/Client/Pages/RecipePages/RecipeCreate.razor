@@ -134,7 +134,7 @@
         {
             if (imageFile != null)
             {
-                var resizedFile = await imageFile.RequestImageFileAsync("image/png", 300, 500);
+                var resizedFile = await imageFile.RequestImageFileAsync("image/png", 1000, 1000);
 
                 using (var ms = resizedFile.OpenReadStream(resizedFile.Size))
                 {
