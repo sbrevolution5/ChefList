@@ -2,6 +2,7 @@
 @inject HttpClient Http
 @inject IApiService _api
 @inject NavigationManager nav
+@using System.Net.Http.Headers
 @using MasterMealWA.Shared.Models.Dtos
 @if (recipe is null)
 {
@@ -112,6 +113,7 @@ else
     public List<Ingredient> ingredients { get; set; }
     public List<Supply> supplyList { get; set; }
     public MudChip[] recipeTags { get; set; }
+    public int ImgId { get; set; }
     protected override async Task OnInitializedAsync()
     {
         recipe = await _api.GetRecipeAsync(Convert.ToInt32(id));
