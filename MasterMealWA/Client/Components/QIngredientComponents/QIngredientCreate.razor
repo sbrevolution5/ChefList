@@ -45,6 +45,14 @@
     [Parameter]
     public QIngredient qingredient { get; set; }
     public MeasurementType measurementType { get; set; }
+    protected override void OnInitialized()
+    {
+        if (qingredient.IngredientId > 0)
+        {
+
+            MeasureChange(qingredient.IngredientId);
+        }
+    }
     public void MeasureChange(int id)
     {
         qingredient.IngredientId = id;
