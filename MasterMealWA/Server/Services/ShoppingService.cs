@@ -21,7 +21,7 @@ namespace MasterMealWA.Server.Services
             _measurementService = measurementService;
         }
 
-        public async Task<ShoppingList> CreateShoppingListForDateRangeAsync(DateTime EndDate, DateTime StartDate,string userId)
+        public async Task<ShoppingList> CreateShoppingListForDateRangeAsync(DateTime EndDate, DateTime StartDate, string userId)
         {
             //Get Meals that are in date range, including recipe, qingredients, ingredients
             List<Meal> meals = await _context.Meal.Include(m => m.Recipe)
@@ -37,12 +37,32 @@ namespace MasterMealWA.Server.Services
             await _context.SaveChangesAsync();
             return list;
         }
+        private Task<List<QIngredient>> GetMealWithServings(int recipeId, int desiredServings)
+        {
+            var list = await ConvertToSingleServingAsync(recipeId);
+        }
+        private Task<List<QIngredient>> ConvertToSingleServingAsync(int recipeId)
+        {
+            throw new NotImplementedException();
+        }
+        private Task<List<QIngredient>> UpscaleServingAsync(List<QIngredient> singleServingIngredients, int desiredServings)
+        {
+            throw new NotImplementedException();
+        }
         private ShoppingList CreateShoppingListFromMealsAsync(List<Meal> meals)
         {
             List<QIngredient> qIngredients = new();
             foreach (var meal in meals)
             {
-                qIngredients.AddRange(meal.Recipe.Ingredients);
+                if (meal.Serves == meal.Recipe.Servings)
+                {
+
+                    qIngredients.AddRange(meal.Recipe.Ingredients);
+                }
+                else
+                {
+                    qIngredients.AddRange()
+                }
             }
             List<ShoppingIngredient> list = CreateShoppingIngredientsFromQIngredients(qIngredients.OrderByDescending(q => q.IngredientId).ToList());
             ShoppingList dbList = new();
@@ -71,7 +91,7 @@ namespace MasterMealWA.Server.Services
             {
                 totalQuantity += qingredient.NumberOfUnits;
                 //If string has Notes (it always has shopping notes due to quantity)
-                if (!string.IsNullOrWhiteSpace(qingredient.Notes) )
+                if (!string.IsNullOrWhiteSpace(qingredient.Notes))
                 {
                     notes.Add(qingredient.ShoppingNotes);
                 }
@@ -89,7 +109,8 @@ namespace MasterMealWA.Server.Services
             {
 
                 result.QuantityString = _measurementService.DecodeVolumeMeasurement(totalQuantity) + " " + ingredient.Name;
-            }else if (measure == MeasurementType.Mass)
+            }
+            else if (measure == MeasurementType.Mass)
             {
                 result.QuantityString = _measurementService.DecodeVolumeMeasurement(totalQuantity) + " " + ingredient.Name;
             }
