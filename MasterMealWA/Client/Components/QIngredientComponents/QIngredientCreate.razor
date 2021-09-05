@@ -1,5 +1,4 @@
-﻿<h3>QIngredientCreate</h3>
-<MudForm>
+﻿<MudForm>
     <MudSelect Value="qingredient.IngredientId" T="int" ValueChanged="@((int id)=>MeasureChange(id))">
         @foreach (var ingredient in ingredientList)
         {

@@ -68,8 +68,11 @@ else
                     <MudCardContent>
                         @foreach (var ingredient in recipe.Ingredients)
                         {
+                        <MudCard Elevation="2">
+
                             <QIngredientCreate qIngredient="@ingredient" ingredientList="ingredients" />
-                            <button class="btn btn-danger" @onclick="(()=>recipe.Ingredients.Remove(ingredient))">Remove</button>
+                            <MudButton Color="Color.Error" @onclick="(()=>recipe.Ingredients.Remove(ingredient))">Remove</MudButton>
+                        </MudCard>
                         }
                         <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Ingredients.Add(new())" />
                     </MudCardContent>
@@ -79,8 +82,11 @@ else
                     <MudCardContent>
                         @foreach (var supply in recipe.Supplies)
                         {
+                        <MudCard Elevation="2">
+
                             <SupplyPicker supply="supply" supplyList="supplyList"></SupplyPicker>
-                            <button class="btn btn-danger" @onclick="(()=>recipe.Supplies.Remove(supply))">Remove</button>
+                            <MudButton Color="Color.Error" @onclick="(()=>recipe.Supplies.Remove(supply))">Remove</MudButton>
+                        </MudCard>
                         }
                         <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Supplies.Add(new())" />
                     </MudCardContent>
