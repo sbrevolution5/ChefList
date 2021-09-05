@@ -29,7 +29,7 @@ namespace MasterMealWA.Server.Services
                                                   .ThenInclude(q => q.Ingredient)
                                                   .Where(m => m.Date >= StartDate && m.Date <= EndDate)
                                                   .ToListAsync();
-            ShoppingList list = CreateShoppingListFromMealsAsync(meals);
+            ShoppingList list = await CreateShoppingListFromMealsAsync(meals);
             list.ChefId = userId;
             list.Name = $"Meals before {EndDate.ToShortDateString()}";
             list.Created = DateTime.Now;
@@ -40,16 +40,28 @@ namespace MasterMealWA.Server.Services
         private async Task<List<QIngredient>> GetMealWithServings(int recipeId, int desiredServings)
         {
             var list = await ConvertToSingleServingAsync(recipeId);
-            var result = await UpscaleServingAsync(list, desiredServings);
+            var result = UpscaleServing(list, desiredServings);
             return result;
         }
-        private Task<List<QIngredient>> ConvertToSingleServingAsync(int recipeId)
+        private async Task<List<QIngredient>> ConvertToSingleServingAsync(int recipeId)
         {
-            throw new NotImplementedException();
+            var recipe = await _context.Recipe.Where(r => r.Id == recipeId).Include(r=>r.Ingredients).ThenInclude(r=>r.Ingredient).AsNoTracking().FirstOrDefaultAsync();
+            var servings = recipe.Servings;
+            var result = new List<QIngredient>();
+            foreach (var ingredient in recipe.Ingredients)
+            {
+                ingredient.NumberOfUnits = ingredient.NumberOfUnits / servings;
+                result.Add(ingredient);
+            }
+            return result;
         }
-        private Task<List<QIngredient>> UpscaleServingAsync(List<QIngredient> singleServingIngredients, int desiredServings)
+        private List<QIngredient> UpscaleServing(List<QIngredient> singleServingIngredients, int desiredServings)
         {
-            throw new NotImplementedException();
+            foreach (var ingredient in singleServingIngredients)
+            {
+                ingredient.NumberOfUnits *= desiredServings;
+            }
+            return singleServingIngredients;
         }
         private async Task<ShoppingList> CreateShoppingListFromMealsAsync(List<Meal> meals)
         {
