@@ -160,25 +160,22 @@ namespace MasterMealWA.Server.Data
                 {
                     ImageData = fileData,
                     ContentType = "jpg",
-                    Id = 1
                 };
                 context.Add(newImage);
-                await context.SaveChangesAsync();
             }
             var userImage = await context.DBImage.FirstOrDefaultAsync(i => i.Id == 2);
             if (userImage == null)
             {
                 var file = $"{Directory.GetCurrentDirectory()}/Assets/DefaultUser.png";
                 var fileData = await File.ReadAllBytesAsync(file);
-                var newImage = new DBImage()
+                var defaultUserImage = new DBImage()
                 {
                     ImageData = fileData,
-                    ContentType = "png",
-                    Id = 2
+                    ContentType = "png"
                 };
-                context.Add(newImage);
-                await context.SaveChangesAsync();
+                context.Add(defaultUserImage);
             }
+            await context.SaveChangesAsync();
 
         }
         private static async Task SeedIngredientTypesAsync(ApplicationDbContext context)
@@ -362,7 +359,7 @@ namespace MasterMealWA.Server.Data
                 AddStep("Bake on top rack, flipping halfway through, until lightly golden, 4 - 5 minutes per side.", 9, beefTostada.Id),
                 AddStep("Serve and top with pico de gallo and lime crema", 10, beefTostada.Id)
             };
-            beefTostada.Supplies =beefSupplies;
+            beefTostada.Supplies = beefSupplies;
             await context.AddRangeAsync(beefSteps);
             await context.AddRangeAsync(beefIng);
             await context.SaveChangesAsync();
@@ -510,7 +507,7 @@ namespace MasterMealWA.Server.Data
             Supply supplyRoot = sup.Where(s => s.Name == v).FirstOrDefault();
             QSupply supply = new()
             {
-                Quantity= 1,
+                Quantity = 1,
                 RecipeId = rId,
                 SupplyId = supplyRoot.Id
             };

@@ -3,6 +3,7 @@
 @inject IApiService _api
 @inject NavigationManager nav
 @inject IImageReader _imageReader
+@attribute [AllowAnonymous]
 <MudItem xs="3">
     <MudFab Icon="@Icons.Material.Filled.Add" Color="Color.Primary" Label="Add Recipe" aria-label="add recipe" @onclick='()=>nav.NavigateTo("/recipes/create")' />
     <MudPaper Width="250px" Class="py-3" Square="true">
