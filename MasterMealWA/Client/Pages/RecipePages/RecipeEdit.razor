@@ -115,9 +115,14 @@ else
                             {
                                 <MudItem xs="12">
                                     <MudCard Elevation="2">
+                                        <MudCardContent>
 
-                                        <StepCreate step="step"></StepCreate>
-                                        <MudButton Color="Color.Error" @onclick="(()=>recipe.Steps.Remove(step))">Remove</MudButton>
+                                            <StepCreate step="step"></StepCreate>
+                                        </MudCardContent>
+                                        <MudCardActions>
+
+                                            <MudButton Color="Color.Error" @onclick="(()=>recipe.Steps.Remove(step))">Remove</MudButton>
+                                        </MudCardActions>
                                     </MudCard>
                                 </MudItem>
                             }
