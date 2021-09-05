@@ -111,7 +111,7 @@
                             <MudItem xs="12">
                                 <MudCard Elevation="2">
 
-                                    <StepCreate step="step"></StepCreate>
+                                    <StepCreate step="step" numDefault="recipe.Steps.Count"></StepCreate>
                                     <MudButton Color="Color.Error" @onclick="(()=>recipe.Steps.Remove(step))">Remove</MudButton>
                                 </MudCard>
                             </MudItem>
