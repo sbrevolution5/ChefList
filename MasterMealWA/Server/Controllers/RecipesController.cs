@@ -24,13 +24,11 @@ namespace MasterMealWA.Server.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IMeasurementService _measurementService;
         private readonly UserManager<Chef> _userManager;
-        private readonly IFileService _fileService;
-        public RecipesController(ApplicationDbContext context, IMeasurementService measurementService, UserManager<Chef> userManager, IFileService fileService)
+        public RecipesController(ApplicationDbContext context, IMeasurementService measurementService, UserManager<Chef> userManager)
         {
             _context = context;
             _measurementService = measurementService;
             _userManager = userManager;
-            _fileService = fileService;
         }
 
         // GET: api/Recipes
@@ -39,7 +37,8 @@ namespace MasterMealWA.Server.Controllers
         public async Task<ActionResult<IEnumerable<Recipe>>> GetRecipe()
         {
             var userId = _userManager.GetUserId(User);
-            return await _context.Recipe.Include(r => r.Author).Include(r=>r.Image).Where(r => !r.IsPrivate || r.AuthorId == userId).ToListAsync();
+            
+            return await _context.Recipe.Include(r => r.Author).Where(r => !r.IsPrivate || r.AuthorId == userId).ToListAsync();
         }
         // GET: api/Recipes
         [HttpGet]
@@ -48,7 +47,7 @@ namespace MasterMealWA.Server.Controllers
         public async Task<ActionResult<IEnumerable<Recipe>>> GetMyRecipes()
         {
             var userId = _userManager.GetUserId(User);
-            return await _context.Recipe.Include(r => r.Author).Include(r => r.Image).Where(r => r.AuthorId == userId).ToListAsync();
+            return await _context.Recipe.Include(r => r.Author).Where(r => r.AuthorId == userId).ToListAsync();
         }
 
         // GET: api/Recipes/5
@@ -63,7 +62,6 @@ namespace MasterMealWA.Server.Controllers
                                               .Include(r => r.Ingredients)
                                               .ThenInclude(r => r.Ingredient)
                                               .Include(r => r.Author)
-                                              .Include(r => r.Image)
                                               .FirstOrDefaultAsync(r => r.Id == id);
 
             if (recipe == null)
@@ -83,7 +81,7 @@ namespace MasterMealWA.Server.Controllers
             var tags = recipeDto.RecipeTags;
             var dbrecipe = await _context.Recipe.Include(r => r.Tags).FirstOrDefaultAsync(r => r.Id == id);
             dbrecipe.Tags.Where(tag => !recipeDto.RecipeTags.Any(id => id.Id == tag.Id)).ToList().ForEach(tag => dbrecipe.Tags.Remove(tag));
-            recipeDto.RecipeTags.Where(id => !dbrecipe.Tags.Any(tag => tag.Id == id.Id)).ToList().ForEach(id => dbrecipe.Tags.Add(_context.RecipeTag.Where(t => t.Id == id.Id).First()));
+            recipeDto.RecipeTags.Where(id => !dbrecipe.Tags.Any(tag => tag.Id == id.Id)).ToList().ForEach(id => dbrecipe.Tags.Add(_context.RecipeTag.Where(t=> t.Id == id.Id ).First()));
             if (id != dbrecipe.Id)
             {
                 return BadRequest();
@@ -96,10 +94,10 @@ namespace MasterMealWA.Server.Controllers
             dbrecipe.Description = recipe.Description;
             dbrecipe.Name = recipe.Name;
             dbrecipe.RecipeSource = recipe.RecipeSource;
-            dbrecipe.RecipeSourceUrl = recipe.RecipeSourceUrl;
-            dbrecipe.Servings = recipe.Servings;
-            dbrecipe.CookingTime = recipe.CookingTime;
-            dbrecipe.ImageId = recipe.ImageId;
+            dbrecipe.RecipeSourceUrl = recipe.RecipeSourceUrl; 
+            dbrecipe.Servings = recipe.Servings; 
+            dbrecipe.CookingTime = recipe.CookingTime; 
+            dbrecipe.ImageId = recipe.ImageId; 
             _context.Entry(dbrecipe).State = EntityState.Modified;
             foreach (var step in dbrecipe.Steps)
             {
@@ -138,6 +136,22 @@ namespace MasterMealWA.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<Recipe>> PostRecipe(Recipe recipe)
         {
+
+            int imageId = 1;
+            //if (recipe.Image is not null)
+            //{
+            //    using var image = Image.Load(recipe.Image.OpenReadStream());
+            //    var imageBytes = await _fileService.ConvertFileToByteArrayAsync(image, imageFile.ContentType);
+            //    DBImage dBImage = new()
+            //    {
+            //        ContentType = imageFile.ContentType,
+            //        ImageData = imageBytes
+            //    };
+            //    context.Add(dBImage);
+            //    await context.SaveChangesAsync();
+            //    imageId = dBImage.Id;
+            //}
+            recipe.ImageId = imageId;
             _context.UpdateRange(recipe.Tags);
             _context.Recipe.Add(recipe);
             foreach (var ingredient in recipe.Ingredients)
