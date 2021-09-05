@@ -4,7 +4,6 @@
 @inject IUserService _userService
 @inject NavigationManager nav
 @using System.Net.Http.Headers
-@using MasterMealWA.Shared.Models.Dtos
 <EditForm Model="@recipe" OnValidSubmit="CreateRecipeAsync">
     <DataAnnotationsValidator />
     <MudGrid>
