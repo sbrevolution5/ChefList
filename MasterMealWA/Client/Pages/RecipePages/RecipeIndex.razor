@@ -2,7 +2,7 @@
 @inject HttpClient Http
 @inject IApiService _api
 @inject NavigationManager nav
-
+@inject IImageReader _imageReader
 <MudItem xs="3">
     <MudFab Icon="@Icons.Material.Filled.Add" Color="Color.Primary" Label="Add Recipe" aria-label="add recipe" @onclick='()=>nav.NavigateTo("/recipes/create")' />
     <MudPaper Width="250px" Class="py-3" Square="true">
@@ -18,10 +18,10 @@
                 <MudChipSet MultiSelection="true" Filter="true">
                     @if (RecipeTypes is not null)
                     {
-                    @foreach (var category in RecipeTypes)
+                        @foreach (var category in RecipeTypes)
                         {
 
-                    <MudChip Text="@category.Name"></MudChip>
+                            <MudChip Text="@category.Name"></MudChip>
                         }
                     }
                 </MudChipSet>
@@ -52,57 +52,56 @@
 <MudItem xs="9">
     @if (recipes is null)
     {
-    <MudOverlay>
+        <MudOverlay>
 
-        <MudText>Loading....</MudText>
-    </MudOverlay>
+            <MudText>Loading....</MudText>
+        </MudOverlay>
     }
     else
     {
-    <MudGrid>
-        @foreach (var recipe in pageRecipes)
+        <MudGrid>
+            @foreach (var recipe in pageRecipes)
             {
-        <MudItem xs="4">
+                <MudItem xs="4">
 
-            <MudCard Elevation="2">
+                    <MudCard Elevation="2">
+                        <MudCardMedia Image="@(_imageReader.ReadImageData(recipe.Image.ImageData, recipe.Image.ContentType))"></MudCardMedia>
+                        <MudCardContent>
 
-                <MudSkeleton SkeletonType="SkeletonType.Rectangle" Animation="Animation.Wave" Height="200px" />
-                <MudCardContent>
-
-                    <MudText>@recipe.Name</MudText>
-                    <MudText Typo="Typo.caption">@recipe.Author.DisplayName</MudText>
-                    <MudText>Cooking time: @recipe.CookingTime</MudText>
-                    <MudText>Servings: @recipe.Servings</MudText>
-                    @if (recipe.Ratings.Count > 1)
+                            <MudText>@recipe.Name</MudText>
+                            <MudText Typo="Typo.caption">@recipe.Author.DisplayName</MudText>
+                            <MudText>Cooking time: @recipe.CookingTime</MudText>
+                            <MudText>Servings: @recipe.Servings</MudText>
+                            @if (recipe.Ratings.Count > 1)
                             {
 
-                    <MudRating ReadOnly="true" SelectedValue="@Convert.ToInt32(recipe.AvgRating)"></MudRating>
+                                <MudRating ReadOnly="true" SelectedValue="@Convert.ToInt32(recipe.AvgRating)"></MudRating>
                             }
-                    @if (!string.IsNullOrWhiteSpace(recipe.RecipeSource))
+                            @if (!string.IsNullOrWhiteSpace(recipe.RecipeSource))
                             {
-                    @if (!string.IsNullOrWhiteSpace(recipe.RecipeSourceUrl))
+                                @if (!string.IsNullOrWhiteSpace(recipe.RecipeSourceUrl))
                                 {
-                    <MudText>
-                        Source:
+                                    <MudText>
+                                        Source:
 
-                        <MudLink Href="@recipe.RecipeSourceUrl">@recipe.RecipeSource</MudLink>
-                    </MudText>
+                                        <MudLink Href="@recipe.RecipeSourceUrl">@recipe.RecipeSource</MudLink>
+                                    </MudText>
                                 }
                                 else
                                 {
-                    <MudText>Source: @recipe.RecipeSource</MudText>
+                                    <MudText>Source: @recipe.RecipeSource</MudText>
                                 }
                             }
-                </MudCardContent>
-                <MudCardActions>
-                    <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Link=@($"/recipes/edit/{recipe.Id}")></MudIconButton>
-                    <MudLink Href="@($"/recipes/details/{recipe.Id}")">Details</MudLink>
-                </MudCardActions>
-            </MudCard>
-        </MudItem>
+                        </MudCardContent>
+                        <MudCardActions>
+                            <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Link=@($"/recipes/edit/{recipe.Id}")></MudIconButton>
+                            <MudLink Href="@($"/recipes/details/{recipe.Id}")">Details</MudLink>
+                        </MudCardActions>
+                    </MudCard>
+                </MudItem>
 
             }
-    </MudGrid>
+        </MudGrid>
     }
     <MudDivider></MudDivider>
     <MudPagination Rectangular="true" Variant="Variant.Text" SelectedChanged="(int p)=>ChangePage(p)" Count="@pageCount" />
@@ -136,8 +135,6 @@
     {
         mine = mine ?? "";
         await GetRecipesAsync();
-        ChangePage(1);
-        RecipeTypes = await _api.GetAllRecipeTypesAsync();
     }
     protected override async Task OnInitializedAsync()
     {
