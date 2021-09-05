@@ -2,7 +2,10 @@
 @inject HttpClient Http
 @inject IApiService _api
 @inject NavigationManager nav
+@inject IDialogService _dialogService
+@inject ISnackbar snackbar
 @inject IImageReader _imageReader
+@inject IUserService _userService
 @attribute [AllowAnonymous]
 <MudItem xs="3">
     <MudFab Icon="@Icons.Material.Filled.Add" Color="Color.Primary" Label="Add Recipe" aria-label="add recipe" @onclick='()=>nav.NavigateTo("/recipes/create")' />
@@ -95,7 +98,17 @@
                             }
                         </MudCardContent>
                         <MudCardActions>
-                            <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Link=@($"/recipes/edit/{recipe.Id}")></MudIconButton>
+                            @if (userId == recipe.AuthorId)
+                            {
+
+                                <MudIconButton Variant="Variant.Filled" Color="Color.Warning" Icon="@Icons.Material.Filled.Edit" Link=@($"/recipes/edit/{recipe.Id}")></MudIconButton>
+                                <MudIconButton Variant="Variant.Filled" Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Link=@($"/recipes/delete/{recipe.Id}")></MudIconButton>
+                                <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Icon="@Icons.Material.Filled.CalendarToday" OnClick="@(()=>AddMeal(recipe))"></MudIconButton>
+                            }
+                            else
+                            {
+                                <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Icon="@Icons.Material.Filled.CalendarToday" OnClick="@(()=>AddMeal(recipe))"></MudIconButton>
+                            }
                             <MudLink Href="@($"/recipes/details/{recipe.Id}")">Details</MudLink>
                         </MudCardActions>
                     </MudCard>
@@ -121,8 +134,18 @@
     private int selectedRating = 0;
     private int? activeRating;
     private int pageCount { get; set; } = 0;
+    private string userId { get; set; }
     private void HandleHoveredValueChanged(int? val) => activeRating = val;
-
+    public async Task AddMeal(Recipe recipe)
+    {
+        var parameters = new DialogParameters { ["recipe"] = recipe };
+        var dialog = _dialogService.Show<MealCreate>("Schedule Meal", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            snackbar.Add("Meal planned!");
+        }
+    }
     private string RatingText => (activeRating ?? selectedRating) switch
     {
         1 => "1 Star or more",
@@ -139,6 +162,7 @@
     }
     protected override async Task OnInitializedAsync()
     {
+        userId = await _userService.GetUserIdAsync();
         mine = mine ?? "";
         var options = new JsonSerializerOptions()
         {
