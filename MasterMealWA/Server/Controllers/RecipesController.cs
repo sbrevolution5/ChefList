@@ -13,6 +13,7 @@ using MasterMealWA.Server.Services.Interfaces;
 using SixLabors.ImageSharp;
 using Microsoft.AspNetCore.Identity;
 using MasterMealWA.Shared.Models.Dtos;
+using MasterMealWA.Server.Extensions;
 
 namespace MasterMealWA.Server.Controllers
 {
@@ -38,16 +39,16 @@ namespace MasterMealWA.Server.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Recipe>>> GetRecipe()
         {
-            var userId = _userManager.GetUserId(User);
+            var userId = HttpContext.GetUserId();
             return await _context.Recipe.Include(r => r.Author).Include(r=>r.Image).Where(r => !r.IsPrivate || r.AuthorId == userId).ToListAsync();
         }
         // GET: api/Recipes
-        [HttpGet]
-        [Route("api/[controller]/myrecipes")]
+        [HttpGet("myrecipes")]
         [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Recipe>>> GetMyRecipes()
         {
-            var userId = _userManager.GetUserId(User);
+            
+            var userId = HttpContext.GetUserId();
             return await _context.Recipe.Include(r => r.Author).Include(r => r.Image).Where(r => r.AuthorId == userId).ToListAsync();
         }
 
