@@ -30,8 +30,8 @@ else
                     <MudButtonGroup Color="Color.Primary" OverrideStyles="false">
 
                         <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.CalendarToday" OnClick="AddMeal">Schedule Meal</MudButton>
-                        <MudButton Variant="Variant.Filled" Color="Color.Warning" StartIcon="@Icons.Material.Filled.Edit" OnClick="AddMeal">Edit Meal</MudButton>
-                        <MudButton Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.Delete" OnClick="AddMeal">Delete Recipe</MudButton>
+                        <MudButton Variant="Variant.Filled" Color="Color.Warning" StartIcon="@Icons.Material.Filled.Edit" Link=@($"recipe/edit/{recipe.Id}")>Edit Meal</MudButton>
+                        <MudButton Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.Delete" Link=@($"recipe/delete/{recipe.Id}")>Delete Recipe</MudButton>
                     </MudButtonGroup>
                 }
                 else
