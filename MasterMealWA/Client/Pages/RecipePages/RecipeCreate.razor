@@ -4,6 +4,7 @@
 @inject IUserService _userService
 @inject IFileService _fileService
 @inject NavigationManager nav
+@using System.Net.Http.Headers
 @using MasterMealWA.Shared.Models.Dtos
 <EditForm Model="@recipe" OnValidSubmit="CreateRecipeAsync">
     <DataAnnotationsValidator />
@@ -110,6 +111,7 @@
     private MudChip[] recipeTags { get; set; }
     private IBrowserFile bytefile { get; set; }
     private string contentType { get; set; }
+    private int ImgId { get; set; }
     protected override async Task OnInitializedAsync()
     {
         Tags = await _api.GetAllRecipeTypesAsync();
@@ -130,15 +132,26 @@
         nav.NavigateTo($"/recipes/details/{recipe.Id}");
     }
     IList<IBrowserFile> files = new List<IBrowserFile>();
-    private void UploadFiles(InputFileChangeEventArgs e)
+    private async Task UploadFiles(InputFileChangeEventArgs e)
     {
-        foreach (var file in e.GetMultipleFiles())
-        {
-            files.Add(file);
-            bytefile = file;
-            contentType = file.ContentType;
-        }
 
-        //TODO upload the files to the server
+        var imageFiles = e.GetMultipleFiles();
+        foreach (var imageFile in imageFiles)
+        {
+            if (imageFile != null)
+            {
+                var resizedFile = await imageFile.RequestImageFileAsync("image/png", 300, 500);
+
+                using (var ms = resizedFile.OpenReadStream(resizedFile.Size))
+                {
+                    var content = new MultipartFormDataContent();
+                    content.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data");
+                    content.Add(new StreamContent(ms, Convert.ToInt32(resizedFile.Size)), "image", imageFile.Name);
+                    ImgId = await _api.UploadImage(content);
+                    await OnChange.InvokeAsync(ImgUrl);
+                }
+            }
+        }
+    }
     }
 }
