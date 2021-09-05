@@ -37,9 +37,11 @@ namespace MasterMealWA.Server.Services
             await _context.SaveChangesAsync();
             return list;
         }
-        private Task<List<QIngredient>> GetMealWithServings(int recipeId, int desiredServings)
+        private async Task<List<QIngredient>> GetMealWithServings(int recipeId, int desiredServings)
         {
             var list = await ConvertToSingleServingAsync(recipeId);
+            var result = await UpscaleServingAsync(list, desiredServings);
+            return result;
         }
         private Task<List<QIngredient>> ConvertToSingleServingAsync(int recipeId)
         {
@@ -49,7 +51,7 @@ namespace MasterMealWA.Server.Services
         {
             throw new NotImplementedException();
         }
-        private ShoppingList CreateShoppingListFromMealsAsync(List<Meal> meals)
+        private async Task<ShoppingList> CreateShoppingListFromMealsAsync(List<Meal> meals)
         {
             List<QIngredient> qIngredients = new();
             foreach (var meal in meals)
@@ -61,7 +63,7 @@ namespace MasterMealWA.Server.Services
                 }
                 else
                 {
-                    qIngredients.AddRange()
+                    qIngredients.AddRange(await GetMealWithServings(meal.RecipeId, meal.Serves));
                 }
             }
             List<ShoppingIngredient> list = CreateShoppingIngredientsFromQIngredients(qIngredients.OrderByDescending(q => q.IngredientId).ToList());
