@@ -44,7 +44,6 @@ namespace MasterMealWA.Server.Controllers
         }
         // GET: api/Recipes
         [HttpGet("myrecipes")]
-        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Recipe>>> GetMyRecipes()
         {
             
