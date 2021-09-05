@@ -1,11 +1,19 @@
-﻿<MudTextField Label="Step Text" @bind-Value="@step.Text"></MudTextField>
-<MudNumericField Label="Step number" @bind-Value="step.StepNumber"></MudNumericField>
+﻿<MudGrid>
+    <MudItem xs="2">
+
+        <MudNumericField Label="Step number" @bind-Value="step.StepNumber"></MudNumericField>
+    </MudItem>
+    <MudItem xs="10">
+
+        <MudTextField Label="Step Text" @bind-Value="@step.Text"></MudTextField>
+    </MudItem>
+</MudGrid>
 
 @code {
     [Parameter]
-    public Step step { get; set;}
+    public Step step { get; set; }
     [Parameter]
-    public int? numDefault { get; set;}
+    public int? numDefault { get; set; }
     protected override void OnInitialized()
     {
         if (numDefault is not null)

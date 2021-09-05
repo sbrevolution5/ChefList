@@ -92,7 +92,7 @@
 
                                 <MudCard Elevation="2">
                                     <SupplyPicker supply="supply" supplyList="supplyList"></SupplyPicker>
-                                    <MudButton Color="Color.Error"  @onclick="(()=>recipe.Supplies.Remove(supply))">Remove</MudButton>
+                                    <MudButton Color="Color.Error" @onclick="(()=>recipe.Supplies.Remove(supply))">Remove</MudButton>
                                 </MudCard>
                             </MudItem>
                         }
@@ -110,9 +110,14 @@
                         {
                             <MudItem xs="12">
                                 <MudCard Elevation="2">
+                                    <MudCardContent>
 
-                                    <StepCreate step="step" numDefault="recipe.Steps.Count"></StepCreate>
-                                    <MudButton Color="Color.Error" @onclick="(()=>recipe.Steps.Remove(step))">Remove</MudButton>
+                                        <StepCreate step="step" numDefault="recipe.Steps.Count"></StepCreate>
+                                    </MudCardContent>
+                                    <MudCardActions>
+
+                                        <MudButton Color="Color.Error" @onclick="(()=>recipe.Steps.Remove(step))">Remove</MudButton>
+                                    </MudCardActions>
                                 </MudCard>
                             </MudItem>
                         }
