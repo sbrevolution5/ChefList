@@ -2,6 +2,7 @@
 @inject HttpClient Http
 @inject IApiService _api
 @inject NavigationManager nav
+@inject IUserService _userService
 @using System.Net.Http.Headers
 @using MasterMealWA.Shared.Models.Dtos
 @if (recipe is null)
@@ -193,6 +194,10 @@ else
     protected override async Task OnInitializedAsync()
     {
         recipe = await _api.GetRecipeAsync(Convert.ToInt32(id));
+        if (recipe.AuthorId != await _userService.GetUserIdAsync())
+        {
+            nav.NavigateTo("recipes");
+        }
         Tags = await _api.GetAllRecipeTypesAsync();
         ingredients = await _api.GetAllIngredientsAsync();
         supplyList = await _api.GetAllSuppliesAsync();
