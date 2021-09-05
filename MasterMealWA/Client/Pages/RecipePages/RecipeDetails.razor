@@ -3,6 +3,7 @@
 @inject IDialogService _dialogService
 @inject ISnackbar snackbar
 @inject IUserService _userService
+@inject IImageReader _imageReader
 <MudItem xs="12">
     <MudBreadcrumbs Items="crumbList"></MudBreadcrumbs>
 </MudItem>
@@ -19,16 +20,8 @@ else
         <MudText Typo="Typo.h2">@recipe.Name</MudText>
 
         <MudCard>
-            @if (String.IsNullOrWhiteSpace(imageData))
-            {
 
-                <MudSkeleton SkeletonType="SkeletonType.Rectangle" Animation="Animation.Wave" Height="375px" />
-            }
-            else
-            {
-                @*<MudCardMedia Image="@_fileService"></MudCardMedia>*@
-
-            }
+            <MudCardMedia Image="@(_imageReader.ReadImageData(recipe.Image.ImageData, recipe.Image.ContentType))"></MudCardMedia>
             <MudCardActions>
                 @if (userId == recipe.AuthorId)
                 {

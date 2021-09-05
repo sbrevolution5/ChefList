@@ -3,6 +3,7 @@
 @inject IApiService _api
 @inject IUserService _userService
 @inject NavigationManager nav
+@using System.Net.Http.Headers
 <EditForm Model="@recipe" OnValidSubmit="CreateRecipeAsync">
     <DataAnnotationsValidator />
     <MudGrid>
@@ -106,26 +107,45 @@
     public List<Ingredient> ingredients { get; set; }
     public List<Supply> supplyList { get; set; }
     private MudChip[] recipeTags { get; set; }
+    private IBrowserFile bytefile { get; set; }
+    private string contentType { get; set; }
+    private int ImgId { get; set; }
     protected override async Task OnInitializedAsync()
     {
         Tags = await _api.GetAllRecipeTypesAsync();
         ingredients = await _api.GetAllIngredientsAsync();
         supplyList = await _api.GetAllSuppliesAsync();
+        ImgId = 1;
     }
     public async Task CreateRecipeAsync()
     {
-        recipe.Tags = recipeTags.Select(r=>(RecipeTag)r.Tag).ToList();
+        recipe.Tags = recipeTags.Select(r => (RecipeTag)r.Tag).ToList();
         recipe.AuthorId = await _userService.GetUserIdAsync();
+        recipe.ImageId = ImgId;
         await _api.CreateNewRecipeAsync(recipe);
-        nav.NavigateTo($"/recipes/details/{recipe.Id}");
+        nav.NavigateTo($"/recipes");
     }
     IList<IBrowserFile> files = new List<IBrowserFile>();
-    private void UploadFiles(InputFileChangeEventArgs e)
+    private async Task UploadFiles(InputFileChangeEventArgs e)
     {
-        foreach (var file in e.GetMultipleFiles())
+
+        var imageFiles = e.GetMultipleFiles();
+        foreach (var imageFile in imageFiles)
         {
-            files.Add(file);
+            if (imageFile != null)
+            {
+                var resizedFile = await imageFile.RequestImageFileAsync("image/png", 1000, 1000);
+
+                using (var ms = resizedFile.OpenReadStream(resizedFile.Size))
+                {
+                    var content = new MultipartFormDataContent();
+                    content.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data");
+                    content.Add(new StreamContent(ms, Convert.ToInt32(resizedFile.Size)), "image", imageFile.Name);
+                    ImgId = await _api.UploadImageAsync(content);
+                    //await OnChange.InvokeAsync(ImgUrl);
+                }
+            }
         }
-        //TODO upload the files to the server
     }
+}
 }

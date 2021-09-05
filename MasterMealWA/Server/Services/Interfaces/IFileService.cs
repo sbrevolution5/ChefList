@@ -1,4 +1,5 @@
 ﻿using MasterMealWA.Shared.Models;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Http;
 using SixLabors.ImageSharp;
 using System;
@@ -10,6 +11,7 @@ namespace MasterMealWA.Server.Services.Interfaces
     public interface IFileService
     {
         public Task<byte[]> ConvertFileToByteArrayAsync(IFormFile file);
+        public Task<byte[]> ConvertFileToByteArrayAsync(IBrowserFile file);
         public Task<byte[]> ConvertFileToByteArrayAsync(Image file, string contentType);
 
         public string ConvertByteArrayToFile(byte[] fileData, string extension);

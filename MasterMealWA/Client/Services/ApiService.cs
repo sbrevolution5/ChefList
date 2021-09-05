@@ -234,5 +234,19 @@ namespace MasterMealWA.Client.Services
                 return new List<Recipe>();
             }
         }
+
+        public async Task<int> UploadImageAsync(MultipartFormDataContent content)
+        {
+            try
+            {
+                var result = await _http.PostAsync("api/dbimages", content);
+                return Convert.ToInt32(await result.Content.ReadAsStringAsync());
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
     }
 }

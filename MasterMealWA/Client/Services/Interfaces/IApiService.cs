@@ -3,6 +3,7 @@ using MasterMealWA.Shared.Models.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace MasterMealWA.Client.Services.Interfaces
@@ -23,6 +24,7 @@ namespace MasterMealWA.Client.Services.Interfaces
         Task UpdateIngredientTypeAsync(IngredientType ingredientType);
         Task UpdateShoppingListAsync(ListCreateDto dto);
         Task UpdateSupplyAsync(Supply supply);
+        Task<int> UploadImageAsync(MultipartFormDataContent content);
         Task DeleteRecipeAsync(int id);
         Task DeleteRecipeTypeAsync(int id);
         Task DeleteMealAsync(int id);

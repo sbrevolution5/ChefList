@@ -8,6 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using MasterMealWA.Server.Data;
 using MasterMealWA.Shared.Models;
 using Microsoft.AspNetCore.Authorization;
+using MasterMealWA.Client.Services.Interfaces;
+using MasterMealWA.Server.Services.Interfaces;
+using Microsoft.AspNetCore.StaticFiles;
 
 namespace MasterMealWA.Server.Controllers
 {
@@ -17,12 +20,50 @@ namespace MasterMealWA.Server.Controllers
     public class DBImagesController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly IFileService _fileService;
 
-        public DBImagesController(ApplicationDbContext context)
+        public DBImagesController(ApplicationDbContext context, IFileService fileService)
         {
             _context = context;
+            _fileService = fileService;
         }
-
+        [HttpPost]
+        public async Task<IActionResult> Upload()
+        {
+            try
+            {
+                var file = Request.Form.Files[0];
+                var imagedata = await _fileService.ConvertFileToByteArrayAsync(file);
+                string contentType = "";
+                if (file.Length > 0)
+                {
+                    if (file.ContentType is null)
+                    {
+                        var fileProvider = new FileExtensionContentTypeProvider();
+                        if (!fileProvider.TryGetContentType(file.FileName, out contentType))
+                        {
+                            return BadRequest();
+                        }
+                    }
+                    var image = new DBImage()
+                    {
+                        ContentType = file.ContentType ?? contentType,
+                        ImageData = imagedata
+                    };
+                    _context.Add(image);
+                    await _context.SaveChangesAsync();
+                    return Ok(image.Id);
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex}");
+            }
+        }
         // GET: api/DBImages
         [HttpGet]
         public async Task<ActionResult<IEnumerable<DBImage>>> GetDBImage()
@@ -75,16 +116,7 @@ namespace MasterMealWA.Server.Controllers
             return NoContent();
         }
 
-        // POST: api/DBImages
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<DBImage>> PostDBImage(DBImage dBImage)
-        {
-            _context.DBImage.Add(dBImage);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetDBImage", new { id = dBImage.Id }, dBImage);
-        }
+        
 
         // DELETE: api/DBImages/5
         [HttpDelete("{id}")]
