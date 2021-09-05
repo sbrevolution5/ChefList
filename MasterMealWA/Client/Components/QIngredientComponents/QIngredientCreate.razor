@@ -65,11 +65,9 @@
     public MeasurementType measurementType { get; set; }
     protected override void OnInitialized()
     {
-        if (qingredient.IngredientId > 0)
-        {
+        qingredient.IngredientId = ingredientList.First().Id;
 
-            MeasureChange(qingredient.IngredientId);
-        }
+        MeasureChange(qingredient.IngredientId);
     }
     public void MeasureChange(int id)
     {

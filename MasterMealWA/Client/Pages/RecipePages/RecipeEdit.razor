@@ -85,8 +85,11 @@ else
                                     </MudCard>
                                 </MudItem>
                             }
+                            <MudItem>
+
+                                <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Ingredients.Add(new())" />
+                            </MudItem>
                         </MudGrid>
-                        <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Ingredients.Add(new())" />
                     </MudCardContent>
                 </MudCard>
                 <MudCard>
@@ -110,8 +113,11 @@ else
                                     </MudCard>
                                 </MudItem>
                             }
+                            <MudItem>
+
+                                <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Supplies.Add(new())" />
+                            </MudItem>
                         </MudGrid>
-                        <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Supplies.Add(new())" />
                     </MudCardContent>
                 </MudCard>
             </MudItem>
@@ -136,8 +142,11 @@ else
                                     </MudCard>
                                 </MudItem>
                             }
+                            <MudItem>
+
+                                <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Steps.Add(new())" />
+                            </MudItem>
                         </MudGrid>
-                        <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Steps.Add(new())" />
 
                     </MudCardContent>
                 </MudCard>
