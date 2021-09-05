@@ -22,43 +22,69 @@ else
 
                 <MudCard>
                     <MudCardContent>
-                        <MudTextField Label="Title" HelperText="The name of the recipe" @bind-Value="recipe.Name" For="@(()=> recipe.Name)" />
-                        <MudTextField Label="Description" HelperText="The description of the recipe" @bind-Value="recipe.Description" For="@(()=> recipe.Description)" />
-                        <InputFile id="fileInput" OnChange="UploadFiles" hidden />
-                        <MudFab HtmlTag="label"
-                                Color="Color.Secondary"
-                                Icon="@Icons.Filled.Image"
-                                Label="Load picture"
-                                for="fileInput" />
-                        @if (files != null)
-                        {
-                            <MudText Typo="@Typo.h6">@files.Count() File@(files.Count() == 1 ? "" : "s"):</MudText>
-                            <MudList>
-                                @foreach (var file in files)
-                                {
-                                    <MudListItem Icon="@Icons.Filled.AttachFile" @key="@file">
-                                        @file.Name <code>@file.Size bytes</code>
-                                    </MudListItem>
-                                }
-                            </MudList>
-                        }
-                        <MudTextField Label="Source" HelperText="Where did you get the recipe?  (if its personal, leave blank)" @bind-Value="recipe.RecipeSource" For="@(()=> recipe.RecipeSource)" />
-                        <MudTextField Label="Source Link" HelperText="Link to the page you found this recipe on.  Please prefix with https://" @bind-Value="recipe.RecipeSourceUrl" For="@(()=> recipe.RecipeSourceUrl)" />
-                        <MudNumericField Label="Cooking Time" HelperText="Estimated minutes to cook recipe" @bind-Value="recipe.CookingTime" For="@(()=> recipe.CookingTime)" />
-                        <MudNumericField Label="Servings" HelperText="How many people the recipe Serves" @bind-Value="recipe.Servings" For="@(()=> recipe.Servings)" />
-                        @if (Tags == null)
-                        {
-                            <p>loading...</p>}
-                        else
-                        {
-                            <MudChipSet MultiSelection="true" @bind-SelectedChips="recipeTags" Filter="true">
+                        <MudGrid>
+                            <MudItem>
 
-                                @foreach (RecipeTag tag in Tags)
+                                <MudTextField Label="Title" HelperText="The name of the recipe" @bind-Value="recipe.Name" For="@(()=> recipe.Name)" />
+                            </MudItem>
+                            <MudItem>
+
+                                <MudTextField Label="Description" HelperText="The description of the recipe" @bind-Value="recipe.Description" For="@(()=> recipe.Description)" />
+                            </MudItem>
+                            <MudItem>
+
+                                <InputFile id="fileInput" OnChange="UploadFiles" hidden />
+                                <MudFab HtmlTag="label"
+                                        Color="Color.Secondary"
+                                        Icon="@Icons.Filled.Image"
+                                        Label="Load picture"
+                                        for="fileInput" />
+                                @if (files != null)
                                 {
-                                    <MudChip Tag="tag" Default="@(recipe.Tags.Select(t=>t.Id).Contains(tag.Id))">@tag.Name</MudChip>
+                                    <MudText Typo="@Typo.h6">@files.Count() File@(files.Count() == 1 ? "" : "s"):</MudText>
+                                    <MudList>
+                                        @foreach (var file in files)
+                                        {
+                                            <MudListItem Icon="@Icons.Filled.AttachFile" @key="@file">
+                                                @file.Name <code>@file.Size bytes</code>
+                                            </MudListItem>
+                                        }
+                                    </MudList>
                                 }
-                            </MudChipSet>
-                        }
+                            </MudItem>
+                            <MudItem>
+
+                                <MudTextField Label="Source" HelperText="Where did you get the recipe?  (if its personal, leave blank)" @bind-Value="recipe.RecipeSource" For="@(()=> recipe.RecipeSource)" />
+                            </MudItem>
+                            <MudItem>
+
+                                <MudTextField Label="Source Link" HelperText="Link to the page you found this recipe on.  Please prefix with https://" @bind-Value="recipe.RecipeSourceUrl" For="@(()=> recipe.RecipeSourceUrl)" />
+                            </MudItem>
+                            <MudItem xs="6">
+
+                                <MudNumericField Label="Cooking Time" Min="15" Max="90" HelperText="Estimated minutes to cook recipe" @bind-Value="recipe.CookingTime" For="@(()=> recipe.CookingTime)" />
+                            </MudItem>
+                            <MudItem xs="6">
+
+                                <MudNumericField Label="Servings" HelperText="How many people the recipe Serves" Max="8" Min="1" @bind-Value="recipe.Servings" For="@(()=> recipe.Servings)" />
+                            </MudItem>
+                            @if (Tags == null)
+                            {
+                                <p>loading...</p>}
+                            else
+                            {
+                                <MudItem xs="12">
+
+                                    <MudChipSet MultiSelection="true" @bind-SelectedChips="recipeTags" Filter="true">
+
+                                        @foreach (RecipeTag tag in Tags)
+                                        {
+                                            <MudChip Tag="tag">@tag.Name</MudChip>
+                                        }
+                                    </MudChipSet>
+                                </MudItem>
+                            }
+                        </MudGrid>
                     </MudCardContent>
                 </MudCard>
             </MudItem>
