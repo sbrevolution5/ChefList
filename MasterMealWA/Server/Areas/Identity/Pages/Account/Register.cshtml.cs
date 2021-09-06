@@ -72,7 +72,7 @@ namespace MasterMealWA.Server.Areas.Identity.Pages.Account
             [DataType(DataType.Password)]
             [Display(Name = "Password")]
             public string Password { get; set; }
-            [Display(Name ="Profile Picture")]
+            [Display(Name = "Profile Picture")]
             public IFormFile ImageFile { get; set; }
 
             [DataType(DataType.Password)]
@@ -101,24 +101,25 @@ namespace MasterMealWA.Server.Areas.Identity.Pages.Account
                     LastName = Input.LastName,
                     ScreenName = Input.UserName
                 };
+                if (Input.ImageFile is not null)
+                {
+                    var newImage = new DBImage()
+                    {
+                        ContentType = Input.ImageFile.ContentType,
+                        ImageData = await _fileService.ConvertFileToByteArrayAsync(Input.ImageFile)
+                    };
+                    _context.Add(newImage);
+                    await _context.SaveChangesAsync();
+                    user.ImageId = newImage.Id;
+                }
+                else
+                {
+                    user.ImageId = 2;
+                }
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
-                    if (Input.ImageFile is not null)
-                    {
-                        var newImage = new DBImage()
-                        {
-                            ContentType = Input.ImageFile.ContentType,
-                            ImageData = await _fileService.ConvertFileToByteArrayAsync(Input.ImageFile)
-                        };
-                        _context.Add(newImage);
-                        await _context.SaveChangesAsync();
-                        user.ImageId = newImage.Id;
-                    }
-                    else {
-                        user.ImageId = 2;
-                    }
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     var callbackUrl = Url.Page(
@@ -136,6 +137,7 @@ namespace MasterMealWA.Server.Areas.Identity.Pages.Account
                     }
                     else
                     {
+                        //TODO: Remove image of user who failed to register
                         await _signInManager.SignInAsync(user, isPersistent: false);
                         return LocalRedirect(returnUrl);
                     }
