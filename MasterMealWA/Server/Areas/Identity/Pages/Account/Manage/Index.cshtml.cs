@@ -3,10 +3,14 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using MasterMealWA.Server.Data;
+using MasterMealWA.Server.Services.Interfaces;
 using MasterMealWA.Shared.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 
 namespace MasterMealWA.Server.Areas.Identity.Pages.Account.Manage
 {
@@ -14,13 +18,17 @@ namespace MasterMealWA.Server.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<Chef> _userManager;
         private readonly SignInManager<Chef> _signInManager;
+        private readonly ApplicationDbContext _context;
+        private readonly IFileService _fileService;
 
         public IndexModel(
             UserManager<Chef> userManager,
-            SignInManager<Chef> signInManager)
+            SignInManager<Chef> signInManager, ApplicationDbContext context, IFileService fileService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _context = context;
+            _fileService = fileService;
         }
 
         public string Username { get; set; }
@@ -36,18 +44,30 @@ namespace MasterMealWA.Server.Areas.Identity.Pages.Account.Manage
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
+            [Display(Name = "First Name")]
+            public string FirstName { get; set; }
+            [Display(Name = "Last Name")]
+            public string LastName { get; set; }
+            public IFormFile ImageFile { get; set; }
+            public byte[] ImageData { get; set; }
+            public string ContentType { get; set; }
         }
 
         private async Task LoadAsync(Chef user)
         {
             var userName = await _userManager.GetUserNameAsync(user);
+            var userImageData = await _context.DBImage.Where(i => i.Id == user.ImageId).FirstOrDefaultAsync();
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
 
             Username = userName;
 
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber
+                PhoneNumber = phoneNumber,
+                LastName = user.LastName,
+                FirstName = user.FirstName,
+                ImageData = userImageData.ImageData,
+                ContentType = userImageData.ContentType
             };
         }
 
@@ -87,7 +107,26 @@ namespace MasterMealWA.Server.Areas.Identity.Pages.Account.Manage
                     return RedirectToPage();
                 }
             }
-
+            if (Input.FirstName is not null)
+            {
+                user.FirstName = Input.FirstName;
+                await _userManager.UpdateAsync(user);
+            }
+            if (Input.LastName is not null)
+            {
+                user.LastName = Input.LastName;
+                await _userManager.UpdateAsync(user);
+            }
+            if (Input.ImageFile is not null)
+            {
+                var newImage = new DBImage()
+                {
+                    ContentType = Input.ImageFile.ContentType,
+                    ImageData = await _fileService.ConvertFileToByteArrayAsync(Input.ImageFile)
+                };
+                _context.Add(newImage);
+                user.ImageId = newImage.Id;
+            }
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your profile has been updated";
             return RedirectToPage();
