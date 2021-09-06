@@ -180,7 +180,7 @@ namespace MasterMealWA.Server.Data
             var mealImage = await context.DBImage.FirstOrDefaultAsync(i => i.Id == 1);
             if (mealImage == null)
             {
-                var file = $"{Directory.GetCurrentDirectory()}/Assets/DefaultRecipe.jpg";
+                var file = $"/Assets/DefaultRecipe.jpg";
                 var fileData = await File.ReadAllBytesAsync(file);
                 var newImage = new DBImage()
                 {
