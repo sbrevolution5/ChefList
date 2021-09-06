@@ -11,6 +11,9 @@ else
 
             <MudText Typo="Typo.h4">@list.Name</MudText>
         </MudCardHeader>
+        <MudDivider>
+
+        </MudDivider>
         <MudCardContent>
 
             <MudGrid>
@@ -25,6 +28,15 @@ else
                                     <MudCheckBox @bind-Checked="item.InPantry" Label="@item.QuantityString" Color="Color.Secondary">
 
                                     </MudCheckBox>
+                                    @if (item.Notes.Count > 0)
+                                    {
+                                        <MudList>
+                                            @foreach (var note in item.Notes)
+                                            {
+                                                <MudListItem>@note</MudListItem>
+                                            }
+                                        </MudList>
+                                    }
                                 </MudPaper>
                             </MudListItem>
 
