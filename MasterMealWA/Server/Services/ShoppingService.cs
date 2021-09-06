@@ -45,7 +45,7 @@ namespace MasterMealWA.Server.Services
         }
         private async Task<List<QIngredient>> ConvertToSingleServingAsync(int recipeId)
         {
-            var recipe = await _context.Recipe.Where(r => r.Id == recipeId).Include(r=>r.Ingredients).ThenInclude(r=>r.Ingredient).AsNoTracking().FirstOrDefaultAsync();
+            var recipe = await _context.Recipe.AsNoTracking().Where(r => r.Id == recipeId).Include(r=>r.Ingredients).ThenInclude(r=>r.Ingredient).AsNoTracking().FirstOrDefaultAsync();
             var servings = recipe.Servings;
             var result = new List<QIngredient>();
             foreach (var ingredient in recipe.Ingredients)

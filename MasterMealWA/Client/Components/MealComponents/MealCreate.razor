@@ -10,6 +10,7 @@
         else
         {
             <MudDatePicker Label="Date" HelperText="When do you plan to have the meal?" @bind-Date="mealdate"></MudDatePicker>
+            <MudNumericField Label="Servings" HelperText="How Many people will be eating?" @bind-Value="meal.Serves"></MudNumericField>
             <MudSelect Label="Recipe" @bind-Value="meal.RecipeId" HelperText="Which meal are you eating?">
                 @foreach (var recipe in recipes)
                     {
@@ -44,6 +45,7 @@
         meal = new()
         {
             RecipeId = recipe.Id,
+            Serves = recipe.Servings,
             Date = DateTime.Today
         };
     }
