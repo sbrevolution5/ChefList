@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -52,6 +53,7 @@ namespace MasterMealWA.Server
             services.AddScoped<IMealService, MealService>();
             services.AddScoped<IRecipeService, RecipeService>();
             services.AddScoped<ISupplyService, SupplyService>();
+            services.AddScoped<IEmailSender, GmailEmailService>();
 
             services.AddControllersWithViews().AddJsonOptions(options =>
             {

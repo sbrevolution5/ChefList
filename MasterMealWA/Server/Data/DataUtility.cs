@@ -47,7 +47,6 @@ namespace MasterMealWA.Server.Data
             var defaultUser = new Chef
             {
                 UserName = "sethbcoding@gmail.com",
-                DisplayName = "sethbcoding@gmail.com",
                 Email = "sethbcoding@gmail.com",
                 FirstName = "Seth",
                 LastName = "Burleson",
@@ -81,7 +80,6 @@ namespace MasterMealWA.Server.Data
             var defaultUser = new Chef
             {
                 UserName = "softballcc11@yahoo.com",
-                DisplayName = "softballcc11@yahoo.com",
                 Email = "softballcc11@yahoo.com",
                 FirstName = "Cydney",
                 LastName = "Burleson",
@@ -114,7 +112,6 @@ namespace MasterMealWA.Server.Data
             var defaultUser = new Chef
             {
                 UserName = "sbrevolution5@aim.com",
-                DisplayName = "sbrevolution5@aim.com",
                 Email = "sbrevolution5@aim.com",
                 FirstName = "Seth",
                 LastName = "Burleson",
