@@ -7,18 +7,26 @@
 }
 else
 {
-    <MudText Typo="Typo.h1">@list.Name</MudText>
-    <MudList>
-        @foreach (var item in list.ShoppingIngredients)
-        {
-            <MudListItem>
-                <MudText>
-                    @item.QuantityString
-                </MudText>
-            </MudListItem>
+    <MudGrid>
+        <MudItem xs="12">
 
-        }
-    </MudList>
+            <MudText Typo="Typo.h4">@list.Name</MudText>
+        </MudItem>
+        <MudItem xs="12">
+
+            <MudList>
+                @foreach (var item in list.ShoppingIngredients)
+                {
+                    <MudListItem>
+                        <MudCheckBox @bind-Checked="item.InPantry" Label="@item.QuantityString" Color="Color.Secondary">
+
+                        </MudCheckBox>
+                    </MudListItem>
+
+                }
+            </MudList>
+        </MudItem>
+    </MudGrid>
 }
 @code {
     [Parameter]
