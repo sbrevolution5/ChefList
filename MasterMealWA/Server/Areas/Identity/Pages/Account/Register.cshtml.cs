@@ -113,6 +113,7 @@ namespace MasterMealWA.Server.Areas.Identity.Pages.Account
                             ImageData = await _fileService.ConvertFileToByteArrayAsync(Input.ImageFile)
                         };
                         _context.Add(newImage);
+                        await _context.SaveChangesAsync();
                         user.ImageId = newImage.Id;
                     }
                     else {

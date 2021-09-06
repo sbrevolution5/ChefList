@@ -125,9 +125,9 @@ namespace MasterMealWA.Server.Areas.Identity.Pages.Account.Manage
                     ImageData = await _fileService.ConvertFileToByteArrayAsync(Input.ImageFile)
                 };
                 _context.Add(newImage);
+                await _context.SaveChangesAsync();
                 user.ImageId = newImage.Id;
                 await _userManager.UpdateAsync(user);
-                await _context.SaveChangesAsync();
             }
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your profile has been updated";
