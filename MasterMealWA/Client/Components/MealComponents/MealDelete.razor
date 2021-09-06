@@ -3,15 +3,9 @@
 <MudDialog>
     <DialogContent>
 
-        @if (recipes == null || meal == null)
-        {
-            <p>Loading...</p>
-        }
-        else
-        {
+        
             <MudText>@meal.Recipe.Name</MudText>
             <MudText>@meal.Date.ToShortDateString()</MudText>
-        }
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Cancel</MudButton>
@@ -25,12 +19,6 @@
     [Parameter]
     public Meal meal { get; set; }
     private List<Recipe> recipes;
-    protected override async Task OnInitializedAsync()
-    {
-
-        recipes = await _api.GetAllRecipesAsync();
-        recipe = recipes.Where(r => r.Id == meal.RecipeId).FirstOrDefault();
-    }
     public async Task ConfirmDelete()
     {
         await _api.DeleteMealAsync(meal.Id);

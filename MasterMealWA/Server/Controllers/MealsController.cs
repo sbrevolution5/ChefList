@@ -9,6 +9,7 @@ using MasterMealWA.Server.Data;
 using MasterMealWA.Shared.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using MasterMealWA.Server.Extensions;
 
 namespace MasterMealWA.Server.Controllers
 {
@@ -30,8 +31,9 @@ namespace MasterMealWA.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Meal>>> GetMeal()
         {
-            var userId = _userManager.GetUserId(User);
-            return await _context.Meal.Include(m => m.Recipe).Where(m=>m.ChefId == userId).ToListAsync();
+            var userId = HttpContext.GetUserId();
+            var meals = await _context.Meal.Include(m => m.Recipe).Where(m=>m.ChefId == userId).ToListAsync();
+            return meals;
         }
 
         // GET: api/Meals/5
@@ -39,7 +41,7 @@ namespace MasterMealWA.Server.Controllers
         public async Task<ActionResult<Meal>> GetMeal(int id)
         {
             var meal = await _context.Meal.FindAsync(id);
-            var userId = _userManager.GetUserId(User);
+            var userId = HttpContext.GetUserId();
 
             if (meal == null || meal.ChefId != userId)
             {
@@ -85,7 +87,6 @@ namespace MasterMealWA.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<Meal>> PostMeal(Meal meal)
         {
-            meal.ChefId = _userManager.GetUserId(User);
             _context.Meal.Add(meal);
             await _context.SaveChangesAsync();
 

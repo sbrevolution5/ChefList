@@ -11,6 +11,7 @@ using MasterMealWA.Shared.Models.Dtos;
 using MasterMealWA.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using MasterMealWA.Server.Extensions;
 
 namespace MasterMealWA.Server.Controllers
 {
@@ -35,7 +36,7 @@ namespace MasterMealWA.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ShoppingList>>> GetShoppingList()
         {
-            var userId = _userManager.GetUserId(User);
+            var userId = HttpContext.GetUserId();
 
             return await _context.ShoppingList.Where(s => s.ChefId == userId).ToListAsync();
         }
@@ -45,7 +46,7 @@ namespace MasterMealWA.Server.Controllers
         public async Task<ActionResult<ShoppingList>> GetShoppingList(int id)
         {
             var shoppingList = await _context.ShoppingList.Include(l => l.ShoppingIngredients).ThenInclude(s => s.Ingredient).Where(l => l.Id == id).FirstOrDefaultAsync();
-            var userId = _userManager.GetUserId(User);
+            var userId = HttpContext.GetUserId();
 
             if (shoppingList == null || shoppingList.ChefId != userId)
             {
@@ -93,7 +94,7 @@ namespace MasterMealWA.Server.Controllers
         public async Task<ActionResult<ShoppingList>> PostShoppingList(ListCreateDto shoppingList)
         {
 
-            var userId = _userManager.GetUserId(User);
+            var userId = HttpContext.GetUserId();
             var list = await _shoppingService.CreateShoppingListForDateRangeAsync(shoppingList.EndDate, shoppingList.StartDate,userId);
             return CreatedAtAction("GetShoppingList", new { id = list.Id }, list);
         }
