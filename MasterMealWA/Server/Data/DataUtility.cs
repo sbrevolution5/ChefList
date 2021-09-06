@@ -180,7 +180,7 @@ namespace MasterMealWA.Server.Data
             var mealImage = await context.DBImage.FirstOrDefaultAsync(i => i.Id == 1);
             if (mealImage == null)
             {
-                var file = $"MasterMealWA/Server/Assets/DefaultRecipe.jpg";
+                var file = $"./Assets/DefaultRecipe.jpg";
                 var fileData = await File.ReadAllBytesAsync(file);
                 var newImage = new DBImage()
                 {
@@ -192,7 +192,7 @@ namespace MasterMealWA.Server.Data
             var userImage = await context.DBImage.FirstOrDefaultAsync(i => i.Id == 2);
             if (userImage == null)
             {
-                var file = $"MasterMealWA/Server/Assets/DefaultUser.png";
+                var file = $"./Assets/DefaultUser.png";
                 var fileData = await File.ReadAllBytesAsync(file);
                 var defaultUserImage = new DBImage()
                 {
