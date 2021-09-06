@@ -15,6 +15,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using MasterMealWA.Server.Data;
+using Microsoft.AspNetCore.Http;
+using MasterMealWA.Server.Services.Interfaces;
 
 namespace MasterMealWA.Server.Areas.Identity.Pages.Account
 {
@@ -26,18 +28,20 @@ namespace MasterMealWA.Server.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly ApplicationDbContext _context;
+        private readonly IFileService _fileService;
 
         public RegisterModel(
             UserManager<Chef> userManager,
             SignInManager<Chef> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender, ApplicationDbContext context)
+            IEmailSender emailSender, ApplicationDbContext context, IFileService fileService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
             _context = context;
+            _fileService = fileService;
         }
 
         [BindProperty]
@@ -68,7 +72,8 @@ namespace MasterMealWA.Server.Areas.Identity.Pages.Account
             [DataType(DataType.Password)]
             [Display(Name = "Password")]
             public string Password { get; set; }
-
+            [Display(Name ="Profile Picture")]
+            public IFormFile ImageFile { get; set; }
 
             [DataType(DataType.Password)]
             [Display(Name = "Confirm password")]
@@ -102,7 +107,16 @@ namespace MasterMealWA.Server.Areas.Identity.Pages.Account
                     _logger.LogInformation("User created a new account with password.");
                     if (Input.ImageFile is not null)
                     {
-
+                        var newImage = new DBImage()
+                        {
+                            ContentType = Input.ImageFile.ContentType,
+                            ImageData = await _fileService.ConvertFileToByteArrayAsync(Input.ImageFile)
+                        };
+                        _context.Add(newImage);
+                        user.ImageId = newImage.Id;
+                    }
+                    else {
+                        user.ImageId = 2;
                     }
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
