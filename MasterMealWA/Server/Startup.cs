@@ -32,7 +32,7 @@ namespace MasterMealWA.Server
         {
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseNpgsql(
-                    Configuration.GetConnectionString("DefaultConnection")));
+                    DataUtility.GetConnectionString(Configuration)));
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
