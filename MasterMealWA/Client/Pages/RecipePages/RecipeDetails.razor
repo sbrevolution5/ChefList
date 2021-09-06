@@ -1,0 +1,167 @@
+﻿@page "/recipes/details/{id}"
+@inject HttpClient Http
+@inject IDialogService _dialogService
+@inject ISnackbar snackbar
+@inject IUserService _userService
+@inject IImageReader _imageReader
+@attribute [AllowAnonymous]
+<MudItem xs="12">
+    <MudBreadcrumbs Items="crumbList"></MudBreadcrumbs>
+</MudItem>
+@if (recipe is null)
+{
+    <MudOverlay>
+
+        <MudText>Loading....</MudText>
+    </MudOverlay>
+}
+else
+{
+    <MudItem xs="8">
+        <MudText Typo="Typo.h2">@recipe.Name</MudText>
+
+        <MudCard>
+
+            <MudCardMedia Image="@(_imageReader.ReadImageData(recipe.Image.ImageData, recipe.Image.ContentType))"></MudCardMedia>
+            <MudCardActions>
+                @if (userId == recipe.AuthorId)
+                {
+
+                    <MudButtonGroup Color="Color.Primary" OverrideStyles="false">
+
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.CalendarToday" OnClick="AddMeal">Schedule Meal</MudButton>
+                        <MudButton Variant="Variant.Filled" Color="Color.Warning" StartIcon="@Icons.Material.Filled.Edit" Link=@($"recipe/edit/{recipe.Id}")>Edit Meal</MudButton>
+                        <MudButton Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.Delete" Link=@($"recipe/delete/{recipe.Id}")>Delete Recipe</MudButton>
+                    </MudButtonGroup>
+                }
+                else
+                {
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.CalendarToday" OnClick="AddMeal">Schedule Meal</MudButton>
+                }
+            </MudCardActions>
+            <MudCardContent>
+                <MudGrid>
+
+                    <MudItem xs="6">
+                        <MudCard Elevation="2">
+
+                            <MudCardContent>
+
+                                <MudText>@recipe.Description</MudText>
+                            </MudCardContent>
+                            <MudCardActions>
+
+                                <MudText Class="d-flex justify-center mt-4">
+                                    Source:
+                                    <MudLink Href="@recipe.RecipeSourceUrl">@recipe.RecipeSource</MudLink>
+                                </MudText>
+                            </MudCardActions>
+                        </MudCard>
+                    </MudItem>
+                    <MudItem xs="6">
+
+                        <MudSimpleTable Elevation="2">
+                            <tbody>
+                                <tr>
+                                    <td>Serves:</td>
+                                    <td>@recipe.Servings</td>
+                                </tr>
+                                <tr>
+                                    <td>Time To Cook:</td>
+                                    <td>@recipe.CookingTime</td>
+                                </tr>
+                                <tr>
+                                    <td>Recipe Type:</td>
+                                    <td>@recipe.Tags.FirstOrDefault().Name</td>
+                                </tr>
+                            </tbody>
+                        </MudSimpleTable>
+                    </MudItem>
+                </MudGrid>
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+    <MudItem xs="4">
+
+        <MudCard>
+            <MudTabs>
+                <MudTabPanel Text="Ingredients">
+                    <MudList>
+                        @foreach (var ingredient in recipe.Ingredients)
+                        {<MudListItem>
+                                <MudPaper Elevation="2">
+
+                                    <MudText Class="h4">
+                                        @ingredient.Ingredient.Name
+                                    </MudText>
+                                    <MudText>@ingredient.Quantity</MudText>
+                                    <MudText>@ingredient.Notes</MudText>
+                                </MudPaper>
+                            </MudListItem>
+                        }
+                    </MudList>
+                </MudTabPanel>
+                <MudTabPanel Text="Supplies">
+                    <MudList>
+
+                        @foreach (var supply in recipe.Supplies)
+                        {
+                            <MudListItem>
+
+                                <MudPaper Elevation="2">
+                                    <MudText Class="h4">@supply.Quantity @supply.Supply.Name</MudText>
+                                </MudPaper>
+                            </MudListItem>
+                        }
+                    </MudList>
+                </MudTabPanel>
+                <MudTabPanel Text="Steps">
+                    <MudList>
+                        @foreach (var step in recipe.Steps.OrderBy(s => s.StepNumber))
+                        {
+                            <MudListItem>
+                                <MudPaper Elevation="2">
+                                    <MudText>@step.StepNumber. @step.Text</MudText>
+                                </MudPaper>
+                            </MudListItem>
+                        }
+                    </MudList>
+                </MudTabPanel>
+            </MudTabs>
+
+        </MudCard>
+    </MudItem>
+}
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+    private Recipe recipe;
+    private string imageData { get; set; }
+    private string userId { get; set; }
+    private List<BreadcrumbItem> crumbList = new()
+    {
+            new BreadcrumbItem("Recipes", href: "/recipes")
+        };
+    public async Task AddMeal()
+    {
+        var parameters = new DialogParameters { ["recipe"] = recipe };
+        var dialog = _dialogService.Show<MealCreate>("Schedule Meal", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            snackbar.Add("Meal planned!");
+        }
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        userId = await _userService.GetUserIdAsync();
+        var options = new JsonSerializerOptions()
+        {
+            ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve,
+            PropertyNamingPolicy = null
+        };
+        recipe = await Http.GetFromJsonAsync<Recipe>($"Api/recipes/{Id}", options);
+        base.OnInitialized();
+    }
+}

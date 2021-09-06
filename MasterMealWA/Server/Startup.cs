@@ -1,9 +1,13 @@
 using MasterMealWA.Server.Data;
-using MasterMealWA.Server.Models;
+using MasterMealWA.Server.Services;
+using MasterMealWA.Server.Services.Interfaces;
+using MasterMealWA.Shared.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -32,16 +36,30 @@ namespace MasterMealWA.Server
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
-            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddDefaultIdentity<Chef>(options => options.SignIn.RequireConfirmedAccount = true).AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddIdentityServer()
-                .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
+                .AddApiAuthorization<Chef, ApplicationDbContext>();
 
             services.AddAuthentication()
                 .AddIdentityServerJwt();
+            services.AddScoped<IMeasurementService, MeasurementService>();
+            services.AddScoped<IFileService, FileService>();
+            services.AddScoped<IIngredientService, IngredientService>();
+            services.AddScoped<ICommentService, CommentService>();
+            services.AddScoped<IRatingService, RatingService>();
+            services.AddScoped<IShoppingService, ShoppingService>();
+            services.AddScoped<IMealService, MealService>();
+            services.AddScoped<IRecipeService, RecipeService>();
+            services.AddScoped<ISupplyService, SupplyService>();
+            services.AddScoped<IEmailSender, GmailEmailService>();
 
-            services.AddControllersWithViews();
+            services.AddControllersWithViews().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+                options.JsonSerializerOptions.PropertyNamingPolicy = null;
+            });
             services.AddRazorPages();
         }
 

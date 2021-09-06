@@ -1,6 +1,5 @@
 ﻿using MasterMealWA.Server.Data;
 using MasterMealWA.Shared.Enums;
-using MasterMealWA.Server.Models;
 using MasterMealWA.Server.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -13,16 +12,15 @@ namespace MasterMealWA.Server.Services
 {
     public class IngredientService : IIngredientService
     {
-        private readonly IDbContextFactory<ApplicationDbContext> ContextFactory;
+        private readonly ApplicationDbContext _context;
 
-        public IngredientService(IDbContextFactory<ApplicationDbContext> contextFactory)
+        public IngredientService(ApplicationDbContext context)
         {
-            ContextFactory = contextFactory;
+            _context = context;
         }
 
         public async Task<Ingredient> GetIngredientByIdAsync(int ingredientId)
         {
-            using var _context = ContextFactory.CreateDbContext();
             var ingredient = await _context.Ingredient.FirstOrDefaultAsync(i => i.Id == ingredientId);
             return ingredient;
         }

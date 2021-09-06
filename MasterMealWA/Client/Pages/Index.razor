@@ -1,41 +1,84 @@
 ﻿@page "/"
-<MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.False">
-    <MudGrid>
+@inject NavigationManager nav
+<MudContainer Class="mt-16">
+    <MudText Typo="Typo.h3" Align="Align.Center" GutterBottom="true">ChefList</MudText>
+    <MudText Align="Align.Center">Welcome to ChefList.  You can add recipes, plan meals, and make shopping lists.</MudText>
+    <MudGrid Class="mt-8">
         <MudItem xs="12" sm="6" md="4">
-            <MudPaper Elevation="2" Class="pa-4" Style="height: 200px;"></MudPaper>
+            <MudCard Elevation="25" Class="rounded-lg pb-4">
+                
+                <MudCardContent>
+                    <div class="d-flex justify-center">
+                        <MudText Typo="Typo.h3">Recipe</MudText>
+                        <MudText Typo="Typo.h5" Class="ml-1 mt-5" Color="Color.Secondary"> Organizer</MudText>
+                    </div>
+                    <MudList Class="mx-auto mt-4" Style="width:300px;">
+                        <MudListItem Icon="@Icons.Material.Filled.Folder">
+                            Organize recipes by Nationality, Protien type, Meal type, and more! 
+                        </MudListItem>
+                        <MudListItem Icon="@Icons.Material.Filled.Note">
+                            Store ingredients, supplies, and steps
+                        </MudListItem>
+                        <MudListItem Icon="@Icons.Material.Filled.RemoveRedEye">
+                            Browse public recipes for inspiration
+                        </MudListItem>
+                    </MudList>
+                </MudCardContent>
+                <MudCardActions Class="d-flex justify-center">
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large" Style="width:50%;" Link="/recipes">View List</MudButton>
+                </MudCardActions>
+            </MudCard>
         </MudItem>
         <MudItem xs="12" sm="6" md="4">
-            <MudPaper Elevation="2" Class="pa-4" Style="height: 200px;"></MudPaper>
+            <MudCard Elevation="25" Class="rounded-lg pb-4">
+                
+                <MudCardContent>
+                    <div class="d-flex justify-center">
+                        <MudText Typo="Typo.h3">Meal</MudText>
+                        <MudText Typo="Typo.h5" Class="ml-1 mt-5" Color="Color.Secondary"> Planner</MudText>
+                    </div>
+                    <MudList Class="mx-auto mt-4" Style="width:300px;">
+                        <MudListItem Icon="@Icons.Material.Filled.Schedule">
+                            Schedule meals for a later date
+                        </MudListItem>
+                        <MudListItem Icon="@Icons.Material.Filled.Group">
+                            Select a serving number (Coming soon!)
+                        </MudListItem>
+                        <MudListItem Icon="@Icons.Material.Filled.History">
+                            View your meal calendar history (Coming soon!)
+                        </MudListItem>
+                    </MudList>
+                </MudCardContent>
+                <MudCardActions Class="d-flex justify-center">
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large" Link="/meals" Style="width:50%;">View Meal Schedule</MudButton>
+                </MudCardActions>
+            </MudCard>
         </MudItem>
         <MudItem xs="12" sm="12" md="4">
-            <MudPaper Elevation="2" Class="pa-4" Style="height: 200px;"></MudPaper>
-        </MudItem>
-        <MudItem xs="12" sm="6">
-            <MudGrid>
-                <MudItem xs="12">
-                    <MudPaper Elevation="2" Class="pa-4" Style="height: 200px;"></MudPaper>
-                </MudItem>
-                <MudItem xs="12">
-                    <MudPaper Elevation="2" Class="pa-4" Style="height: 200px;"></MudPaper>
-                </MudItem>
-            </MudGrid>
-        </MudItem>
-        <MudItem xs="12" sm="6">
-            <MudPaper Elevation="2" Class="pa-4" Style="height: 100%"></MudPaper>
-        </MudItem>
-        <MudItem xs="12" sm="6" md="4">
-            <MudPaper Elevation="2" Class="pa-4" Style="height: 200px;"></MudPaper>
-        </MudItem>
-        <MudItem xs="12" sm="6" md="4">
-            <MudPaper Elevation="2" Class="pa-4" Style="height: 200px;"></MudPaper>
-        </MudItem>
-        <MudItem xs="12" sm="12" md="4">
-            <MudPaper Elevation="2" Class="pa-4" Style="height: 200px;"></MudPaper>
+            <MudCard Elevation="25" Class="rounded-lg pb-4">
+                
+                <MudCardContent>
+                    <div class="d-flex justify-center">
+                        <MudText Typo="Typo.h3">Shopping</MudText>
+                        <MudText Typo="Typo.h5" Class="ml-1 mt-5" Color="Color.Secondary"> Helper</MudText>
+                    </div>
+                    <MudList Class="mx-auto mt-4" Style="width:300px;">
+                        <MudListItem Icon="@Icons.Material.Filled.List">
+                            A list of exactly what you need for your meal plan
+                        </MudListItem>
+                        <MudListItem Icon="@Icons.Material.Filled.ShoppingBasket">
+                            Cross off pantry items before you go to the store (Coming soon!)
+                        </MudListItem>
+                        <MudListItem Icon="@Icons.Material.Filled.Sort">
+                            Sorted by common grocery aisle (Coming soon!)
+                        </MudListItem>
+                    </MudList>
+                </MudCardContent>
+                <MudCardActions Class="d-flex justify-center">
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large" Link="/ShoppingLists" Style="width:50%;">Go Shopping</MudButton>
+                </MudCardActions>
+            </MudCard>
         </MudItem>
     </MudGrid>
 </MudContainer>
-<h1>Hello, world!</h1>
 
-Welcome to your new app.
-
-<SurveyPrompt Title="How is Blazor working for you?" />

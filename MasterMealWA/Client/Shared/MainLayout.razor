@@ -1,21 +1,30 @@
 ﻿@inherits LayoutComponentBase
 
-<MudThemeProvider Theme="currentTheme"/>
+<MudThemeProvider Theme="currentTheme" />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
 <MudLayout>
     <MudAppBar>
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
-        ChefList
+        <MudLink Href="/" Color="Color.Inherit">
+            ChefList
+        </MudLink>
         <MudSpacer />
         <MudIconButton Icon="@Icons.Material.Filled.ModeNight" OnClick="@((e) => DarkMode())">Toggle Dark/Light Mode</MudIconButton>
+        <LoginDisplay></LoginDisplay>
     </MudAppBar>
     <MudDrawer @bind-Open="@_drawerOpen">
         <NavMenu />
     </MudDrawer>
     <MudMainContent>
-        @Body
+
+        <MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.False">
+            <MudGrid>
+                @Body
+            </MudGrid>
+        </MudContainer>
+
     </MudMainContent>
 </MudLayout>
 @code {
@@ -41,6 +50,15 @@
     {
         Palette = new Palette()
         {
+            Background="#EDC7B7",
+            BackgroundGrey="#EEE2DC",
+            Surface="#Bab2b5",
+            Primary="#123C69",
+            AppbarBackground="#123C69",
+            AppbarText="#EEE2DC",
+            DrawerBackground= "#EEE2DC",
+            Secondary ="#AC3B61",
+
             Black = "#272c34"
         }
     };

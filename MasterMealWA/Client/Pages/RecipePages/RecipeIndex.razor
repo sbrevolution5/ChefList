@@ -1,0 +1,195 @@
+﻿@page "/recipes/{mine?}"
+@inject HttpClient Http
+@inject IApiService _api
+@inject NavigationManager nav
+@inject IDialogService _dialogService
+@inject ISnackbar snackbar
+@inject IImageReader _imageReader
+@inject IUserService _userService
+@attribute [AllowAnonymous]
+<MudItem xs="3">
+    <MudFab Icon="@Icons.Material.Filled.Add" Color="Color.Primary" Label="Add Recipe" aria-label="add recipe" @onclick='()=>nav.NavigateTo("/recipes/create")' />
+    <MudPaper Width="250px" Class="py-3" Square="true">
+        <MudExpansionPanels MultiExpansion="true" Elevation="2">
+
+            <MudExpansionPanel Text="Author" IsInitiallyExpanded="true">
+                <MudSwitch Label="Only My Recipes" @bind-Checked="myRecipes"></MudSwitch>
+            </MudExpansionPanel>
+            <MudExpansionPanel Text="Supplies" IsInitiallyExpanded="true">
+                <MudSwitch Disabled="true" Label="I have Supplies" @bind-Checked="mySupplies"></MudSwitch>
+            </MudExpansionPanel>
+            <MudExpansionPanel Text="Categories" IsInitiallyExpanded="true">
+                <MudChipSet MultiSelection="true" Filter="true">
+                    @if (RecipeTypes is not null)
+                    {
+                        @foreach (var category in RecipeTypes)
+                        {
+
+                            <MudChip Text="@category.Name"></MudChip>
+                        }
+                    }
+                </MudChipSet>
+            </MudExpansionPanel>
+            <MudExpansionPanel Text="Rating" IsInitiallyExpanded="true">
+                <div class="d-flex flex-column align-center">
+                    <MudRating Color="Color.Secondary" @bind-SelectedValue="selectedRating" HoveredValueChanged="HandleHoveredValueChanged" />
+                    <MudText Typo="Typo.subtitle2" Class="mt-2">@RatingText</MudText>
+                </div>
+
+
+
+            </MudExpansionPanel>
+            <MudExpansionPanel Text="CookingTime" IsInitiallyExpanded="true">
+                <MudSwitch Disabled="true" Label="FilterByTime" @bind-Checked="timeFilter"></MudSwitch>
+
+                <MudItem xs="12">
+                    <MudNumericField @bind-Value="minTime" Label="Min Cooking Time" Variant="Variant.Text" Min="0" Max="60" />
+                </MudItem>
+                <MudItem xs="12">
+                    <MudNumericField @bind-Value="maxTime" Label="Max cooking time" Variant="Variant.Text" Min="0" Max="60" />
+                </MudItem>
+            </MudExpansionPanel>
+        </MudExpansionPanels>
+    </MudPaper>
+</MudItem>
+
+<MudItem xs="9">
+    @if (recipes is null)
+    {
+        <MudOverlay>
+
+            <MudText>Loading....</MudText>
+        </MudOverlay>
+    }
+    else
+    {
+        <MudGrid>
+            @foreach (var recipe in pageRecipes)
+            {
+                <MudItem xs="4">
+
+                    <MudCard Elevation="2">
+                        <MudCardMedia Image="@(_imageReader.ReadImageData(recipe.Image.ImageData, recipe.Image.ContentType))"></MudCardMedia>
+                        <MudCardContent>
+
+                            <MudText>@recipe.Name</MudText>
+                            <MudText Typo="Typo.caption">@recipe.Author.ScreenName</MudText>
+                            <MudText>Cooking time: @recipe.CookingTime</MudText>
+                            <MudText>Servings: @recipe.Servings</MudText>
+                            @if (recipe.Ratings.Count > 1)
+                            {
+
+                                <MudRating ReadOnly="true" SelectedValue="@Convert.ToInt32(recipe.AvgRating)"></MudRating>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(recipe.RecipeSource))
+                            {
+                                @if (!string.IsNullOrWhiteSpace(recipe.RecipeSourceUrl))
+                                {
+                                    <MudText>
+                                        Source:
+
+                                        <MudLink Href="@recipe.RecipeSourceUrl">@recipe.RecipeSource</MudLink>
+                                    </MudText>
+                                }
+                                else
+                                {
+                                    <MudText>Source: @recipe.RecipeSource</MudText>
+                                }
+                            }
+                        </MudCardContent>
+                        <MudCardActions>
+                            @if (userId == recipe.AuthorId)
+                            {
+
+                                <MudIconButton Variant="Variant.Filled" Color="Color.Warning" Icon="@Icons.Material.Filled.Edit" Link=@($"/recipes/edit/{recipe.Id}")></MudIconButton>
+                                <MudIconButton Variant="Variant.Filled" Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Link=@($"/recipes/delete/{recipe.Id}")></MudIconButton>
+                                <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Icon="@Icons.Material.Filled.CalendarToday" OnClick="@(()=>AddMeal(recipe))"></MudIconButton>
+                            }
+                            else
+                            {
+                                <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Icon="@Icons.Material.Filled.CalendarToday" OnClick="@(()=>AddMeal(recipe))"></MudIconButton>
+                            }
+                            <MudLink Href="@($"/recipes/details/{recipe.Id}")">Details</MudLink>
+                        </MudCardActions>
+                    </MudCard>
+                </MudItem>
+
+            }
+        </MudGrid>
+    }
+    <MudDivider></MudDivider>
+    <MudPagination Rectangular="true" Variant="Variant.Text" SelectedChanged="(int p)=>ChangePage(p)" Count="@pageCount" />
+</MudItem>
+@code {
+    [Parameter]
+    public string mine { get; set; }
+    private List<Recipe> recipes;
+    private List<Recipe> pageRecipes { get; set; }
+    private List<RecipeTag> RecipeTypes { get; set; }
+    private bool mySupplies { get; set; }
+    private bool myRecipes { get; set; }
+    private bool timeFilter { get; set; }
+    private int minTime { get; set; } = 1;
+    private int maxTime { get; set; } = 60;
+    private int selectedRating = 0;
+    private int? activeRating;
+    private int pageCount { get; set; } = 0;
+    private string userId { get; set; }
+    private void HandleHoveredValueChanged(int? val) => activeRating = val;
+    public async Task AddMeal(Recipe recipe)
+    {
+        var parameters = new DialogParameters { ["recipe"] = recipe };
+        var dialog = _dialogService.Show<MealCreate>("Schedule Meal", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            snackbar.Add("Meal planned!");
+        }
+    }
+    private string RatingText => (activeRating ?? selectedRating) switch
+    {
+        1 => "1 Star or more",
+        2 => "2 Stars or more",
+        3 => "3 Stars or more",
+        4 => "4 Stars or more",
+        5 => "5 Stars",
+        _ => "Any Rating"
+    };
+    protected override async Task OnParametersSetAsync()
+    {
+        mine = mine ?? "";
+        await GetRecipesAsync();
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        userId = await _userService.GetUserIdAsync();
+        mine = mine ?? "";
+        var options = new JsonSerializerOptions()
+        {
+            ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve,
+            PropertyNamingPolicy = null
+        };
+        await GetRecipesAsync();
+        ChangePage(1);
+        RecipeTypes = await _api.GetAllRecipeTypesAsync();
+        base.OnInitialized();
+    }
+    private async Task GetRecipesAsync()
+    {
+        if (mine.ToLower() == "myrecipes")
+        {
+
+            recipes = await _api.GetMyRecipesAsync();
+        }
+        else
+        {
+
+            recipes = await _api.GetAllRecipesAsync();
+        }
+        pageCount = (recipes.Count / 6) + 1;
+    }
+    private void ChangePage(int page)
+    {
+        pageRecipes = recipes.OrderBy(r => r.Id).Skip((page - 1) * 6).Take(6).ToList();
+    }
+}

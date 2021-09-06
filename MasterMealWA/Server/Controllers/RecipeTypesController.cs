@@ -7,11 +7,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MasterMealWA.Server.Data;
 using MasterMealWA.Shared.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MasterMealWA.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class RecipeTypesController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -23,16 +25,17 @@ namespace MasterMealWA.Server.Controllers
 
         // GET: api/RecipeTypes
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<RecipeType>>> GetRecipeType()
+        public async Task<ActionResult<IEnumerable<RecipeTag>>> GetRecipeType()
         {
-            return await _context.RecipeType.ToListAsync();
+            var typelist = await _context.RecipeTag.ToListAsync();
+            return typelist;
         }
 
         // GET: api/RecipeTypes/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<RecipeType>> GetRecipeType(int id)
+        public async Task<ActionResult<RecipeTag>> GetRecipeType(int id)
         {
-            var recipeType = await _context.RecipeType.FindAsync(id);
+            var recipeType = await _context.RecipeTag.FindAsync(id);
 
             if (recipeType == null)
             {
@@ -45,7 +48,7 @@ namespace MasterMealWA.Server.Controllers
         // PUT: api/RecipeTypes/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutRecipeType(int id, RecipeType recipeType)
+        public async Task<IActionResult> PutRecipeType(int id, RecipeTag recipeType)
         {
             if (id != recipeType.Id)
             {
@@ -76,9 +79,9 @@ namespace MasterMealWA.Server.Controllers
         // POST: api/RecipeTypes
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<RecipeType>> PostRecipeType(RecipeType recipeType)
+        public async Task<ActionResult<RecipeTag>> PostRecipeType(RecipeTag recipeType)
         {
-            _context.RecipeType.Add(recipeType);
+            _context.RecipeTag.Add(recipeType);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetRecipeType", new { id = recipeType.Id }, recipeType);
@@ -88,13 +91,13 @@ namespace MasterMealWA.Server.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRecipeType(int id)
         {
-            var recipeType = await _context.RecipeType.FindAsync(id);
-            if (recipeType == null)
+            var recipeTag = await _context.RecipeTag.FindAsync(id);
+            if (recipeTag == null)
             {
                 return NotFound();
             }
 
-            _context.RecipeType.Remove(recipeType);
+            _context.RecipeTag.Remove(recipeTag);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -102,7 +105,7 @@ namespace MasterMealWA.Server.Controllers
 
         private bool RecipeTypeExists(int id)
         {
-            return _context.RecipeType.Any(e => e.Id == id);
+            return _context.RecipeTag.Any(e => e.Id == id);
         }
     }
 }

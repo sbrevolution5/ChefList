@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,10 +9,6 @@ namespace MasterMealWA.Shared.Models
 {
     public class Recipe
     {
-        public Recipe()
-        {
-            this.Supplies = new HashSet<Supply>();
-        }
         public int Id { get; set; }
         public virtual ICollection<QIngredient> Ingredients { get; set; } = new HashSet<QIngredient>();
         public virtual ICollection<Step> Steps { get; set; } = new HashSet<Step>();
@@ -22,14 +19,14 @@ namespace MasterMealWA.Shared.Models
         public virtual ICollection<Rating> Ratings { get; set; } = new HashSet<Rating>();
         public string AuthorId { get; set; }
         public virtual Chef Author { get; set; }
-        public int TypeId { get; set; }
         public int ImageId { get; set; }
-        public virtual RecipeType Type { get; set; }
+        public ICollection<RecipeTag> Tags { get; set; } = new List<RecipeTag>();
         public virtual DBImage Image { get; set; }
         public string RecipeSource { get; set; } = "";
         public string RecipeSourceUrl { get; set; } = "";
+        public bool IsPrivate { get; set; }
         //Many to many, Not virtual!
-        public ICollection<Supply> Supplies { get; set; } = new List<Supply>();
+        public ICollection<QSupply> Supplies { get; set; } = new HashSet<QSupply>();
         [NotMapped]
         public float AvgRating
         {

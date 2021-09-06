@@ -7,25 +7,33 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MasterMealWA.Server.Data;
 using MasterMealWA.Shared.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
+using MasterMealWA.Server.Extensions;
 
 namespace MasterMealWA.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class MealsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<Chef> _userManager;
 
-        public MealsController(ApplicationDbContext context)
+        public MealsController(ApplicationDbContext context, UserManager<Chef> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: api/Meals
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Meal>>> GetMeal()
         {
-            return await _context.Meal.ToListAsync();
+            var userId = HttpContext.GetUserId();
+            var meals = await _context.Meal.Include(m => m.Recipe).Where(m=>m.ChefId == userId).ToListAsync();
+            return meals;
         }
 
         // GET: api/Meals/5
@@ -33,8 +41,9 @@ namespace MasterMealWA.Server.Controllers
         public async Task<ActionResult<Meal>> GetMeal(int id)
         {
             var meal = await _context.Meal.FindAsync(id);
+            var userId = HttpContext.GetUserId();
 
-            if (meal == null)
+            if (meal == null || meal.ChefId != userId)
             {
                 return NotFound();
             }

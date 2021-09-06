@@ -8,8 +8,9 @@ using MasterMealWA.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
+using Microsoft.AspNetCore.Components.Forms;
 
-namespace JamesonBugTracker.Services
+namespace MasterMealWA.Server.Services
 {
 
     public class FileService : IFileService
@@ -28,6 +29,16 @@ namespace JamesonBugTracker.Services
             return byteFile;
 
 
+        }
+        public async Task<byte[]> ConvertFileToByteArrayAsync(IBrowserFile file)
+        {
+            using var mstream = new MemoryStream();
+            var stream = file.OpenReadStream();
+            await stream.CopyToAsync(mstream);
+            var bytearray = mstream.ToArray();
+            mstream.Close();
+            mstream.Dispose();
+            return bytearray;
         }
         public async Task<byte[]> ConvertFileToByteArrayAsync(Image file, string contentType)
         {

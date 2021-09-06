@@ -7,11 +7,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MasterMealWA.Server.Data;
 using MasterMealWA.Shared.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MasterMealWA.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class IngredientsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -25,7 +27,8 @@ namespace MasterMealWA.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Ingredient>>> GetIngredient()
         {
-            return await _context.Ingredient.ToListAsync();
+            var list = await _context.Ingredient.ToListAsync();
+            return list;
         }
 
         // GET: api/Ingredients/5

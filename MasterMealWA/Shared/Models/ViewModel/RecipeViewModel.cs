@@ -16,7 +16,7 @@ namespace MasterMealWA.Shared.Models.ViewModel
         public string Description { get; set; }
         public string AuthorId { get; set; }
         public int TypeId { get; set; }
-        public virtual RecipeType Type { get; set; }
+        public virtual RecipeTag Type { get; set; }
         
     }
 }

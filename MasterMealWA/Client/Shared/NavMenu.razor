@@ -1,7 +1,16 @@
 ﻿<MudNavMenu>
-    <MudNavLink Href="/dashboard">Dashboard</MudNavLink>
-    <MudNavLink Href="/recipe">Recipes</MudNavLink>
-    <MudNavLink Href="/ingredient">Ingredients</MudNavLink>
-    <MudNavLink Href="/supply">supplies</MudNavLink>
-    <MudNavLink Href="/about">About</MudNavLink>
+    <MudText Typo="Typo.h6" Align="Align.Center">ChefList</MudText>
+    <MudDivider Class="my-2"></MudDivider>
+    <MudNavGroup Title="Recipes" Icon="@Icons.Material.Filled.Restaurant" Expanded="true">
+
+        <MudNavLink Href="/recipes" Icon="@Icons.Material.Filled.People">All recipes</MudNavLink>
+        <MudNavLink Href="/recipes/MyRecipes" Icon="@Icons.Material.Filled.Person">My Recipes</MudNavLink>
+    </MudNavGroup>
+    <MudNavLink Href="/ingredients" Icon="@Icons.Material.Filled.LunchDining">Ingredients</MudNavLink>
+    <MudNavLink Href="/supplies" Icon="@Icons.Material.Filled.RestaurantMenu">Supplies</MudNavLink>
+    <MudNavLink Href="/meals" Icon="@Icons.Material.Filled.DinnerDining">Meals</MudNavLink>
+    <MudNavLink Href="/shoppinglists" Icon="@Icons.Material.Filled.Checklist">Shopping Lists</MudNavLink>
+    <MudDivider Class="my-2"></MudDivider>
+    <MudNavLink Href="https://github.com/sbrevolution5/ChefList/issues" Target="_blank" Icon="@Icons.Material.Filled.BugReport">Report a bug</MudNavLink>
+    <MudNavLink Href="https://github.com/sbrevolution5/ChefList" Target="_blank" Icon="@Icons.Custom.Brands.GitHub">Contribute on Github</MudNavLink>
 </MudNavMenu>

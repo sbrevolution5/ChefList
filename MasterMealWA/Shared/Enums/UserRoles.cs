@@ -8,6 +8,7 @@ namespace MasterMealWA.Shared.Enums
     public enum UserRoles
     {
         Admin,
-        User
+        User,
+        Moderator
     }
 }

@@ -35,7 +35,7 @@ namespace MasterMealWA.Server.Services
             var Recipes = await _context.Recipe
                                     .Include(r => r.Ingredients)
                                     .ThenInclude(i => i.Ingredient)
-                                    .Include(r => r.Type)
+                                    .Include(r => r.Tags)
                                     .Include(r => r.Author)
                                     .Where(r => r.CookingTime <= maxTime).ToListAsync();
             return Recipes;
@@ -45,7 +45,7 @@ namespace MasterMealWA.Server.Services
             var Recipes = await _context.Recipe
                                     .Include(r => r.Ingredients)
                                     .ThenInclude(i => i.Ingredient)
-                                    .Include(r => r.Type)
+                                    .Include(r => r.Tags)
                                     .Include(r => r.Author)
                                     .Where(r => r.CookingTime >= minTime).ToListAsync();
             return Recipes;
@@ -56,7 +56,7 @@ namespace MasterMealWA.Server.Services
             var Recipes = await _context.Recipe
                                     .Include(r => r.Ingredients)
                                     .ThenInclude(i => i.Ingredient)
-                                    .Include(r => r.Type)
+                                    .Include(r => r.Tags)
                                     .Include(r => r.Author)
                                     .Where(r => r.AvgRating >= minRating).ToListAsync();
             return Recipes;
@@ -67,15 +67,16 @@ namespace MasterMealWA.Server.Services
             throw new NotImplementedException();
         }
 
-        public async Task<List<Recipe>> GetRecipesByTypeAsync(int typeId)
+        public async Task<List<Recipe>> GetRecipesByTypeAsync(int tagId)
         {
-            var Recipes = await _context.Recipe
-                                    .Include(r => r.Ingredients)
-                                    .ThenInclude(i => i.Ingredient)
-                                    .Include(r => r.Type)
-                                    .Include(r => r.Author)
-                                    .Where(r => r.TypeId == typeId).ToListAsync();
-            return Recipes;
+            throw new NotImplementedException();
+            //var Recipes = await _context.Recipe
+            //                        .Include(r => r.Ingredients)
+            //                        .ThenInclude(i => i.Ingredient)
+            //                        .Include(r => r.Tags)
+            //                        .Include(r => r.Author)
+            //                        .Where(r => r.Tags.(t => t.Id == tagId)).ToListAsync();
+            //return Recipes;
         }
 
         public Task<List<Recipe>> GetUserFavoriteRecipesAsync(string UserId)
@@ -89,7 +90,7 @@ namespace MasterMealWA.Server.Services
             var Recipes = await _context.Recipe
                                     .Include(r => r.Ingredients)
                                     .ThenInclude(i => i.Ingredient)
-                                    .Include(r => r.Type)
+                                    .Include(r => r.Tags)
                                     .Include(r => r.Author)
                                     .Where(r => r.AuthorId == userId).ToListAsync();
             return Recipes;
@@ -97,19 +98,20 @@ namespace MasterMealWA.Server.Services
 
         public async Task<List<Recipe>> GetUserRecipesByTypeAsync(string userId, int typeId)
         {
-            var Recipes = await _context.Recipe
-                                    .Include(r => r.Ingredients)
-                                    .ThenInclude(i => i.Ingredient)
-                                    .Include(r => r.Type)
-                                    .Include(r => r.Author)
-                                    .Where(r => r.AuthorId == userId && r.TypeId == typeId).ToListAsync();
-            return Recipes;
+            throw new NotImplementedException();
+            //var Recipes = await _context.Recipe
+            //                        .Include(r => r.Ingredients)
+            //                        .ThenInclude(i => i.Ingredient)
+            //                        .Include(r => r.Tags)
+            //                        .Include(r => r.Author)
+            //                        .Where(r => r.AuthorId == userId && r.TypeId == typeId).ToListAsync();
+            //return Recipes;
         }
 
         public async Task<List<Recipe>> GetUserRecipesWithNoRating(string userId)
         {
             var today = DateTime.Now;
-            var pastMeals = await _context.Meal.Where(m => m.Date < today && m.ChefId == userId).Include(m => m.Recipe).ThenInclude(r=>r.Ratings).ToListAsync();
+            var pastMeals = await _context.Meal.Where(m => m.Date < today && m.ChefId == userId).Include(m => m.Recipe).ThenInclude(r => r.Ratings).ToListAsync();
             List<Recipe> noRating = new();
 
             foreach (var meal in pastMeals)

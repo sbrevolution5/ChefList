@@ -7,34 +7,48 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MasterMealWA.Server.Data;
 using MasterMealWA.Shared.Models;
+using MasterMealWA.Shared.Models.Dtos;
+using MasterMealWA.Server.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using MasterMealWA.Server.Extensions;
 
 namespace MasterMealWA.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ShoppingListsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly IShoppingService _shoppingService;
+        private readonly UserManager<Chef> _userManager;
 
-        public ShoppingListsController(ApplicationDbContext context)
+
+        public ShoppingListsController(ApplicationDbContext context, IShoppingService shoppingService, UserManager<Chef> userManager)
         {
             _context = context;
+            _shoppingService = shoppingService;
+            _userManager = userManager;
         }
 
         // GET: api/ShoppingLists
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ShoppingList>>> GetShoppingList()
         {
-            return await _context.ShoppingList.ToListAsync();
+            var userId = HttpContext.GetUserId();
+
+            return await _context.ShoppingList.Where(s => s.ChefId == userId).ToListAsync();
         }
 
         // GET: api/ShoppingLists/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ShoppingList>> GetShoppingList(int id)
         {
-            var shoppingList = await _context.ShoppingList.FindAsync(id);
+            var shoppingList = await _context.ShoppingList.Include(l => l.ShoppingIngredients).ThenInclude(s => s.Ingredient).Where(l => l.Id == id).FirstOrDefaultAsync();
+            var userId = HttpContext.GetUserId();
 
-            if (shoppingList == null)
+            if (shoppingList == null || shoppingList.ChefId != userId)
             {
                 return NotFound();
             }
@@ -47,7 +61,8 @@ namespace MasterMealWA.Server.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutShoppingList(int id, ShoppingList shoppingList)
         {
-            if (id != shoppingList.Id)
+            var userId = _userManager.GetUserId(User);
+            if (id != shoppingList.Id||shoppingList.ChefId != userId)
             {
                 return BadRequest();
             }
@@ -76,24 +91,24 @@ namespace MasterMealWA.Server.Controllers
         // POST: api/ShoppingLists
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<ShoppingList>> PostShoppingList(ShoppingList shoppingList)
+        public async Task<ActionResult<ShoppingList>> PostShoppingList(ListCreateDto shoppingList)
         {
-            _context.ShoppingList.Add(shoppingList);
-            await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetShoppingList", new { id = shoppingList.Id }, shoppingList);
+            var userId = HttpContext.GetUserId();
+            var list = await _shoppingService.CreateShoppingListForDateRangeAsync(shoppingList.EndDate, shoppingList.StartDate,userId);
+            return CreatedAtAction("GetShoppingList", new { id = list.Id }, list);
         }
 
         // DELETE: api/ShoppingLists/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteShoppingList(int id)
         {
-            var shoppingList = await _context.ShoppingList.FindAsync(id);
+            var shoppingList = await _context.ShoppingList.Include(s => s.ShoppingIngredients).FirstOrDefaultAsync(s => s.Id == id);
             if (shoppingList == null)
             {
                 return NotFound();
             }
-
+            _context.RemoveRange(shoppingList.ShoppingIngredients);
             _context.ShoppingList.Remove(shoppingList);
             await _context.SaveChangesAsync();
 

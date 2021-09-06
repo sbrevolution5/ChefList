@@ -1,0 +1,69 @@
+﻿@page "/ingredients"
+@inject IApiService _api
+@inject IDialogService _dialogService
+@if (Ingredients is null)
+{
+
+}
+else
+{<MudGrid>
+        <MudCard>
+            <MudCardHeader>
+                <MudText Typo="Typo.h3">IngredientIndex</MudText>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudList>
+                    @foreach (var ingredient in Ingredients)
+                    {
+                        <MudListItem>
+                            <MudPaper Elevation="4" Style="padding-left:5px;margin:10px;">
+                                <MudGrid>
+                                    <MudItem xs="9">
+                                        <MudText>
+
+                                            @ingredient.Name
+                                        </MudText>
+                                    </MudItem>
+
+                                    <MudItem xs="3">
+                                        <MudButtonGroup>
+                                            <MudIconButton Variant="Variant.Filled" Color="Color.Warning" Icon="@Icons.Material.Filled.Edit" OnClick="@(()=>EditIngredient(ingredient))"></MudIconButton>
+                                        </MudButtonGroup>
+                                    </MudItem>
+                                </MudGrid>
+                            </MudPaper>
+                        </MudListItem>
+                    }
+                </MudList>
+                <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" OnClick="NewIngredient" />
+            </MudCardContent>
+        </MudCard>
+    </MudGrid>
+}
+@code {
+    public List<Ingredient> Ingredients { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        Ingredients = await _api.GetAllIngredientsAsync();
+        base.OnInitialized();
+    }
+    public async Task NewIngredient()
+    {
+        var dialog = _dialogService.Show<IngredientCreate>("New Ingredient");
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            Ingredients = await _api.GetAllIngredientsAsync();
+        }
+    }
+    public async Task EditIngredient(Ingredient ingredient)
+    {
+        var parameters = new DialogParameters { ["Ingredient"] = ingredient };
+        var dialog = _dialogService.Show<IngredientEdit>("Edit Ingredient", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            Ingredients = await _api.GetAllIngredientsAsync();
+        }
+    }
+}

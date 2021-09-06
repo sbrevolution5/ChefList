@@ -1,0 +1,31 @@
+﻿@inject IApiService _api
+@attribute [Authorize(Roles = ("Admin,Moderator"))]
+<MudDialog>
+    <DialogContent>
+
+        
+            <MudText>@meal.Recipe.Name</MudText>
+            <MudText>@meal.Date.ToShortDateString()</MudText>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Success" OnClick="ConfirmDelete">Delete Meal</MudButton>
+    </DialogActions>
+</MudDialog>
+@code {
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; }
+    public Recipe recipe { get; set; }
+    [Parameter]
+    public Meal meal { get; set; }
+    private List<Recipe> recipes;
+    public async Task ConfirmDelete()
+    {
+        await _api.DeleteMealAsync(meal.Id);
+        MudDialog.Close(DialogResult.Ok(meal));
+    }
+    public void Cancel()
+    {
+        MudDialog.Cancel();
+    }
+}

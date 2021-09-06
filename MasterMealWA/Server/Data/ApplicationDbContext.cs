@@ -1,5 +1,4 @@
 ﻿using IdentityServer4.EntityFramework.Options;
-using MasterMealWA.Server.Models;
 using MasterMealWA.Shared.Models;
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace MasterMealWA.Server.Data
 {
-    public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>
+    public class ApplicationDbContext : ApiAuthorizationDbContext<Chef>
     {
         public ApplicationDbContext(
             DbContextOptions options,
@@ -25,13 +24,13 @@ namespace MasterMealWA.Server.Data
         public DbSet<QIngredient> QIngredient { get; set; }
         public DbSet<Rating> Rating { get; set; }
         public DbSet<Recipe> Recipe { get; set; }
-        public DbSet<RecipeType> RecipeType { get; set; }
+        public DbSet<RecipeTag> RecipeTag { get; set; }
         public DbSet<Step> Step { get; set; }
         public DbSet<Supply> Supply { get; set; }
         public DbSet<IngredientType> IngredientType { get; set; }
         public DbSet<DBImage> DBImage { get; set; }
-        public DbSet<MasterMealWA.Shared.Models.Chef> Chef { get; set; }
-        public DbSet<MasterMealWA.Shared.Models.ShoppingIngredient> ShoppingIngredient { get; set; }
-        public DbSet<MasterMealWA.Shared.Models.ShoppingList> ShoppingList { get; set; }
+        public DbSet<QSupply> QSupply { get; set; }
+        public DbSet<ShoppingIngredient> ShoppingIngredient { get; set; }
+        public DbSet<ShoppingList> ShoppingList { get; set; }
     }
 }

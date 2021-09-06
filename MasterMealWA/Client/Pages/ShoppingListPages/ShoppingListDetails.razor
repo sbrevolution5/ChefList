@@ -1,0 +1,59 @@
+﻿@page "/shoppinglists/details/{id}"
+@inject IApiService _api
+
+@if (list is null)
+{
+    <MudText>Loading...</MudText>
+}
+else
+{
+    <MudCard>
+        <MudCardHeader>
+
+            <MudText Typo="Typo.h4">@list.Name</MudText>
+        </MudCardHeader>
+        <MudDivider>
+
+        </MudDivider>
+        <MudCardContent>
+
+            <MudGrid>
+                <MudItem xs="12">
+
+                    <MudList>
+                        @foreach (var item in list.ShoppingIngredients)
+                        {
+                            <MudListItem>
+                                <MudPaper Elevation="2">
+
+                                    <MudCheckBox @bind-Checked="item.InPantry" Label="@item.QuantityString" Color="Color.Secondary">
+
+                                    </MudCheckBox>
+                                    @if (item.Notes.Count > 0)
+                                    {
+                                        <MudList>
+                                            @foreach (var note in item.Notes)
+                                            {
+                                                <MudListItem>@note</MudListItem>
+                                            }
+                                        </MudList>
+                                    }
+                                </MudPaper>
+                            </MudListItem>
+
+                        }
+                    </MudList>
+                </MudItem>
+            </MudGrid>
+        </MudCardContent>
+    </MudCard>
+}
+@code {
+    [Parameter]
+    public string id { get; set; }
+    public ShoppingList list { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        list = await _api.GetShoppingListAsync(Convert.ToInt32(id));
+    }
+}
