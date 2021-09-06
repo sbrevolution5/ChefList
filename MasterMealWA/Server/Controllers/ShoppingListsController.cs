@@ -11,6 +11,7 @@ using MasterMealWA.Shared.Models.Dtos;
 using MasterMealWA.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using MasterMealWA.Server.Extensions;
 
 namespace MasterMealWA.Server.Controllers
 {
@@ -35,7 +36,7 @@ namespace MasterMealWA.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ShoppingList>>> GetShoppingList()
         {
-            var userId = _userManager.GetUserId(User);
+            var userId = HttpContext.GetUserId();
 
             return await _context.ShoppingList.Where(s => s.ChefId == userId).ToListAsync();
         }
