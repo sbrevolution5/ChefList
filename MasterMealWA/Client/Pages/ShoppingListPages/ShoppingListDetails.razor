@@ -6,27 +6,34 @@
     <MudText>Loading...</MudText>
 }
 else
-{
-    <MudGrid>
-        <MudItem xs="12">
+{<MudCard>
+        <MudCardHeader>
 
             <MudText Typo="Typo.h4">@list.Name</MudText>
-        </MudItem>
-        <MudItem xs="12">
+        </MudCardHeader>
+        <MudCardContent>
 
-            <MudList>
-                @foreach (var item in list.ShoppingIngredients)
-                {
-                    <MudListItem>
-                        <MudCheckBox @bind-Checked="item.InPantry" Label="@item.QuantityString" Color="Color.Secondary">
+            <MudGrid>
+                <MudItem xs="12">
 
-                        </MudCheckBox>
-                    </MudListItem>
+                    <MudList>
+                        @foreach (var item in list.ShoppingIngredients)
+                        {
+                            <MudListItem>
+                                <MudPaper Elevation="2">
 
-                }
-            </MudList>
-        </MudItem>
-    </MudGrid>
+                                    <MudCheckBox @bind-Checked="item.InPantry" Label="@item.QuantityString" Color="Color.Secondary">
+
+                                    </MudCheckBox>
+                                </MudPaper>
+                            </MudListItem>
+
+                        }
+                    </MudList>
+                </MudItem>
+            </MudGrid>
+        </MudCardContent>
+    </MudCard>
 }
 @code {
     [Parameter]
