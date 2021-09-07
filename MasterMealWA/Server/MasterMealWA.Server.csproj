@@ -36,4 +36,9 @@
     <Folder Include="Areas\Identity\Pages\Account\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\Assets\DefaultRecipe.jpg" />
+    <None Include="wwwroot\Assets\DefaultUser.png" />
+  </ItemGroup>
+
 </Project>
