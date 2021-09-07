@@ -4,15 +4,17 @@ using System.Collections.Generic;
 using MasterMealWA.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace MasterMealWA.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210903150728_008-typetoTag")]
+    partial class _008typetoTag
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -133,6 +135,10 @@ namespace MasterMealWA.Server.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
+                        .HasColumnType("text");
+
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Email")
@@ -442,9 +448,6 @@ namespace MasterMealWA.Server.Migrations
                     b.Property<int>("ImageId")
                         .HasColumnType("integer");
 
-                    b.Property<bool>("IsPrivate")
-                        .HasColumnType("boolean");
-
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
@@ -478,7 +481,7 @@ namespace MasterMealWA.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RecipeTag");
+                    b.ToTable("RecipeType");
                 });
 
             modelBuilder.Entity("MasterMealWA.Shared.Models.ShoppingIngredient", b =>

@@ -4,15 +4,17 @@ using System.Collections.Generic;
 using MasterMealWA.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace MasterMealWA.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210831191332_004-createdcapitalize")]
+    partial class _004createdcapitalize
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -123,7 +125,7 @@ namespace MasterMealWA.Server.Migrations
                     b.ToTable("PersistedGrants");
                 });
 
-            modelBuilder.Entity("MasterMealWA.Shared.Models.Chef", b =>
+            modelBuilder.Entity("MasterMealWA.Server.Models.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text");
@@ -133,6 +135,10 @@ namespace MasterMealWA.Server.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
+                        .HasColumnType("text");
+
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Email")
@@ -207,6 +213,41 @@ namespace MasterMealWA.Server.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("MasterMealWA.Shared.Models.Chef", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("ImageId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ScreenName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("ShowFullName")
+                        .HasColumnType("boolean");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ImageId");
+
+                    b.ToTable("Chef");
+                });
+
             modelBuilder.Entity("MasterMealWA.Shared.Models.Comment", b =>
                 {
                     b.Property<int>("Id")
@@ -216,6 +257,9 @@ namespace MasterMealWA.Server.Migrations
 
                     b.Property<string>("ChefId")
                         .HasColumnType("text");
+
+                    b.Property<Guid?>("ChefId1")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("CommentBody")
                         .HasColumnType("text");
@@ -228,7 +272,7 @@ namespace MasterMealWA.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ChefId");
+                    b.HasIndex("ChefId1");
 
                     b.HasIndex("RecipeId");
 
@@ -301,6 +345,9 @@ namespace MasterMealWA.Server.Migrations
                     b.Property<string>("ChefId")
                         .HasColumnType("text");
 
+                    b.Property<Guid?>("ChefId1")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime>("Date")
                         .HasColumnType("timestamp without time zone");
 
@@ -318,7 +365,7 @@ namespace MasterMealWA.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ChefId");
+                    b.HasIndex("ChefId1");
 
                     b.HasIndex("ImageId");
 
@@ -408,6 +455,9 @@ namespace MasterMealWA.Server.Migrations
                     b.Property<string>("ChefId")
                         .HasColumnType("text");
 
+                    b.Property<Guid?>("ChefId1")
+                        .HasColumnType("uuid");
+
                     b.Property<int>("RecipeId")
                         .HasColumnType("integer");
 
@@ -416,7 +466,7 @@ namespace MasterMealWA.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ChefId");
+                    b.HasIndex("ChefId1");
 
                     b.HasIndex("RecipeId");
 
@@ -430,8 +480,14 @@ namespace MasterMealWA.Server.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("text");
+
                     b.Property<string>("AuthorId")
                         .HasColumnType("text");
+
+                    b.Property<Guid?>("AuthorId1")
+                        .HasColumnType("uuid");
 
                     b.Property<int>("CookingTime")
                         .HasColumnType("integer");
@@ -441,9 +497,6 @@ namespace MasterMealWA.Server.Migrations
 
                     b.Property<int>("ImageId")
                         .HasColumnType("integer");
-
-                    b.Property<bool>("IsPrivate")
-                        .HasColumnType("boolean");
 
                     b.Property<string>("Name")
                         .HasColumnType("text");
@@ -457,16 +510,23 @@ namespace MasterMealWA.Server.Migrations
                     b.Property<int>("Servings")
                         .HasColumnType("integer");
 
+                    b.Property<int>("TypeId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("AuthorId");
+                    b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("AuthorId1");
 
                     b.HasIndex("ImageId");
+
+                    b.HasIndex("TypeId");
 
                     b.ToTable("Recipe");
                 });
 
-            modelBuilder.Entity("MasterMealWA.Shared.Models.RecipeTag", b =>
+            modelBuilder.Entity("MasterMealWA.Shared.Models.RecipeType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -478,7 +538,7 @@ namespace MasterMealWA.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RecipeTag");
+                    b.ToTable("RecipeType");
                 });
 
             modelBuilder.Entity("MasterMealWA.Shared.Models.ShoppingIngredient", b =>
@@ -528,6 +588,9 @@ namespace MasterMealWA.Server.Migrations
                     b.Property<string>("ChefId")
                         .HasColumnType("text");
 
+                    b.Property<Guid?>("ChefId1")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime>("Created")
                         .HasColumnType("timestamp without time zone");
 
@@ -536,7 +599,7 @@ namespace MasterMealWA.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ChefId");
+                    b.HasIndex("ChefId1");
 
                     b.ToTable("ShoppingList");
                 });
@@ -713,19 +776,15 @@ namespace MasterMealWA.Server.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("RecipeRecipeTag", b =>
+            modelBuilder.Entity("MasterMealWA.Server.Models.ApplicationUser", b =>
                 {
-                    b.Property<int>("RecipesId")
-                        .HasColumnType("integer");
+                    b.HasOne("MasterMealWA.Shared.Models.DBImage", "Image")
+                        .WithMany()
+                        .HasForeignKey("ImageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Property<int>("TagsId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("RecipesId", "TagsId");
-
-                    b.HasIndex("TagsId");
-
-                    b.ToTable("RecipeRecipeTag");
+                    b.Navigation("Image");
                 });
 
             modelBuilder.Entity("MasterMealWA.Shared.Models.Chef", b =>
@@ -743,7 +802,7 @@ namespace MasterMealWA.Server.Migrations
                 {
                     b.HasOne("MasterMealWA.Shared.Models.Chef", "Chef")
                         .WithMany()
-                        .HasForeignKey("ChefId");
+                        .HasForeignKey("ChefId1");
 
                     b.HasOne("MasterMealWA.Shared.Models.Recipe", "Recipe")
                         .WithMany()
@@ -771,7 +830,7 @@ namespace MasterMealWA.Server.Migrations
                 {
                     b.HasOne("MasterMealWA.Shared.Models.Chef", "Chef")
                         .WithMany()
-                        .HasForeignKey("ChefId");
+                        .HasForeignKey("ChefId1");
 
                     b.HasOne("MasterMealWA.Shared.Models.DBImage", "Image")
                         .WithMany()
@@ -834,7 +893,7 @@ namespace MasterMealWA.Server.Migrations
                 {
                     b.HasOne("MasterMealWA.Shared.Models.Chef", "Chef")
                         .WithMany()
-                        .HasForeignKey("ChefId");
+                        .HasForeignKey("ChefId1");
 
                     b.HasOne("MasterMealWA.Shared.Models.Recipe", "Recipe")
                         .WithMany("Ratings")
@@ -849,9 +908,13 @@ namespace MasterMealWA.Server.Migrations
 
             modelBuilder.Entity("MasterMealWA.Shared.Models.Recipe", b =>
                 {
+                    b.HasOne("MasterMealWA.Server.Models.ApplicationUser", null)
+                        .WithMany("FavoriteRecipes")
+                        .HasForeignKey("ApplicationUserId");
+
                     b.HasOne("MasterMealWA.Shared.Models.Chef", "Author")
                         .WithMany("FavoriteRecipes")
-                        .HasForeignKey("AuthorId");
+                        .HasForeignKey("AuthorId1");
 
                     b.HasOne("MasterMealWA.Shared.Models.DBImage", "Image")
                         .WithMany()
@@ -859,9 +922,17 @@ namespace MasterMealWA.Server.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("MasterMealWA.Shared.Models.RecipeType", "Type")
+                        .WithMany()
+                        .HasForeignKey("TypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Author");
 
                     b.Navigation("Image");
+
+                    b.Navigation("Type");
                 });
 
             modelBuilder.Entity("MasterMealWA.Shared.Models.ShoppingIngredient", b =>
@@ -883,7 +954,7 @@ namespace MasterMealWA.Server.Migrations
                 {
                     b.HasOne("MasterMealWA.Shared.Models.Chef", "Chef")
                         .WithMany()
-                        .HasForeignKey("ChefId");
+                        .HasForeignKey("ChefId1");
 
                     b.Navigation("Chef");
                 });
@@ -910,7 +981,7 @@ namespace MasterMealWA.Server.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("MasterMealWA.Shared.Models.Chef", null)
+                    b.HasOne("MasterMealWA.Server.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -919,7 +990,7 @@ namespace MasterMealWA.Server.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("MasterMealWA.Shared.Models.Chef", null)
+                    b.HasOne("MasterMealWA.Server.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -934,7 +1005,7 @@ namespace MasterMealWA.Server.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MasterMealWA.Shared.Models.Chef", null)
+                    b.HasOne("MasterMealWA.Server.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -943,26 +1014,16 @@ namespace MasterMealWA.Server.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("MasterMealWA.Shared.Models.Chef", null)
+                    b.HasOne("MasterMealWA.Server.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("RecipeRecipeTag", b =>
+            modelBuilder.Entity("MasterMealWA.Server.Models.ApplicationUser", b =>
                 {
-                    b.HasOne("MasterMealWA.Shared.Models.Recipe", null)
-                        .WithMany()
-                        .HasForeignKey("RecipesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MasterMealWA.Shared.Models.RecipeTag", null)
-                        .WithMany()
-                        .HasForeignKey("TagsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("FavoriteRecipes");
                 });
 
             modelBuilder.Entity("MasterMealWA.Shared.Models.Chef", b =>

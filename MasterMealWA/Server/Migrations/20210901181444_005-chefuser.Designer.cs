@@ -4,15 +4,17 @@ using System.Collections.Generic;
 using MasterMealWA.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace MasterMealWA.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210901181444_005-chefuser")]
+    partial class _005chefuser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -123,7 +125,7 @@ namespace MasterMealWA.Server.Migrations
                     b.ToTable("PersistedGrants");
                 });
 
-            modelBuilder.Entity("MasterMealWA.Shared.Models.Chef", b =>
+            modelBuilder.Entity("MasterMealWA.Server.Models.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text");
@@ -133,6 +135,10 @@ namespace MasterMealWA.Server.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
+                        .HasColumnType("text");
+
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Email")
@@ -205,6 +211,82 @@ namespace MasterMealWA.Server.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers");
+                });
+
+            modelBuilder.Entity("MasterMealWA.Shared.Models.Chef", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .HasColumnType("text");
+
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("ImageId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasColumnType("text");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("ScreenName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("ShowFullName")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ImageId");
+
+                    b.ToTable("Chef");
                 });
 
             modelBuilder.Entity("MasterMealWA.Shared.Models.Comment", b =>
@@ -430,6 +512,9 @@ namespace MasterMealWA.Server.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("text");
+
                     b.Property<string>("AuthorId")
                         .HasColumnType("text");
 
@@ -441,9 +526,6 @@ namespace MasterMealWA.Server.Migrations
 
                     b.Property<int>("ImageId")
                         .HasColumnType("integer");
-
-                    b.Property<bool>("IsPrivate")
-                        .HasColumnType("boolean");
 
                     b.Property<string>("Name")
                         .HasColumnType("text");
@@ -457,16 +539,23 @@ namespace MasterMealWA.Server.Migrations
                     b.Property<int>("Servings")
                         .HasColumnType("integer");
 
+                    b.Property<int>("TypeId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("AuthorId");
 
                     b.HasIndex("ImageId");
 
+                    b.HasIndex("TypeId");
+
                     b.ToTable("Recipe");
                 });
 
-            modelBuilder.Entity("MasterMealWA.Shared.Models.RecipeTag", b =>
+            modelBuilder.Entity("MasterMealWA.Shared.Models.RecipeType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -478,7 +567,7 @@ namespace MasterMealWA.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RecipeTag");
+                    b.ToTable("RecipeType");
                 });
 
             modelBuilder.Entity("MasterMealWA.Shared.Models.ShoppingIngredient", b =>
@@ -713,19 +802,15 @@ namespace MasterMealWA.Server.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("RecipeRecipeTag", b =>
+            modelBuilder.Entity("MasterMealWA.Server.Models.ApplicationUser", b =>
                 {
-                    b.Property<int>("RecipesId")
-                        .HasColumnType("integer");
+                    b.HasOne("MasterMealWA.Shared.Models.DBImage", "Image")
+                        .WithMany()
+                        .HasForeignKey("ImageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Property<int>("TagsId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("RecipesId", "TagsId");
-
-                    b.HasIndex("TagsId");
-
-                    b.ToTable("RecipeRecipeTag");
+                    b.Navigation("Image");
                 });
 
             modelBuilder.Entity("MasterMealWA.Shared.Models.Chef", b =>
@@ -849,6 +934,10 @@ namespace MasterMealWA.Server.Migrations
 
             modelBuilder.Entity("MasterMealWA.Shared.Models.Recipe", b =>
                 {
+                    b.HasOne("MasterMealWA.Server.Models.ApplicationUser", null)
+                        .WithMany("FavoriteRecipes")
+                        .HasForeignKey("ApplicationUserId");
+
                     b.HasOne("MasterMealWA.Shared.Models.Chef", "Author")
                         .WithMany("FavoriteRecipes")
                         .HasForeignKey("AuthorId");
@@ -859,9 +948,17 @@ namespace MasterMealWA.Server.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("MasterMealWA.Shared.Models.RecipeType", "Type")
+                        .WithMany()
+                        .HasForeignKey("TypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Author");
 
                     b.Navigation("Image");
+
+                    b.Navigation("Type");
                 });
 
             modelBuilder.Entity("MasterMealWA.Shared.Models.ShoppingIngredient", b =>
@@ -910,7 +1007,7 @@ namespace MasterMealWA.Server.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("MasterMealWA.Shared.Models.Chef", null)
+                    b.HasOne("MasterMealWA.Server.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -919,7 +1016,7 @@ namespace MasterMealWA.Server.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("MasterMealWA.Shared.Models.Chef", null)
+                    b.HasOne("MasterMealWA.Server.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -934,7 +1031,7 @@ namespace MasterMealWA.Server.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MasterMealWA.Shared.Models.Chef", null)
+                    b.HasOne("MasterMealWA.Server.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -943,26 +1040,16 @@ namespace MasterMealWA.Server.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("MasterMealWA.Shared.Models.Chef", null)
+                    b.HasOne("MasterMealWA.Server.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("RecipeRecipeTag", b =>
+            modelBuilder.Entity("MasterMealWA.Server.Models.ApplicationUser", b =>
                 {
-                    b.HasOne("MasterMealWA.Shared.Models.Recipe", null)
-                        .WithMany()
-                        .HasForeignKey("RecipesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MasterMealWA.Shared.Models.RecipeTag", null)
-                        .WithMany()
-                        .HasForeignKey("TagsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("FavoriteRecipes");
                 });
 
             modelBuilder.Entity("MasterMealWA.Shared.Models.Chef", b =>
