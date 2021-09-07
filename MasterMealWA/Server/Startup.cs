@@ -31,7 +31,7 @@ namespace MasterMealWA.Server
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseNpgsql(
+                options.UseSqlServer(
                     DataUtility.GetConnectionString(Configuration)));
 
             services.AddDatabaseDeveloperPageExceptionFilter();

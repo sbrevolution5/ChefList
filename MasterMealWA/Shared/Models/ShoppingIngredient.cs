@@ -1,6 +1,7 @@
 ﻿using MasterMealWA.Shared.Enums;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -12,6 +13,7 @@ namespace MasterMealWA.Shared.Models
         public int IngredientId { get; set; }
         public int Quantity { get; set; }
         public string QuantityString { get; set; }
+        [NotMapped]
         public List<string> Notes { get; set; }
         public bool InPantry { get; set; }
         public bool InCart { get; set; }
