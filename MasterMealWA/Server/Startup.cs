@@ -40,6 +40,7 @@ namespace MasterMealWA.Server
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddIdentityServer()
+                .AddSigningCredentials()
                 .AddApiAuthorization<Chef, ApplicationDbContext>();
 
             services.AddAuthentication()
