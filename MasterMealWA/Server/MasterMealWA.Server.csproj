@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <UserSecretsId>MasterMealWA.Server-CD15ACDD-DF51-4FE9-9E85-0F682D37937B</UserSecretsId>
+    <Configurations>Debug;Release;Development</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
