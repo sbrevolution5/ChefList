@@ -92,7 +92,7 @@
                 <MudCardHeader>Ingredients</MudCardHeader>
                 <MudCardContent>
                     <MudGrid>
-                        <MudFab OnClick="NewIngredient" Color="Color.Success" Icon="Icons.Material.Filled.FiberNew" Label="Add ingredient not in list"></MudFab>
+                        <MudFab OnClick="NewIngredient" Color="Color.Success" Icon="@Icons.Material.Filled.FiberNew" Label="Add ingredient not in list"></MudFab>
                         @foreach (var ingredient in recipe.Ingredients)
                         {
                             <MudItem xs="12">
