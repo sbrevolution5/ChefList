@@ -3,6 +3,7 @@
 @inject IApiService _api
 @inject IUserService _userService
 @inject NavigationManager nav
+@inject IDialogService _dialogService
 @using System.Net.Http.Headers
 <EditForm Model="@recipe" OnValidSubmit="CreateRecipeAsync">
     <DataAnnotationsValidator />
@@ -99,7 +100,7 @@
                                 <MudCard Elevation="2">
                                     <MudCardContent>
 
-                                        <QIngredientCreate qIngredient="@ingredient" ingredientList="ingredients" />
+                                        <QIngredientCreate qIngredient="@ingredient" ingredientList="Ingredients" />
                                     </MudCardContent>
                                     <MudCardActions>
 
@@ -148,17 +149,17 @@
                 <MudCardHeader>Steps</MudCardHeader>
                 <MudCardContent>
                     <MudGrid>
-                        @foreach (var ingredient in recipe.Ingredients)
+                        @foreach (var step in recipe.Steps)
                         {
                             <MudItem xs="12">
                                 <MudCard Elevation="2">
                                     <MudCardContent>
 
-                                        <StepCreate step="               ingredientep" numDefault="                         Ingredient"></StepCreate>
+                                        <StepCreate step="step" numDefault="recipe.Steps.Count+1"></StepCreate>
                                     </MudCardContent>
                                     <MudCardActions>
 
-                                        <MudButton Color="Color.Error" @onclick="(()=>recipe.Ingredients.Remove(ingredient))">Remove</MudButton>
+                                        <MudButton Color="Color.Error" @onclick="(()=>recipe.Steps.Remove(step))">Remove</MudButton>
                                     </MudCardActions>
                                 </MudCard>
                             </MudItem>
