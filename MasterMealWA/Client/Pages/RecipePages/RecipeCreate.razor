@@ -191,6 +191,18 @@
         Ingredients = await _api.GetAllIngredientsAsync();
         supplyList = await _api.GetAllSuppliesAsync();
         ImgId = 1;
+        if (recipe.Ingredients.Count == 0)
+        {
+            recipe.Ingredients.Add(new());
+        }
+        if (recipe.Supplies.Count == 0)
+        {
+            recipe.Supplies.Add(new());
+        }
+        if (recipe.Steps.Count == 0)
+        {
+            recipe.Steps.Add(new());
+        }
     }
     public async Task CreateRecipeAsync()
     {
