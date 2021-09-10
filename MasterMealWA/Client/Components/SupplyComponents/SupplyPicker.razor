@@ -20,7 +20,7 @@
         }
         if (supply.SupplyId == 0)
         {
-            supply.Supply = supplyList.FirstOrDefault();
+            supply.SupplyId = supplyList.FirstOrDefault().Id;
         }
     }
 }
