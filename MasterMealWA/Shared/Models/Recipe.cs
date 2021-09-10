@@ -13,6 +13,8 @@ namespace MasterMealWA.Shared.Models
         public virtual ICollection<QIngredient> Ingredients { get; set; } = new HashSet<QIngredient>();
         public virtual ICollection<Step> Steps { get; set; } = new HashSet<Step>();
         public int Servings { get; set; }
+        [Required]
+        [StringLength(30, ErrorMessage ="Please keep your recipe name below 40 characters.")]
         public string Name { get; set; }
         public int CookingTime { get; set; }
         public string Description { get; set; }
