@@ -7,180 +7,180 @@
 @using MasterMealWA.Shared.Models.Dtos
 @if (recipe is null)
 {
-    <MudText>Loading...</MudText>
+<MudText>Loading...</MudText>
 }
 else
 {
-    <EditForm Model="@recipe" OnValidSubmit="UpdateRecipeAsync">
-        <DataAnnotationsValidator />
-        <MudGrid>
+<EditForm Model="@recipe" OnValidSubmit="UpdateRecipeAsync">
+    <DataAnnotationsValidator />
+    <MudGrid>
 
-            <MudItem xs="12">
+        <MudItem xs="12">
 
-                <MudText Typo="Typo.h3">Recipe Create</MudText>
-            </MudItem>
-            <MudItem xs="12" sm="6" md="4">
+            <MudText Typo="Typo.h3">Recipe Create</MudText>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="4">
 
-                <MudCard>
-                    <MudCardContent>
-                        <MudGrid>
-                            <MudItem xs="12">
+            <MudCard>
+                <MudCardContent>
+                    <MudGrid>
+                        <MudItem xs="12">
 
-                                <MudTextField Label="Title" HelperText="The name of the recipe" @bind-Value="recipe.Name" For="@(()=> recipe.Name)" />
-                            </MudItem>
-                            <MudItem xs="12">
+                            <MudTextField Label="Title" HelperText="The name of the recipe" @bind-Value="recipe.Name" For="@(()=> recipe.Name)" />
+                        </MudItem>
+                        <MudItem xs="12">
 
-                                <MudTextField Label="Description" HelperText="The description of the recipe" @bind-Value="recipe.Description" For="@(()=> recipe.Description)" />
-                            </MudItem>
-                            <MudItem xs="12">
+                            <MudTextField Label="Description" HelperText="The description of the recipe" @bind-Value="recipe.Description" For="@(()=> recipe.Description)" />
+                        </MudItem>
+                        <MudItem xs="12">
 
-                                <InputFile id="fileInput" OnChange="UploadFiles" hidden />
-                                <MudFab HtmlTag="label"
-                                        Color="Color.Secondary"
-                                        Icon="@Icons.Filled.Image"
-                                        Label="Load picture"
-                                        for="fileInput" />
-                                @if (files != null)
+                            <InputFile id="fileInput" OnChange="UploadFiles" hidden />
+                            <MudFab HtmlTag="label"
+                                    Color="Color.Secondary"
+                                    Icon="@Icons.Filled.Image"
+                                    Label="Load picture"
+                                    for="fileInput" />
+                            @if (files != null)
                                 {
-                                    <MudText Typo="@Typo.h6">@files.Count() File@(files.Count() == 1 ? "" : "s"):</MudText>
-                                    <MudList>
-                                        @foreach (var file in files)
+                            <MudText Typo="@Typo.h6">@files.Count() File@(files.Count() == 1 ? "" : "s"):</MudText>
+                            <MudList>
+                                @foreach (var file in files)
                                         {
-                                            <MudListItem Icon="@Icons.Filled.AttachFile" @key="@file">
-                                                @file.Name <code>@file.Size bytes</code>
-                                            </MudListItem>
+                                <MudListItem Icon="@Icons.Filled.AttachFile" @key="@file">
+                                    @file.Name <code>@file.Size bytes</code>
+                                </MudListItem>
                                         }
-                                    </MudList>
+                            </MudList>
                                 }
-                            </MudItem>
-                            <MudItem xs="12">
+                        </MudItem>
+                        <MudItem xs="12">
 
-                                <MudTextField Label="Source" HelperText="Where did you get the recipe?  (if its personal, leave blank)" @bind-Value="recipe.RecipeSource" For="@(()=> recipe.RecipeSource)" />
-                            </MudItem>
-                            <MudItem xs="12">
+                            <MudTextField Label="Source" HelperText="Where did you get the recipe?  (if its personal, leave blank)" @bind-Value="recipe.RecipeSource" For="@(()=> recipe.RecipeSource)" />
+                        </MudItem>
+                        <MudItem xs="12">
 
-                                <MudTextField Label="Source Link" HelperText="Link to the page you found this recipe on.  Please prefix with https://" @bind-Value="recipe.RecipeSourceUrl" For="@(()=> recipe.RecipeSourceUrl)" />
-                            </MudItem>
-                            <MudItem xs="6">
+                            <MudTextField Label="Source Link" HelperText="Link to the page you found this recipe on.  Please prefix with https://" @bind-Value="recipe.RecipeSourceUrl" For="@(()=> recipe.RecipeSourceUrl)" />
+                        </MudItem>
+                        <MudItem xs="6">
 
-                                <MudNumericField Label="Cooking Time" Min="15" Max="90" HelperText="Estimated minutes to cook recipe" @bind-Value="recipe.CookingTime" For="@(()=> recipe.CookingTime)" />
-                            </MudItem>
-                            <MudItem xs="6">
+                            <MudNumericField Label="Cooking Time" Min="15" Max="90" HelperText="Estimated minutes to cook recipe" @bind-Value="recipe.CookingTime" For="@(()=> recipe.CookingTime)" />
+                        </MudItem>
+                        <MudItem xs="6">
 
-                                <MudNumericField Label="Servings" HelperText="How many people the recipe Serves" Max="8" Min="1" @bind-Value="recipe.Servings" For="@(()=> recipe.Servings)" />
-                            </MudItem>
-                            @if (Tags == null)
+                            <MudNumericField Label="Servings" HelperText="How many people the recipe Serves" Max="8" Min="1" @bind-Value="recipe.Servings" For="@(()=> recipe.Servings)" />
+                        </MudItem>
+                        @if (Tags == null)
                             {
-                                <p>loading...</p>}
+                        <p>loading...</p>}
                             else
                             {
-                                <MudItem xs="12">
+                        <MudItem xs="12">
 
-                                    <MudChipSet MultiSelection="true" @bind-SelectedChips="recipeTags" Filter="true">
+                            <MudChipSet MultiSelection="true" @bind-SelectedChips="recipeTags" Filter="true">
 
-                                        @foreach (RecipeTag tag in Tags)
+                                @foreach (RecipeTag tag in Tags)
                                         {
-                                            <MudChip Tag="tag">@tag.Name</MudChip>
+                                <MudChip Tag="tag">@tag.Name</MudChip>
                                         }
-                                    </MudChipSet>
-                                </MudItem>
+                            </MudChipSet>
+                        </MudItem>
                             }
-                        </MudGrid>
-                    </MudCardContent>
-                </MudCard>
-            </MudItem>
-            <MudItem xs="12" sm="6" md="4">
+                    </MudGrid>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="4">
 
-                <MudCard>
-                    <MudCardHeader>Ingredients</MudCardHeader>
-                    <MudCardContent>
-                        <MudGrid>
-
-                            @foreach (var ingredient in recipe.Ingredients)
+            <MudCard>
+                <MudCardHeader>Ingredients</MudCardHeader>
+                <MudCardContent>
+                    <MudGrid>
+                        <MudFab OnClick="NewIngredient" Color="Color.Success" Icon="@Icons.Material.Filled.FiberNew" Label="Add ingredient not in list"></MudFab>
+                        @foreach (var ingredient in recipe.Ingredients)
                             {
-                                <MudItem xs="12">
+                        <MudItem xs="12">
 
-                                    <MudCard Elevation="2">
-                                        <MudCardContent>
+                            <MudCard Elevation="2">
+                                <MudCardContent>
 
-                                            <QIngredientCreate qIngredient="@ingredient" ingredientList="ingredients" />
-                                        </MudCardContent>
-                                        <MudCardActions>
+                                    <QIngredientCreate qIngredient="@ingredient" ingredientList="ingredients" />
+                                </MudCardContent>
+                                <MudCardActions>
 
-                                            <MudButton Color="Color.Error" @onclick="(()=>recipe.Ingredients.Remove(ingredient))">Remove</MudButton>
-                                        </MudCardActions>
-                                    </MudCard>
-                                </MudItem>
+                                    <MudButton Color="Color.Error" @onclick="(()=>recipe.Ingredients.Remove(ingredient))">Remove</MudButton>
+                                </MudCardActions>
+                            </MudCard>
+                        </MudItem>
                             }
-                            <MudItem>
+                        <MudItem>
 
-                                <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Ingredients.Add(new())" />
-                            </MudItem>
-                        </MudGrid>
-                    </MudCardContent>
-                </MudCard>
-                <MudCard>
-                    <MudCardHeader>Supplies</MudCardHeader>
-                    <MudCardContent>
-                        <MudGrid>
-
-                            @foreach (var supply in recipe.Supplies)
+                            <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Ingredients.Add(new())" />
+                        </MudItem>
+                    </MudGrid>
+                </MudCardContent>
+            </MudCard>
+            <MudCard>
+                <MudCardHeader>Supplies</MudCardHeader>
+                <MudCardContent>
+                    <MudGrid>
+                        <MudFab OnClick="NewSupply" Color="Color.Success" Icon="@Icons.Material.Filled.FiberNew" Label="Add supply not in list"></MudFab>
+                        @foreach (var supply in recipe.Supplies)
                             {
-                                <MudItem xs="12">
+                        <MudItem xs="12">
 
-                                    <MudCard Elevation="2">
-                                        <MudCardContent>
+                            <MudCard Elevation="2">
+                                <MudCardContent>
 
-                                            <SupplyPicker supply="supply" supplyList="supplyList"></SupplyPicker>
-                                        </MudCardContent>
-                                        <MudCardActions>
+                                    <SupplyPicker supply="supply" supplyList="supplyList"></SupplyPicker>
+                                </MudCardContent>
+                                <MudCardActions>
 
-                                            <MudButton Color="Color.Error" @onclick="(()=>recipe.Supplies.Remove(supply))">Remove</MudButton>
-                                        </MudCardActions>
-                                    </MudCard>
-                                </MudItem>
+                                    <MudButton Color="Color.Error" @onclick="(()=>recipe.Supplies.Remove(supply))">Remove</MudButton>
+                                </MudCardActions>
+                            </MudCard>
+                        </MudItem>
                             }
-                            <MudItem>
+                        <MudItem>
 
-                                <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Supplies.Add(new())" />
-                            </MudItem>
-                        </MudGrid>
-                    </MudCardContent>
-                </MudCard>
-            </MudItem>
-            <MudItem xs="12" sm="6" md="4">
-                <MudCard>
-                    <MudCardHeader>Steps</MudCardHeader>
-                    <MudCardContent>
-                        <MudGrid>
+                            <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Supplies.Add(new())" />
+                        </MudItem>
+                    </MudGrid>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="4">
+            <MudCard>
+                <MudCardHeader>Steps</MudCardHeader>
+                <MudCardContent>
+                    <MudGrid>
 
-                            @foreach (var step in recipe.Steps)
+                        @foreach (var step in recipe.Steps)
                             {
-                                <MudItem xs="12">
-                                    <MudCard Elevation="2">
-                                        <MudCardContent>
+                        <MudItem xs="12">
+                            <MudCard Elevation="2">
+                                <MudCardContent>
 
-                                            <StepCreate step="step"></StepCreate>
-                                        </MudCardContent>
-                                        <MudCardActions>
+                                    <StepCreate step="step"></StepCreate>
+                                </MudCardContent>
+                                <MudCardActions>
 
-                                            <MudButton Color="Color.Error" @onclick="(()=>recipe.Steps.Remove(step))">Remove</MudButton>
-                                        </MudCardActions>
-                                    </MudCard>
-                                </MudItem>
+                                    <MudButton Color="Color.Error" @onclick="(()=>recipe.Steps.Remove(step))">Remove</MudButton>
+                                </MudCardActions>
+                            </MudCard>
+                        </MudItem>
                             }
-                            <MudItem>
+                        <MudItem>
 
-                                <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Steps.Add(new())" />
-                            </MudItem>
-                        </MudGrid>
+                            <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Steps.Add(new())" />
+                        </MudItem>
+                    </MudGrid>
 
-                    </MudCardContent>
-                </MudCard>
-            </MudItem>
-        </MudGrid>
-        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Save Recipe</MudButton>
-    </EditForm>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Save Recipe</MudButton>
+</EditForm>
 }
 @code{
     [Parameter]
@@ -214,6 +214,24 @@ else
         };
         await _api.UpdateRecipeAsync(dto);
         nav.NavigateTo($"/recipes/details/{recipe.Id}");
+    }
+public async Task NewIngredient()
+    {
+        var dialog = _dialogService.Show<IngredientCreate>("New Ingredient");
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            Ingredients = await _api.GetAllIngredientsAsync();
+        }
+    }
+    public async Task NewSupply()
+    {
+        var dialog = _dialogService.Show<SupplyCreate>("New Supply");
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            supplyList = await _api.GetAllSuppliesAsync();
+        }
     }
     IList<IBrowserFile> files = new List<IBrowserFile>();
     private async Task UploadFiles(InputFileChangeEventArgs e)
