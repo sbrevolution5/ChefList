@@ -91,7 +91,7 @@
                 <MudCardHeader>Ingredients</MudCardHeader>
                 <MudCardContent>
                     <MudGrid>
-
+                        <MudFab OnClick="NewIngredient">Add Ingredient Not in database!</MudFab>
                         @foreach (var ingredient in recipe.Ingredients)
                         {
                             <MudItem xs="12">
@@ -148,23 +148,23 @@
                 <MudCardHeader>Steps</MudCardHeader>
                 <MudCardContent>
                     <MudGrid>
-                        @foreach (var step in recipe.Steps)
+                        @foreach (var ingredient in recipe.Ingredients)
                         {
                             <MudItem xs="12">
                                 <MudCard Elevation="2">
                                     <MudCardContent>
 
-                                        <StepCreate step="step" numDefault="recipe.Steps.Count"></StepCreate>
+                                        <StepCreate step="               ingredientep" numDefault="                         Ingredient"></StepCreate>
                                     </MudCardContent>
                                     <MudCardActions>
 
-                                        <MudButton Color="Color.Error" @onclick="(()=>recipe.Steps.Remove(step))">Remove</MudButton>
+                                        <MudButton Color="Color.Error" @onclick="(()=>recipe.Ingredients.Remove(ingredient))">Remove</MudButton>
                                     </MudCardActions>
                                 </MudCard>
                             </MudItem>
                         }
                         <MudItem>
-                            <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Steps.Add(new())" />
+                            <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Ingredients.Add(new())" />
                         </MudItem>
                     </MudGrid>
                 </MudCardContent>
@@ -176,7 +176,7 @@
 @code{
     public Recipe recipe { get; set; } = new();
     public List<RecipeTag> Tags { get; set; }
-    public List<Ingredient> ingredients { get; set; }
+    public List<Ingredient> Ingredients { get; set; }
     public List<Supply> supplyList { get; set; }
     private MudChip[] recipeTags { get; set; }
     private IBrowserFile bytefile { get; set; }
@@ -187,7 +187,7 @@
         recipe.Servings = 2;
         recipe.CookingTime = 30;
         Tags = await _api.GetAllRecipeTypesAsync();
-        ingredients = await _api.GetAllIngredientsAsync();
+        Ingredients = await _api.GetAllIngredientsAsync();
         supplyList = await _api.GetAllSuppliesAsync();
         ImgId = 1;
     }
@@ -198,6 +198,15 @@
         recipe.ImageId = ImgId;
         await _api.CreateNewRecipeAsync(recipe);
         nav.NavigateTo($"/recipes");
+    }
+    public async Task NewIngredient()
+    {
+        var dialog = _dialogService.Show<IngredientCreate>("New Ingredient");
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            Ingredients = await _api.GetAllIngredientsAsync();
+        }
     }
     IList<IBrowserFile> files = new List<IBrowserFile>();
     private async Task UploadFiles(InputFileChangeEventArgs e)
