@@ -7,7 +7,7 @@
 @inject IImageReader _imageReader
 @inject IUserService _userService
 @attribute [AllowAnonymous]
-<MudItem xs="3">
+<MudItem xs="12" md="3">
     <MudFab Icon="@Icons.Material.Filled.Add" Color="Color.Primary" Label="Add Recipe" aria-label="add recipe" @onclick='()=>nav.NavigateTo("/recipes/create")' />
     <MudPaper Width="250px" Class="py-3" Square="true">
         <MudExpansionPanels MultiExpansion="true" Elevation="2">
@@ -54,13 +54,13 @@
 </MudItem>
 
 <MudItem xs="9">
-    @if (recipes is null)
+    @if (!loaded)
     {
-    <MudOverlay>
+
 
         <Loader></Loader>
 
-    </MudOverlay>
+
     }
     else
     {
@@ -136,6 +136,7 @@
     private int? activeRating;
     private int pageCount { get; set; } = 0;
     private string userId { get; set; }
+    public bool loaded { get; set; } = false;
     private void HandleHoveredValueChanged(int? val) => activeRating = val;
     public async Task AddMeal(Recipe recipe)
     {
@@ -174,6 +175,7 @@
         ChangePage(1);
         RecipeTypes = await _api.GetAllRecipeTypesAsync();
         base.OnInitialized();
+        loaded = true;
     }
     private async Task GetRecipesAsync()
     {
