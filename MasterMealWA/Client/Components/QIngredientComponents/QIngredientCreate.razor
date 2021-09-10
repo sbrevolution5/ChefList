@@ -1,62 +1,65 @@
-﻿<MudForm>
-    <MudGrid>
+﻿<EditForm Model="qingredient">
 
-        <MudItem xs="4">
+    <MudForm>
+        <MudGrid>
 
-            <MudNumericField Label="Number" T="int" @bind-Value="qingredient.QuantityNumber"></MudNumericField>
-        </MudItem>
-        <MudItem xs="8">
-            <MudSelect Label="Fraction" T="Fraction" @bind-Value="qingredient.Fraction">
-                @foreach (Fraction frac in Enum.GetValues(typeof(Fraction)))
-                {
-                    <MudSelectItem Value="@frac">@frac</MudSelectItem>
-                }
-            </MudSelect>
+            <MudItem xs="4">
 
-        </MudItem>
-        <MudItem xs="12">
-
-            @if (measurementType == MeasurementType.Volume)
-            {
-                <MudSelect Label="Volume Measurement" T="VolumeMeasurementUnit?" @bind-Value="qingredient.VolumeMeasurementUnit">
-                    @foreach (VolumeMeasurementUnit? measure in Enum.GetValues(typeof(VolumeMeasurementUnit)))
+                <MudNumericField Label="Number" T="int" @bind-Value="qingredient.QuantityNumber"></MudNumericField>
+            </MudItem>
+            <MudItem xs="8">
+                <MudSelect Label="Fraction" T="Fraction" @bind-Value="qingredient.Fraction">
+                    @foreach (Fraction frac in Enum.GetValues(typeof(Fraction)))
                     {
-                        <MudSelectItem Value="@measure">@measure</MudSelectItem>
+                        <MudSelectItem Value="@frac">@frac</MudSelectItem>
                     }
                 </MudSelect>
-            }
-            else if (measurementType == MeasurementType.Mass)
-            {
-                <MudSelect Label="Mass Measurement" T="MassMeasurementUnit?" @bind-Value="qingredient.MassMeasurementUnit">
-                    @foreach (MassMeasurementUnit? measure in Enum.GetValues(typeof(MassMeasurementUnit)))
+
+            </MudItem>
+            <MudItem xs="12">
+
+                @if (measurementType == MeasurementType.Volume)
+                {
+                    <MudSelect Label="Volume Measurement" T="VolumeMeasurementUnit?" @bind-Value="qingredient.VolumeMeasurementUnit">
+                        @foreach (VolumeMeasurementUnit? measure in Enum.GetValues(typeof(VolumeMeasurementUnit)))
+                        {
+                            <MudSelectItem Value="@measure">@measure</MudSelectItem>
+                        }
+                    </MudSelect>
+                }
+                else if (measurementType == MeasurementType.Mass)
+                {
+                    <MudSelect Label="Mass Measurement" T="MassMeasurementUnit?" @bind-Value="qingredient.MassMeasurementUnit">
+                        @foreach (MassMeasurementUnit? measure in Enum.GetValues(typeof(MassMeasurementUnit)))
+                        {
+                            <MudSelectItem Value="@measure">@measure</MudSelectItem>
+                        }
+                    </MudSelect>
+                }
+                else if (measurementType == MeasurementType.Count)
+                {
+
+                }
+                else
+                {
+                    <MudText>Please select an ingredient</MudText>
+                }
+            </MudItem>
+            <MudItem xs="12">
+
+                <MudSelect Value="qingredient.IngredientId" T="int" ValueChanged="@((int id)=>MeasureChange(id))">
+                    @foreach (var ingredient in ingredientList)
                     {
-                        <MudSelectItem Value="@measure">@measure</MudSelectItem>
+                        <MudSelectItem Value="@ingredient.Id">@ingredient.Name</MudSelectItem>
                     }
                 </MudSelect>
-            }
-            else if (measurementType == MeasurementType.Count)
-            {
-
-            }
-            else
-            {
-                <MudText>Please select an ingredient</MudText>
-            }
-        </MudItem>
-        <MudItem xs="12">
-
-            <MudSelect Value="qingredient.IngredientId" T="int" ValueChanged="@((int id)=>MeasureChange(id))">
-                @foreach (var ingredient in ingredientList)
-                {
-                    <MudSelectItem Value="@ingredient.Id">@ingredient.Name</MudSelectItem>
-                }
-            </MudSelect>
-        </MudItem>
-        <MudItem xs="12">
-            <MudTextField Label="Additional Notes" @bind-Value="qingredient.Notes"></MudTextField>
-        </MudItem>
-    </MudGrid>
-</MudForm>
+            </MudItem>
+            <MudItem xs="12">
+                <MudTextField Label="Additional Notes" @bind-Value="qingredient.Notes"></MudTextField>
+            </MudItem>
+        </MudGrid>
+    </MudForm>
+</EditForm>
 @code {
     [Parameter]
     public List<Ingredient> ingredientList { get; set; }
@@ -80,7 +83,8 @@
         if (qingredient.MeasurementType == MeasurementType.Volume && qingredient.VolumeMeasurementUnit == null)
         {
             qingredient.VolumeMeasurementUnit = VolumeMeasurementUnit.Teaspoon;
-        }else if (qingredient.MeasurementType == MeasurementType.Mass && qingredient.MassMeasurementUnit == null)
+        }
+        else if (qingredient.MeasurementType == MeasurementType.Mass && qingredient.MassMeasurementUnit == null)
         {
             qingredient.MassMeasurementUnit = MassMeasurementUnit.pound;
         }
