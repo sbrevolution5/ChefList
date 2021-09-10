@@ -56,10 +56,11 @@
 <MudItem xs="9">
     @if (recipes is null)
     {
-        <MudOverlay>
+    <MudOverlay>
 
-            <MudText>Loading....</MudText>
-        </MudOverlay>
+        <Loader></Loader>
+
+    </MudOverlay>
     }
     else
     {
