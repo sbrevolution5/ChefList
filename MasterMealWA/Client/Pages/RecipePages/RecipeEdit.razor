@@ -222,7 +222,7 @@ public async Task NewIngredient()
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-            Ingredients = await _api.GetAllIngredientsAsync();
+            ingredients = await _api.GetAllIngredientsAsync();
         }
     }
     public async Task NewSupply()

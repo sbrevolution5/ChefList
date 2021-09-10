@@ -155,7 +155,7 @@
                                 <MudCard Elevation="2">
                                     <MudCardContent>
 
-                                        <StepCreate step="step" numDefault="recipe.Steps.Count+1"></StepCreate>
+                                        <StepCreate step="step" numDefault="recipe.Steps.Count"></StepCreate>
                                     </MudCardContent>
                                     <MudCardActions>
 
@@ -165,7 +165,7 @@
                             </MudItem>
                         }
                         <MudItem>
-                            <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Ingredients.Add(new())" />
+                            <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Steps.Add(new())" />
                         </MudItem>
                     </MudGrid>
                 </MudCardContent>
@@ -191,6 +191,18 @@
         Ingredients = await _api.GetAllIngredientsAsync();
         supplyList = await _api.GetAllSuppliesAsync();
         ImgId = 1;
+        if (recipe.Ingredients.Count == 0)
+        {
+            recipe.Ingredients.Add(new());
+        }
+        if (recipe.Supplies.Count == 0)
+        {
+            recipe.Supplies.Add(new());
+        }
+        if (recipe.Steps.Count == 0)
+        {
+            recipe.Steps.Add(new());
+        }
     }
     public async Task CreateRecipeAsync()
     {
