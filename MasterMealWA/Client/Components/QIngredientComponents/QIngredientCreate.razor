@@ -65,7 +65,10 @@
     public MeasurementType measurementType { get; set; }
     protected override void OnInitialized()
     {
-        qingredient.IngredientId = ingredientList.First().Id;
+        if (qingredient.IngredientId == 0)
+        {
+            qingredient.IngredientId = ingredientList.First().Id;
+        }
 
         MeasureChange(qingredient.IngredientId);
     }
@@ -74,6 +77,13 @@
         qingredient.IngredientId = id;
         measurementType = ingredientList.FirstOrDefault(i => i.Id == id).MeasurementType;
         qingredient.MeasurementType = measurementType;
+        if (qingredient.MeasurementType == MeasurementType.Volume && qingredient.VolumeMeasurementUnit == null)
+        {
+            qingredient.VolumeMeasurementUnit = VolumeMeasurementUnit.Teaspoon;
+        }else if (qingredient.MeasurementType == MeasurementType.Mass && qingredient.MassMeasurementUnit == null)
+        {
+            qingredient.MassMeasurementUnit = MassMeasurementUnit.pound;
+        }
         return;
     }
 }
