@@ -155,7 +155,7 @@
                                 <MudCard Elevation="2">
                                     <MudCardContent>
 
-                                        <StepCreate step="step" numDefault="recipe.Steps.Count+1"></StepCreate>
+                                        <StepCreate step="step" numDefault="recipe.Steps.Count"></StepCreate>
                                     </MudCardContent>
                                     <MudCardActions>
 
@@ -165,7 +165,7 @@
                             </MudItem>
                         }
                         <MudItem>
-                            <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Ingredients.Add(new())" />
+                            <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Steps.Add(new())" />
                         </MudItem>
                     </MudGrid>
                 </MudCardContent>
