@@ -12,4 +12,15 @@
     public QSupply supply { get; set; }
     [Parameter]
     public List<Supply> supplyList { get; set; }
+    protected override void OnInitialized()
+    {
+        if (supply.Quantity == 0)
+        {
+            supply.Quantity = 1;
+        }
+        if (supply.SupplyId == 0)
+        {
+            supply.Supply = supplyList.FirstOrDefault();
+        }
+    }
 }

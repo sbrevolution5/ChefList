@@ -3,6 +3,7 @@
 @inject IApiService _api
 @inject IUserService _userService
 @inject NavigationManager nav
+@inject IDialogService _dialogService
 @using System.Net.Http.Headers
 <EditForm Model="@recipe" OnValidSubmit="CreateRecipeAsync">
     <DataAnnotationsValidator />
@@ -12,8 +13,7 @@
 
             <MudText Typo="Typo.h3">Recipe Create</MudText>
         </MudItem>
-        <MudItem xs="4">
-
+        <MudItem xs="12" sm="6" md="4">
             <MudCard>
                 <MudCardContent>
                     <MudGrid>
@@ -85,13 +85,13 @@
                 </MudCardActions>
             </MudCard>
         </MudItem>
-        <MudItem xs="4">
+        <MudItem xs="12" sm="6" md="4">
 
             <MudCard>
                 <MudCardHeader>Ingredients</MudCardHeader>
                 <MudCardContent>
                     <MudGrid>
-
+                        <MudFab OnClick="NewIngredient" Color="Color.Success" Icon="@Icons.Material.Filled.FiberNew" Label="Add ingredient not in list"></MudFab>
                         @foreach (var ingredient in recipe.Ingredients)
                         {
                             <MudItem xs="12">
@@ -99,7 +99,7 @@
                                 <MudCard Elevation="2">
                                     <MudCardContent>
 
-                                        <QIngredientCreate qIngredient="@ingredient" ingredientList="ingredients" />
+                                        <QIngredientCreate qIngredient="@ingredient" ingredientList="Ingredients" />
                                     </MudCardContent>
                                     <MudCardActions>
 
@@ -118,23 +118,24 @@
             </MudCard>
             <MudCard>
                 <MudCardHeader>Supplies</MudCardHeader>
+                <MudFab OnClick="NewSupply" Color="Color.Success" Icon="@Icons.Material.Filled.FiberNew" Label="Add supply not in list"></MudFab>
                 <MudCardContent>
                     <MudGrid>
                         @foreach (var supply in recipe.Supplies)
                         {
-                            <MudItem xs="12">
+                        <MudItem xs="12">
 
-                                <MudCard Elevation="2">
-                                    <MudCardContent>
+                            <MudCard Elevation="2">
+                                <MudCardContent>
 
-                                        <SupplyPicker supply="supply" supplyList="supplyList"></SupplyPicker>
-                                    </MudCardContent>
-                                    <MudCardActions>
+                                    <SupplyPicker supply="supply" supplyList="supplyList"></SupplyPicker>
+                                </MudCardContent>
+                                <MudCardActions>
 
-                                        <MudButton Color="Color.Error" @onclick="(()=>recipe.Supplies.Remove(supply))">Remove</MudButton>
-                                    </MudCardActions>
-                                </MudCard>
-                            </MudItem>
+                                    <MudButton Color="Color.Error" @onclick="(()=>recipe.Supplies.Remove(supply))">Remove</MudButton>
+                                </MudCardActions>
+                            </MudCard>
+                        </MudItem>
                         }
                         <MudItem>
                             <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Supplies.Add(new())" />
@@ -143,7 +144,7 @@
                 </MudCardContent>
             </MudCard>
         </MudItem>
-        <MudItem xs="4">
+        <MudItem xs="12" sm="6" md="4">
             <MudCard>
                 <MudCardHeader>Steps</MudCardHeader>
                 <MudCardContent>
@@ -176,7 +177,7 @@
 @code{
     public Recipe recipe { get; set; } = new();
     public List<RecipeTag> Tags { get; set; }
-    public List<Ingredient> ingredients { get; set; }
+    public List<Ingredient> Ingredients { get; set; }
     public List<Supply> supplyList { get; set; }
     private MudChip[] recipeTags { get; set; }
     private IBrowserFile bytefile { get; set; }
@@ -187,9 +188,21 @@
         recipe.Servings = 2;
         recipe.CookingTime = 30;
         Tags = await _api.GetAllRecipeTypesAsync();
-        ingredients = await _api.GetAllIngredientsAsync();
+        Ingredients = await _api.GetAllIngredientsAsync();
         supplyList = await _api.GetAllSuppliesAsync();
         ImgId = 1;
+        if (recipe.Ingredients.Count == 0)
+        {
+            recipe.Ingredients.Add(new());
+        }
+        if (recipe.Supplies.Count == 0)
+        {
+            recipe.Supplies.Add(new());
+        }
+        if (recipe.Steps.Count == 0)
+        {
+            recipe.Steps.Add(new());
+        }
     }
     public async Task CreateRecipeAsync()
     {
@@ -198,6 +211,24 @@
         recipe.ImageId = ImgId;
         await _api.CreateNewRecipeAsync(recipe);
         nav.NavigateTo($"/recipes");
+    }
+    public async Task NewIngredient()
+    {
+        var dialog = _dialogService.Show<IngredientCreate>("New Ingredient");
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            Ingredients = await _api.GetAllIngredientsAsync();
+        }
+    }
+    public async Task NewSupply()
+    {
+        var dialog = _dialogService.Show<SupplyCreate>("New Supply");
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            supplyList = await _api.GetAllSuppliesAsync();
+        }
     }
     IList<IBrowserFile> files = new List<IBrowserFile>();
     private async Task UploadFiles(InputFileChangeEventArgs e)
