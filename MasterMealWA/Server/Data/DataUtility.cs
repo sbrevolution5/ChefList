@@ -595,32 +595,99 @@ namespace MasterMealWA.Server.Data
                 {
                     new()
                     {
-                        Name = "American"
+                        Name = "American",
+                        Category = CategoryType.Nationality
                     },
                     new()
                     {
-                        Name = "Chicken"
+                        Name = "Chicken",
+                        Category = CategoryType.Protein
                     },
 
                     new()
                     {
-                        Name = "Mexican"
+                        Name = "Mexican",
+                        Category = CategoryType.Nationality
                     },
                     new()
                     {
-                        Name = "Seafood"
+                        Name = "Seafood",
+                        Category = CategoryType.Type
                     },
                     new()
                     {
-                        Name = "Italian"
+                        Name = "Italian",
+                        Category = CategoryType.Nationality
                     },
                     new()
                     {
-                        Name = "Breakfast"
+                        Name = "Breakfast",
+                        Category = CategoryType.Type
                     },
                     new()
                     {
-                        Name = "Asian"
+                        Name = "Pork",
+                        Category = CategoryType.Protein
+                    },
+                    new()
+                    {
+                        Name = "Beef",
+                        Category = CategoryType.Protein
+                    },
+                    new()
+                    {
+                        Name = "Fish",
+                        Category = CategoryType.Protein
+                    },
+                    new()
+                    {
+                        Name = "British",
+                        Category = CategoryType.Nationality
+                    },
+                    new()
+                    {
+                        Name = "Middle-Eastern",
+                        Category = CategoryType.Nationality
+                    },
+                    new()
+                    {
+                        Name = "African",
+                        Category = CategoryType.Nationality
+                    },
+                    new()
+                    {
+                        Name = "German",
+                        Category = CategoryType.Nationality
+                    },
+                    new()
+                    {
+                        Name = "Vegetarian",
+                        Category = CategoryType.Protein
+                    },
+                    new()
+                    {
+                        Name = "Lamb",
+                        Category = CategoryType.Protein
+                    },
+                    new()
+                    {
+                        Name = "Dessert",
+                        Category = CategoryType.Type
+                    },
+                    new()
+                    {
+                        Name = "Dinner",
+                        Category = CategoryType.Type
+                    },
+                    new()
+                    {
+                        Name = "Salad",
+                        Category = CategoryType.Type
+                    },
+                    new()
+                    {
+                        Name = "Appetizer",
+                        Category = CategoryType.Type
                     }
                 };
                 context.AddRange(types);
