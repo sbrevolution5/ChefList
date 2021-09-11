@@ -5,7 +5,8 @@
         <MudTextField Label="Ingredient Name" @bind-Value="ingredient.Name"></MudTextField>
         @if (types is null)
         {
-            <MudText>Loading Types...</MudText>
+            <Loader></Loader>
+
         }
         else
         {
