@@ -686,7 +686,62 @@ namespace MasterMealWA.Server.Data
                     },
                     new()
                     {
-                        Name = "Appetizer",
+                        Name = "Stir-Fry",
+                        Category = CategoryType.Type
+                    },
+                    new()
+                    {
+                        Name = "Meatball",
+                        Category = CategoryType.Type
+                    },
+                    new()
+                    {
+                        Name = "Burger",
+                        Category = CategoryType.Type
+                    },
+                    new()
+                    {
+                        Name = "Taco",
+                        Category = CategoryType.Type
+                    },
+                    new()
+                    {
+                        Name = "Noodle",
+                        Category = CategoryType.Type
+                    },
+                    new()
+                    {
+                        Name = "Bowl",
+                        Category = CategoryType.Type
+                    },
+                    new()
+                    {
+                        Name = "Flatbread",
+                        Category = CategoryType.Type
+                    },
+                    new()
+                    {
+                        Name = "Pasta",
+                        Category = CategoryType.Type
+                    },
+                    new()
+                    {
+                        Name = "Indian",
+                        Category = CategoryType.Nationality
+                    },
+                    new()
+                    {
+                        Name = "Korean",
+                        Category = CategoryType.Nationality
+                    },
+                    new()
+                    {
+                        Name = "Mediterranean",
+                        Category = CategoryType.Type
+                    },
+                    new()
+                    {
+                        Name = "Latin American",
                         Category = CategoryType.Type
                     }
                 };
