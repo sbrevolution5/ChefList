@@ -737,12 +737,12 @@ namespace MasterMealWA.Server.Data
                     new()
                     {
                         Name = "Mediterranean",
-                        Category = CategoryType.Type
+                        Category = CategoryType.Nationality
                     },
                     new()
                     {
                         Name = "Latin American",
-                        Category = CategoryType.Type
+                        Category = CategoryType.Nationality
                     }
                 };
                 context.AddRange(types);
