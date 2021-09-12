@@ -266,6 +266,8 @@ else
         var fakeRecipe = recipe;
         RecipeEditDto dto = new()
         {
+            SuppliesToRemove = RemovedSupplies,
+            StepsToRemove = RemovedSteps,
             IngredientsToRemove = RemovedIngredients,
             Recipe = fakeRecipe,
             RecipeTags = Tags,
