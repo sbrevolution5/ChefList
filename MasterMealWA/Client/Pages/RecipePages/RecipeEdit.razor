@@ -137,7 +137,7 @@ else
                                         </MudCardContent>
                                         <MudCardActions>
 
-                                            <MudButton Color="Color.Error" Variant="Variant.Filled" @onclick="(()=>recipe.Supplies.Remove(supply))">Remove</MudButton>
+                                            <MudButton Color="Color.Error" Variant="Variant.Filled" @onclick="@(()=>RemoveSupply(supply))">Remove</MudButton>
                                         </MudCardActions>
                                     </MudCard>
                                 </MudItem>
@@ -166,7 +166,7 @@ else
                                         </MudCardContent>
                                         <MudCardActions>
 
-                                            <MudButton Color="Color.Error" Variant="Variant.Filled" @onclick="(()=>recipe.Steps.Remove(step))">Remove</MudButton>
+                                            <MudButton Color="Color.Error" Variant="Variant.Filled" @onclick="@(()=>RemoveStep(step))">Remove</MudButton>
                                         </MudCardActions>
                                     </MudCard>
                                 </MudItem>
@@ -191,6 +191,8 @@ else
     public List<RecipeTag> Tags { get; set; }
     public List<Ingredient> ingredients { get; set; }
     public List<QIngredient> RemovedIngredients { get; set; } = new();
+    public List<QSupply> RemovedSupplies { get; set; } = new();
+    public List<Step> RemovedSteps { get; set; } = new();
     public List<Supply> supplyList { get; set; }
     public MudChip[] recipeTags { get; set; }
     public int ImgId { get; set; }
@@ -218,13 +220,29 @@ else
         return Color.Tertiary;
 
     }
+    public void RemoveStep(Step step)
+    {
+        if (step.Id != 0)
+        {
+            RemovedSteps.Add(step);
+        }
+            recipe.Steps.Remove(step);
+    }
+    public void RemoveSupply(QSupply supply)
+    {
+        if (supply.Id != 0)
+        {
+            RemovedSupplies.Add(supply);
+        }
+            recipe.Supplies.Remove(supply);
+    }
     public void RemoveIngredient(QIngredient ingredient)
     {
         if (ingredient.Id != 0)
         {
             RemovedIngredients.Add(ingredient);
-            recipe.Ingredients.Remove(ingredient);
         }
+            recipe.Ingredients.Remove(ingredient);
     }
     public bool RecipeHasTag(RecipeTag tag)
     {
