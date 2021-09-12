@@ -46,13 +46,7 @@
                 }
             </MudItem>
             <MudItem xs="12">
-
-                <MudSelect Value="qingredient.IngredientId" T="int" ValueChanged="@((int id)=>MeasureChange(id))">
-                    @foreach (var ingredient in ingredientList)
-                    {
-                        <MudSelectItem Value="@ingredient.Id">@ingredient.Name</MudSelectItem>
-                    }
-                </MudSelect>
+                <MudAutocomplete Label="Ingredient" T="Ingredient" ValueChanged="@((Ingredient i)=>MeasureChange(i.Id))" Value="qingredient.Ingredient" ToStringFunc="@(i=> i==null?null : $"{i.Name}")" SearchFunc="@Search"></MudAutocomplete>
             </MudItem>
             <MudItem xs="12">
                 <MudTextField Label="Additional Notes" @bind-Value="qingredient.Notes"></MudTextField>
@@ -66,6 +60,15 @@
     [Parameter]
     public QIngredient qingredient { get; set; }
     public MeasurementType measurementType { get; set; }
+    private async Task<IEnumerable<Ingredient>> Search (string v)
+    {
+        await Task.Delay(1);
+        if (String.IsNullOrWhiteSpace(v))
+        {
+            return ingredientList;
+        }
+        return ingredientList.Where(i => i.Name.ToLower().Contains(v));
+    }
     protected override void OnInitialized()
     {
         if (qingredient.IngredientId == 0)
