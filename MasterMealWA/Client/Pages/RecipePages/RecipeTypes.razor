@@ -2,7 +2,7 @@
 @inject IApiService _api
 @inject IDialogService _dialogService
 @attribute [Authorize(Roles = "Admin, Moderator")]
-@if (!loaded)
+@if (!Loaded)
 {
 
 
@@ -56,12 +56,14 @@ else
         </MudCardContent>
     </MudCard>
 }
-    @code {
-public List<RecipeTag> Tags { get; set; }
+@code {
+    public List<RecipeTag> Tags { get; set; }
+    public bool Loaded { get; set; }
     protected override async Task OnInitializedAsync()
     {
         Tags = await _api.GetAllTagsAsync();
         base.OnInitialized();
+        Loaded = true;
     }
     public async Task NewSupply()
     {
@@ -82,4 +84,4 @@ public List<RecipeTag> Tags { get; set; }
             Tags = await _api.GetAllTagsAsync();
         }
     }
-    }
+}

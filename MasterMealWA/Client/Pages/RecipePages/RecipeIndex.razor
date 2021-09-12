@@ -8,12 +8,12 @@
 @inject IUserService _userService
 @attribute [AllowAnonymous]
 
-<AuthorizeView Roles="Admin, Moderator">
-    <Authorized>
-        <MudButton @onclick='()=>nav.NavigateTo("/recipes/types")'>Manage Recipe Types</MudButton>
-    </Authorized>
-</AuthorizeView>
 <MudItem xs="12" md="3">
+    <AuthorizeView Roles="Admin, Moderator">
+        <Authorized>
+            <MudButton @onclick='()=>nav.NavigateTo("/recipes/types")'>Manage Recipe Types</MudButton>
+        </Authorized>
+    </AuthorizeView>
     <MudFab Icon="@Icons.Material.Filled.Add" Color="Color.Primary" Label="Add Recipe" aria-label="add recipe" @onclick='()=>nav.NavigateTo("/recipes/create")' />
     <MudPaper Width="250px" Class="py-3" Square="true">
         <MudExpansionPanels MultiExpansion="true" Elevation="2">
