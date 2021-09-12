@@ -11,8 +11,6 @@ namespace MasterMealWA.Shared.Models
     public class QIngredient
     {
         public int Id { get; set; }
-        public int RecipeId { get; set; }
-        public virtual Recipe Recipe { get; set; }
         public int IngredientId { get; set; }
         public virtual Ingredient Ingredient { get; set; }
         public string Notes { get; set; } = "";

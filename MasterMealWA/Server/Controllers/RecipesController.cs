@@ -142,7 +142,7 @@ namespace MasterMealWA.Server.Controllers
             _context.Recipe.Add(recipe);
             foreach (var ingredient in recipe.Ingredients)
             {
-                ingredient.RecipeId = recipe.Id;
+                //ingredient.RecipeId = recipe.Id;
                 if (ingredient.MeasurementType == MeasurementType.Volume)
                 {
                     ingredient.MassMeasurementUnit = null;

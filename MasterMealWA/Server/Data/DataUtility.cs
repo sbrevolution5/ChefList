@@ -552,7 +552,7 @@ namespace MasterMealWA.Server.Data
                 QuantityNumber = count,
                 NumberOfUnits = _measurementService.EncodeUnitMeasurement(count, Fraction.NoFraction)
             };
-            qing.RecipeId = rId;
+            //qing.RecipeId = rId;
             return qing;
         }
         private static QIngredient NewQIngredient(string name, int count, Fraction frac, VolumeMeasurementUnit unit, List<Ingredient> ingredients, int rId)
@@ -568,7 +568,7 @@ namespace MasterMealWA.Server.Data
                 NumberOfUnits = _measurementService.EncodeVolumeMeasurement(count, frac, unit)
             };
             qing.Quantity = _measurementService.DecodeVolumeMeasurement(qing.NumberOfUnits);
-            qing.RecipeId = rId;
+            //qing.RecipeId = rId;
             return qing;
         }
         private static QIngredient NewQIngredient(string name, int count, Fraction frac, MassMeasurementUnit mass, List<Ingredient> ingredients, int rId)
@@ -584,7 +584,7 @@ namespace MasterMealWA.Server.Data
                 NumberOfUnits = _measurementService.EncodeMassMeasurement(count, frac, mass)
             };
             qing.Quantity = _measurementService.DecodeMassMeasurement(qing.NumberOfUnits);
-            qing.RecipeId = rId;
+            //qing.RecipeId = rId;
             return qing;
         }
         private static async Task SeedRecipeTypesAsync(ApplicationDbContext context)
