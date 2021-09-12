@@ -222,6 +222,14 @@
         recipe.Tags = recipeTags.Select(r => (RecipeTag)r.Tag).ToList();
         recipe.AuthorId = await _userService.GetUserIdAsync();
         recipe.ImageId = ImgId;
+        foreach (var ing in recipe.Ingredients)
+        {
+            ing.Ingredient = null;
+        }
+        foreach (var sup in recipe.Supplies)
+        {
+            sup.Supply = null;
+        }
         await _api.CreateNewRecipeAsync(recipe);
         nav.NavigateTo($"/recipes");
     }
