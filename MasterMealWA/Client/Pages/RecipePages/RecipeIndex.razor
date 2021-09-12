@@ -9,6 +9,10 @@
 @attribute [AllowAnonymous]
 <AuthorizeView Roles="Admin, Moderator">
     <Authorized>
+        @if (user.IsInrole)
+        {
+
+        }
         <MudButton @onclick='()=>nav.NavigateTo("/recipes/types")'>Manage Recipe Types</MudButton>
     </Authorized>
 </AuthorizeView>
