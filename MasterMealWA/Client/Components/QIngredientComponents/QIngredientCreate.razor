@@ -46,13 +46,7 @@
                 }
             </MudItem>
             <MudItem xs="12">
-
-                <MudSelect Value="qingredient.IngredientId" T="int" ValueChanged="@((int id)=>MeasureChange(id))">
-                    @foreach (var ingredient in ingredientList)
-                    {
-                        <MudSelectItem Value="@ingredient.Id">@ingredient.Name</MudSelectItem>
-                    }
-                </MudSelect>
+                <MudAutocomplete HelperText="Start typing to search for an ingredient, If you can't find your ingredient, create a new one with the button above." Required="true" Label="Ingredient" T="Ingredient" ValueChanged="@((Ingredient i)=>MeasureChange(i))" Value="qingredient.Ingredient" ToStringFunc="@(i=> $"{i.Name} ({i.MeasurementType.ToString()})")" SearchFunc="@Search" MaxItems="null"></MudAutocomplete>
             </MudItem>
             <MudItem xs="12">
                 <MudTextField Label="Additional Notes" @bind-Value="qingredient.Notes"></MudTextField>
@@ -66,19 +60,32 @@
     [Parameter]
     public QIngredient qingredient { get; set; }
     public MeasurementType measurementType { get; set; }
+    private async Task<IEnumerable<Ingredient>> Search(string v)
+    {
+        await Task.Delay(1);
+        if (String.IsNullOrEmpty(v))
+        {
+            return ingredientList;
+        }
+        return ingredientList.Where(i => i.Name.ToLower().Contains(v.ToLower()));
+    }
     protected override void OnInitialized()
     {
         if (qingredient.IngredientId == 0)
         {
             qingredient.IngredientId = ingredientList.First().Id;
         }
+        else
+        {
 
-        MeasureChange(qingredient.IngredientId);
+            MeasureChange(qingredient.Ingredient);
+        }
     }
-    public void MeasureChange(int id)
+    public void MeasureChange(Ingredient ing)
     {
-        qingredient.IngredientId = id;
-        measurementType = ingredientList.FirstOrDefault(i => i.Id == id).MeasurementType;
+        qingredient.IngredientId = ing.Id;
+        qingredient.Ingredient = ing;
+        measurementType = ingredientList.FirstOrDefault(i => i.Id == ing.Id).MeasurementType;
         qingredient.MeasurementType = measurementType;
         if (qingredient.MeasurementType == MeasurementType.Volume && qingredient.VolumeMeasurementUnit == null)
         {
