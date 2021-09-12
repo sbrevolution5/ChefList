@@ -7,6 +7,11 @@
 @inject IImageReader _imageReader
 @inject IUserService _userService
 @attribute [AllowAnonymous]
+<AuthorizeView>
+    <Authorized>
+        <MudButton @onclick='()=>nav.NavigateTo("/recipes/types")'>Manage Recipe Types</MudButton>
+    </Authorized>
+</AuthorizeView>
 <MudItem xs="12" md="3">
     <MudFab Icon="@Icons.Material.Filled.Add" Color="Color.Primary" Label="Add Recipe" aria-label="add recipe" @onclick='()=>nav.NavigateTo("/recipes/create")' />
     <MudPaper Width="250px" Class="py-3" Square="true">
