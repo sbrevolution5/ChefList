@@ -30,7 +30,7 @@
                         @foreach (var category in RecipeTypes)
                         {
 
-                            <MudChip Text="@category.Name"></MudChip>
+                            <MudChip Color="@BadgeColor(category.Category)" Text="@category.Name"></MudChip>
                         }
                     }
                 </MudChipSet>
@@ -141,6 +141,19 @@
     private int? activeRating;
     private int pageCount { get; set; } = 0;
     private string userId { get; set; }
+    public Color BadgeColor(CategoryType type)
+    {
+        if (type == CategoryType.Nationality)
+        {
+            return Color.Primary;
+        }
+        if (type == CategoryType.Nationality)
+        {
+            return Color.Secondary;
+        }
+        return Color.Tertiary;
+
+    }
     public bool loaded { get; set; } = false;
     private void HandleHoveredValueChanged(int? val) => activeRating = val;
     public async Task AddMeal(Recipe recipe)
