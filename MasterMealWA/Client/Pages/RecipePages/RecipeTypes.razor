@@ -68,7 +68,7 @@
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-            Supplies = await _api.GetAllSuppliesAsync();
+            Tags = await _api.GetAllTagsAsync();
         }
     }
 }
