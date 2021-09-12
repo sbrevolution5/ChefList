@@ -46,7 +46,7 @@
                 }
             </MudItem>
             <MudItem xs="12">
-                <MudAutocomplete HelperText="Start typing to search for an ingredient, If you can't find your ingredient, create a new one with the button above.'" Required="true" Label="Ingredient" T="Ingredient" ValueChanged="@((Ingredient i)=>MeasureChange(i.Id))" ResetValueOnEmptyText="true" Value="qingredient.Ingredient" ToStringFunc="@(i=> $"{i.Name} ({i.MeasurementType.ToString()})")" SearchFunc="@Search"></MudAutocomplete>
+                <MudAutocomplete HelperText="Start typing to search for an ingredient, If you can't find your ingredient, create a new one with the button above." Required="true" Label="Ingredient" T="Ingredient" ValueChanged="@((Ingredient i)=>MeasureChange(i.Id))" ResetValueOnEmptyText="true" Value="qingredient.Ingredient" ToStringFunc="@(i=> $"{i.Name} ({i.MeasurementType.ToString()})")" SearchFunc="@Search"></MudAutocomplete>
             </MudItem>
             <MudItem xs="12">
                 <MudTextField Label="Additional Notes" @bind-Value="qingredient.Notes"></MudTextField>
