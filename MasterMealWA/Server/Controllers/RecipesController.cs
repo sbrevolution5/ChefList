@@ -102,6 +102,8 @@ namespace MasterMealWA.Server.Controllers
             dbrecipe.ImageId = recipe.ImageId;
             _context.Entry(dbrecipe).State = EntityState.Modified;
             _context.QIngredient.RemoveRange(recipeDto.IngredientsToRemove);
+            _context.QSupply.RemoveRange(recipeDto.SuppliesToRemove);
+            _context.Step.RemoveRange(recipeDto.StepsToRemove);
             foreach (var step in dbrecipe.Steps)
             {
                 _context.Entry(step).State = EntityState.Modified;
