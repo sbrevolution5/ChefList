@@ -1,5 +1,5 @@
 ﻿<EditForm Model="supply">
-
+    <MudAutocomplete HelperText="Start typing to search for an ingredient, If you can't find your ingredient, create a new one with the button above." Required="true" Label="Ingredient" T="Ingredient" ValueChanged="@((Ingredient i)=>MeasureChange(i.Id))" ResetValueOnEmptyText="true" Value="qingredient.Ingredient" ToStringFunc="@(i=> $"{i.Name} ({i.MeasurementType.ToString()})")" SearchFunc="@Search"></MudAutocomplete>
     <MudSelect Label="Supply" T="int" @bind-Value="supply.SupplyId">
         @foreach (Supply sup in supplyList)
         {
@@ -24,5 +24,14 @@
         {
             supply.SupplyId = supplyList.FirstOrDefault().Id;
         }
+    }
+    private async Task<IEnumerable<Supply>> Search(string v)
+    {
+        await Task.Delay(1);
+        if (String.IsNullOrEmpty(v))
+        {
+            return supplyList;
+        }
+        return supplyList.Where(i => i.Name.ToLower().Contains(v.ToLower()));
     }
 }
