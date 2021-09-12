@@ -71,7 +71,7 @@
 
                                 <MudChipSet MultiSelection="true" @bind-SelectedChips="recipeTags" Filter="true">
 
-                                    @foreach (RecipeTag tag in Tags)
+                                    @foreach (RecipeTag tag in Tags.OrderBy(t => t.Category))
                                     {
                                         <MudChip Color="BadgeColor(tag.Category)" Tag="tag">@tag.Name</MudChip>
                                     }
