@@ -72,8 +72,11 @@ else
                                     <td>@recipe.CookingTime</td>
                                 </tr>
                                 <tr>
-                                    <td>Recipe Type:</td>
-                                    <td>@recipe.Tags.FirstOrDefault().Name</td>
+                                    <td>Tags:</td>
+                                    <td>@foreach (var tag in recipe.Tags)
+                                    {
+                                        <MudChip Color="@BadgeColor(tag.Category)">@tag.Name</MudChip>
+                                    }</td>
                                 </tr>
                             </tbody>
                         </MudSimpleTable>
@@ -142,8 +145,8 @@ else
     private string userId { get; set; }
     private List<BreadcrumbItem> crumbList = new()
     {
-            new BreadcrumbItem("Recipes", href: "/recipes")
-        };
+        new BreadcrumbItem("Recipes", href: "/recipes")
+    };
     public async Task AddMeal()
     {
         var parameters = new DialogParameters { ["recipe"] = recipe };
@@ -153,6 +156,19 @@ else
         {
             snackbar.Add("Meal planned!");
         }
+    }
+    public Color BadgeColor(CategoryType type)
+    {
+        if (type == CategoryType.Nationality)
+        {
+            return Color.Primary;
+        }
+        if (type == CategoryType.Protein)
+        {
+            return Color.Secondary;
+        }
+        return Color.Tertiary;
+
     }
     protected override async Task OnInitializedAsync()
     {

@@ -12,8 +12,6 @@ namespace MasterMealWA.Shared.Models
         public int Id { get; set; }
         public int Serves { get; set; }
         public DateTime Date { get; set; }
-        [Required]
-        public string Name { get; set; }
         [ForeignKey("User")]
         public string ChefId { get; set; }
         public virtual Chef Chef { get; set; }

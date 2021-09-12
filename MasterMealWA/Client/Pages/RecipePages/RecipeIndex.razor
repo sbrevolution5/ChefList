@@ -7,7 +7,13 @@
 @inject IImageReader _imageReader
 @inject IUserService _userService
 @attribute [AllowAnonymous]
+
 <MudItem xs="12" md="3">
+    <AuthorizeView Roles="Admin, Moderator">
+        <Authorized>
+            <MudButton @onclick='()=>nav.NavigateTo("/recipes/types")'>Manage Recipe Types</MudButton>
+        </Authorized>
+    </AuthorizeView>
     <MudFab Icon="@Icons.Material.Filled.Add" Color="Color.Primary" Label="Add Recipe" aria-label="add recipe" @onclick='()=>nav.NavigateTo("/recipes/create")' />
     <MudPaper Width="250px" Class="py-3" Square="true">
         <MudExpansionPanels MultiExpansion="true" Elevation="2">
@@ -18,18 +24,41 @@
             <MudExpansionPanel Text="Supplies" IsInitiallyExpanded="true">
                 <MudSwitch Disabled="true" Label="I have Supplies" @bind-Checked="mySupplies"></MudSwitch>
             </MudExpansionPanel>
-            <MudExpansionPanel Text="Categories" IsInitiallyExpanded="true">
-                <MudChipSet MultiSelection="true" Filter="true">
-                    @if (RecipeTypes is not null)
-                    {
-                        @foreach (var category in RecipeTypes)
+            @if (!Loaded)
+            {
+                <Loader></Loader>
+            }
+            else
+            {
+
+                <MudExpansionPanel Text="Nationality" IsInitiallyExpanded="true">
+                    <MudChipSet MultiSelection="true" Filter="true">
+                        @foreach (var category in RecipeTypes.Where(t => t.Category == CategoryType.Nationality))
                         {
 
-                            <MudChip Text="@category.Name"></MudChip>
+                            <MudChip Color="@BadgeColor(category.Category)" Text="@category.Name"></MudChip>
                         }
-                    }
-                </MudChipSet>
-            </MudExpansionPanel>
+                    </MudChipSet>
+                </MudExpansionPanel>
+                <MudExpansionPanel Text="Protein Types" IsInitiallyExpanded="true">
+                    <MudChipSet MultiSelection="true" Filter="true">
+                        @foreach (var category in RecipeTypes.Where(t => t.Category == CategoryType.Protein))
+                        {
+
+                            <MudChip Color="@BadgeColor(category.Category)" Text="@category.Name"></MudChip>
+                        }
+                    </MudChipSet>
+                </MudExpansionPanel>
+                <MudExpansionPanel Text="Other Categories" IsInitiallyExpanded="true">
+                    <MudChipSet MultiSelection="true" Filter="true">
+                        @foreach (var category in RecipeTypes.Where(t => t.Category == CategoryType.Type))
+                        {
+
+                            <MudChip Color="@BadgeColor(category.Category)" Text="@category.Name"></MudChip>
+                        }
+                    </MudChipSet>
+                </MudExpansionPanel>
+            }
             <MudExpansionPanel Text="Rating" IsInitiallyExpanded="true">
                 <div class="d-flex flex-column align-center">
                     <MudRating Color="Color.Secondary" @bind-SelectedValue="selectedRating" HoveredValueChanged="HandleHoveredValueChanged" />
@@ -54,7 +83,7 @@
 </MudItem>
 
 <MudItem xs="9">
-    @if (!loaded)
+    @if (!Loaded)
     {
 
 
@@ -136,7 +165,20 @@
     private int? activeRating;
     private int pageCount { get; set; } = 0;
     private string userId { get; set; }
-    public bool loaded { get; set; } = false;
+    public Color BadgeColor(CategoryType type)
+    {
+        if (type == CategoryType.Nationality)
+        {
+            return Color.Primary;
+        }
+        if (type == CategoryType.Protein)
+        {
+            return Color.Secondary;
+        }
+        return Color.Tertiary;
+
+    }
+    public bool Loaded { get; set; } = false;
     private void HandleHoveredValueChanged(int? val) => activeRating = val;
     public async Task AddMeal(Recipe recipe)
     {
@@ -173,9 +215,9 @@
         };
         await GetRecipesAsync();
         ChangePage(1);
-        RecipeTypes = await _api.GetAllRecipeTypesAsync();
+        RecipeTypes = await _api.GetAllTagsAsync();
         base.OnInitialized();
-        loaded = true;
+        Loaded = true;
     }
     private async Task GetRecipesAsync()
     {

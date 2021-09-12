@@ -71,9 +71,9 @@
 
                                 <MudChipSet MultiSelection="true" @bind-SelectedChips="recipeTags" Filter="true">
 
-                                    @foreach (RecipeTag tag in Tags)
+                                    @foreach (RecipeTag tag in Tags.OrderBy(t => t.Category))
                                     {
-                                        <MudChip Tag="tag">@tag.Name</MudChip>
+                                        <MudChip Color="BadgeColor(tag.Category)" Tag="tag">@tag.Name</MudChip>
                                     }
                                 </MudChipSet>
                             </MudItem>
@@ -187,7 +187,7 @@
     {
         recipe.Servings = 2;
         recipe.CookingTime = 30;
-        Tags = await _api.GetAllRecipeTypesAsync();
+        Tags = await _api.GetAllTagsAsync();
         Ingredients = await _api.GetAllIngredientsAsync();
         supplyList = await _api.GetAllSuppliesAsync();
         ImgId = 1;
@@ -203,6 +203,19 @@
         {
             recipe.Steps.Add(new());
         }
+    }
+    public Color BadgeColor(CategoryType type)
+    {
+        if (type == CategoryType.Nationality)
+        {
+            return Color.Primary;
+        }
+        if (type == CategoryType.Protein)
+        {
+            return Color.Secondary;
+        }
+        return Color.Tertiary;
+
     }
     public async Task CreateRecipeAsync()
     {

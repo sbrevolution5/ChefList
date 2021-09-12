@@ -80,9 +80,9 @@ else
 
                                     <MudChipSet MultiSelection="true" @bind-SelectedChips="recipeTags" Filter="true">
 
-                                        @foreach (RecipeTag tag in Tags)
+                                        @foreach (RecipeTag tag in Tags.OrderBy(t=>t.Category))
                                         {
-                                            <MudChip Tag="tag">@tag.Name</MudChip>
+                                            <MudChip Color="BadgeColor(tag.Category)" Tag="tag">@tag.Name</MudChip>
                                         }
                                     </MudChipSet>
                                 </MudItem>
@@ -200,9 +200,22 @@ else
         {
             nav.NavigateTo("recipes");
         }
-        Tags = await _api.GetAllRecipeTypesAsync();
+        Tags = await _api.GetAllTagsAsync();
         ingredients = await _api.GetAllIngredientsAsync();
         supplyList = await _api.GetAllSuppliesAsync();
+    }
+    public Color BadgeColor(CategoryType type)
+    {
+        if (type == CategoryType.Nationality)
+        {
+            return Color.Primary;
+        }
+        if (type == CategoryType.Protein)
+        {
+            return Color.Secondary;
+        }
+        return Color.Tertiary;
+
     }
     public async Task UpdateRecipeAsync()
     {
