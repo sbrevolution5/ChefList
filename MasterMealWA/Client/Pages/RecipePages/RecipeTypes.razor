@@ -1,5 +1,7 @@
 ﻿@page "/recipe/types"
 @inject IApiService _api
+@inject IDialogService _dialogService
+@attribute [Authorize(Roles = "Admin, Moderator")]
 <MudCard>
     <MudCardHeader>
         <MudText Typo="Typo.h3">Tags</MudText>
@@ -52,17 +54,17 @@
     }
     public async Task NewSupply()
     {
-        var dialog = _dialogService.Show<SupplyCreate>("New Supply");
+        var dialog = _dialogService.Show<TagCreate>("New Tag");
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-            Tags = await _api.GetAllSuppliesAsync();
+            Tags = await _api.GetAllTagsAsync();
         }
     }
     public async Task EditTag(RecipeTag tag)
     {
-        var parameters = new DialogParameters { ["Supply"] = supply };
-        var dialog = _dialogService.Show<SupplyEdit>("Edit Supply", parameters);
+        var parameters = new DialogParameters { ["Tag"] = tag };
+        var dialog = _dialogService.Show<TagEdit>("Edit Tag", parameters);
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
