@@ -109,7 +109,7 @@ else
                                         </MudCardContent>
                                         <MudCardActions>
 
-                                            <MudButton Color="Color.Error" Variant="Variant.Filled" @onclick="(()=>recipe.Ingredients.Remove(ingredient))">Remove</MudButton>
+                                            <MudButton Color="Color.Error" Variant="Variant.Filled" @onclick="@(()=>RemoveIngredient(ingredient))">Remove</MudButton>
                                         </MudCardActions>
                                     </MudCard>
                                 </MudItem>
@@ -190,6 +190,7 @@ else
     public Recipe recipe { get; set; } = new();
     public List<RecipeTag> Tags { get; set; }
     public List<Ingredient> ingredients { get; set; }
+    public List<QIngredient> RemovedIngredients { get; set; } = new();
     public List<Supply> supplyList { get; set; }
     public MudChip[] recipeTags { get; set; }
     public int ImgId { get; set; }
@@ -217,6 +218,14 @@ else
         return Color.Tertiary;
 
     }
+    public void RemoveIngredient(QIngredient ingredient)
+    {
+        if (ingredient.Id != 0)
+        {
+            RemovedIngredients.Add(ingredient);
+            recipe.Ingredients.Remove(ingredient);
+        }
+    }
     public bool RecipeHasTag(RecipeTag tag)
     {
         if (recipe.Tags.Where(t=>t.Id == tag.Id).Count() >0)
@@ -239,6 +248,7 @@ else
         var fakeRecipe = recipe;
         RecipeEditDto dto = new()
         {
+            IngredientsToRemove = RemovedIngredients,
             Recipe = fakeRecipe,
             RecipeTags = Tags,
             Id = recipe.Id,
