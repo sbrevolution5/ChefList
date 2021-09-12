@@ -219,6 +219,14 @@ else
     }
     public async Task UpdateRecipeAsync()
     {
+        foreach (var ing in recipe.Ingredients)
+        {
+            ing.Ingredient = null;
+        }
+        foreach (var sup in recipe.Supplies)
+        {
+            sup.Supply = null;
+        }
         var Tags = recipeTags.Select(r => (RecipeTag)r.Tag).ToList();
         var fakeRecipe = recipe;
         RecipeEditDto dto = new()
