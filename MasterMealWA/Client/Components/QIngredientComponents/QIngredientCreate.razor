@@ -46,7 +46,7 @@
                 }
             </MudItem>
             <MudItem xs="12">
-                <MudAutocomplete Label="Ingredient" T="Ingredient" ValueChanged="@((Ingredient i)=>MeasureChange(i.Id))" Value="qingredient.Ingredient" ToStringFunc="@(i=> i==null?null : $"{i.Name}")" SearchFunc="@Search"></MudAutocomplete>
+                <MudAutocomplete Label="Ingredient" T="Ingredient" ValueChanged="@((Ingredient i)=>MeasureChange(i.Id))" Value="qingredient.Ingredient" ToStringFunc="@(i=> i==null?null : $"{i.Name} {i.MeasurementType.ToString()}")" SearchFunc="@Search"></MudAutocomplete>
             </MudItem>
             <MudItem xs="12">
                 <MudTextField Label="Additional Notes" @bind-Value="qingredient.Notes"></MudTextField>
@@ -59,38 +59,38 @@
     public List<Ingredient> ingredientList { get; set; }
     [Parameter]
     public QIngredient qingredient { get; set; }
-    public MeasurementType measurementType { get; set; }
-    private async Task<IEnumerable<Ingredient>> Search (string v)
+public MeasurementType measurementType { get; set; }
+private async Task<IEnumerable<Ingredient>> Search(string v)
+{
+    await Task.Delay(1);
+    if (String.IsNullOrEmpty(v))
     {
-        await Task.Delay(1);
-        if (String.IsNullOrWhiteSpace(v))
-        {
-            return ingredientList;
-        }
-        return ingredientList.Where(i => i.Name.ToLower().Contains(v));
+        return ingredientList;
     }
-    protected override void OnInitialized()
+    return ingredientList.Where(i => i.Name.ToLower().Contains(v.ToLower()));
+}
+protected override void OnInitialized()
+{
+    if (qingredient.IngredientId == 0)
     {
-        if (qingredient.IngredientId == 0)
-        {
-            qingredient.IngredientId = ingredientList.First().Id;
-        }
+        qingredient.IngredientId = ingredientList.First().Id;
+    }
 
-        MeasureChange(qingredient.IngredientId);
-    }
-    public void MeasureChange(int id)
+    MeasureChange(qingredient.IngredientId);
+}
+public void MeasureChange(int id)
+{
+    qingredient.IngredientId = id;
+    measurementType = ingredientList.FirstOrDefault(i => i.Id == id).MeasurementType;
+    qingredient.MeasurementType = measurementType;
+    if (qingredient.MeasurementType == MeasurementType.Volume && qingredient.VolumeMeasurementUnit == null)
     {
-        qingredient.IngredientId = id;
-        measurementType = ingredientList.FirstOrDefault(i => i.Id == id).MeasurementType;
-        qingredient.MeasurementType = measurementType;
-        if (qingredient.MeasurementType == MeasurementType.Volume && qingredient.VolumeMeasurementUnit == null)
-        {
-            qingredient.VolumeMeasurementUnit = VolumeMeasurementUnit.Teaspoon;
-        }
-        else if (qingredient.MeasurementType == MeasurementType.Mass && qingredient.MassMeasurementUnit == null)
-        {
-            qingredient.MassMeasurementUnit = MassMeasurementUnit.pound;
-        }
-        return;
+        qingredient.VolumeMeasurementUnit = VolumeMeasurementUnit.Teaspoon;
     }
+    else if (qingredient.MeasurementType == MeasurementType.Mass && qingredient.MassMeasurementUnit == null)
+    {
+        qingredient.MassMeasurementUnit = MassMeasurementUnit.pound;
+    }
+    return;
+}
 }
