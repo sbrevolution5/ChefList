@@ -7,6 +7,7 @@
 @inject IImageReader _imageReader
 @inject IUserService _userService
 @attribute [AllowAnonymous]
+
 <AuthorizeView Roles="Admin, Moderator">
     <Authorized>
         <MudButton @onclick='()=>nav.NavigateTo("/recipes/types")'>Manage Recipe Types</MudButton>

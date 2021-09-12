@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using MudBlazor.Services;
 using MasterMealWA.Client.Services;
 using MasterMealWA.Client.Services.Interfaces;
+using MasterMealWA.Client.Factories;
 
 namespace MasterMealWA.Client
 {
@@ -30,7 +31,7 @@ namespace MasterMealWA.Client
             builder.Services.AddScoped<IImageReader, ImageReader>();
             builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("MasterMealWA.ServerAPI"));
             builder.Services.AddMudServices();
-            builder.Services.AddApiAuthorization();
+            builder.Services.AddApiAuthorization().AddAccountClaimsPrincipalFactory<CustomUserFactory>();
 
             await builder.Build().RunAsync();
         }
