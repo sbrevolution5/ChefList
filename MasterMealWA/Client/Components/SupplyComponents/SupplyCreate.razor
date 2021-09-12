@@ -3,6 +3,7 @@
 <MudDialog>
     <DialogContent>
         <MudTextField Label="Supply Name" @bind-Value="supply.Name"></MudTextField>
+        <MudText Color="Color.Error">Please do not add duplicate supplies.  Make sure your supply is not already in the database before you save!</MudText>
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Cancel</MudButton>
