@@ -1,5 +1,5 @@
 ﻿<EditForm Model="supply">
-    <MudAutocomplete HelperText="Start typing to search for an supply, If you can't find your supply, create a new one with the button above." Required="true" Label="Supply" T="Supply" ResetValueOnEmptyText="true" Value="supply.Supply" ToStringFunc="@(s=> $"{s.Name}")" SearchFunc="@Search"></MudAutocomplete>
+    <MudAutocomplete HelperText="Start typing to search for an supply, If you can't find your supply, create a new one with the button above." Required="true" Label="Supply" T="Supply" ResetValueOnEmptyText="true" Value="supply.Supply" ToStringFunc="@(s=> $"{s.Name}")" SearchFunc="@Search" MaxItems="null"></MudAutocomplete>
     <MudNumericField Label="Quantity" @bind-Value="supply.Quantity"></MudNumericField>
 </EditForm>
 
