@@ -82,7 +82,7 @@ else
 
                                         @foreach (RecipeTag tag in Tags)
                                         {
-                                            <MudChip Tag="tag">@tag.Name</MudChip>
+                                            <MudChip Color="BadgeColor(tag.Category)" Tag="tag">@tag.Name</MudChip>
                                         }
                                     </MudChipSet>
                                 </MudItem>
@@ -203,6 +203,19 @@ else
         Tags = await _api.GetAllTagsAsync();
         ingredients = await _api.GetAllIngredientsAsync();
         supplyList = await _api.GetAllSuppliesAsync();
+    }
+    public Color BadgeColor(CategoryType type)
+    {
+        if (type == CategoryType.Nationality)
+        {
+            return Color.Primary;
+        }
+        if (type == CategoryType.Protein)
+        {
+            return Color.Secondary;
+        }
+        return Color.Tertiary;
+
     }
     public async Task UpdateRecipeAsync()
     {

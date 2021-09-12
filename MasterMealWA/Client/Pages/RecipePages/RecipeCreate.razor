@@ -73,7 +73,7 @@
 
                                     @foreach (RecipeTag tag in Tags)
                                     {
-                                        <MudChip Tag="tag">@tag.Name</MudChip>
+                                        <MudChip Color="BadgeColor(tag.Category)" Tag="tag">@tag.Name</MudChip>
                                     }
                                 </MudChipSet>
                             </MudItem>
@@ -203,6 +203,19 @@
         {
             recipe.Steps.Add(new());
         }
+    }
+    public Color BadgeColor(CategoryType type)
+    {
+        if (type == CategoryType.Nationality)
+        {
+            return Color.Primary;
+        }
+        if (type == CategoryType.Protein)
+        {
+            return Color.Secondary;
+        }
+        return Color.Tertiary;
+
     }
     public async Task CreateRecipeAsync()
     {
