@@ -59,38 +59,41 @@
     public List<Ingredient> ingredientList { get; set; }
     [Parameter]
     public QIngredient qingredient { get; set; }
-public MeasurementType measurementType { get; set; }
-private async Task<IEnumerable<Ingredient>> Search(string v)
-{
-    await Task.Delay(1);
-    if (String.IsNullOrEmpty(v))
+    public MeasurementType measurementType { get; set; }
+    private async Task<IEnumerable<Ingredient>> Search(string v)
     {
-        return ingredientList;
+        await Task.Delay(1);
+        if (String.IsNullOrEmpty(v))
+        {
+            return ingredientList;
+        }
+        return ingredientList.Where(i => i.Name.ToLower().Contains(v.ToLower()));
     }
-    return ingredientList.Where(i => i.Name.ToLower().Contains(v.ToLower()));
-}
-protected override void OnInitialized()
-{
-    if (qingredient.IngredientId == 0)
+    protected override void OnInitialized()
     {
-        qingredient.IngredientId = ingredientList.First().Id;
-    }
+        if (qingredient.IngredientId == 0)
+        {
+            qingredient.IngredientId = ingredientList.First().Id;
+        }
+        else
+        {
 
-    MeasureChange(qingredient.IngredientId);
-}
-public void MeasureChange(int id)
-{
-    qingredient.IngredientId = id;
-    measurementType = ingredientList.FirstOrDefault(i => i.Id == id).MeasurementType;
-    qingredient.MeasurementType = measurementType;
-    if (qingredient.MeasurementType == MeasurementType.Volume && qingredient.VolumeMeasurementUnit == null)
-    {
-        qingredient.VolumeMeasurementUnit = VolumeMeasurementUnit.Teaspoon;
+            MeasureChange(qingredient.IngredientId);
+        }
     }
-    else if (qingredient.MeasurementType == MeasurementType.Mass && qingredient.MassMeasurementUnit == null)
+    public void MeasureChange(int id)
     {
-        qingredient.MassMeasurementUnit = MassMeasurementUnit.pound;
+        qingredient.IngredientId = id;
+        measurementType = ingredientList.FirstOrDefault(i => i.Id == id).MeasurementType;
+        qingredient.MeasurementType = measurementType;
+        if (qingredient.MeasurementType == MeasurementType.Volume && qingredient.VolumeMeasurementUnit == null)
+        {
+            qingredient.VolumeMeasurementUnit = VolumeMeasurementUnit.Teaspoon;
+        }
+        else if (qingredient.MeasurementType == MeasurementType.Mass && qingredient.MassMeasurementUnit == null)
+        {
+            qingredient.MassMeasurementUnit = MassMeasurementUnit.pound;
+        }
+        return;
     }
-    return;
-}
 }
