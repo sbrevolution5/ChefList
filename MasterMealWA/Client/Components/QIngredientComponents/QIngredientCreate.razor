@@ -46,7 +46,7 @@
                 }
             </MudItem>
             <MudItem xs="12">
-                <MudAutocomplete HelperText="Start typing to search for an ingredient, If you can't find your ingredient, create a new one with the button above." Required="true" Label="Ingredient" T="Ingredient" ValueChanged="@((Ingredient i)=>MeasureChange(i.Id))" ResetValueOnEmptyText="true" Value="qingredient.Ingredient" ToStringFunc="@(i=> $"{i.Name} ({i.MeasurementType.ToString()})")" SearchFunc="@Search" MaxItems="null"></MudAutocomplete>
+                <MudAutocomplete HelperText="Start typing to search for an ingredient, If you can't find your ingredient, create a new one with the button above." Required="true" Label="Ingredient" T="Ingredient" ValueChanged="@((Ingredient i)=>MeasureChange(i))" Value="qingredient.Ingredient" ToStringFunc="@(i=> $"{i.Name} ({i.MeasurementType.ToString()})")" SearchFunc="@Search" MaxItems="null"></MudAutocomplete>
             </MudItem>
             <MudItem xs="12">
                 <MudTextField Label="Additional Notes" @bind-Value="qingredient.Notes"></MudTextField>
@@ -78,13 +78,14 @@
         else
         {
 
-            MeasureChange(qingredient.IngredientId);
+            MeasureChange(qingredient.Ingredient);
         }
     }
-    public void MeasureChange(int id)
+    public void MeasureChange(Ingredient ing)
     {
-        qingredient.IngredientId = id;
-        measurementType = ingredientList.FirstOrDefault(i => i.Id == id).MeasurementType;
+        qingredient.IngredientId = ing.Id;
+        qingredient.Ingredient = ing;
+        measurementType = ingredientList.FirstOrDefault(i => i.Id == ing.Id).MeasurementType;
         qingredient.MeasurementType = measurementType;
         if (qingredient.MeasurementType == MeasurementType.Volume && qingredient.VolumeMeasurementUnit == null)
         {
