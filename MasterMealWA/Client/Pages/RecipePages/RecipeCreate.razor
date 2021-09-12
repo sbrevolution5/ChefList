@@ -19,7 +19,7 @@
                     <MudGrid>
                         <MudItem xs="12">
 
-                            <MudTextField Label="Title" HelperText="The name of the recipe" @bind-Value="recipe.Name" For="@(()=> recipe.Name)" />
+                            <MudTextField Label="Title" HelperText="The name of the recipe" @bind-Value="recipe.Name" For="@(()=> recipe.Name)"/>
                         </MudItem>
                         <MudItem xs="12">
 
@@ -71,9 +71,9 @@
 
                                 <MudChipSet MultiSelection="true" @bind-SelectedChips="recipeTags" Filter="true">
 
-                                    @foreach (RecipeTag tag in Tags)
+                                    @foreach (RecipeTag tag in Tags.OrderBy(t => t.Category))
                                     {
-                                        <MudChip Tag="tag">@tag.Name</MudChip>
+                                        <MudChip Color="BadgeColor(tag.Category)" Tag="tag">@tag.Name</MudChip>
                                     }
                                 </MudChipSet>
                             </MudItem>
@@ -103,7 +103,7 @@
                                     </MudCardContent>
                                     <MudCardActions>
 
-                                        <MudButton Color="Color.Error" @onclick="(()=>recipe.Ingredients.Remove(ingredient))">Remove</MudButton>
+                                        <MudButton Color="Color.Error" Variant="Variant.Filled" @onclick="(()=>recipe.Ingredients.Remove(ingredient))">Remove</MudButton>
                                     </MudCardActions>
                                 </MudCard>
                             </MudItem>
@@ -132,7 +132,7 @@
                                 </MudCardContent>
                                 <MudCardActions>
 
-                                    <MudButton Color="Color.Error" @onclick="(()=>recipe.Supplies.Remove(supply))">Remove</MudButton>
+                                    <MudButton Color="Color.Error" Variant="Variant.Filled" @onclick="(()=>recipe.Supplies.Remove(supply))">Remove</MudButton>
                                 </MudCardActions>
                             </MudCard>
                         </MudItem>
@@ -159,7 +159,7 @@
                                     </MudCardContent>
                                     <MudCardActions>
 
-                                        <MudButton Color="Color.Error" @onclick="(()=>recipe.Steps.Remove(step))">Remove</MudButton>
+                                        <MudButton Color="Color.Error" Variant="Variant.Filled" @onclick="(()=>recipe.Steps.Remove(step))">Remove</MudButton>
                                     </MudCardActions>
                                 </MudCard>
                             </MudItem>
@@ -187,7 +187,7 @@
     {
         recipe.Servings = 2;
         recipe.CookingTime = 30;
-        Tags = await _api.GetAllRecipeTypesAsync();
+        Tags = await _api.GetAllTagsAsync();
         Ingredients = await _api.GetAllIngredientsAsync();
         supplyList = await _api.GetAllSuppliesAsync();
         ImgId = 1;
@@ -204,11 +204,32 @@
             recipe.Steps.Add(new());
         }
     }
+    public Color BadgeColor(CategoryType type)
+    {
+        if (type == CategoryType.Nationality)
+        {
+            return Color.Primary;
+        }
+        if (type == CategoryType.Protein)
+        {
+            return Color.Secondary;
+        }
+        return Color.Tertiary;
+
+    }
     public async Task CreateRecipeAsync()
     {
         recipe.Tags = recipeTags.Select(r => (RecipeTag)r.Tag).ToList();
         recipe.AuthorId = await _userService.GetUserIdAsync();
         recipe.ImageId = ImgId;
+        foreach (var ing in recipe.Ingredients)
+        {
+            ing.Ingredient = null;
+        }
+        foreach (var sup in recipe.Supplies)
+        {
+            sup.Supply = null;
+        }
         await _api.CreateNewRecipeAsync(recipe);
         nav.NavigateTo($"/recipes");
     }

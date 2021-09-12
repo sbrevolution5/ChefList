@@ -552,7 +552,7 @@ namespace MasterMealWA.Server.Data
                 QuantityNumber = count,
                 NumberOfUnits = _measurementService.EncodeUnitMeasurement(count, Fraction.NoFraction)
             };
-            qing.RecipeId = rId;
+            //qing.RecipeId = rId;
             return qing;
         }
         private static QIngredient NewQIngredient(string name, int count, Fraction frac, VolumeMeasurementUnit unit, List<Ingredient> ingredients, int rId)
@@ -568,7 +568,7 @@ namespace MasterMealWA.Server.Data
                 NumberOfUnits = _measurementService.EncodeVolumeMeasurement(count, frac, unit)
             };
             qing.Quantity = _measurementService.DecodeVolumeMeasurement(qing.NumberOfUnits);
-            qing.RecipeId = rId;
+            //qing.RecipeId = rId;
             return qing;
         }
         private static QIngredient NewQIngredient(string name, int count, Fraction frac, MassMeasurementUnit mass, List<Ingredient> ingredients, int rId)
@@ -584,7 +584,7 @@ namespace MasterMealWA.Server.Data
                 NumberOfUnits = _measurementService.EncodeMassMeasurement(count, frac, mass)
             };
             qing.Quantity = _measurementService.DecodeMassMeasurement(qing.NumberOfUnits);
-            qing.RecipeId = rId;
+            //qing.RecipeId = rId;
             return qing;
         }
         private static async Task SeedRecipeTypesAsync(ApplicationDbContext context)
@@ -595,32 +595,154 @@ namespace MasterMealWA.Server.Data
                 {
                     new()
                     {
-                        Name = "American"
+                        Name = "American",
+                        Category = CategoryType.Nationality
                     },
                     new()
                     {
-                        Name = "Chicken"
+                        Name = "Chicken",
+                        Category = CategoryType.Protein
                     },
 
                     new()
                     {
-                        Name = "Mexican"
+                        Name = "Mexican",
+                        Category = CategoryType.Nationality
                     },
                     new()
                     {
-                        Name = "Seafood"
+                        Name = "Seafood",
+                        Category = CategoryType.Type
                     },
                     new()
                     {
-                        Name = "Italian"
+                        Name = "Italian",
+                        Category = CategoryType.Nationality
                     },
                     new()
                     {
-                        Name = "Breakfast"
+                        Name = "Breakfast",
+                        Category = CategoryType.Type
                     },
                     new()
                     {
-                        Name = "Asian"
+                        Name = "Pork",
+                        Category = CategoryType.Protein
+                    },
+                    new()
+                    {
+                        Name = "Beef",
+                        Category = CategoryType.Protein
+                    },
+                    new()
+                    {
+                        Name = "Fish",
+                        Category = CategoryType.Protein
+                    },
+                    new()
+                    {
+                        Name = "British",
+                        Category = CategoryType.Nationality
+                    },
+                    new()
+                    {
+                        Name = "Middle-Eastern",
+                        Category = CategoryType.Nationality
+                    },
+                    new()
+                    {
+                        Name = "African",
+                        Category = CategoryType.Nationality
+                    },
+                    new()
+                    {
+                        Name = "German",
+                        Category = CategoryType.Nationality
+                    },
+                    new()
+                    {
+                        Name = "Vegetarian",
+                        Category = CategoryType.Protein
+                    },
+                    new()
+                    {
+                        Name = "Lamb",
+                        Category = CategoryType.Protein
+                    },
+                    new()
+                    {
+                        Name = "Dessert",
+                        Category = CategoryType.Type
+                    },
+                    new()
+                    {
+                        Name = "Dinner",
+                        Category = CategoryType.Type
+                    },
+                    new()
+                    {
+                        Name = "Salad",
+                        Category = CategoryType.Type
+                    },
+                    new()
+                    {
+                        Name = "Stir-Fry",
+                        Category = CategoryType.Type
+                    },
+                    new()
+                    {
+                        Name = "Meatball",
+                        Category = CategoryType.Type
+                    },
+                    new()
+                    {
+                        Name = "Burger",
+                        Category = CategoryType.Type
+                    },
+                    new()
+                    {
+                        Name = "Taco",
+                        Category = CategoryType.Type
+                    },
+                    new()
+                    {
+                        Name = "Noodle",
+                        Category = CategoryType.Type
+                    },
+                    new()
+                    {
+                        Name = "Bowl",
+                        Category = CategoryType.Type
+                    },
+                    new()
+                    {
+                        Name = "Flatbread",
+                        Category = CategoryType.Type
+                    },
+                    new()
+                    {
+                        Name = "Pasta",
+                        Category = CategoryType.Type
+                    },
+                    new()
+                    {
+                        Name = "Indian",
+                        Category = CategoryType.Nationality
+                    },
+                    new()
+                    {
+                        Name = "Korean",
+                        Category = CategoryType.Nationality
+                    },
+                    new()
+                    {
+                        Name = "Mediterranean",
+                        Category = CategoryType.Nationality
+                    },
+                    new()
+                    {
+                        Name = "Latin American",
+                        Category = CategoryType.Nationality
                     }
                 };
                 context.AddRange(types);

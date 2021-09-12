@@ -44,9 +44,9 @@ namespace MasterMealWA.Client.Services
             await _http.PostAsJsonAsync("api/recipes", recipe);
         }
 
-        public async Task CreateNewRecipeTypeAsync(RecipeTag type)
+        public async Task CreateNewTagAsync(RecipeTag tag)
         {
-            await _http.PostAsJsonAsync("api/recipeTypes", type);
+            await _http.PostAsJsonAsync("api/recipeTypes", tag);
         }
 
         public async Task CreateNewShoppingListAsync(ListCreateDto dto)
@@ -80,7 +80,7 @@ namespace MasterMealWA.Client.Services
             await _http.DeleteAsync($"api/recipes/{id}");
         }
 
-        public async Task DeleteRecipeTypeAsync(int id)
+        public async Task DeleteTagAsync(int id)
         {
             await _http.DeleteAsync($"api/recipetypes/{id}");
         }
@@ -119,7 +119,7 @@ namespace MasterMealWA.Client.Services
             return list;
         }
 
-        public async Task<List<RecipeTag>> GetAllRecipeTypesAsync()
+        public async Task<List<RecipeTag>> GetAllTagsAsync()
         {
             var list = await _http.GetFromJsonAsync<List<RecipeTag>>("api/recipeTypes", _options);
             return list;
@@ -202,9 +202,9 @@ namespace MasterMealWA.Client.Services
 
         }
 
-        public async Task UpdateRecipeTypeAsync(RecipeTag type)
+        public async Task UpdateTagAsync(RecipeTag tag)
         {
-            await _http.PutAsJsonAsync("api/recipetypes", type);
+            await _http.PutAsJsonAsync("api/recipetypes", tag);
 
         }
 

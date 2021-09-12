@@ -3,41 +3,45 @@
 @inject IDialogService _dialogService
 @if (Ingredients is null)
 {
+    <Loader></Loader>
 
 }
 else
-{<MudGrid>
-        <MudCard>
-            <MudCardHeader>
-                <MudText Typo="Typo.h3">IngredientIndex</MudText>
-            </MudCardHeader>
-            <MudCardContent>
-                <MudList>
-                    @foreach (var ingredient in Ingredients)
-                    {
-                        <MudListItem>
-                            <MudPaper Elevation="4" Style="padding-left:5px;margin:10px;">
-                                <MudGrid>
-                                    <MudItem xs="9">
-                                        <MudText>
+{
+    <MudGrid>
+        <MudItem xs="12">
 
-                                            @ingredient.Name
-                                        </MudText>
-                                    </MudItem>
+            <MudCard>
+                <MudCardHeader>
+                    <MudText Typo="Typo.h3">IngredientIndex</MudText>
+                </MudCardHeader>
+                <MudCardContent>
+                    <MudGrid>
+                        @foreach (var ingredient in Ingredients)
+                        {
+                            <MudItem xs="12" sm="6" md="4" lg="3">
 
-                                    <MudItem xs="3">
-                                        <MudButtonGroup>
-                                            <MudIconButton Variant="Variant.Filled" Color="Color.Warning" Icon="@Icons.Material.Filled.Edit" OnClick="@(()=>EditIngredient(ingredient))"></MudIconButton>
-                                        </MudButtonGroup>
-                                    </MudItem>
-                                </MudGrid>
-                            </MudPaper>
-                        </MudListItem>
-                    }
-                </MudList>
-                <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" OnClick="NewIngredient" />
-            </MudCardContent>
-        </MudCard>
+                                <MudPaper Elevation="4" Style="padding-left:5px;margin:10px;">
+                                    <MudGrid>
+                                        <MudItem xs="9">
+                                            <MudText>
+
+                                                @ingredient.Name
+                                            </MudText>
+                                        </MudItem>
+
+                                        <MudItem xs="3">
+                                                <MudIconButton Variant="Variant.Filled" Color="Color.Warning" Icon="@Icons.Material.Filled.Edit" OnClick="@(()=>EditIngredient(ingredient))"></MudIconButton>
+                                        </MudItem>
+                                    </MudGrid>
+                                </MudPaper>
+                            </MudItem>
+                        }
+                    </MudGrid>
+                    <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" OnClick="NewIngredient" />
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
     </MudGrid>
 }
 @code {

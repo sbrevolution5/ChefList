@@ -10,10 +10,11 @@
 </MudItem>
 @if (recipe is null)
 {
-    <MudOverlay>
+<MudOverlay>
 
-        <MudText>Loading....</MudText>
-    </MudOverlay>
+    <Loader></Loader>
+
+</MudOverlay>
 }
 else
 {
@@ -30,8 +31,8 @@ else
                     <MudButtonGroup Color="Color.Primary" OverrideStyles="false">
 
                         <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.CalendarToday" OnClick="AddMeal">Schedule Meal</MudButton>
-                        <MudButton Variant="Variant.Filled" Color="Color.Warning" StartIcon="@Icons.Material.Filled.Edit" Link=@($"recipe/edit/{recipe.Id}")>Edit Meal</MudButton>
-                        <MudButton Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.Delete" Link=@($"recipe/delete/{recipe.Id}")>Delete Recipe</MudButton>
+                        <MudButton Variant="Variant.Filled" Color="Color.Warning" StartIcon="@Icons.Material.Filled.Edit" Link=@($"recipes/edit/{recipe.Id}")>Edit Recipe</MudButton>
+                        <MudButton Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.Delete" Link=@($"recipes/delete/{recipe.Id}")>Delete Recipe</MudButton>
                     </MudButtonGroup>
                 }
                 else
@@ -71,8 +72,11 @@ else
                                     <td>@recipe.CookingTime</td>
                                 </tr>
                                 <tr>
-                                    <td>Recipe Type:</td>
-                                    <td>@recipe.Tags.FirstOrDefault().Name</td>
+                                    <td>Tags:</td>
+                                    <td>@foreach (var tag in recipe.Tags)
+                                    {
+                                        <MudChip Color="@BadgeColor(tag.Category)">@tag.Name</MudChip>
+                                    }</td>
                                 </tr>
                             </tbody>
                         </MudSimpleTable>
@@ -141,8 +145,8 @@ else
     private string userId { get; set; }
     private List<BreadcrumbItem> crumbList = new()
     {
-            new BreadcrumbItem("Recipes", href: "/recipes")
-        };
+        new BreadcrumbItem("Recipes", href: "/recipes")
+    };
     public async Task AddMeal()
     {
         var parameters = new DialogParameters { ["recipe"] = recipe };
@@ -152,6 +156,19 @@ else
         {
             snackbar.Add("Meal planned!");
         }
+    }
+    public Color BadgeColor(CategoryType type)
+    {
+        if (type == CategoryType.Nationality)
+        {
+            return Color.Primary;
+        }
+        if (type == CategoryType.Protein)
+        {
+            return Color.Secondary;
+        }
+        return Color.Tertiary;
+
     }
     protected override async Task OnInitializedAsync()
     {

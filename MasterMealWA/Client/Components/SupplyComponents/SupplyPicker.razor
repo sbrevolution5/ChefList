@@ -1,11 +1,7 @@
-﻿
-<MudSelect Label="Supply" T="int" @bind-Value="supply.SupplyId">
-    @foreach (Supply sup in supplyList)
-    {
-        <MudSelectItem Value="sup.Id">@sup.Name</MudSelectItem>
-    }
-</MudSelect>
-<MudNumericField Label="Quantity" @bind-Value="supply.Quantity"></MudNumericField>
+﻿<EditForm Model="supply">
+    <MudAutocomplete HelperText="Start typing to search for an supply, If you can't find your supply, create a new one with the button above." Required="true" Label="Supply" T="Supply" ResetValueOnEmptyText="true" Value="supply.Supply" ToStringFunc="@(s=> $"{s.Name}")" SearchFunc="@Search" MaxItems="null" ValueChanged="@((Supply s)=>SupplyChange(s))"></MudAutocomplete>
+    <MudNumericField Label="Quantity" @bind-Value="supply.Quantity"></MudNumericField>
+</EditForm>
 
 @code {
     [Parameter]
@@ -20,7 +16,21 @@
         }
         if (supply.SupplyId == 0)
         {
-            supply.Supply = supplyList.FirstOrDefault();
+            supply.SupplyId = supplyList.FirstOrDefault().Id;
         }
+    }
+    private async Task<IEnumerable<Supply>> Search(string v)
+    {
+        await Task.Delay(1);
+        if (String.IsNullOrEmpty(v))
+        {
+            return supplyList;
+        }
+        return supplyList.Where(i => i.Name.ToLower().Contains(v.ToLower()));
+    }
+    private void SupplyChange(Supply s)
+    {
+        supply.SupplyId = s.Id;
+        supply.Supply = s;
     }
 }

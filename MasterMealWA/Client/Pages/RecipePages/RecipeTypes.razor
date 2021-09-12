@@ -1,0 +1,87 @@
+﻿@page "/recipes/types"
+@inject IApiService _api
+@inject IDialogService _dialogService
+@attribute [Authorize(Roles = "Admin, Moderator")]
+@if (!Loaded)
+{
+
+
+    <Loader></Loader>
+
+
+}
+else
+{
+    <MudCard>
+        <MudCardHeader>
+            <MudText Typo="Typo.h3">Tags</MudText>
+
+        </MudCardHeader>
+        <MudCardContent>
+
+            <MudList>
+
+                @foreach (var tag in Tags)
+                {
+                    <MudListItem>
+                        <MudPaper Elevation="2" Style="padding-left:5px;margin:10px;">
+                            <MudGrid>
+
+                                <MudItem xs="4">
+
+                                    <MudText>
+
+                                        @tag.Name
+                                    </MudText>
+                                </MudItem>
+                                <MudItem xs="4">
+
+                                    <MudText>
+
+                                        @tag.Category.ToString()
+                                    </MudText>
+                                </MudItem>
+                                <MudItem xs="4">
+
+                                    <MudButtonGroup>
+                                        <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" OnClick="@(() => EditTag(tag))"></MudIconButton>
+                                    </MudButtonGroup>
+                                </MudItem>
+                            </MudGrid>
+                        </MudPaper>
+                    </MudListItem>
+                }
+            </MudList>
+            <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" OnClick="NewSupply" />
+        </MudCardContent>
+    </MudCard>
+}
+@code {
+    public List<RecipeTag> Tags { get; set; }
+    public bool Loaded { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        Tags = await _api.GetAllTagsAsync();
+        base.OnInitialized();
+        Loaded = true;
+    }
+    public async Task NewSupply()
+    {
+        var dialog = _dialogService.Show<TagCreate>("New Tag");
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            Tags = await _api.GetAllTagsAsync();
+        }
+    }
+    public async Task EditTag(RecipeTag tag)
+    {
+        var parameters = new DialogParameters { ["Tag"] = tag };
+        var dialog = _dialogService.Show<TagEdit>("Edit Tag", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            Tags = await _api.GetAllTagsAsync();
+        }
+    }
+}
