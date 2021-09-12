@@ -15,7 +15,7 @@
         </Authorized>
     </AuthorizeView>
     <MudFab Icon="@Icons.Material.Filled.Add" Color="Color.Primary" Label="Add Recipe" aria-label="add recipe" @onclick='()=>nav.NavigateTo("/recipes/create")' />
-    <MudPaper Width="250px" Class="py-3" Square="true">
+    <MudPaper Class="py-3" Square="true">
         <MudExpansionPanels MultiExpansion="true" Elevation="2">
 
             <MudExpansionPanel Text="Author" IsInitiallyExpanded="true">
@@ -82,7 +82,7 @@
     </MudPaper>
 </MudItem>
 
-<MudItem xs="9">
+<MudItem xs="12" md="9">
     @if (!Loaded)
     {
 
@@ -96,7 +96,7 @@
         <MudGrid>
             @foreach (var recipe in pageRecipes)
             {
-                <MudItem xs="4">
+                <MudItem xs="12"md="4">
 
                     <MudCard Elevation="2">
                         <MudCardMedia Image="@(_imageReader.ReadImageData(recipe.Image.ImageData, recipe.Image.ContentType))"></MudCardMedia>
