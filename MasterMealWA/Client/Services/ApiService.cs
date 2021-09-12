@@ -204,7 +204,7 @@ namespace MasterMealWA.Client.Services
 
         public async Task UpdateTagAsync(RecipeTag tag)
         {
-            await _http.PutAsJsonAsync("api/recipetypes", tag);
+            await _http.PutAsJsonAsync($"api/recipetypes/{tag.Id}", tag);
 
         }
 
