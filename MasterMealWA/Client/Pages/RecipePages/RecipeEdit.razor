@@ -200,7 +200,7 @@ else
         {
             nav.NavigateTo("recipes");
         }
-        Tags = await _api.GetAllRecipeTypesAsync();
+        Tags = await _api.GetAllTagsAsync();
         ingredients = await _api.GetAllIngredientsAsync();
         supplyList = await _api.GetAllSuppliesAsync();
     }

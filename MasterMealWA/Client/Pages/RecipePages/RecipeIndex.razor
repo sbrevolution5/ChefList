@@ -178,7 +178,7 @@
         };
         await GetRecipesAsync();
         ChangePage(1);
-        RecipeTypes = await _api.GetAllRecipeTypesAsync();
+        RecipeTypes = await _api.GetAllTagsAsync();
         base.OnInitialized();
         loaded = true;
     }
