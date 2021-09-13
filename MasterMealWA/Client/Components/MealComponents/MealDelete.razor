@@ -8,8 +8,8 @@
             <MudText>@meal.Date.ToShortDateString()</MudText>
     </DialogContent>
     <DialogActions>
-        <MudButton OnClick="Cancel">Cancel</MudButton>
-        <MudButton Color="Color.Success" OnClick="ConfirmDelete">Delete Meal</MudButton>
+        <MudButton OnClick="Cancel" Variant="Variant.Filled" Color="Color.Dark">Cancel</MudButton>
+        <MudButton Color="Color.Error" OnClick="ConfirmDelete" Variant="Variant.Filled">Delete Meal</MudButton>
     </DialogActions>
 </MudDialog>
 @code {
