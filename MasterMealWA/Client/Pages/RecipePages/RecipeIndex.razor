@@ -137,6 +137,13 @@
                             }
                             else
                             {
+                                <AuthorizeView Roles="Admin, Moderator">
+                                    <Authorized>
+                                        <MudIconButton Variant="Variant.Filled" Color="Color.Warning" Icon="@Icons.Material.Filled.Edit" Link=@($"/recipes/edit/{recipe.Id}")></MudIconButton>
+                                        <MudIconButton Variant="Variant.Filled" Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Link=@($"/recipes/delete/{recipe.Id}")></MudIconButton>
+                                        <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Icon="@Icons.Material.Filled.CalendarToday" OnClick="@(()=>AddMeal(recipe))"></MudIconButton>
+                                    </Authorized>
+                                </AuthorizeView>
                                 <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Icon="@Icons.Material.Filled.CalendarToday" OnClick="@(()=>AddMeal(recipe))"></MudIconButton>
                             }
                             <MudLink Href="@($"/recipes/details/{recipe.Id}")">Details</MudLink>
