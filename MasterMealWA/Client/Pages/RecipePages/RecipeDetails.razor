@@ -4,17 +4,18 @@
 @inject ISnackbar snackbar
 @inject IUserService _userService
 @inject IImageReader _imageReader
+@inject NavigationManager _nav
 @attribute [AllowAnonymous]
 <MudItem xs="12">
     <MudBreadcrumbs Items="crumbList"></MudBreadcrumbs>
 </MudItem>
 @if (recipe is null)
 {
-<MudOverlay>
+    <MudOverlay>
 
-    <Loader></Loader>
+        <Loader></Loader>
 
-</MudOverlay>
+    </MudOverlay>
 }
 else
 {
@@ -32,12 +33,24 @@ else
 
                         <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.CalendarToday" OnClick="AddMeal">Schedule Meal</MudButton>
                         <MudButton Variant="Variant.Filled" Color="Color.Warning" StartIcon="@Icons.Material.Filled.Edit" Link=@($"recipes/edit/{recipe.Id}")>Edit Recipe</MudButton>
-                        <MudButton Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.Delete" Link=@($"recipes/delete/{recipe.Id}")>Delete Recipe</MudButton>
+                        <MudButton Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.Delete" OnClick="DeleteRecipe">Delete Recipe</MudButton>
                     </MudButtonGroup>
                 }
                 else
                 {
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.CalendarToday" OnClick="AddMeal">Schedule Meal</MudButton>
+                    <AuthorizeView Roles="Admin, Moderator">
+                        <Authorized>
+                            <MudIconButton Variant="Variant.Filled" Color="Color.Warning" Icon="@Icons.Material.Filled.Edit" Link=@($"/recipes/edit/{recipe.Id}")></MudIconButton>
+                            <MudIconButton Variant="Variant.Filled" Color="Color.Error" Icon="@Icons.Material.Filled.Delete" OnClick="DeleteRecipe"></MudIconButton>
+                            @*<MudIconButton Variant="Variant.Filled" Color="Color.Primary" Icon="@Icons.Material.Filled.CalendarToday" OnClick="@(()=>AddMeal(recipe))"></MudIconButton>*@
+                        </Authorized>
+                    </AuthorizeView>
+                    <AuthorizeView>
+                        <Authorized>
+
+                            <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Icon="@Icons.Material.Filled.CalendarToday" OnClick="AddMeal"></MudIconButton>
+                        </Authorized>
+                    </AuthorizeView>
                 }
             </MudCardActions>
             <MudCardContent>
@@ -73,68 +86,70 @@ else
                                 </tr>
                                 <tr>
                                     <td>Tags:</td>
-                                    <td>@foreach (var tag in recipe.Tags)
-                                    {
-                                        <MudChip Color="@BadgeColor(tag.Category)">@tag.Name</MudChip>
-                                    }</td>
-                                </tr>
-                            </tbody>
-                        </MudSimpleTable>
-                    </MudItem>
-                </MudGrid>
-            </MudCardContent>
-        </MudCard>
-    </MudItem>
-    <MudItem xs="4">
+                                    <td>
+                                        @foreach (var tag in recipe.Tags)
+                                        {
+                                            <MudChip Color="@BadgeColor(tag.Category)">@tag.Name</MudChip>
+                                        }
+                                </td>
+                            </tr>
+                        </tbody>
+                    </MudSimpleTable>
+                </MudItem>
+            </MudGrid>
+        </MudCardContent>
+    </MudCard>
+</MudItem>
+<MudItem xs="4">
 
-        <MudCard>
-            <MudTabs>
-                <MudTabPanel Text="Ingredients">
-                    <MudList>
-                        @foreach (var ingredient in recipe.Ingredients)
-                        {<MudListItem>
-                                <MudPaper Elevation="2">
+    <MudCard>
+        <MudTabs>
+            <MudTabPanel Text="Ingredients">
+                <MudList>
+                    @foreach (var ingredient in recipe.Ingredients)
+                    {<MudListItem>
+                            <MudPaper Elevation="2">
 
-                                    <MudText Class="h4">
-                                        @ingredient.Ingredient.Name
-                                    </MudText>
-                                    <MudText>@ingredient.Quantity</MudText>
-                                    <MudText>@ingredient.Notes</MudText>
-                                </MudPaper>
-                            </MudListItem>
-                        }
-                    </MudList>
-                </MudTabPanel>
-                <MudTabPanel Text="Supplies">
-                    <MudList>
+                                <MudText Class="h4">
+                                    @ingredient.Ingredient.Name
+                                </MudText>
+                                <MudText>@ingredient.Quantity</MudText>
+                                <MudText>@ingredient.Notes</MudText>
+                            </MudPaper>
+                        </MudListItem>
+                    }
+                </MudList>
+            </MudTabPanel>
+            <MudTabPanel Text="Supplies">
+                <MudList>
 
-                        @foreach (var supply in recipe.Supplies)
-                        {
-                            <MudListItem>
+                    @foreach (var supply in recipe.Supplies)
+                    {
+                        <MudListItem>
 
-                                <MudPaper Elevation="2">
-                                    <MudText Class="h4">@supply.Quantity @supply.Supply.Name</MudText>
-                                </MudPaper>
-                            </MudListItem>
-                        }
-                    </MudList>
-                </MudTabPanel>
-                <MudTabPanel Text="Steps">
-                    <MudList>
-                        @foreach (var step in recipe.Steps.OrderBy(s => s.StepNumber))
-                        {
-                            <MudListItem>
-                                <MudPaper Elevation="2">
-                                    <MudText>@step.StepNumber. @step.Text</MudText>
-                                </MudPaper>
-                            </MudListItem>
-                        }
-                    </MudList>
-                </MudTabPanel>
-            </MudTabs>
+                            <MudPaper Elevation="2">
+                                <MudText Class="h4">@supply.Quantity @supply.Supply.Name</MudText>
+                            </MudPaper>
+                        </MudListItem>
+                    }
+                </MudList>
+            </MudTabPanel>
+            <MudTabPanel Text="Steps">
+                <MudList>
+                    @foreach (var step in recipe.Steps.OrderBy(s => s.StepNumber))
+                    {
+                        <MudListItem>
+                            <MudPaper Elevation="2">
+                                <MudText>@step.StepNumber. @step.Text</MudText>
+                            </MudPaper>
+                        </MudListItem>
+                    }
+                </MudList>
+            </MudTabPanel>
+        </MudTabs>
 
-        </MudCard>
-    </MudItem>
+    </MudCard>
+</MudItem>
 }
 
 @code {
@@ -145,8 +160,8 @@ else
     private string userId { get; set; }
     private List<BreadcrumbItem> crumbList = new()
     {
-        new BreadcrumbItem("Recipes", href: "/recipes")
-    };
+            new BreadcrumbItem("Recipes", href: "/recipes")
+        };
     public async Task AddMeal()
     {
         var parameters = new DialogParameters { ["recipe"] = recipe };
@@ -181,5 +196,15 @@ else
         };
         recipe = await _api.GetRecipeAsync(Convert.ToInt32(Id), auth);
         base.OnInitialized();
+    }
+    public async Task DeleteRecipe()
+    {
+        var parameters = new DialogParameters { ["recipe"] = recipe };
+        var dialog = _dialogService.Show<RecipeDelete>("Are you sure you want to delete this recipe?", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            _nav.NavigateTo("/recipes");
+        }
     }
 }

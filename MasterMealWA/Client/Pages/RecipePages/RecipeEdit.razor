@@ -200,7 +200,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         recipe = await _api.GetRecipeAsync(Convert.ToInt32(id), true);
-        if (recipe.AuthorId != await _userService.GetUserIdAsync())
+        if (recipe.AuthorId != await _userService.GetUserIdAsync()&& !(await _userService.IsModeratorAsync()))
         {
             nav.NavigateTo("recipes");
         }
