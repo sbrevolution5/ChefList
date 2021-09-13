@@ -4,6 +4,7 @@
 @inject ISnackbar snackbar
 @inject IUserService _userService
 @inject IImageReader _imageReader
+@inject NavigationManager _nav
 @attribute [AllowAnonymous]
 <MudItem xs="12">
     <MudBreadcrumbs Items="crumbList"></MudBreadcrumbs>
@@ -32,7 +33,7 @@ else
 
                         <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.CalendarToday" OnClick="AddMeal">Schedule Meal</MudButton>
                         <MudButton Variant="Variant.Filled" Color="Color.Warning" StartIcon="@Icons.Material.Filled.Edit" Link=@($"recipes/edit/{recipe.Id}")>Edit Recipe</MudButton>
-                        <MudButton Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.Delete" Link=@($"recipes/delete/{recipe.Id}")>Delete Recipe</MudButton>
+                        <MudButton Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.Delete" OnClick="()=>DeleteRecipe(recipe)">Delete Recipe</MudButton>
                     </MudButtonGroup>
                 }
                 else
@@ -181,5 +182,15 @@ else
         };
         recipe = await _api.GetRecipeAsync(Convert.ToInt32(Id), auth);
         base.OnInitialized();
+    }
+    public async Task DeleteRecipe(Recipe recipe)
+    {
+        var parameters = new DialogParameters { ["recipe"] = recipe };
+        var dialog = _dialogService.Show<RecipeDelete>("Are you sure you want to delete this recipe?", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            _nav.NavigateTo("/recipes");
+        }
     }
 }
