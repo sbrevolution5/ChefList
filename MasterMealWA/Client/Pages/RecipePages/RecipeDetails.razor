@@ -1,5 +1,5 @@
 ﻿@page "/recipes/details/{id}"
-@inject HttpClient Http
+@inject IApiService _api
 @inject IDialogService _dialogService
 @inject ISnackbar snackbar
 @inject IUserService _userService
@@ -173,12 +173,13 @@ else
     protected override async Task OnInitializedAsync()
     {
         userId = await _userService.GetUserIdAsync();
+        bool auth = !string.IsNullOrEmpty(userId);
         var options = new JsonSerializerOptions()
         {
             ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve,
             PropertyNamingPolicy = null
         };
-        recipe = await Http.GetFromJsonAsync<Recipe>($"Api/recipes/{Id}", options);
+        recipe = await _api.GetRecipeAsync(Convert.ToInt32(Id), auth);
         base.OnInitialized();
     }
 }
