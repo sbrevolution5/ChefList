@@ -14,14 +14,17 @@ namespace MasterMealWA.Client.Services
     public class ApiService : IApiService
     {
         private readonly HttpClient _http;
+        private readonly IHttpClientFactory _clientFactory;
+
         private readonly JsonSerializerOptions _options = new()
         {
             ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve,
             PropertyNamingPolicy = null
         };
-        public ApiService(HttpClient http)
+        public ApiService(HttpClient http, IHttpClientFactory clientFactory)
         {
             _http = http;
+            _clientFactory = clientFactory;
         }
 
         public async Task CreateNewIngredientAsync(Ingredient ingredient)
@@ -113,15 +116,26 @@ namespace MasterMealWA.Client.Services
             return list;
         }
 
-        public async Task<List<Recipe>> GetAllRecipesAsync()
+        public async Task<List<Recipe>> GetAllRecipesAsync(bool auth)
         {
-            var list = await _http.GetFromJsonAsync<List<Recipe>>("api/recipes", _options);
+            List<Recipe> list;
+            if (auth)
+            {
+
+                list = await _http.GetFromJsonAsync<List<Recipe>>($"api/recipes", _options);
+            }
+            else
+            {
+                var client = _clientFactory.CreateClient("MasterMealWA.NonAuthServerAPI");
+                list = await client.GetFromJsonAsync<List<Recipe>>($"api/recipes", _options);
+            }
             return list;
         }
 
         public async Task<List<RecipeTag>> GetAllTagsAsync()
         {
-            var list = await _http.GetFromJsonAsync<List<RecipeTag>>("api/recipeTypes", _options);
+            var client = _clientFactory.CreateClient("MasterMealWA.NonAuthServerAPI");
+            var list = await client.GetFromJsonAsync<List<RecipeTag>>($"api/recipetypes", _options);
             return list;
         }
 
@@ -155,9 +169,19 @@ namespace MasterMealWA.Client.Services
             return meal;
         }
 
-        public async Task<Recipe> GetRecipeAsync(int id)
+        public async Task<Recipe> GetRecipeAsync(int id, bool auth)
         {
-            var recipe = await _http.GetFromJsonAsync<Recipe>($"api/recipes/{id}", _options);
+            Recipe recipe;
+            if (auth)
+            {
+
+                recipe = await _http.GetFromJsonAsync<Recipe>($"api/recipes/{id}", _options);
+            }
+            else
+            {
+                var client = _clientFactory.CreateClient("MasterMealWA.NonAuthServerAPI");
+                recipe = await client.GetFromJsonAsync<Recipe>($"api/recipes/{id}", _options);
+            }
             return recipe;
         }
 

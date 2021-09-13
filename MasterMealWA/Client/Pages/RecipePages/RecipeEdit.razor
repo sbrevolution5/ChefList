@@ -4,6 +4,7 @@
 @inject NavigationManager nav
 @inject IUserService _userService
 @inject IDialogService _dialogService
+@attribute [Authorize]
 @using System.Net.Http.Headers
 @using MasterMealWA.Shared.Models.Dtos
 @if (recipe is null)
@@ -198,7 +199,7 @@ else
     public int ImgId { get; set; }
     protected override async Task OnInitializedAsync()
     {
-        recipe = await _api.GetRecipeAsync(Convert.ToInt32(id));
+        recipe = await _api.GetRecipeAsync(Convert.ToInt32(id), true);
         if (recipe.AuthorId != await _userService.GetUserIdAsync())
         {
             nav.NavigateTo("recipes");

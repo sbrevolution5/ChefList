@@ -39,6 +39,10 @@ namespace MasterMealWA.Server.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Recipe>>> GetRecipe()
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return await _context.Recipe.Include(r => r.Author).Include(r => r.Image).Where(r => !r.IsPrivate).ToListAsync();
+            }
             var userId = HttpContext.GetUserId();
             return await _context.Recipe.Include(r => r.Author).Include(r=>r.Image).Where(r => !r.IsPrivate || r.AuthorId == userId).ToListAsync();
         }
