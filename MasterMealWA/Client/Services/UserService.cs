@@ -21,5 +21,10 @@ namespace MasterMealWA.Client.Services
             var id = (await _authState.GetAuthenticationStateAsync()).User.FindFirst(c => c.Type == "sub")?.Value;
             return id;
         }
+        public async Task<bool> IsModeratorAsync()
+        {
+            var authState = await _authState.GetAuthenticationStateAsync();
+            return authState.User.IsInRole("Admin") || authState.User.IsInRole("Moderator");
+        }
     }
 }
