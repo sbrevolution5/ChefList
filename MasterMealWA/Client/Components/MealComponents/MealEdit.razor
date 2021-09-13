@@ -37,7 +37,7 @@
     protected override async Task OnInitializedAsync()
     {
 
-        recipes = await _api.GetAllRecipesAsync();
+        recipes = await _api.GetAllRecipesAsync(true);
         recipe = recipes.Where(r => r.Id == meal.RecipeId).FirstOrDefault();
     }
     public async Task EditMeal()

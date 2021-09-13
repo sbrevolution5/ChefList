@@ -165,6 +165,7 @@
     private int? activeRating;
     private int pageCount { get; set; } = 0;
     private string userId { get; set; }
+    public bool Auth { get; set; }
     public Color BadgeColor(CategoryType type)
     {
         if (type == CategoryType.Nationality)
@@ -207,20 +208,20 @@
     protected override async Task OnInitializedAsync()
     {
         userId = await _userService.GetUserIdAsync();
-        bool auth = !string.IsNullOrEmpty(userId);
+        Auth = !string.IsNullOrEmpty(userId);
         mine = mine ?? "";
         var options = new JsonSerializerOptions()
         {
             ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve,
             PropertyNamingPolicy = null
         };
-        await GetRecipesAsync(auth);
+        await GetRecipesAsync();
         ChangePage(1);
         RecipeTypes = await _api.GetAllTagsAsync();
         base.OnInitialized();
         Loaded = true;
     }
-    private async Task GetRecipesAsync(bool auth)
+    private async Task GetRecipesAsync()
     {
         if (mine.ToLower() == "myrecipes")
         {
@@ -230,7 +231,7 @@
         else
         {
 
-            recipes = await _api.GetAllRecipesAsync(auth);
+            recipes = await _api.GetAllRecipesAsync(Auth);
         }
         pageCount = (recipes.Count / 6) + 1;
     }
