@@ -33,7 +33,7 @@ else
 
                         <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.CalendarToday" OnClick="AddMeal">Schedule Meal</MudButton>
                         <MudButton Variant="Variant.Filled" Color="Color.Warning" StartIcon="@Icons.Material.Filled.Edit" Link=@($"recipes/edit/{recipe.Id}")>Edit Recipe</MudButton>
-                        <MudButton Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.Delete" OnClick="()=>DeleteRecipe(recipe)">Delete Recipe</MudButton>
+                        <MudButton Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.Delete" OnClick="DeleteRecipe">Delete Recipe</MudButton>
                     </MudButtonGroup>
                 }
                 else
@@ -41,7 +41,7 @@ else
                     <AuthorizeView Roles="Admin, Moderator">
                         <Authorized>
                             <MudIconButton Variant="Variant.Filled" Color="Color.Warning" Icon="@Icons.Material.Filled.Edit" Link=@($"/recipes/edit/{recipe.Id}")></MudIconButton>
-                            <MudIconButton Variant="Variant.Filled" Color="Color.Error" Icon="@Icons.Material.Filled.Delete" OnClick="()=>DeleteRecipe(recipe)"></MudIconButton>
+                            <MudIconButton Variant="Variant.Filled" Color="Color.Error" Icon="@Icons.Material.Filled.Delete" OnClick="DeleteRecipe"></MudIconButton>
                             @*<MudIconButton Variant="Variant.Filled" Color="Color.Primary" Icon="@Icons.Material.Filled.CalendarToday" OnClick="@(()=>AddMeal(recipe))"></MudIconButton>*@
                         </Authorized>
                     </AuthorizeView>
@@ -197,7 +197,7 @@ else
         recipe = await _api.GetRecipeAsync(Convert.ToInt32(Id), auth);
         base.OnInitialized();
     }
-    public async Task DeleteRecipe(Recipe recipe)
+    public async Task DeleteRecipe()
     {
         var parameters = new DialogParameters { ["recipe"] = recipe };
         var dialog = _dialogService.Show<RecipeDelete>("Are you sure you want to delete this recipe?", parameters);
