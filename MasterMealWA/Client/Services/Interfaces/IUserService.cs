@@ -9,5 +9,6 @@ namespace MasterMealWA.Client.Services.Interfaces
     public interface IUserService
     {
         public Task<string> GetUserIdAsync();
+        public Task<bool> IsModeratorAsync();
     }
 }

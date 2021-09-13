@@ -6,8 +6,8 @@
         <MudDatePicker Label="End Date" HelperText="The last date you are shopping for." @bind-Date="endDate"></MudDatePicker>
     </DialogContent>
     <DialogActions>
-        <MudButton OnClick="Cancel">Cancel</MudButton>
-        <MudButton Color="Color.Success" OnClick="CreateList">Create</MudButton>
+        <MudButton OnClick="Cancel" Variant="Variant.Filled" Color="Color.Dark">Cancel</MudButton>
+        <MudButton Color="Color.Success" OnClick="CreateList" Variant="Variant.Filled">Create</MudButton>
     </DialogActions>
 </MudDialog>
 @code {
