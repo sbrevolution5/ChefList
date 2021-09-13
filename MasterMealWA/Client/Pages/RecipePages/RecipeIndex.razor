@@ -207,19 +207,20 @@
     protected override async Task OnInitializedAsync()
     {
         userId = await _userService.GetUserIdAsync();
+        bool auth = !string.IsNullOrEmpty(userId);
         mine = mine ?? "";
         var options = new JsonSerializerOptions()
         {
             ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve,
             PropertyNamingPolicy = null
         };
-        await GetRecipesAsync();
+        await GetRecipesAsync(auth);
         ChangePage(1);
         RecipeTypes = await _api.GetAllTagsAsync();
         base.OnInitialized();
         Loaded = true;
     }
-    private async Task GetRecipesAsync()
+    private async Task GetRecipesAsync(bool auth)
     {
         if (mine.ToLower() == "myrecipes")
         {
@@ -229,7 +230,7 @@
         else
         {
 
-            recipes = await _api.GetAllRecipesAsync();
+            recipes = await _api.GetAllRecipesAsync(auth);
         }
         pageCount = (recipes.Count / 6) + 1;
     }
