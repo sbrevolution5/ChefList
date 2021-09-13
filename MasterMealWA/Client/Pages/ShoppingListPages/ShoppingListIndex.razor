@@ -1,7 +1,7 @@
 ﻿@page "/ShoppingLists"
 @inject IApiService _api
 @inject IDialogService _dialogService
-
+@attribute [Authorize]
 <MudText Typo="Typo.h1">Shopping lists</MudText>
 @if (shoppingLists is null)
 {

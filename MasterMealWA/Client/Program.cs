@@ -24,6 +24,8 @@ namespace MasterMealWA.Client
 
             builder.Services.AddHttpClient("MasterMealWA.ServerAPI", client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
                 .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
+            builder.Services.AddHttpClient("MasterMealWA.NonAuthServerAPI",
+    client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress));
 
             // Supply HttpClient instances that include access tokens when making requests to the server project
             builder.Services.AddScoped<IApiService, ApiService>();
