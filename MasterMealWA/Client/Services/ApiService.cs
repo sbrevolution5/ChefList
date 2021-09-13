@@ -14,6 +14,13 @@ namespace MasterMealWA.Client.Services
     public class ApiService : IApiService
     {
         private readonly HttpClient _http;
+        private readonly IHttpClientFactory _clientFactory;
+
+        public ApiService(IHttpClientFactory clientFactory)
+        {
+            _clientFactory = clientFactory;
+        }
+
         private readonly JsonSerializerOptions _options = new()
         {
             ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve,
@@ -155,9 +162,19 @@ namespace MasterMealWA.Client.Services
             return meal;
         }
 
-        public async Task<Recipe> GetRecipeAsync(int id)
+        public async Task<Recipe> GetRecipeAsync(int id, bool auth)
         {
-            var recipe = await _http.GetFromJsonAsync<Recipe>($"api/recipes/{id}", _options);
+            Recipe recipe;
+            if (auth)
+            {
+
+                recipe = await _http.GetFromJsonAsync<Recipe>($"api/recipes/{id}", _options);
+            }
+            else
+            {
+                var client = _clientFactory.CreateClient("MasterMealWA.NonAuthServerAPI");
+                recipe = await _http.GetFromJsonAsync<Recipe>($"api/recipes/{id}", _options);
+            }
             return recipe;
         }
 
