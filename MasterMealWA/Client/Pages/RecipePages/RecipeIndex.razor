@@ -35,7 +35,7 @@
                 {
 
                     <MudExpansionPanel Text="Nationality" IsInitiallyExpanded="true">
-                        <MudChipSet MultiSelection="true" Filter="true">
+                        <MudChipSet MultiSelection="true" Filter="true" @bind-SelectedChips="Filters.NationalityChips">
                             @foreach (var category in RecipeTypes.Where(t => t.Category == CategoryType.Nationality))
                             {
 
@@ -44,7 +44,7 @@
                         </MudChipSet>
                     </MudExpansionPanel>
                     <MudExpansionPanel Text="Protein Types" IsInitiallyExpanded="true">
-                        <MudChipSet MultiSelection="true" Filter="true">
+                        <MudChipSet MultiSelection="true" Filter="true"@bind-SelectedChips="Filters.ProteinChips">
                             @foreach (var category in RecipeTypes.Where(t => t.Category == CategoryType.Protein))
                             {
 
@@ -64,7 +64,7 @@
                 }
                 <MudExpansionPanel Text="Rating" IsInitiallyExpanded="true">
                     <div class="d-flex flex-column align-center">
-                        <MudRating Color="Color.Secondary" @bind-SelectedValue="Filter.LowestRating" HoveredValueChanged="HandleHoveredValueChanged" />
+                        <MudRating Color="Color.Secondary" @bind-SelectedValue="Filters.LowestRating" HoveredValueChanged="HandleHoveredValueChanged" />
                         <MudText Typo="Typo.subtitle2" Class="mt-2">@RatingText</MudText>
                     </div>
 
@@ -72,7 +72,7 @@
 
                 </MudExpansionPanel>
                 <MudExpansionPanel Text="CookingTime" IsInitiallyExpanded="true">
-                    <MudSwitch Disabled="true" Label="FilterByTime" @bind-Checked="timeFilter"></MudSwitch>
+                    <MudSwitch Disabled="true" Label="FilterByTime" @bind-Checked="Filters."></MudSwitch>
 
                     <MudItem xs="12">
                         <MudNumericField @bind-Value="Filters.MinCookingTime" Label="Min Cooking Time" Variant="Variant.Text" Min="0" Max="60" />
@@ -98,6 +98,10 @@
     else
     {
         <MudGrid>
+            @if (FilteredRecipes.Count == 0)
+            {
+                <MudText Typo="Typo.h3">No Recipes were found, please select a less restrictive filter.</MudText>
+            }
             @foreach (var recipe in pageRecipes)
             {
                 <MudItem xs="12" md="4">
@@ -179,7 +183,6 @@
     private bool timeFilter { get; set; }
     private int minTime { get; set; } = 1;
     private int maxTime { get; set; } = 60;
-    private int selectedRating = 0;
     private int? activeRating;
     private int pageCount { get; set; } = 0;
     private string userId { get; set; }
@@ -209,7 +212,7 @@
             snackbar.Add("Meal planned!");
         }
     }
-    private string RatingText => (activeRating ?? selectedRating) switch
+    private string RatingText => (activeRating ?? Filters.LowestRating) switch
     {
         1 => "1 Star or more",
         2 => "2 Stars or more",
