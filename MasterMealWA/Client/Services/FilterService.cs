@@ -24,6 +24,7 @@ namespace MasterMealWA.Client.Services
             //Type
             //Rating
             //CookingTime
+            return recipes;
         }
     }
 }
