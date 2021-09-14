@@ -1,4 +1,5 @@
 ﻿@page "/recipes/{mine?}"
+@using MasterMealWA.Client.Models
 @inject HttpClient Http
 @inject IApiService _api
 @inject NavigationManager nav
@@ -18,70 +19,70 @@
     <MudPaper Class="py-3" Square="true">
         <MudForm Model="Filters" IsTouchedChanged="FilterRecipes">
 
+            <MudExpansionPanels MultiExpansion="true" Elevation="2">
+
+                <MudExpansionPanel Text="Author" IsInitiallyExpanded="true">
+                    <MudSwitch Label="Only My Recipes" @bind-Checked="myRecipes"></MudSwitch>
+                </MudExpansionPanel>
+                <MudExpansionPanel Text="Supplies" IsInitiallyExpanded="true">
+                    <MudSwitch Disabled="true" Label="I have Supplies" @bind-Checked="mySupplies"></MudSwitch>
+                </MudExpansionPanel>
+                @if (!Loaded)
+                {
+                    <Loader></Loader>
+                }
+                else
+                {
+
+                    <MudExpansionPanel Text="Nationality" IsInitiallyExpanded="true">
+                        <MudChipSet MultiSelection="true" Filter="true">
+                            @foreach (var category in RecipeTypes.Where(t => t.Category == CategoryType.Nationality))
+                            {
+
+                                <MudChip Color="@BadgeColor(category.Category)" Text="@category.Name"></MudChip>
+                            }
+                        </MudChipSet>
+                    </MudExpansionPanel>
+                    <MudExpansionPanel Text="Protein Types" IsInitiallyExpanded="true">
+                        <MudChipSet MultiSelection="true" Filter="true">
+                            @foreach (var category in RecipeTypes.Where(t => t.Category == CategoryType.Protein))
+                            {
+
+                                <MudChip Color="@BadgeColor(category.Category)" Text="@category.Name"></MudChip>
+                            }
+                        </MudChipSet>
+                    </MudExpansionPanel>
+                    <MudExpansionPanel Text="Other Categories" IsInitiallyExpanded="true">
+                        <MudChipSet MultiSelection="true" Filter="true">
+                            @foreach (var category in RecipeTypes.Where(t => t.Category == CategoryType.Type))
+                            {
+
+                                <MudChip Color="@BadgeColor(category.Category)" Text="@category.Name"></MudChip>
+                            }
+                        </MudChipSet>
+                    </MudExpansionPanel>
+                }
+                <MudExpansionPanel Text="Rating" IsInitiallyExpanded="true">
+                    <div class="d-flex flex-column align-center">
+                        <MudRating Color="Color.Secondary" @bind-SelectedValue="selectedRating" HoveredValueChanged="HandleHoveredValueChanged" />
+                        <MudText Typo="Typo.subtitle2" Class="mt-2">@RatingText</MudText>
+                    </div>
+
+
+
+                </MudExpansionPanel>
+                <MudExpansionPanel Text="CookingTime" IsInitiallyExpanded="true">
+                    <MudSwitch Disabled="true" Label="FilterByTime" @bind-Checked="timeFilter"></MudSwitch>
+
+                    <MudItem xs="12">
+                        <MudNumericField @bind-Value="minTime" Label="Min Cooking Time" Variant="Variant.Text" Min="0" Max="60" />
+                    </MudItem>
+                    <MudItem xs="12">
+                        <MudNumericField @bind-Value="maxTime" Label="Max cooking time" Variant="Variant.Text" Min="0" Max="60" />
+                    </MudItem>
+                </MudExpansionPanel>
+            </MudExpansionPanels>
         </MudForm>
-        <MudExpansionPanels MultiExpansion="true" Elevation="2">
-
-            <MudExpansionPanel Text="Author" IsInitiallyExpanded="true">
-                <MudSwitch Label="Only My Recipes" @bind-Checked="myRecipes"></MudSwitch>
-            </MudExpansionPanel>
-            <MudExpansionPanel Text="Supplies" IsInitiallyExpanded="true">
-                <MudSwitch Disabled="true" Label="I have Supplies" @bind-Checked="mySupplies"></MudSwitch>
-            </MudExpansionPanel>
-            @if (!Loaded)
-            {
-                <Loader></Loader>
-            }
-            else
-            {
-
-                <MudExpansionPanel Text="Nationality" IsInitiallyExpanded="true">
-                    <MudChipSet MultiSelection="true" Filter="true">
-                        @foreach (var category in RecipeTypes.Where(t => t.Category == CategoryType.Nationality))
-                        {
-
-                            <MudChip Color="@BadgeColor(category.Category)" Text="@category.Name"></MudChip>
-                        }
-                    </MudChipSet>
-                </MudExpansionPanel>
-                <MudExpansionPanel Text="Protein Types" IsInitiallyExpanded="true">
-                    <MudChipSet MultiSelection="true" Filter="true">
-                        @foreach (var category in RecipeTypes.Where(t => t.Category == CategoryType.Protein))
-                        {
-
-                            <MudChip Color="@BadgeColor(category.Category)" Text="@category.Name"></MudChip>
-                        }
-                    </MudChipSet>
-                </MudExpansionPanel>
-                <MudExpansionPanel Text="Other Categories" IsInitiallyExpanded="true">
-                    <MudChipSet MultiSelection="true" Filter="true">
-                        @foreach (var category in RecipeTypes.Where(t => t.Category == CategoryType.Type))
-                        {
-
-                            <MudChip Color="@BadgeColor(category.Category)" Text="@category.Name"></MudChip>
-                        }
-                    </MudChipSet>
-                </MudExpansionPanel>
-            }
-            <MudExpansionPanel Text="Rating" IsInitiallyExpanded="true">
-                <div class="d-flex flex-column align-center">
-                    <MudRating Color="Color.Secondary" @bind-SelectedValue="selectedRating" HoveredValueChanged="HandleHoveredValueChanged" />
-                    <MudText Typo="Typo.subtitle2" Class="mt-2">@RatingText</MudText>
-                </div>
-
-
-
-            </MudExpansionPanel>
-            <MudExpansionPanel Text="CookingTime" IsInitiallyExpanded="true">
-                <MudSwitch Disabled="true" Label="FilterByTime" @bind-Checked="timeFilter"></MudSwitch>
-
-                <MudItem xs="12">
-                    <MudNumericField @bind-Value="minTime" Label="Min Cooking Time" Variant="Variant.Text" Min="0" Max="60" />
-                </MudItem>
-                <MudItem xs="12">
-                    <MudNumericField @bind-Value="maxTime" Label="Max cooking time" Variant="Variant.Text" Min="0" Max="60" />
-                </MudItem>
-            </MudExpansionPanel>
-        </MudExpansionPanels>
     </MudPaper>
 </MudItem>
 
@@ -168,6 +169,7 @@
 @code {
     [Parameter]
     public string mine { get; set; }
+    public Filter Filters { get; set; }
     private List<Recipe> AllRecipes;
     private List<Recipe> FilteredRecipes;
     private List<Recipe> pageRecipes { get; set; }
@@ -263,7 +265,7 @@
     }
     public async Task DeleteRecipe(Recipe recipe)
     {
-        var parameters = new DialogParameters { ["recipe"] = recipe};
+        var parameters = new DialogParameters { ["recipe"] = recipe };
         var dialog = _dialogService.Show<RecipeDelete>("Are you sure you want to delete this recipe?", parameters);
         var result = await dialog.Result;
         if (!result.Cancelled)
