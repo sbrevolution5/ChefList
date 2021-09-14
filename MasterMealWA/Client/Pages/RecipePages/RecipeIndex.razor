@@ -22,14 +22,14 @@
             <MudExpansionPanels MultiExpansion="true" Elevation="2">
 
                 <MudExpansionPanel Text="Author" IsInitiallyExpanded="true">
-                    <MudSwitch Label="Only My Recipes" @bind-Checked="myRecipes"></MudSwitch>
+                    <MudSwitch Color="Color.Primary" Label="Only My Recipes" @bind-Checked="myRecipes"/>
                 </MudExpansionPanel>
                 <MudExpansionPanel Text="Supplies" IsInitiallyExpanded="true">
-                    <MudSwitch Disabled="true" Label="I have Supplies" @bind-Checked="mySupplies"></MudSwitch>
+                    <MudSwitch Disabled="true" Color="Color.Primary" Label="I have Supplies" @bind-Checked="mySupplies"/>
                 </MudExpansionPanel>
                 @if (!Loaded)
                 {
-                    <Loader></Loader>
+                    <Loader/>
                 }
                 else
                 {
@@ -42,7 +42,7 @@
                         <MudChip Color="@BadgeColor(category.Category)" Text="@category.Name"></MudChip>
                     }
                 </MudChipSet>
-                <MudSwitch Label="Must have all selected Nationalities" @bind-Checked="Filters.HasAllNationality"></MudSwitch>
+                <MudSwitch Color="Color.Primary" Label="Must have all selected Nationalities" @bind-Checked="Filters.HasAllNationality"/>
             </MudExpansionPanel>
                     <MudExpansionPanel Text="Protein Types" IsInitiallyExpanded="true">
                         <MudChipSet MultiSelection="true" Filter="true"@bind-SelectedChips="Filters.ProteinChips">
@@ -52,7 +52,7 @@
                                 <MudChip Color="@BadgeColor(category.Category)" Text="@category.Name"></MudChip>
                             }
                         </MudChipSet>
-                        <MudSwitch Label="Must have all selected proteins" @bind-Checked="Filters.HasAllProtein"></MudSwitch>
+                        <MudSwitch Color="Color.Primary" Label="Must have all selected proteins" @bind-Checked="Filters.HasAllProtein"/>
                     </MudExpansionPanel>
                     <MudExpansionPanel Text="Other Categories" IsInitiallyExpanded="true">
                         <MudChipSet MultiSelection="true" Filter="true" @bind-SelectedChips="Filters.TypeChips">
@@ -62,7 +62,7 @@
                                 <MudChip Color="@BadgeColor(category.Category)" Text="@category.Name"></MudChip>
                             }
                         </MudChipSet>
-                        <MudSwitch Label="Must have all types" @bind-Checked="Filters.HasAllType"></MudSwitch>
+                        <MudSwitch Color="Color.Primary" Label="Must have all types" @bind-Checked="Filters.HasAllType"/>
                     </MudExpansionPanel>
                 }
                 <MudExpansionPanel Text="Rating" IsInitiallyExpanded="true">
@@ -75,7 +75,7 @@
 
                 </MudExpansionPanel>
                 <MudExpansionPanel Text="CookingTime" IsInitiallyExpanded="true">
-                    <MudSwitch Disabled="true" Label="FilterByTime" @bind-Checked="Filters.CookingTime"></MudSwitch>
+                    <MudSwitch Color="Color.Primary" Label="FilterByTime" @bind-Checked="Filters.CookingTime"></MudSwitch>
 
                     <MudItem xs="12">
                         <MudNumericField @bind-Value="Filters.MinCookingTime" Label="Min Cooking Time" Variant="Variant.Text" Min="0" Max="60" />
