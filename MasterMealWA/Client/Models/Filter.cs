@@ -11,11 +11,11 @@ namespace MasterMealWA.Client.Models
         public bool MyRecipes { get; set; }
         public bool MySupplies { get; set; }
         public MudChip[] NationalityChips { get; set; }
-        public bool HasAllNationality { get; set; }
+        public bool HasAllNationalities { get; set; }
         public MudChip[] ProteinChips { get; set; }
-        public bool HasAllProtein { get; set; }
+        public bool HasAllProteins { get; set; }
         public MudChip[] TypeChips { get; set; }
-        public bool HasAllType { get; set; }
+        public bool HasAllTypes { get; set; }
         public int LowestRating { get; set; } = 0;
         public bool CookingTime { get; set; }
         public int MinCookingTime { get; set; } = 15;
