@@ -16,6 +16,9 @@
     </AuthorizeView>
     <MudFab Icon="@Icons.Material.Filled.Add" Color="Color.Primary" Label="Add Recipe" aria-label="add recipe" @onclick='()=>nav.NavigateTo("/recipes/create")' />
     <MudPaper Class="py-3" Square="true">
+        <MudForm Model="Filters" IsTouchedChanged="FilterRecipes">
+
+        </MudForm>
         <MudExpansionPanels MultiExpansion="true" Elevation="2">
 
             <MudExpansionPanel Text="Author" IsInitiallyExpanded="true">
@@ -233,6 +236,10 @@
         RecipeTypes = await _api.GetAllTagsAsync();
         base.OnInitialized();
         Loaded = true;
+    }
+    private void FilterRecipes()
+    {
+        throw new NotImplementedException();
     }
     private async Task GetRecipesAsync()
     {
