@@ -10,7 +10,7 @@ namespace MasterMealWA.Client.Services
 {
     public class FilterService : IFilterService
     {
-        public List<Recipe> ApplyFilter(List<Recipe> allRecipes, Filter filter,string userId)
+        public List<Recipe> ApplyFilter(List<Recipe> allRecipes, Filter filter, string userId)
         {
             List<Recipe> recipes = allRecipes;
             //MyRecipes
@@ -22,15 +22,15 @@ namespace MasterMealWA.Client.Services
             if (filter.MySupplies)
             {
                 //TODO: Supplies USER CURRENTLY HAS NO ABILITY TO DO THIS
-                
+
             }
             //Nationality
-            if (filter.UseNationalities)
-            {
 
-            var selectedNationalities = filter.NationalityChips.Select(r => (RecipeTag)r.Tag).ToList();
-            if (selectedNationalities.Count > 0)
+
+            var nationalitySet = filter.NationalityChips.Select(r => (RecipeTag)r.Tag);
+            if (nationalitySet.Any())
             {
+                var selectedNationalities = nationalitySet.ToList();
                 if (filter.HasAllNationalities)
                 {
                     recipes = recipes.Where(r => selectedNationalities.All(i => r.Tags.Contains(i))).ToList();
@@ -46,14 +46,13 @@ namespace MasterMealWA.Client.Services
                     recipes = recipesWithTags.Distinct().ToList();
                 }
             }
-            }
-            if (filter.UseProteins)
-            {
+
 
             //Protein
-            var selectedProteins = filter.ProteinChips.Select(r => (RecipeTag)r.Tag).ToList();
-            if (selectedProteins.Count > 0)
+            var proteinSet = filter.NationalityChips.Select(r => (RecipeTag)r.Tag);
+            if (proteinSet.Any())
             {
+                var selectedProteins = proteinSet.ToList();
                 if (filter.HasAllProteins)
                 {
                     recipes = recipes.Where(r => selectedProteins.All(p => r.Tags.Contains(p))).ToList();
@@ -68,15 +67,13 @@ namespace MasterMealWA.Client.Services
                     recipes = recipesWithTags.Distinct().ToList();
                 }
             }
-            }
-            if (filter.UseType)
-            {
 
-            }
+
             //Type
-            var selectedTypes = filter.TypeChips.Select(r => (RecipeTag)r.Tag).ToList();
-            if (selectedTypes.Count > 0)
+            var typeSet = filter.NationalityChips.Select(r => (RecipeTag)r.Tag);
+            if (typeSet.Any())
             {
+                var selectedTypes = typeSet.ToList();
                 if (filter.HasAllTypes)
                 {
                     recipes = recipes.Where(r => selectedTypes.All(t => r.Tags.Contains(t))).ToList();
@@ -92,7 +89,7 @@ namespace MasterMealWA.Client.Services
                 }
             }
             //Rating
-            if (filter.LowestRating>1)
+            if (filter.LowestRating > 1)
             {
                 recipes = recipes.Where(r => r.AvgRating >= filter.LowestRating).ToList();
             }
