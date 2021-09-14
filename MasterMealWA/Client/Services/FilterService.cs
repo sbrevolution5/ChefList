@@ -34,7 +34,12 @@ namespace MasterMealWA.Client.Services
                 }
                 else
                 {
-
+                    List<Recipe> recipesWithTags = new();
+                    foreach (var item in selectedNationalities)
+                    {
+                        recipesWithTags.AddRange(recipes.Where(r => r.Tags.Contains(item)));
+                    }
+                    recipes = recipesWithTags.Distinct().ToList();
                 }
             }
             //Protein
@@ -47,7 +52,12 @@ namespace MasterMealWA.Client.Services
                 }
                 else
                 {
-
+                    List<Recipe> recipesWithTags = new();
+                    foreach (var item in selectedProteins)
+                    {
+                        recipesWithTags.AddRange(recipes.Where(r => r.Tags.Contains(item)));
+                    }
+                    recipes = recipesWithTags.Distinct().ToList();
                 }
             }
             //Type
@@ -60,7 +70,12 @@ namespace MasterMealWA.Client.Services
                 }
                 else
                 {
-
+                    List<Recipe> recipesWithTags = new();
+                    foreach (var item in selectedTypes)
+                    {
+                        recipesWithTags.AddRange(recipes.Where(r => r.Tags.Contains(item)));
+                    }
+                    recipes = recipesWithTags.Distinct().ToList();
                 }
             }
             //Rating
