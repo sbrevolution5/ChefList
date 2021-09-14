@@ -165,7 +165,8 @@
 @code {
     [Parameter]
     public string mine { get; set; }
-    private List<Recipe> recipes;
+    private List<Recipe> AllRecipes;
+    private List<Recipe> FilteredRecipes;
     private List<Recipe> pageRecipes { get; set; }
     private List<RecipeTag> RecipeTypes { get; set; }
     private bool mySupplies { get; set; }
@@ -238,18 +239,20 @@
         if (mine.ToLower() == "myrecipes")
         {
 
-            recipes = await _api.GetMyRecipesAsync();
+            AllRecipes = await _api.GetMyRecipesAsync();
+            FilteredRecipes = AllRecipes;
         }
         else
         {
 
-            recipes = await _api.GetAllRecipesAsync(Auth);
+            AllRecipes = await _api.GetAllRecipesAsync(Auth);
+            FilteredRecipes = AllRecipes;
         }
-        pageCount = (recipes.Count / 6) + 1;
+        pageCount = (FilteredRecipes.Count / 6) + 1;
     }
     private void ChangePage(int page)
     {
-        pageRecipes = recipes.OrderBy(r => r.Id).Skip((page - 1) * 6).Take(6).ToList();
+        pageRecipes = FilteredRecipes.OrderBy(r => r.Id).Skip((page - 1) * 6).Take(6).ToList();
     }
     public async Task DeleteRecipe(Recipe recipe)
     {
