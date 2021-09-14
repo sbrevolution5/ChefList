@@ -7,6 +7,7 @@
 @inject ISnackbar snackbar
 @inject IImageReader _imageReader
 @inject IUserService _userService
+@inject IFilterService _filterService
 @attribute [AllowAnonymous]
 
 <MudItem xs="12" md="3">
@@ -17,7 +18,7 @@
     </AuthorizeView>
     <MudFab Icon="@Icons.Material.Filled.Add" Color="Color.Primary" Label="Add Recipe" aria-label="add recipe" @onclick='()=>nav.NavigateTo("/recipes/create")' />
     <MudPaper Class="py-3" Square="true">
-        <MudForm Model="Filters" IsTouchedChanged="FilterRecipes">
+        <MudForm Model="Filters" IsTouchedChanged="()=>FilterRecipes()">
 
             <MudExpansionPanels MultiExpansion="true" Elevation="2">
 
@@ -247,7 +248,9 @@
     }
     private void FilterRecipes()
     {
-        throw new NotImplementedException();
+        FilteredRecipes = _filterService.ApplyFilter(AllRecipes, Filters);
+        pageCount = (FilteredRecipes.Count / 6) + 1;
+        ChangePage(1);
     }
     private async Task GetRecipesAsync()
     {
