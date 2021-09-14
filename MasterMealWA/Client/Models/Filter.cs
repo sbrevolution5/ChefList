@@ -16,8 +16,7 @@ namespace MasterMealWA.Client.Models
         public bool HasAllProtein { get; set; }
         public MudChip[] TypeChips { get; set; }
         public bool HasAllType { get; set; }
-        public int MaxRating { get; set; } = 5;
-        public int MinRating { get; set; } = 1;
+        public int LowestRating { get; set; } = 0;
         public bool CookingTime { get; set; }
         public int MinCookingTime { get; set; }
         public int MaxCookingTime { get; set; }

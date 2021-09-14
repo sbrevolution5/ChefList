@@ -64,7 +64,7 @@
                 }
                 <MudExpansionPanel Text="Rating" IsInitiallyExpanded="true">
                     <div class="d-flex flex-column align-center">
-                        <MudRating Color="Color.Secondary" @bind-SelectedValue="selectedRating" HoveredValueChanged="HandleHoveredValueChanged" />
+                        <MudRating Color="Color.Secondary" @bind-SelectedValue="Filter.LowestRating" HoveredValueChanged="HandleHoveredValueChanged" />
                         <MudText Typo="Typo.subtitle2" Class="mt-2">@RatingText</MudText>
                     </div>
 
@@ -75,10 +75,10 @@
                     <MudSwitch Disabled="true" Label="FilterByTime" @bind-Checked="timeFilter"></MudSwitch>
 
                     <MudItem xs="12">
-                        <MudNumericField @bind-Value="minTime" Label="Min Cooking Time" Variant="Variant.Text" Min="0" Max="60" />
+                        <MudNumericField @bind-Value="Filters.MinCookingTime" Label="Min Cooking Time" Variant="Variant.Text" Min="0" Max="60" />
                     </MudItem>
                     <MudItem xs="12">
-                        <MudNumericField @bind-Value="maxTime" Label="Max cooking time" Variant="Variant.Text" Min="0" Max="60" />
+                        <MudNumericField @bind-Value="Filters.MaxCookingTime" Label="Max cooking time" Variant="Variant.Text" Min="0" Max="60" />
                     </MudItem>
                 </MudExpansionPanel>
             </MudExpansionPanels>
