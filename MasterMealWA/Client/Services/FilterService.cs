@@ -16,7 +16,7 @@ namespace MasterMealWA.Client.Services
             //MyRecipes
             if (filter.MyRecipes)
             {
-                recipes = recipes.Where()
+                recipes = recipes.Where(r => r.AuthorId == userId).ToList();
             }
             //MySupplies
             //Nationality
