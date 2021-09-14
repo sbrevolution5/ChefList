@@ -75,14 +75,14 @@
 
 
                 </MudExpansionPanel>
-                <MudExpansionPanel Text="CookingTime" IsInitiallyExpanded="true">
-                    <MudSwitch Color="Color.Primary" Label="FilterByTime" @bind-Checked="Filters.CookingTime"></MudSwitch>
+                <MudExpansionPanel Text="Cooking Time" IsInitiallyExpanded="true">
+                    <MudSwitch Color="Color.Primary" Label="FilterByTime" @bind-Checked="Filters.CookingTime"/>
 
                     <MudItem xs="12">
-                        <MudNumericField Disabled="@Filters.CookingTime" @bind-Value="Filters.MinCookingTime" Label="Min Cooking Time" Variant="Variant.Text" Min="0" Max="90" />
+                        <MudNumericField Disabled="@(!Filters.CookingTime)" @bind-Value="Filters.MinCookingTime" Label="Min Cooking Time" Variant="Variant.Text" Min="0" Max="90" />
                     </MudItem>
                     <MudItem xs="12">
-                        <MudNumericField Disabled="@Filters.CookingTime" @bind-Value="Filters.MaxCookingTime" Label="Max cooking time" Variant="Variant.Text" Min="0" Max="90" />
+                        <MudNumericField Disabled="@(!Filters.CookingTime)" @bind-Value="Filters.MaxCookingTime" Label="Max cooking time" Variant="Variant.Text" Min="0" Max="90" />
                     </MudItem>
                 </MudExpansionPanel>
             </MudExpansionPanels>
@@ -184,9 +184,6 @@
     private List<RecipeTag> RecipeTypes { get; set; }
     private bool mySupplies { get; set; }
     private bool myRecipes { get; set; }
-    private bool timeFilter { get; set; }
-    private int minTime { get; set; } = 1;
-    private int maxTime { get; set; } = 60;
     private int? activeRating;
     private int pageCount { get; set; } = 0;
     private string userId { get; set; }
