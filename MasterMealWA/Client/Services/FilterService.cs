@@ -12,7 +12,13 @@ namespace MasterMealWA.Client.Services
     {
         public List<Recipe> ApplyFilter(List<Recipe> allRecipes, Filter filter)
         {
-            //
+            //MyRecipes
+            //MySupplies
+            //Nationality
+            //Protein
+            //Type
+            //Rating
+            //CookingTime
         }
     }
 }
