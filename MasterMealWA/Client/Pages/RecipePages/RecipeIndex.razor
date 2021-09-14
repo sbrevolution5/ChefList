@@ -78,10 +78,10 @@
                     <MudSwitch Color="Color.Primary" Label="FilterByTime" @bind-Checked="Filters.CookingTime"></MudSwitch>
 
                     <MudItem xs="12">
-                        <MudNumericField @bind-Value="Filters.MinCookingTime" Label="Min Cooking Time" Variant="Variant.Text" Min="0" Max="60" />
+                        <MudNumericField Disabled="@Filters.CookingTime" @bind-Value="Filters.MinCookingTime" Label="Min Cooking Time" Variant="Variant.Text" Min="0" Max="90" />
                     </MudItem>
                     <MudItem xs="12">
-                        <MudNumericField @bind-Value="Filters.MaxCookingTime" Label="Max cooking time" Variant="Variant.Text" Min="0" Max="60" />
+                        <MudNumericField Disabled="@Filters.CookingTime" @bind-Value="Filters.MaxCookingTime" Label="Max cooking time" Variant="Variant.Text" Min="0" Max="90" />
                     </MudItem>
                 </MudExpansionPanel>
             </MudExpansionPanels>
