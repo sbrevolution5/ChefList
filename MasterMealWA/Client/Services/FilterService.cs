@@ -84,7 +84,10 @@ namespace MasterMealWA.Client.Services
                 recipes = recipes.Where(r => r.AvgRating >= filter.LowestRating).ToList();
             }
             //CookingTime
-            
+            if (filter.CookingTime)
+            {
+                recipes = recipes.Where(r => r.CookingTime >= filter.MinCookingTime && r.CookingTime <= filter.MaxCookingTime).ToList();
+            }
             return recipes;
         }
     }
