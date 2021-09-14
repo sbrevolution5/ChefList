@@ -26,20 +26,22 @@ namespace MasterMealWA.Client.Services
             }
             //Nationality
 
+            if (filter.NationalityChips is not null)
+            {
 
             var nationalitySet = filter.NationalityChips.Select(r => (RecipeTag)r.Tag);
             if (nationalitySet.Any())
             {
-                var selectedNationalities = nationalitySet.ToList();
+                
                 if (filter.HasAllNationalities)
                 {
-                    recipes = recipes.Where(r => selectedNationalities.All(i => r.Tags.Contains(i))).ToList();
+                    recipes = recipes.Where(r => nationalitySet.All(i => r.Tags.Contains(i))).ToList();
 
                 }
                 else
                 {
                     List<Recipe> recipesWithTags = new();
-                    foreach (var item in selectedNationalities)
+                    foreach (var item in nationalitySet)
                     {
                         recipesWithTags.AddRange(recipes.Where(r => r.Tags.Contains(item)));
                     }
@@ -47,20 +49,24 @@ namespace MasterMealWA.Client.Services
                 }
             }
 
+
+            }
+            if (filter.ProteinChips is not null)
+            {
 
             //Protein
-            var proteinSet = filter.NationalityChips.Select(r => (RecipeTag)r.Tag);
+            var proteinSet = filter.ProteinChips.Select(r => (RecipeTag)r.Tag);
             if (proteinSet.Any())
             {
-                var selectedProteins = proteinSet.ToList();
+                
                 if (filter.HasAllProteins)
                 {
-                    recipes = recipes.Where(r => selectedProteins.All(p => r.Tags.Contains(p))).ToList();
+                    recipes = recipes.Where(r => proteinSet.All(p => r.Tags.Contains(p))).ToList();
                 }
                 else
                 {
                     List<Recipe> recipesWithTags = new();
-                    foreach (var item in selectedProteins)
+                    foreach (var item in proteinSet)
                     {
                         recipesWithTags.AddRange(recipes.Where(r => r.Tags.Contains(item)));
                     }
@@ -68,20 +74,20 @@ namespace MasterMealWA.Client.Services
                 }
             }
 
+            }
 
             //Type
-            var typeSet = filter.NationalityChips.Select(r => (RecipeTag)r.Tag);
+            var typeSet = filter.TypeChips.Select(r => (RecipeTag)r.Tag);
             if (typeSet.Any())
             {
-                var selectedTypes = typeSet.ToList();
                 if (filter.HasAllTypes)
                 {
-                    recipes = recipes.Where(r => selectedTypes.All(t => r.Tags.Contains(t))).ToList();
+                    recipes = recipes.Where(r => typeSet.All(t => r.Tags.Contains(t))).ToList();
                 }
                 else
                 {
                     List<Recipe> recipesWithTags = new();
-                    foreach (var item in selectedTypes)
+                    foreach (var item in typeSet)
                     {
                         recipesWithTags.AddRange(recipes.Where(r => r.Tags.Contains(item)));
                     }
