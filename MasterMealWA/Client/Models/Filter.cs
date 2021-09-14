@@ -18,7 +18,7 @@ namespace MasterMealWA.Client.Models
         public bool HasAllType { get; set; }
         public int LowestRating { get; set; } = 0;
         public bool CookingTime { get; set; }
-        public int MinCookingTime { get; set; }
-        public int MaxCookingTime { get; set; }
+        public int MinCookingTime { get; set; } = 15;
+        public int MaxCookingTime { get; set; } = 90;
     }
 }
