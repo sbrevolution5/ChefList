@@ -48,7 +48,7 @@ namespace MasterMealWA.Client.Services
             {
                 if (filter.HasAllProteins)
                 {
-
+                    recipes = recipes.Where()
                 }
                 else
                 {
@@ -66,7 +66,7 @@ namespace MasterMealWA.Client.Services
             {
                 if (filter.HasAllTypes)
                 {
-
+                    //How do I do this!?
                 }
                 else
                 {
@@ -79,7 +79,12 @@ namespace MasterMealWA.Client.Services
                 }
             }
             //Rating
+            if (filter.LowestRating>1)
+            {
+                recipes = recipes.Where(r => r.AvgRating >= filter.LowestRating).ToList();
+            }
             //CookingTime
+            
             return recipes;
         }
     }
