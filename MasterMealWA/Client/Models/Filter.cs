@@ -20,5 +20,8 @@ namespace MasterMealWA.Client.Models
         public bool CookingTime { get; set; }
         public int MinCookingTime { get; set; } = 15;
         public int MaxCookingTime { get; set; } = 90;
+        public bool UseProteins { get; set; }
+        public bool UseNationalities { get; set; }
+        public bool UseType { get; set; }
     }
 }

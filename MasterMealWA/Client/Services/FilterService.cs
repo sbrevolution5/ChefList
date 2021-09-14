@@ -25,6 +25,9 @@ namespace MasterMealWA.Client.Services
                 
             }
             //Nationality
+            if (filter.UseNationalities)
+            {
+
             var selectedNationalities = filter.NationalityChips.Select(r => (RecipeTag)r.Tag).ToList();
             if (selectedNationalities.Count > 0)
             {
@@ -43,6 +46,10 @@ namespace MasterMealWA.Client.Services
                     recipes = recipesWithTags.Distinct().ToList();
                 }
             }
+            }
+            if (filter.UseProteins)
+            {
+
             //Protein
             var selectedProteins = filter.ProteinChips.Select(r => (RecipeTag)r.Tag).ToList();
             if (selectedProteins.Count > 0)
@@ -60,6 +67,11 @@ namespace MasterMealWA.Client.Services
                     }
                     recipes = recipesWithTags.Distinct().ToList();
                 }
+            }
+            }
+            if (filter.UseType)
+            {
+
             }
             //Type
             var selectedTypes = filter.TypeChips.Select(r => (RecipeTag)r.Tag).ToList();
