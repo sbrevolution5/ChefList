@@ -12,7 +12,7 @@ namespace MasterMealWA.Client.Models
         public bool MySupplies { get; set; }
         public MudChip[] NationalityChips { get; set; }
         public bool HasAllNationalities { get; set; }
-        public MudChip[] ProteinChips { get; set; }
+        public MudChip[] ProteinChips { get; set; } 
         public bool HasAllProteins { get; set; }
         public MudChip[] TypeChips { get; set; }
         public bool HasAllTypes { get; set; }
