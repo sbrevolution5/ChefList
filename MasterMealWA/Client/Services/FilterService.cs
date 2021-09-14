@@ -25,8 +25,44 @@ namespace MasterMealWA.Client.Services
                 
             }
             //Nationality
+            var selectedNationalities = filter.NationalityChips.Select(r => (RecipeTag)r.Tag).ToList();
+            if (selectedNationalities.Count > 0)
+            {
+                if (filter.HasAllNationality)
+                {
+
+                }
+                else
+                {
+
+                }
+            }
             //Protein
+            var selectedNationalities = filter.NationalityChips.Select(r => (RecipeTag)r.Tag).ToList();
+            if (selectedNationalities.Count > 0)
+            {
+                if (filter.HasAllNationality)
+                {
+
+                }
+                else
+                {
+
+                }
+            }
             //Type
+            var selectedNationalities = filter.NationalityChips.Select(r => (RecipeTag)r.Tag).ToList();
+            if (selectedNationalities.Count > 0)
+            {
+                if (filter.HasAllNationality)
+                {
+
+                }
+                else
+                {
+
+                }
+            }
             //Rating
             //CookingTime
             return recipes;
