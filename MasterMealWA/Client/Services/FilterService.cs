@@ -30,6 +30,7 @@ namespace MasterMealWA.Client.Services
             {
                 if (filter.HasAllNationalities)
                 {
+                    recipes = recipes.Where(r => selectedNationalities.All(i => r.Tags.Contains(i))).ToList();
 
                 }
                 else
@@ -48,7 +49,7 @@ namespace MasterMealWA.Client.Services
             {
                 if (filter.HasAllProteins)
                 {
-                    recipes = recipes.Where()
+                    recipes = recipes.Where(r => selectedProteins.All(p => r.Tags.Contains(p))).ToList();
                 }
                 else
                 {
@@ -66,7 +67,7 @@ namespace MasterMealWA.Client.Services
             {
                 if (filter.HasAllTypes)
                 {
-                    //How do I do this!?
+                    recipes = recipes.Where(r => selectedTypes.All(t => r.Tags.Contains(t))).ToList();
                 }
                 else
                 {
