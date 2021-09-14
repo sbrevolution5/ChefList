@@ -9,6 +9,6 @@ namespace MasterMealWA.Client.Services.Interfaces
 {
     public interface IFilterService
     {
-        public List<Recipe> ApplyFilter(List<Recipe> allRecipes, Filter filter);
+        public List<Recipe> ApplyFilter(List<Recipe> allRecipes, Filter filter,string userId);
     }
 }

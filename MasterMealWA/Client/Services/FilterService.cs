@@ -10,9 +10,14 @@ namespace MasterMealWA.Client.Services
 {
     public class FilterService : IFilterService
     {
-        public List<Recipe> ApplyFilter(List<Recipe> allRecipes, Filter filter)
+        public List<Recipe> ApplyFilter(List<Recipe> allRecipes, Filter filter,string userId)
         {
+            List<Recipe> recipes = allRecipes;
             //MyRecipes
+            if (filter.MyRecipes)
+            {
+                recipes = recipes.Where()
+            }
             //MySupplies
             //Nationality
             //Protein

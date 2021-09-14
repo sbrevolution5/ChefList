@@ -248,7 +248,7 @@
     }
     private void FilterRecipes()
     {
-        FilteredRecipes = _filterService.ApplyFilter(AllRecipes, Filters);
+        FilteredRecipes = _filterService.ApplyFilter(AllRecipes, Filters,userId);
         pageCount = (FilteredRecipes.Count / 6) + 1;
         ChangePage(1);
     }
