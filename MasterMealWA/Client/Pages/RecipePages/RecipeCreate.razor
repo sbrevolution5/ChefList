@@ -4,6 +4,7 @@
 @inject IUserService _userService
 @inject NavigationManager nav
 @inject IDialogService _dialogService
+@inject ISnackbar _snackbar
 @using System.Net.Http.Headers
 <EditForm Model="@recipe" OnValidSubmit="CreateRecipeAsync">
     <DataAnnotationsValidator />
@@ -19,13 +20,13 @@
                     <MudGrid>
                         <MudItem xs="12">
 
-                            <MudTextField Label="Title" HelperText="The name of the recipe" @bind-Value="recipe.Name" For="@(()=> recipe.Name)"/>
+                            <MudTextField Label="Title" HelperText="The name of the recipe" @bind-Value="recipe.Name" For="@(()=> recipe.Name)" />
                         </MudItem>
                         <MudItem xs="12">
 
                             <MudTextField Label="Description" HelperText="The description of the recipe" @bind-Value="recipe.Description" For="@(()=> recipe.Description)" />
                         </MudItem>
-                        <MudItem  xs="12">
+                        <MudItem xs="12">
 
                             <InputFile id="fileInput" OnChange="UploadFiles" hidden />
                             <MudFab HtmlTag="label"
@@ -46,7 +47,7 @@
                                 </MudList>
                             }
                         </MudItem>
-                        <MudItem  xs="12">
+                        <MudItem xs="12">
 
                             <MudTextField Label="Source" HelperText="Where did you get the recipe?  (if its personal, leave blank)" @bind-Value="recipe.RecipeSource" For="@(()=> recipe.RecipeSource)" />
                         </MudItem>
@@ -123,19 +124,19 @@
                     <MudGrid>
                         @foreach (var supply in recipe.Supplies)
                         {
-                        <MudItem xs="12">
+                            <MudItem xs="12">
 
-                            <MudCard Elevation="2">
-                                <MudCardContent>
+                                <MudCard Elevation="2">
+                                    <MudCardContent>
 
-                                    <SupplyPicker supply="supply" supplyList="supplyList"></SupplyPicker>
-                                </MudCardContent>
-                                <MudCardActions>
+                                        <SupplyPicker supply="supply" supplyList="supplyList"></SupplyPicker>
+                                    </MudCardContent>
+                                    <MudCardActions>
 
-                                    <MudButton Color="Color.Error" Variant="Variant.Filled" @onclick="(()=>recipe.Supplies.Remove(supply))">Remove</MudButton>
-                                </MudCardActions>
-                            </MudCard>
-                        </MudItem>
+                                        <MudButton Color="Color.Error" Variant="Variant.Filled" @onclick="(()=>recipe.Supplies.Remove(supply))">Remove</MudButton>
+                                    </MudCardActions>
+                                </MudCard>
+                            </MudItem>
                         }
                         <MudItem>
                             <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Supplies.Add(new())" />
@@ -271,11 +272,19 @@
                     {
 
                         ImgId = await _api.UploadImageAsync(content);
-                        
+
                     }
                     else
                     {
-                        await _api.UpdateImageAsync(content);
+                        var res = await _api.UpdateImageAsync(content);
+                        if (res)
+                        {
+                            _snackbar.Add("Image Updated");
+                        }
+                        else
+                        {
+                            _snackbar.Add("Image Failed to update", Severity.Error);
+                        }
                         ImgId = recipe.ImageId;
                     }
                     //await OnChange.InvokeAsync(ImgUrl);
