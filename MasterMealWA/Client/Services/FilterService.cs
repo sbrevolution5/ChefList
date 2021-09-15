@@ -55,7 +55,7 @@ namespace MasterMealWA.Client.Services
             //Type
             if (filter.TypeList is not null)
             {
-                if (filter.NationalityList.Any())
+                if (filter.TypeList.Any())
                 {
                     if (filter.HasAllTypes)
                     {
