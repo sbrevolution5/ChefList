@@ -53,25 +53,24 @@ namespace MasterMealWA.Client.Services
             if (filter.ProteinList is not null)
             {
 
-                //Protein
-                if (filter.ProteinList.Any())
-                {
 
-                    if (filter.HasAllProteins)
-                    {
-                        recipes = recipes.Where(r => filter.ProteinList.All(p => r.Tags.Contains(p))).ToList();
-                    }
-                    else
-                    {
-                        recipes = recipes.Where(r => r.Tags.Intersect(filter.ProteinList).Any()).ToList();
-                    }
+
+                if (filter.HasAllProteins)
+                {
+                    recipes = recipes.Where(r => filter.ProteinList.All(p => r.Tags.Contains(p))).ToList();
                 }
+                else
+                {
+                    recipes = recipes.Where(r => r.Tags.Select(t=>t.Id).Intersect(filter.ProteinList.Select(t=>t.Id)).Any()).ToList();
+                    //recipes = recipes.Where(r => r.Tags.Intersect(filter.ProteinList).Any()).ToList();
+                }
+
 
             }
 
             //Type
 
-            if (filter.TypeList.Any())
+            if (filter.TypeList is not null)
             {
                 if (filter.HasAllTypes)
                 {

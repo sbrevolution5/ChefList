@@ -89,9 +89,21 @@
     public MudChip[] TypeChips { get; set; }
     public void ApplyFilter()
     {
-        Filters.ProteinList = ProteinChips.Select(r => (RecipeTag)r.Tag).ToList();
-        Filters.NationalityList = NationalityChips.Select(r => (RecipeTag)r.Tag).ToList();
-        Filters.TypeList = TypeChips.Select(r => (RecipeTag)r.Tag).ToList();
+        if (ProteinChips is not null)
+        {
+
+            Filters.ProteinList = ProteinChips.Select(r => (RecipeTag)r.Tag).ToList();
+        }
+        if (NationalityChips is not null)
+        {
+
+            Filters.NationalityList = NationalityChips.Select(r => (RecipeTag)r.Tag).ToList();
+        }
+        if (TypeChips is not null)
+        {
+
+            Filters.TypeList = TypeChips.Select(r => (RecipeTag)r.Tag).ToList();
+        }
         ReFilter.Invoke();
     }
     private int? activeRating;
