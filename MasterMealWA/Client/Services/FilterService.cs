@@ -29,69 +29,74 @@ namespace MasterMealWA.Client.Services
             if (filter.NationalityChips is not null)
             {
 
-            var nationalitySet = filter.NationalityChips.Select(r => (RecipeTag)r.Tag);
-            if (nationalitySet.Any())
-            {
-                
-                if (filter.HasAllNationalities)
+                var nationalitySet = filter.NationalityChips.Select(r => (RecipeTag)r.Tag);
+                if (nationalitySet.Any())
                 {
-                    recipes = recipes.Where(r => nationalitySet.All(i => r.Tags.Contains(i))).ToList();
 
-                }
-                else
-                {
-                    List<Recipe> recipesWithTags = new();
-                    foreach (var item in nationalitySet)
+                    if (filter.HasAllNationalities)
                     {
-                        recipesWithTags.AddRange(recipes.Where(r => r.Tags.Contains(item)));
+                        recipes = recipes.Where(r => nationalitySet.All(i => r.Tags.Contains(i))).ToList();
+
                     }
-                    recipes = recipesWithTags.Distinct().ToList();
+                    else
+                    {
+                        List<Recipe> recipesWithTags = new();
+                        foreach (var item in nationalitySet)
+                        {
+                            recipesWithTags.AddRange(recipes.Where(r => r.Tags.Contains(item)));
+                        }
+                        recipes = recipesWithTags.Distinct().ToList();
+                    }
                 }
-            }
 
 
             }
             if (filter.ProteinChips is not null)
             {
 
-            //Protein
-            var proteinSet = filter.ProteinChips.Select(r => (RecipeTag)r.Tag);
-            if (proteinSet.Any())
-            {
-                
-                if (filter.HasAllProteins)
+                //Protein
+                var proteinSet = filter.ProteinChips.Select(r => (RecipeTag)r.Tag);
+                if (proteinSet.Any())
                 {
-                    recipes = recipes.Where(r => proteinSet.All(p => r.Tags.Contains(p))).ToList();
-                }
-                else
-                {
-                    List<Recipe> recipesWithTags = new();
-                    foreach (var item in proteinSet)
+                    var proteinList = proteinSet.ToList();
+                    if (filter.HasAllProteins)
                     {
-                        recipesWithTags.AddRange(recipes.Where(r => r.Tags.Contains(item)));
+                        recipes = recipes.Where(r => proteinList.All(p => r.Tags.Contains(p))).ToList();
                     }
-                    recipes = recipesWithTags.Distinct().ToList();
+                    else
+                    {
+                        List<Recipe> recipesWithTags = new();
+                        foreach (RecipeTag item in proteinList)
+                        {
+                            var taggedRecipes = recipes.Where(r => r.Tags.Contains(item)).ToList();
+                            recipesWithTags.AddRange(taggedRecipes);
+                        }
+                        recipes = recipesWithTags.Distinct().ToList();
+                    }
                 }
-            }
 
             }
 
             //Type
-            var typeSet = filter.TypeChips.Select(r => (RecipeTag)r.Tag);
-            if (typeSet.Any())
+            if (filter.TypeChips is not null)
             {
-                if (filter.HasAllTypes)
+
+                var typeSet = filter.TypeChips.Select(r => (RecipeTag)r.Tag);
+                if (typeSet.Any())
                 {
-                    recipes = recipes.Where(r => typeSet.All(t => r.Tags.Contains(t))).ToList();
-                }
-                else
-                {
-                    List<Recipe> recipesWithTags = new();
-                    foreach (var item in typeSet)
+                    if (filter.HasAllTypes)
                     {
-                        recipesWithTags.AddRange(recipes.Where(r => r.Tags.Contains(item)));
+                        recipes = recipes.Where(r => typeSet.All(t => r.Tags.Contains(t))).ToList();
                     }
-                    recipes = recipesWithTags.Distinct().ToList();
+                    else
+                    {
+                        List<Recipe> recipesWithTags = new();
+                        foreach (var item in typeSet)
+                        {
+                            recipesWithTags.AddRange(recipes.Where(r => r.Tags.Contains(item)));
+                        }
+                        recipes = recipesWithTags.Distinct().ToList();
+                    }
                 }
             }
             //Rating
