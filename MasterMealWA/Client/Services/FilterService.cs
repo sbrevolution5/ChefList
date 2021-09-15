@@ -55,23 +55,17 @@ namespace MasterMealWA.Client.Services
             {
 
                 //Protein
-                var proteinSet = filter.ProteinChips.Select(r => (RecipeTag)r.Tag);
-                if (proteinSet.Any())
+                var proteinList = filter.ProteinChips.Select(r => (RecipeTag)r.Tag).ToList();
+                if (proteinList.Any())
                 {
-                    var proteinList = proteinSet.ToList();
+                    
                     if (filter.HasAllProteins)
                     {
                         recipes = recipes.Where(r => proteinList.All(p => r.Tags.Contains(p))).ToList();
                     }
                     else
                     {
-                        List<Recipe> recipesWithTags = new();
-                        foreach (RecipeTag item in proteinList)
-                        {
-                            var taggedRecipes = recipes.Where(r => r.Tags.Contains(item)).ToList();
-                            recipesWithTags.AddRange(taggedRecipes);
-                        }
-                        recipes = recipesWithTags.Distinct().ToList();
+                        recipes = recipes.Where(r => r.Tags.Intersect(proteinList).Any()).ToList();
                     }
                 }
 
