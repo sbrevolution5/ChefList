@@ -9,6 +9,11 @@ namespace MasterMealWA.Shared.Models
 {
     public class RecipeTag
     {
+        public bool Equals(RecipeTag x, RecipeTag y)
+        {
+            // TODO - Add null handling.
+            return x.Id == y.Id;
+        }
         public int Id { get; set; }
         [Required]
         public string Name { get; set; }
