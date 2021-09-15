@@ -4,6 +4,7 @@
 @inject NavigationManager nav
 @inject IUserService _userService
 @inject IDialogService _dialogService
+@inject ISnackbar _snackbar
 @attribute [Authorize]
 @using System.Net.Http.Headers
 @using MasterMealWA.Shared.Models.Dtos
@@ -227,7 +228,7 @@ else
         {
             RemovedSteps.Add(step);
         }
-            recipe.Steps.Remove(step);
+        recipe.Steps.Remove(step);
     }
     public void RemoveSupply(QSupply supply)
     {
@@ -235,7 +236,7 @@ else
         {
             RemovedSupplies.Add(supply);
         }
-            recipe.Supplies.Remove(supply);
+        recipe.Supplies.Remove(supply);
     }
     public void RemoveIngredient(QIngredient ingredient)
     {
@@ -243,7 +244,7 @@ else
         {
             RemovedIngredients.Add(ingredient);
         }
-            recipe.Ingredients.Remove(ingredient);
+        recipe.Ingredients.Remove(ingredient);
     }
     public bool RecipeHasTag(RecipeTag tag)
     {
@@ -311,8 +312,25 @@ else
                     var content = new MultipartFormDataContent();
                     content.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data");
                     content.Add(new StreamContent(ms, Convert.ToInt32(resizedFile.Size)), "image", imageFile.Name);
-                    ImgId = await _api.UploadImageAsync(content);
-                    //await OnChange.InvokeAsync(ImgUrl);
+                    if (recipe.ImageId == 0 ||recipe.ImageId ==  1)
+                    {
+
+                        ImgId = await _api.UploadImageAsync(content);
+
+                    }
+                    else
+                    {
+                        var res = await _api.UpdateImageAsync(content);
+                        if (res)
+                        {
+                            _snackbar.Add("Image Updated");
+                        }
+                        else
+                        {
+                            _snackbar.Add("Image Failed to update", Severity.Error);
+                        }
+                        ImgId = recipe.ImageId;
+                    }
                 }
             }
         }
