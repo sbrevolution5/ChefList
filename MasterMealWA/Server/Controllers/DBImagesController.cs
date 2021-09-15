@@ -90,16 +90,34 @@ namespace MasterMealWA.Server.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutDBImage(int id, DBImage dBImage)
         {
-            if (id != dBImage.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(dBImage).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                var file = Request.Form.Files[0];
+                var imagedata = await _fileService.ConvertFileToByteArrayAsync(file);
+                string contentType = "";
+                if (file.Length > 0)
+                {
+                    if (file.ContentType is null)
+                    {
+                        var fileProvider = new FileExtensionContentTypeProvider();
+                        if (!fileProvider.TryGetContentType(file.FileName, out contentType))
+                        {
+                            return BadRequest();
+                        }
+                    }
+                    var image = await _context.DBImage.FindAsync(id);
+
+                    image.ContentType = file.ContentType ?? contentType;
+                    image.ImageData = imagedata;
+                    
+                    _context.Entry(dBImage).State = EntityState.Modified;
+                    await _context.SaveChangesAsync();
+                    return Ok(image.Id);
+                }
+                else
+                {
+                    return BadRequest();
+                }
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -112,8 +130,12 @@ namespace MasterMealWA.Server.Controllers
                     throw;
                 }
             }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex}");
+            }
 
-            return NoContent();
+           
         }
 
         
