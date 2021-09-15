@@ -41,10 +41,10 @@ namespace MasterMealWA.Server.Controllers
         {
             if (!User.Identity.IsAuthenticated)
             {
-                return await _context.Recipe.Include(r => r.Author).Include(r => r.Image).Where(r => !r.IsPrivate).ToListAsync();
+                return await _context.Recipe.Include(r => r.Author).Include(r => r.Image).Where(r => !r.IsPrivate).Include(r=>r.Tags).ToListAsync();
             }
             var userId = HttpContext.GetUserId();
-            return await _context.Recipe.Include(r => r.Author).Include(r=>r.Image).Where(r => !r.IsPrivate || r.AuthorId == userId).ToListAsync();
+            return await _context.Recipe.Include(r => r.Author).Include(r=>r.Image).Where(r => !r.IsPrivate || r.AuthorId == userId).Include(r => r.Tags).ToListAsync();
         }
         // GET: api/Recipes
         [HttpGet("myrecipes")]
