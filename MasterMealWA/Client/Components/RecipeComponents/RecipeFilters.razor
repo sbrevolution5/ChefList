@@ -20,7 +20,7 @@
         {
 
             <MudExpansionPanel Text="Nationality" IsInitiallyExpanded="true">
-                <MudChipSet MultiSelection="true" Filter="true" @bind-SelectedChips="Filters.NationalityChips">
+                <MudChipSet MultiSelection="true" Filter="true" @bind-SelectedChips="NationalityChips">
                     @foreach (var category in RecipeTypes.Where(t => t.Category == CategoryType.Nationality))
                     {
 
@@ -30,7 +30,7 @@
                 <MudSwitch Color="Color.Primary" Label="Must have all selected Nationalities" @bind-Checked="Filters.HasAllNationalities" />
             </MudExpansionPanel>
             <MudExpansionPanel Text="Protein Types" IsInitiallyExpanded="true">
-                <MudChipSet MultiSelection="true" Filter="true" @bind-SelectedChips="Filters.ProteinChips">
+                <MudChipSet MultiSelection="true" Filter="true" @bind-SelectedChips="ProteinChips">
                     @foreach (var category in RecipeTypes.Where(t => t.Category == CategoryType.Protein))
                     {
                         <MudChip Color="@BadgeColor(category.Category)" Tag="category" Text="@category.Name"></MudChip>
@@ -39,7 +39,7 @@
                 <MudSwitch Color="Color.Primary" Label="Must have all selected proteins" @bind-Checked="Filters.HasAllProteins" />
             </MudExpansionPanel>
             <MudExpansionPanel Text="Other Categories" IsInitiallyExpanded="true">
-                <MudChipSet MultiSelection="true" Filter="true" @bind-SelectedChips="Filters.TypeChips">
+                <MudChipSet MultiSelection="true" Filter="true" @bind-SelectedChips="TypeChips">
 
                     @foreach (var category in RecipeTypes.Where(t => t.Category == CategoryType.Type))
                     {
@@ -84,8 +84,14 @@
     public bool Loaded { get; set; }
     [Parameter]
     public Action ReFilter { get; set; }
+    public MudChip[] NationalityChips { get; set; }
+    public MudChip[] ProteinChips { get; set; }
+    public MudChip[] TypeChips { get; set; }
     public void ApplyFilter()
     {
+        Filters.ProteinList = ProteinChips.Select(r => (RecipeTag)r.Tag).ToList();
+        Filters.NationalityList = NationalityChips.Select(r => (RecipeTag)r.Tag).ToList();
+        Filters.TypeList = TypeChips.Select(r => (RecipeTag)r.Tag).ToList();
         ReFilter.Invoke();
     }
     private int? activeRating;

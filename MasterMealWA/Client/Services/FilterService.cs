@@ -26,22 +26,21 @@ namespace MasterMealWA.Client.Services
             }
             //Nationality
 
-            if (filter.NationalityChips is not null)
+            if (filter.NationalityList is not null)
             {
 
-                var nationalitySet = filter.NationalityChips.Select(r => (RecipeTag)r.Tag);
-                if (nationalitySet.Any())
+                if (filter.NationalityList.Any())
                 {
 
                     if (filter.HasAllNationalities)
                     {
-                        recipes = recipes.Where(r => nationalitySet.All(i => r.Tags.Contains(i))).ToList();
+                        recipes = recipes.Where(r => filter.NationalityList.All(i => r.Tags.Contains(i))).ToList();
 
                     }
                     else
                     {
                         List<Recipe> recipesWithTags = new();
-                        foreach (var item in nationalitySet)
+                        foreach (var item in filter.NationalityList)
                         {
                             recipesWithTags.AddRange(recipes.Where(r => r.Tags.Contains(item)));
                         }
@@ -51,46 +50,41 @@ namespace MasterMealWA.Client.Services
 
 
             }
-            if (filter.ProteinChips is not null)
+            if (filter.ProteinList is not null)
             {
 
                 //Protein
-                var proteinList = filter.ProteinChips.Select(r => (RecipeTag)r.Tag).ToList();
-                if (proteinList.Any())
+                if (filter.ProteinList.Any())
                 {
-                    
+
                     if (filter.HasAllProteins)
                     {
-                        recipes = recipes.Where(r => proteinList.All(p => r.Tags.Contains(p))).ToList();
+                        recipes = recipes.Where(r => filter.ProteinList.All(p => r.Tags.Contains(p))).ToList();
                     }
                     else
                     {
-                        recipes = recipes.Where(r => r.Tags.Intersect(proteinList).Any()).ToList();
+                        recipes = recipes.Where(r => r.Tags.Intersect(filter.ProteinList).Any()).ToList();
                     }
                 }
 
             }
 
             //Type
-            if (filter.TypeChips is not null)
-            {
 
-                var typeSet = filter.TypeChips.Select(r => (RecipeTag)r.Tag);
-                if (typeSet.Any())
+            if (filter.TypeList.Any())
+            {
+                if (filter.HasAllTypes)
                 {
-                    if (filter.HasAllTypes)
+                    recipes = recipes.Where(r => filter.TypeList.All(t => r.Tags.Contains(t))).ToList();
+                }
+                else
+                {
+                    List<Recipe> recipesWithTags = new();
+                    foreach (var item in filter.TypeList)
                     {
-                        recipes = recipes.Where(r => typeSet.All(t => r.Tags.Contains(t))).ToList();
+                        recipesWithTags.AddRange(recipes.Where(r => r.Tags.Contains(item)));
                     }
-                    else
-                    {
-                        List<Recipe> recipesWithTags = new();
-                        foreach (var item in typeSet)
-                        {
-                            recipesWithTags.AddRange(recipes.Where(r => r.Tags.Contains(item)));
-                        }
-                        recipes = recipesWithTags.Distinct().ToList();
-                    }
+                    recipes = recipesWithTags.Distinct().ToList();
                 }
             }
             //Rating

@@ -1,4 +1,5 @@
-﻿using MudBlazor;
+﻿using MasterMealWA.Shared.Models;
+using MudBlazor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,11 +11,11 @@ namespace MasterMealWA.Client.Models
     {
         public bool MyRecipes { get; set; }
         public bool MySupplies { get; set; }
-        public MudChip[] NationalityChips { get; set; }
+        public List<RecipeTag> NationalityList { get; set; }
         public bool HasAllNationalities { get; set; }
-        public MudChip[] ProteinChips { get; set; } 
+        public List<RecipeTag> ProteinList { get; set; } 
         public bool HasAllProteins { get; set; }
-        public MudChip[] TypeChips { get; set; }
+        public List<RecipeTag> TypeList { get; set; }
         public bool HasAllTypes { get; set; }
         public int LowestRating { get; set; } = 0;
         public bool CookingTime { get; set; }
