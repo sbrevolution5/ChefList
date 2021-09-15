@@ -6,10 +6,10 @@
     <MudButton OnClick="ApplyFilter" FullWidth="true" Variant="Variant.Filled" Color="Color.Primary" Class="m-1 p-1">Apply Filters</MudButton>
     <MudExpansionPanels MultiExpansion="true" Elevation="2">
 
-        <MudExpansionPanel Text="Author" IsInitiallyExpanded="true">
+        <MudExpansionPanel Text="Author" IsInitiallyExpanded="@string.IsNullOrEmpty(userId)">
             <MudSwitch Color="Color.Primary" Label="Only My Recipes" @bind-Checked="myRecipes" Disabled="@string.IsNullOrEmpty(userId)" />
         </MudExpansionPanel>
-        <MudExpansionPanel Text="Supplies" IsInitiallyExpanded="true">
+        <MudExpansionPanel Text="Supplies" IsInitiallyExpanded="@string.IsNullOrEmpty(userId)">
             <MudSwitch Disabled="true" Color="Color.Primary" Label="I have Supplies" @bind-Checked="mySupplies" />
         </MudExpansionPanel>
         @if (!Loaded)
