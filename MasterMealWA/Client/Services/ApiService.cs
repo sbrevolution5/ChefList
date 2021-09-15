@@ -285,5 +285,11 @@ namespace MasterMealWA.Client.Services
                 return false;
             }
         }
+
+        public async Task<DBImage> GetImageAsync(int id)
+        {
+            DBImage result = await _http.GetFromJsonAsync<DBImage>($"api/dbimages/{id}");
+            return result;
+        }
     }
 }

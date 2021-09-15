@@ -5,6 +5,7 @@
 @inject NavigationManager nav
 @inject IDialogService _dialogService
 @inject ISnackbar _snackbar
+@inject IImageReader _imageReader
 @using System.Net.Http.Headers
 <EditForm Model="@recipe" OnValidSubmit="CreateRecipeAsync">
     <DataAnnotationsValidator />
@@ -34,17 +35,18 @@
                                     Icon="@Icons.Filled.Image"
                                     Label="Load picture"
                                     for="fileInput" />
-                            @if (files != null)
+                            @if (string.IsNullOrEmpty(ImageName))
                             {
-                                <MudText Typo="@Typo.h6">@files.Count() File@(files.Count() == 1 ? "" : "s"):</MudText>
-                                <MudList>
-                                    @foreach (var file in files)
-                                    {
-                                        <MudListItem Icon="@Icons.Filled.AttachFile" @key="@file">
-                                            @ImageName <code>@file.Size bytes</code>
-                                        </MudListItem>
-                                    }
-                                </MudList>
+                                <MudCard>
+                                    <MudCardMedia Image="@(_imageReader.ReadImageData(recipe.Image.ImageData, recipe.Image.ContentType))">
+                                    </MudCardMedia>
+                                </MudCard>
+
+                            }
+                            else
+                            {
+
+                                <MudText Typo="@Typo.h6">@ImageName<code>@file.Size bytes</code></MudText>
                             }
                         </MudItem>
                         <MudItem xs="12">
@@ -253,7 +255,7 @@
             supplyList = await _api.GetAllSuppliesAsync();
         }
     }
-    IList<IBrowserFile> files = new List<IBrowserFile>();
+    IBrowserFile file;
     private async Task UploadFiles(InputFileChangeEventArgs e)
     {
 
@@ -266,12 +268,12 @@
             {
                 var content = new MultipartFormDataContent();
                 content.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data");
-                content.Add(new StreamContent(ms, Convert.ToInt32(resizedFile.Size)), "image", imageFile.Name);
+                content.Add(new StreamContent(ms, Convert.ToInt32(resizedFile.Size)), "image", file.Name);
                 if (recipe.ImageId == 0)
                 {
 
                     ImgId = await _api.UploadImageAsync(content);
-
+                    StateHasChanged();
                 }
                 else
                 {
@@ -280,13 +282,14 @@
                     {
                         _snackbar.Add("Image Updated", Severity.Success);
                         ImageName = file.Name;
+                        StateHasChanged();
                     }
                     else
                     {
                         _snackbar.Add("Image Failed to update", Severity.Error);
                     }
                 }
-                //await OnChange.InvokeAsync(ImgUrl);
+                
             }
         }
     }
