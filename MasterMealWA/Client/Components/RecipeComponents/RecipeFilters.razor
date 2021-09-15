@@ -1,0 +1,135 @@
+﻿@using MasterMealWA.Client.Models
+
+<MudPaper Class="py-3" Square="true">
+
+
+    <MudButton OnClick="ApplyFilter" FullWidth="true" Variant="Variant.Filled" Color="Color.Primary" Class="m-1 p-1">Apply Filters</MudButton>
+    <MudExpansionPanels MultiExpansion="true" Elevation="2">
+
+        <MudExpansionPanel Text="Author" IsInitiallyExpanded="@string.IsNullOrEmpty(userId)">
+            <MudSwitch Color="Color.Primary" Label="Only My Recipes" @bind-Checked="myRecipes" Disabled="@string.IsNullOrEmpty(userId)" />
+        </MudExpansionPanel>
+        <MudExpansionPanel Text="Supplies" IsInitiallyExpanded="@string.IsNullOrEmpty(userId)">
+            <MudSwitch Disabled="true" Color="Color.Primary" Label="I have Supplies" @bind-Checked="mySupplies" />
+        </MudExpansionPanel>
+        @if (!Loaded)
+        {
+            <Loader />
+        }
+        else
+        {
+
+            <MudExpansionPanel Text="Nationality" IsInitiallyExpanded="true">
+                <MudChipSet MultiSelection="true" Filter="true" @bind-SelectedChips="NationalityChips">
+                    @foreach (var category in RecipeTypes.Where(t => t.Category == CategoryType.Nationality))
+                    {
+
+                        <MudChip Color="@BadgeColor(category.Category)" Tag="category" Text="@category.Name"></MudChip>
+                    }
+                </MudChipSet>
+                <MudSwitch Color="Color.Primary" Label="Must have all selected Nationalities" @bind-Checked="Filters.HasAllNationalities" />
+            </MudExpansionPanel>
+            <MudExpansionPanel Text="Protein Types" IsInitiallyExpanded="true">
+                <MudChipSet MultiSelection="true" Filter="true" @bind-SelectedChips="ProteinChips">
+                    @foreach (var category in RecipeTypes.Where(t => t.Category == CategoryType.Protein))
+                    {
+                        <MudChip Color="@BadgeColor(category.Category)" Tag="category" Text="@category.Name"></MudChip>
+                    }
+                </MudChipSet>
+                <MudSwitch Color="Color.Primary" Label="Must have all selected proteins" @bind-Checked="Filters.HasAllProteins" />
+            </MudExpansionPanel>
+            <MudExpansionPanel Text="Other Categories" IsInitiallyExpanded="true">
+                <MudChipSet MultiSelection="true" Filter="true" @bind-SelectedChips="TypeChips">
+
+                    @foreach (var category in RecipeTypes.Where(t => t.Category == CategoryType.Type))
+                    {
+
+                        <MudChip Color="@BadgeColor(category.Category)" Tag="category" Text="@category.Name" />
+                    }
+                </MudChipSet>
+                <MudSwitch Color="Color.Primary" Label="Must have all types" @bind-Checked="Filters.HasAllTypes" />
+            </MudExpansionPanel>
+        }
+        <MudExpansionPanel Text="Rating" IsInitiallyExpanded="true">
+            <div class="d-flex flex-column align-center">
+                <MudRating Color="Color.Secondary" @bind-SelectedValue="Filters.LowestRating" HoveredValueChanged="HandleHoveredValueChanged" />
+                <MudText Typo="Typo.subtitle2" Class="mt-2">@RatingText</MudText>
+            </div>
+
+
+
+        </MudExpansionPanel>
+        <MudExpansionPanel Text="Cooking Time" IsInitiallyExpanded="true">
+            <MudSwitch Color="Color.Primary" Label="FilterByTime" @bind-Checked="Filters.CookingTime" />
+
+            <MudItem xs="12">
+                <MudNumericField Disabled="@(!Filters.CookingTime)" @bind-Value="Filters.MinCookingTime" Label="Min Cooking Time" Variant="Variant.Text" Min="0" Max="90" />
+            </MudItem>
+            <MudItem xs="12">
+                <MudNumericField Disabled="@(!Filters.CookingTime)" @bind-Value="Filters.MaxCookingTime" Label="Max cooking time" Variant="Variant.Text" Min="0" Max="90" />
+            </MudItem>
+        </MudExpansionPanel>
+    </MudExpansionPanels>
+    <MudButton OnClick="ApplyFilter" FullWidth="true" Variant="Variant.Filled" Color="Color.Primary">Apply Filters</MudButton>
+</MudPaper>
+
+@code {
+    [Parameter]
+    public Filter Filters { get; set; }
+    [Parameter]
+    public string userId { get; set; }
+    [Parameter]
+    public List<RecipeTag> RecipeTypes { get; set; }
+    [Parameter]
+    public bool Loaded { get; set; }
+    [Parameter]
+    public Action ReFilter { get; set; }
+    public MudChip[] NationalityChips { get; set; }
+    public MudChip[] ProteinChips { get; set; }
+    public MudChip[] TypeChips { get; set; }
+    public void ApplyFilter()
+    {
+        if (ProteinChips is not null)
+        {
+
+            Filters.ProteinList = ProteinChips.Select(r => (RecipeTag)r.Tag).ToList();
+        }
+        if (NationalityChips is not null)
+        {
+
+            Filters.NationalityList = NationalityChips.Select(r => (RecipeTag)r.Tag).ToList();
+        }
+        if (TypeChips is not null)
+        {
+
+            Filters.TypeList = TypeChips.Select(r => (RecipeTag)r.Tag).ToList();
+        }
+        ReFilter.Invoke();
+    }
+    private int? activeRating;
+    public Color BadgeColor(CategoryType type)
+    {
+        if (type == CategoryType.Nationality)
+        {
+            return Color.Primary;
+        }
+        if (type == CategoryType.Protein)
+        {
+            return Color.Secondary;
+        }
+        return Color.Tertiary;
+
+    }
+    private bool mySupplies { get; set; }
+    private bool myRecipes { get; set; }
+    private void HandleHoveredValueChanged(int? val) => activeRating = val;
+    private string RatingText => (activeRating ?? Filters.LowestRating) switch
+    {
+        1 => "1 Star or more",
+        2 => "2 Stars or more",
+        3 => "3 Stars or more",
+        4 => "4 Stars or more",
+        5 => "5 Stars",
+        _ => "Any Rating"
+    };
+}
