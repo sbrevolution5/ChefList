@@ -24,6 +24,7 @@ namespace MasterMealWA.Client.Services.Interfaces
         Task UpdateIngredientTypeAsync(IngredientType ingredientType);
         Task UpdateShoppingListAsync(ListCreateDto dto);
         Task UpdateSupplyAsync(Supply supply);
+        Task<bool> UpdateImageAsync(MultipartFormDataContent content);
         Task<int> UploadImageAsync(MultipartFormDataContent content);
         Task DeleteRecipeAsync(int id);
         Task DeleteTagAsync(int id);

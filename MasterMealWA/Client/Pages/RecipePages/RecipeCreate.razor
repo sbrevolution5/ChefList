@@ -267,7 +267,17 @@
                     var content = new MultipartFormDataContent();
                     content.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data");
                     content.Add(new StreamContent(ms, Convert.ToInt32(resizedFile.Size)), "image", imageFile.Name);
-                    ImgId = await _api.UploadImageAsync(content);
+                    if (recipe.ImageId == 0)
+                    {
+
+                        ImgId = await _api.UploadImageAsync(content);
+                        
+                    }
+                    else
+                    {
+                        await _api.UpdateImageAsync(content);
+                        ImgId = recipe.ImageId;
+                    }
                     //await OnChange.InvokeAsync(ImgUrl);
                 }
             }

@@ -272,5 +272,18 @@ namespace MasterMealWA.Client.Services
                 throw;
             }
         }
+        public async Task<bool> UpdateImageAsync(MultipartFormDataContent content)
+        {
+            try
+            {
+                var result = await _http.PostAsync("api/dbimages", content);
+                return true;
+            }
+            catch (Exception)
+            {
+
+                return false;
+            }
+        }
     }
 }
