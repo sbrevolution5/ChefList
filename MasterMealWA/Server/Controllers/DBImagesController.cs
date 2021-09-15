@@ -88,10 +88,11 @@ namespace MasterMealWA.Server.Controllers
         // PUT: api/DBImages/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutDBImage(int id, DBImage dBImage)
+        public async Task<IActionResult> PutDBImage(int id)
         {
             try
             {
+                var dBImage = await _context.DBImage.FindAsync(id);
                 var file = Request.Form.Files[0];
                 var imagedata = await _fileService.ConvertFileToByteArrayAsync(file);
                 string contentType = "";

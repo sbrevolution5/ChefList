@@ -276,7 +276,7 @@
                     }
                     else
                     {
-                        var res = await _api.UpdateImageAsync(content);
+                        var res = await _api.UpdateImageAsync(content,recipe.ImageId);
                         if (res)
                         {
                             _snackbar.Add("Image Updated");
@@ -285,7 +285,6 @@
                         {
                             _snackbar.Add("Image Failed to update", Severity.Error);
                         }
-                        ImgId = recipe.ImageId;
                     }
                     //await OnChange.InvokeAsync(ImgUrl);
                 }
