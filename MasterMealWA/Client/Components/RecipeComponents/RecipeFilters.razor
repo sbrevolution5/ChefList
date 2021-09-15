@@ -24,7 +24,7 @@
                     @foreach (var category in RecipeTypes.Where(t => t.Category == CategoryType.Nationality))
                     {
 
-                        <MudChip Color="@BadgeColor(category.Category)" Text="@category.Name"></MudChip>
+                        <MudChip Color="@BadgeColor(category.Category)" Tag="category" Text="@category.Name"></MudChip>
                     }
                 </MudChipSet>
                 <MudSwitch Color="Color.Primary" Label="Must have all selected Nationalities" @bind-Checked="Filters.HasAllNationalities" />
@@ -33,7 +33,7 @@
                 <MudChipSet MultiSelection="true" Filter="true" @bind-SelectedChips="Filters.ProteinChips">
                     @foreach (var category in RecipeTypes.Where(t => t.Category == CategoryType.Protein))
                     {
-                        <MudChip Color="@BadgeColor(category.Category)" Text="@category.Name"></MudChip>
+                        <MudChip Color="@BadgeColor(category.Category)" Tag="category" Text="@category.Name"></MudChip>
                     }
                 </MudChipSet>
                 <MudSwitch Color="Color.Primary" Label="Must have all selected proteins" @bind-Checked="Filters.HasAllProteins" />
@@ -44,7 +44,7 @@
                     @foreach (var category in RecipeTypes.Where(t => t.Category == CategoryType.Type))
                     {
 
-                        <MudChip Color="@BadgeColor(category.Category)" Text="@category.Name" />
+                        <MudChip Color="@BadgeColor(category.Category)" Tag="category" Text="@category.Name" />
                     }
                 </MudChipSet>
                 <MudSwitch Color="Color.Primary" Label="Must have all types" @bind-Checked="Filters.HasAllTypes" />
