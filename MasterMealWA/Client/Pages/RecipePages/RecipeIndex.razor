@@ -20,14 +20,11 @@
     <RecipeFilters Loaded="Loaded" Filters="Filters" RecipeTypes="RecipeTypes" userId="@userId" ReFilter="()=>FilterRecipes()" />
 </MudItem>
 
+
 <MudItem xs="12" md="9">
     @if (!Loaded)
     {
-
-
         <Loader></Loader>
-
-
     }
     else
     {
@@ -45,7 +42,6 @@
                         <MudCard Elevation="2">
                             <MudCardMedia Image="@(_imageReader.ReadImageData(recipe.Image.ImageData, recipe.Image.ContentType))"></MudCardMedia>
                             <MudCardContent>
-
                                 <MudText>@recipe.Name</MudText>
                                 <MudText Typo="Typo.caption">@recipe.Author.ScreenName</MudText>
                                 <MudText>Cooking time: @recipe.CookingTime</MudText>
@@ -112,7 +108,7 @@
     public string mine { get; set; }
     public Filter Filters { get; set; } = new();
     private List<Recipe> AllRecipes;
-    private List<Recipe> FilteredRecipes;
+    public List<Recipe> FilteredRecipes;
     private List<Recipe> pageRecipes { get; set; }
     private List<RecipeTag> RecipeTypes { get; set; }
     private bool mySupplies { get; set; }
@@ -176,7 +172,7 @@
         base.OnInitialized();
         Loaded = true;
     }
-    private void FilterRecipes()
+    public void FilterRecipes()
     {
         FilteredRecipes = _filterService.ApplyFilter(AllRecipes, Filters, userId);
         pageCount = (FilteredRecipes.Count / 6) + 1;
@@ -188,13 +184,13 @@
         {
 
             AllRecipes = await _api.GetMyRecipesAsync();
-            FilteredRecipes = AllRecipes;
+            FilterRecipes();
         }
         else
         {
 
             AllRecipes = await _api.GetAllRecipesAsync(Auth);
-            FilteredRecipes = AllRecipes;
+            FilterRecipes();
         }
         pageCount = (FilteredRecipes.Count / 6) + 1;
     }
