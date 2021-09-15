@@ -35,18 +35,17 @@
                                     Icon="@Icons.Filled.Image"
                                     Label="Load picture"
                                     for="fileInput" />
-                            @if (string.IsNullOrEmpty(ImageName))
+                            @if (recipe.ImageId !=0)
                             {
-                                <MudCard>
-                                    <MudCardMedia Image="@(_imageReader.ReadImageData(recipe.Image.ImageData, recipe.Image.ContentType))">
-                                    </MudCardMedia>
-                                </MudCard>
-
+                        <MudCard>
+                            <MudCardMedia Image="@(imageString)">
+                            </MudCardMedia>
+                        </MudCard>
                             }
                             else
                             {
 
-                                <MudText Typo="@Typo.h6">@ImageName<code>@file.Size bytes</code></MudText>
+                                <MudText Typo="@Typo.h6">No Image, will use default</MudText>
                             }
                         </MudItem>
                         <MudItem xs="12">
@@ -186,7 +185,8 @@
     private IBrowserFile bytefile { get; set; }
     private string contentType { get; set; }
     private int ImgId { get; set; }
-    private string ImageName { get; set; }
+    public DBImage image { get; set; }
+    public string imageString { get; set; }
     protected override async Task OnInitializedAsync()
     {
         recipe.Servings = 2;
@@ -269,19 +269,23 @@
                 var content = new MultipartFormDataContent();
                 content.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data");
                 content.Add(new StreamContent(ms, Convert.ToInt32(resizedFile.Size)), "image", file.Name);
-                if (recipe.ImageId == 0)
+                if (recipe.ImageId == 0 || recipe.ImageId == 1)
                 {
 
                     ImgId = await _api.UploadImageAsync(content);
+                    recipe.ImageId = ImgId;
+                    image = await _api.GetImageAsync(recipe.ImageId);
+                    imageString = _imageReader.ReadImageData(image.ImageData, image.ContentType);
                     StateHasChanged();
                 }
                 else
                 {
-                    var res = await _api.UpdateImageAsync(content,recipe.ImageId);
+                    var res = await _api.UpdateImageAsync(content, recipe.ImageId);
                     if (res)
                     {
                         _snackbar.Add("Image Updated", Severity.Success);
-                        ImageName = file.Name;
+                        image = await _api.GetImageAsync(recipe.ImageId);
+                        imageString = _imageReader.ReadImageData(image.ImageData, image.ContentType);
                         StateHasChanged();
                     }
                     else
@@ -289,9 +293,8 @@
                         _snackbar.Add("Image Failed to update", Severity.Error);
                     }
                 }
-                
+
             }
         }
-    }
     }
 }
