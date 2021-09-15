@@ -197,6 +197,7 @@
     private void ChangePage(int page)
     {
         pageRecipes = FilteredRecipes.OrderBy(r => r.Id).Skip((page - 1) * 6).Take(6).ToList();
+        StateHasChanged();
     }
     public async Task DeleteRecipe(Recipe recipe)
     {
