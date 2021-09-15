@@ -41,7 +41,7 @@
                                     @foreach (var file in files)
                                     {
                                         <MudListItem Icon="@Icons.Filled.AttachFile" @key="@file">
-                                            @file.Name <code>@file.Size bytes</code>
+                                            @ImageName <code>@file.Size bytes</code>
                                         </MudListItem>
                                     }
                                 </MudList>
@@ -184,6 +184,7 @@
     private IBrowserFile bytefile { get; set; }
     private string contentType { get; set; }
     private int ImgId { get; set; }
+    private string ImageName { get; set; }
     protected override async Task OnInitializedAsync()
     {
         recipe.Servings = 2;
@@ -256,39 +257,38 @@
     private async Task UploadFiles(InputFileChangeEventArgs e)
     {
 
-        var imageFiles = e.GetMultipleFiles();
-        foreach (var imageFile in imageFiles)
+        var file = e.File;
+        if (file != null)
         {
-            if (imageFile != null)
+            var resizedFile = await file.RequestImageFileAsync("image/png", 1000, 1000);
+
+            using (var ms = resizedFile.OpenReadStream(resizedFile.Size))
             {
-                var resizedFile = await imageFile.RequestImageFileAsync("image/png", 1000, 1000);
-
-                using (var ms = resizedFile.OpenReadStream(resizedFile.Size))
+                var content = new MultipartFormDataContent();
+                content.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data");
+                content.Add(new StreamContent(ms, Convert.ToInt32(resizedFile.Size)), "image", imageFile.Name);
+                if (recipe.ImageId == 0)
                 {
-                    var content = new MultipartFormDataContent();
-                    content.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data");
-                    content.Add(new StreamContent(ms, Convert.ToInt32(resizedFile.Size)), "image", imageFile.Name);
-                    if (recipe.ImageId == 0)
+
+                    ImgId = await _api.UploadImageAsync(content);
+
+                }
+                else
+                {
+                    var res = await _api.UpdateImageAsync(content,recipe.ImageId);
+                    if (res)
                     {
-
-                        ImgId = await _api.UploadImageAsync(content);
-
+                        _snackbar.Add("Image Updated", Severity.Success);
+                        ImageName = file.Name;
                     }
                     else
                     {
-                        var res = await _api.UpdateImageAsync(content,recipe.ImageId);
-                        if (res)
-                        {
-                            _snackbar.Add("Image Updated");
-                        }
-                        else
-                        {
-                            _snackbar.Add("Image Failed to update", Severity.Error);
-                        }
+                        _snackbar.Add("Image Failed to update", Severity.Error);
                     }
-                    //await OnChange.InvokeAsync(ImgUrl);
                 }
+                //await OnChange.InvokeAsync(ImgUrl);
             }
         }
+    }
     }
 }

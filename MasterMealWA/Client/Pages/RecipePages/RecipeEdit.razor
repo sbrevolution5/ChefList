@@ -46,7 +46,7 @@ else
                                         for="fileInput" />
                                 @if (file != null)
                                 {
-                                    <MudText Typo="@Typo.h6">@file.Name<code>@file.Size bytes</code></MudText>
+                                    <MudText Typo="@Typo.h6">@ImageName<code>@file.Size bytes</code></MudText>
                                 }
                             </MudItem>
                             <MudItem xs="12">
@@ -181,7 +181,7 @@ else
 @code{
     [Parameter]
     public string id { get; set; }
-    public Recipe recipe { get; set; } = new();
+    public Recipe recipe { get; set; }
     public List<RecipeTag> Tags { get; set; }
     public List<Ingredient> ingredients { get; set; }
     public List<QIngredient> RemovedIngredients { get; set; } = new();
@@ -190,6 +190,7 @@ else
     public List<Supply> supplyList { get; set; }
     public MudChip[] recipeTags { get; set; }
     public int ImgId { get; set; }
+    public string ImageName { get; set; }
     protected override async Task OnInitializedAsync()
     {
         recipe = await _api.GetRecipeAsync(Convert.ToInt32(id), true);
@@ -307,13 +308,15 @@ else
 
                     ImgId = await _api.UploadImageAsync(content);
                     recipe.ImageId = ImgId;
+                    ImageName = file.Name;
                 }
                 else
                 {
                     var res = await _api.UpdateImageAsync(content,recipe.ImageId);
                     if (res)
                     {
-                        _snackbar.Add("Image Updated");
+                        _snackbar.Add("Image Updated", Severity.Success);
+                        ImageName = file.Name;
                     }
                     else
                     {
