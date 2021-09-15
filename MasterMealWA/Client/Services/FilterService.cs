@@ -29,27 +29,20 @@ namespace MasterMealWA.Client.Services
             if (filter.NationalityList is not null)
             {
 
-                if (filter.NationalityList.Any())
+
+
+                if (filter.HasAllNationalities)
                 {
-
-                    if (filter.HasAllNationalities)
-                    {
-                        recipes = recipes.Where(r => filter.NationalityList.All(i => r.Tags.Contains(i))).ToList();
-
-                    }
-                    else
-                    {
-                        List<Recipe> recipesWithTags = new();
-                        foreach (var item in filter.NationalityList)
-                        {
-                            recipesWithTags.AddRange(recipes.Where(r => r.Tags.Contains(item)));
-                        }
-                        recipes = recipesWithTags.Distinct().ToList();
-                    }
+                    recipes = recipes.Where(r => filter.NationalityList.All(p => r.Tags.Contains(p))).ToList();
+                }
+                else
+                {
+                    recipes = recipes.Where(r => r.Tags.Select(t => t.Id).Intersect(filter.NationalityList.Select(t => t.Id)).Any()).ToList();
                 }
 
 
             }
+
             if (filter.ProteinList is not null)
             {
 
@@ -62,7 +55,6 @@ namespace MasterMealWA.Client.Services
                 else
                 {
                     recipes = recipes.Where(r => r.Tags.Select(t=>t.Id).Intersect(filter.ProteinList.Select(t=>t.Id)).Any()).ToList();
-                    //recipes = recipes.Where(r => r.Tags.Intersect(filter.ProteinList).Any()).ToList();
                 }
 
 
@@ -72,19 +64,19 @@ namespace MasterMealWA.Client.Services
 
             if (filter.TypeList is not null)
             {
+
+
+
                 if (filter.HasAllTypes)
                 {
-                    recipes = recipes.Where(r => filter.TypeList.All(t => r.Tags.Contains(t))).ToList();
+                    recipes = recipes.Where(r => filter.TypeList.All(p => r.Tags.Contains(p))).ToList();
                 }
                 else
                 {
-                    List<Recipe> recipesWithTags = new();
-                    foreach (var item in filter.TypeList)
-                    {
-                        recipesWithTags.AddRange(recipes.Where(r => r.Tags.Contains(item)));
-                    }
-                    recipes = recipesWithTags.Distinct().ToList();
+                    recipes = recipes.Where(r => r.Tags.Select(t => t.Id).Intersect(filter.TypeList.Select(t => t.Id)).Any()).ToList();
                 }
+
+
             }
             //Rating
             if (filter.LowestRating > 1)
