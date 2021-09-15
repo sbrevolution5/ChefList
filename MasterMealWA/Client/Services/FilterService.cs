@@ -26,36 +26,45 @@ namespace MasterMealWA.Client.Services
             //Nationality
             if (filter.NationalityList is not null)
             {
-                if (filter.HasAllNationalities)
+                if (filter.NationalityList.Any())
                 {
-                    recipes = recipes.Where(r => filter.NationalityList.All(p => r.Tags.Contains(p))).ToList();
-                }
-                else
-                {
-                    recipes = recipes.Where(r => r.Tags.Select(t => t.Id).Intersect(filter.NationalityList.Select(t => t.Id)).Any()).ToList();
+                    if (filter.HasAllNationalities)
+                    {
+                        recipes = recipes.Where(r => filter.NationalityList.All(p => r.Tags.Contains(p))).ToList();
+                    }
+                    else
+                    {
+                        recipes = recipes.Where(r => r.Tags.Select(t => t.Id).Intersect(filter.NationalityList.Select(t => t.Id)).Any()).ToList();
+                    }
                 }
             }
             if (filter.ProteinList is not null)
             {
-                if (filter.HasAllProteins)
+                if (filter.ProteinList.Any())
                 {
-                    recipes = recipes.Where(r => filter.ProteinList.All(p => r.Tags.Contains(p))).ToList();
-                }
-                else
-                {
-                    recipes = recipes.Where(r => r.Tags.Select(t=>t.Id).Intersect(filter.ProteinList.Select(t=>t.Id)).Any()).ToList();
+                    if (filter.HasAllProteins)
+                    {
+                        recipes = recipes.Where(r => filter.ProteinList.All(p => r.Tags.Contains(p))).ToList();
+                    }
+                    else
+                    {
+                        recipes = recipes.Where(r => r.Tags.Select(t => t.Id).Intersect(filter.ProteinList.Select(t => t.Id)).Any()).ToList();
+                    }
                 }
             }
             //Type
             if (filter.TypeList is not null)
             {
-                if (filter.HasAllTypes)
+                if (filter.NationalityList.Any())
                 {
-                    recipes = recipes.Where(r => filter.TypeList.All(p => r.Tags.Contains(p))).ToList();
-                }
-                else
-                {
-                    recipes = recipes.Where(r => r.Tags.Select(t => t.Id).Intersect(filter.TypeList.Select(t => t.Id)).Any()).ToList();
+                    if (filter.HasAllTypes)
+                    {
+                        recipes = recipes.Where(r => filter.TypeList.All(p => r.Tags.Contains(p))).ToList();
+                    }
+                    else
+                    {
+                        recipes = recipes.Where(r => r.Tags.Select(t => t.Id).Intersect(filter.TypeList.Select(t => t.Id)).Any()).ToList();
+                    }
                 }
             }
             //Rating
