@@ -44,17 +44,9 @@ else
                                         Icon="@Icons.Filled.Image"
                                         Label="Load picture"
                                         for="fileInput" />
-                                @if (files != null)
+                                @if (file != null)
                                 {
-                                    <MudText Typo="@Typo.h6">@files.Count() File@(files.Count() == 1 ? "" : "s"):</MudText>
-                                    <MudList>
-                                        @foreach (var file in files)
-                                        {
-                                            <MudListItem Icon="@Icons.Filled.AttachFile" @key="@file">
-                                                @file.Name <code>@file.Size bytes</code>
-                                            </MudListItem>
-                                        }
-                                    </MudList>
+                                    <MudText Typo="@Typo.h6">@file.Name<code>@file.Size bytes</code></MudText>
                                 }
                             </MudItem>
                             <MudItem xs="12">
@@ -82,7 +74,7 @@ else
 
                                     <MudChipSet MultiSelection="true" @bind-SelectedChips="recipeTags" Filter="true">
 
-                                        @foreach (RecipeTag tag in Tags.OrderBy(t=>t.Category))
+                                        @foreach (RecipeTag tag in Tags.OrderBy(t => t.Category))
                                         {
                                             <MudChip Color="BadgeColor(tag.Category)" Default="@RecipeHasTag(tag)" Tag="tag">@tag.Name</MudChip>
                                         }
@@ -201,7 +193,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         recipe = await _api.GetRecipeAsync(Convert.ToInt32(id), true);
-        if (recipe.AuthorId != await _userService.GetUserIdAsync()&& !(await _userService.IsModeratorAsync()))
+        if (recipe.AuthorId != await _userService.GetUserIdAsync() && !(await _userService.IsModeratorAsync()))
         {
             nav.NavigateTo("recipes");
         }
@@ -248,7 +240,7 @@ else
     }
     public bool RecipeHasTag(RecipeTag tag)
     {
-        if (recipe.Tags.Where(t=>t.Id == tag.Id).Count() >0)
+        if (recipe.Tags.Where(t => t.Id == tag.Id).Count() > 0)
         {
             return true;
         }
@@ -296,43 +288,41 @@ else
             supplyList = await _api.GetAllSuppliesAsync();
         }
     }
-    IList<IBrowserFile> files = new List<IBrowserFile>();
+    public IBrowserFile file;
     private async Task UploadFiles(InputFileChangeEventArgs e)
     {
 
-        var imageFiles = e.GetMultipleFiles();
-        foreach (var imageFile in imageFiles)
+        var imageFile = e.File;
+        if (imageFile != null)
         {
-            if (imageFile != null)
+            var resizedFile = await imageFile.RequestImageFileAsync("image/png", 1000, 1000);
+
+            using (var ms = resizedFile.OpenReadStream(resizedFile.Size))
             {
-                var resizedFile = await imageFile.RequestImageFileAsync("image/png", 1000, 1000);
-
-                using (var ms = resizedFile.OpenReadStream(resizedFile.Size))
+                var content = new MultipartFormDataContent();
+                content.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data");
+                content.Add(new StreamContent(ms, Convert.ToInt32(resizedFile.Size)), "image", imageFile.Name);
+                if (recipe.ImageId == 0 || recipe.ImageId == 1)
                 {
-                    var content = new MultipartFormDataContent();
-                    content.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data");
-                    content.Add(new StreamContent(ms, Convert.ToInt32(resizedFile.Size)), "image", imageFile.Name);
-                    if (recipe.ImageId == 0 ||recipe.ImageId ==  1)
+
+                    ImgId = await _api.UploadImageAsync(content);
+                    recipe.ImageId = ImgId;
+                }
+                else
+                {
+                    var res = await _api.UpdateImageAsync(content);
+                    if (res)
                     {
-
-                        ImgId = await _api.UploadImageAsync(content);
-
+                        _snackbar.Add("Image Updated");
                     }
                     else
                     {
-                        var res = await _api.UpdateImageAsync(content);
-                        if (res)
-                        {
-                            _snackbar.Add("Image Updated");
-                        }
-                        else
-                        {
-                            _snackbar.Add("Image Failed to update", Severity.Error);
-                        }
-                        ImgId = recipe.ImageId;
+                        _snackbar.Add("Image Failed to update", Severity.Error);
                     }
+                    ImgId = recipe.ImageId;
                 }
             }
         }
+        StateHasChanged();
     }
 }
