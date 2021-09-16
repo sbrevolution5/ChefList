@@ -1,8 +1,10 @@
 ﻿@inject IApiService _api
 @inject ISnackbar _snackbar
 <MudHidden IsHidden="@string.IsNullOrEmpty(UserId)">
-    <MudRating SelectedValue="userRating" ReadOnly="ReadOnly" SelectedValueChanged="(int i)=>SaveRating(i)"></MudRating>
+    <MudText Typo="Typo.subtitle2">Your Rating</MudText>
+    <MudRating SelectedValue="userRating"  ReadOnly="ReadOnly" SelectedValueChanged="(int i)=>SaveRating(i)"></MudRating>
 </MudHidden>
+<MudText Typo="Typo.subtitle2">Average Rating</MudText>
 <MudRating SelectedValue="AverageRating" ReadOnly="true"></MudRating>
 @code {
     [Parameter]
@@ -15,7 +17,7 @@
     public bool ReadOnly { get; set; }
     public async Task SaveRating(int i)
     {
-        if (i != 0)
+        if (i != 0 && i != userRating)
         {
 
             var res = await _api.CreateOrUpdateRatingAsync(recipe.Id, UserId, i, IsNewRating);

@@ -44,7 +44,7 @@ namespace MasterMealWA.Server.Controllers
                 return await _context.Recipe.Include(r => r.Author).Include(r=>r.Ratings).Include(r => r.Image).Where(r => !r.IsPrivate).Include(r=>r.Tags).ToListAsync();
             }
             var userId = HttpContext.GetUserId();
-            return await _context.Recipe.Include(r => r.Author).Include(r=>r.Image).Where(r => !r.IsPrivate || r.AuthorId == userId).Include(r => r.Tags).ToListAsync();
+            return await _context.Recipe.Include(r => r.Author).Include(r=>r.Image).Where(r => !r.IsPrivate || r.AuthorId == userId).Include(r => r.Tags).Include(r=>r.Ratings).ToListAsync();
         }
         // GET: api/Recipes
         [HttpGet("myrecipes")]
@@ -52,7 +52,7 @@ namespace MasterMealWA.Server.Controllers
         {
             
             var userId = HttpContext.GetUserId();
-            return await _context.Recipe.Include(r => r.Author).Include(r => r.Image).Where(r => r.AuthorId == userId).ToListAsync();
+            return await _context.Recipe.Include(r => r.Author).Include(r=>r.Tags).Include(r=>r.Ratings).Include(r => r.Image).Where(r => r.AuthorId == userId).ToListAsync();
         }
 
         // GET: api/Recipes/5
