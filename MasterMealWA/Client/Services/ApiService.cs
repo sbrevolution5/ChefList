@@ -310,14 +310,31 @@ namespace MasterMealWA.Client.Services
             }
         }
 
-        public Task<bool> CreateOrUpdateRating(int recipeId, string userId, int rating, bool isNew = true)
+        public async Task<bool> CreateOrUpdateRating(int recipeId, string userId, int rating, bool isNew = true)
         {
-            throw new NotImplementedException();
+            bool res;
+            if (isNew)
+            {
+                res = await CreateNewRatingAsync(recipeId, userId, rating);
+            }
+            else
+            {
+                res = await UpdateRatingAsync(recipeId, userId, rating);
+            }
+            return res;
         }
 
-        public Task<bool> UpdateRatingAsync(int recipeId, string userId, int rating)
+        public async Task<bool> UpdateRatingAsync(int recipeId, string userId, int rating)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _http.PutAsJsonAsync($"api/ratings/{recipeId}", rating);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
     }
 }
