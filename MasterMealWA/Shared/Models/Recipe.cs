@@ -20,7 +20,7 @@ namespace MasterMealWA.Shared.Models
         public int CookingTime { get; set; }
         [Required]
         public string Description { get; set; }
-        public virtual ICollection<Rating> Ratings { get; set; } = new HashSet<Rating>();
+        public ICollection<Rating> Ratings { get; set; } = new HashSet<Rating>();
         public string AuthorId { get; set; }
         public virtual Chef Author { get; set; }
         public int ImageId { get; set; }
