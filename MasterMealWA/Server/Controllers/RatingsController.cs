@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using MasterMealWA.Server.Data;
 using MasterMealWA.Shared.Models;
 using Microsoft.AspNetCore.Authorization;
+using MasterMealWA.Shared.Models.Dtos;
 
 namespace MasterMealWA.Server.Controllers
 {
@@ -47,13 +48,14 @@ namespace MasterMealWA.Server.Controllers
         // PUT: api/Ratings/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutRating(int id, Rating rating)
+        public async Task<IActionResult> PutRating(RatingEditDto dto)
         {
-            if (id != rating.Id)
+            var rating = await _context.Rating.Where(r => r.ChefId == dto.ChefId && r.RecipeId == dto.RecipeId).FirstOrDefaultAsync();
+            if (rating.RecipeId != dto.RecipeId || rating.ChefId != dto.ChefId)
             {
                 return BadRequest();
             }
-
+            rating.Stars = dto.NewRating;
             _context.Entry(rating).State = EntityState.Modified;
 
             try
@@ -62,14 +64,7 @@ namespace MasterMealWA.Server.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!RatingExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                throw;
             }
 
             return NoContent();
