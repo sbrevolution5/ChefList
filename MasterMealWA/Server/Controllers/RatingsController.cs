@@ -76,6 +76,8 @@ namespace MasterMealWA.Server.Controllers
         public async Task<ActionResult<Rating>> PostRating(Rating rating)
         {
             _context.Rating.Add(rating);
+            var recipe = await _context.Recipe.Where(r => r.Id == rating.RecipeId).FirstOrDefaultAsync();
+            recipe.Ratings.Add(rating);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetRating", new { id = rating.Id }, rating);
