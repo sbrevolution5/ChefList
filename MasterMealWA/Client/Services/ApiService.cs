@@ -310,7 +310,7 @@ namespace MasterMealWA.Client.Services
             }
         }
 
-        public async Task<bool> CreateOrUpdateRating(int recipeId, string userId, int rating, bool isNew = true)
+        public async Task<bool> CreateOrUpdateRatingAsync(int recipeId, string userId, int rating, bool isNew = true)
         {
             bool res;
             if (isNew)
