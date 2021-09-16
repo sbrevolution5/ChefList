@@ -1,6 +1,8 @@
 ﻿@inject IApiService _api
 <h3>RecipeRating</h3>
-<MudRating SelectedValue="userRating" ReadOnly="ReadOnly" SelectedValueChanged="(int i)=>SaveRating(i)"></MudRating>
+<MudHidden IsHidden="@string.IsNullOrEmpty(UserId)">
+    <MudRating SelectedValue="userRating"  ReadOnly="ReadOnly" SelectedValueChanged="(int i)=>SaveRating(i)"></MudRating>
+</MudHidden>
 <MudRating SelectedValue="AverageRating" ReadOnly="true"></MudRating>
 @code {
     [Parameter]
@@ -18,20 +20,16 @@
     {
         if (recipe.Ratings.Any())
         {
-            if (string.IsNullOrEmpty(UserId))
-            {
-
-                userRating = Convert.ToInt32(recipe.AvgRating);
-                ReadOnly = true;
-            }
-            else
+                AverageRating = Convert.ToInt32(recipe.AvgRating);
+            if (!string.IsNullOrEmpty(UserId))
             {
                 userRating = recipe.Ratings.Where(r => r.ChefId == UserId).FirstOrDefault().Stars;
+
             }
         }
         else
         {
-            display = 0;
+            AverageRating = 0;
         }
         base.OnInitialized();
     }
