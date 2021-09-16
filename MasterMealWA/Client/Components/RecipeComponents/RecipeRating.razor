@@ -1,12 +1,14 @@
 ﻿@inject IApiService _api
 <h3>RecipeRating</h3>
-<MudRating SelectedValue="display" ReadOnly="ReadOnly" SelectedValueChanged="(int i)=>SaveRating(i)"></MudRating>
+<MudRating SelectedValue="userRating" ReadOnly="ReadOnly" SelectedValueChanged="(int i)=>SaveRating(i)"></MudRating>
+<MudRating SelectedValue="AverageRating" ReadOnly="true"></MudRating>
 @code {
     [Parameter]
     public Recipe recipe { get; set; }
     [Parameter]
     public string UserId { get; set; }
-    public int display { get; set; }
+    public int AverageRating { get; set; }
+    public int userRating { get; set; }
     public bool ReadOnly { get; set; }
     public async Task<bool> SaveRating(int i)
     {
@@ -19,12 +21,12 @@
             if (string.IsNullOrEmpty(UserId))
             {
 
-                display = Convert.ToInt32(recipe.AvgRating);
+                userRating = Convert.ToInt32(recipe.AvgRating);
                 ReadOnly = true;
             }
             else
             {
-                display = recipe.Ratings.Where(r => r.ChefId == UserId).FirstOrDefault().Stars;
+                userRating = recipe.Ratings.Where(r => r.ChefId == UserId).FirstOrDefault().Stars;
             }
         }
         else
