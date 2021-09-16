@@ -1,32 +1,36 @@
 ﻿@inject IApiService _api
 <h3>RecipeRating</h3>
-<MudRating SelectedValue="display" ReadOnly="ReadOnly"></MudRating>
+<MudRating SelectedValue="display" ReadOnly="ReadOnly" SelectedValueChanged="(int i)=>SaveRating(i)"></MudRating>
 @code {
     [Parameter]
     public Recipe recipe { get; set; }
     [Parameter]
     public string UserId { get; set; }
-public int display { get; set; }
-public bool ReadOnly { get; set; }
-protected override void OnInitialized()
-{
-    if (recipe.Ratings.Any())
+    public int display { get; set; }
+    public bool ReadOnly { get; set; }
+    public async Task<bool> SaveRating(int i)
     {
-        if (string.IsNullOrEmpty(UserId)
+        return await _api.CreateNewRatingAsync(recipe.Id, UserId, i);
+    }
+    protected override void OnInitialized()
+    {
+        if (recipe.Ratings.Any())
         {
+            if (string.IsNullOrEmpty(UserId))
+            {
 
-            display = Convert.ToInt32(recipe.AvgRating);
-            ReadOnly = true;
+                display = Convert.ToInt32(recipe.AvgRating);
+                ReadOnly = true;
+            }
+            else
+            {
+                display = recipe.Ratings.Where(r => r.ChefId == UserId).FirstOrDefault().Stars;
+            }
         }
         else
         {
-            display = recipe.Ratings.Where(r => r.ChefId == userId);
+            display = 0;
         }
+        base.OnInitialized();
     }
-    else
-    {
-        display = 0;
-    }
-    base.OnInitialized();
-}
 }

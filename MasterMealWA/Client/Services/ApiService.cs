@@ -291,5 +291,23 @@ namespace MasterMealWA.Client.Services
             DBImage result = await _http.GetFromJsonAsync<DBImage>($"api/dbimages/{id}");
             return result;
         }
+
+        public async Task<bool> CreateNewRatingAsync(int recipeId, string userId, int rating)
+        {
+            try
+            {
+                await _http.PostAsJsonAsync($"api/ratings", new Rating()
+                {
+                    Stars = rating,
+                    ChefId = userId,
+                    RecipeId = recipeId
+                });
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
     }
 }
