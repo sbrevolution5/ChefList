@@ -1,14 +1,32 @@
-﻿@inject IApiService _api 
+﻿@inject IApiService _api
 <h3>RecipeRating</h3>
-
+<MudRating SelectedValue="display" ReadOnly="ReadOnly"></MudRating>
 @code {
     [Parameter]
-    public Recipe Recipe { get; set; }
+    public Recipe recipe { get; set; }
     [Parameter]
     public string UserId { get; set; }
-    public bool ReadOnly { get; set; }
-    protected override void OnInitialized()
+public int display { get; set; }
+public bool ReadOnly { get; set; }
+protected override void OnInitialized()
+{
+    if (recipe.Ratings.Any())
     {
-        base.OnInitialized();
+        if (string.IsNullOrEmpty(UserId)
+        {
+
+            display = Convert.ToInt32(recipe.AvgRating);
+            ReadOnly = true;
+        }
+        else
+        {
+            display = recipe.Ratings.Where(r => r.ChefId == userId);
+        }
     }
+    else
+    {
+        display = 0;
+    }
+    base.OnInitialized();
+}
 }
