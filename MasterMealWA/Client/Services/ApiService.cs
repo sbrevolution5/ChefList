@@ -309,5 +309,15 @@ namespace MasterMealWA.Client.Services
                 return false;
             }
         }
+
+        public Task<bool> CreateOrUpdateRating(int recipeId, string userId, int rating, bool isNew = true)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> UpdateRatingAsync(int recipeId, string userId, int rating)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
