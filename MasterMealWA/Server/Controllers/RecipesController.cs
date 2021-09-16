@@ -67,6 +67,7 @@ namespace MasterMealWA.Server.Controllers
                                               .Include(r => r.Ingredients)
                                               .ThenInclude(r => r.Ingredient)
                                               .Include(r => r.Author)
+                                              .Include(r=>r.Ratings)
                                               .Include(r => r.Image)
                                               .FirstOrDefaultAsync(r => r.Id == id);
 
