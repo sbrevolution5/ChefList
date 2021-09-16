@@ -15,17 +15,21 @@
     public bool ReadOnly { get; set; }
     public async Task SaveRating(int i)
     {
-        var res = await _api.CreateOrUpdateRatingAsync(recipe.Id, UserId, i, IsNewRating);
-        if (res)
+        if (i != 0)
         {
-            _snackbar.Add("Rating Saved!", Severity.Success);
-            IsNewRating = false;
-            userRating = i;
-            StateHasChanged();
-        }
-        else
-        {
-            _snackbar.Add("Failed to save rating, try again.", Severity.Error);
+
+            var res = await _api.CreateOrUpdateRatingAsync(recipe.Id, UserId, i, IsNewRating);
+            if (res)
+            {
+                _snackbar.Add("Rating Saved!", Severity.Success);
+                IsNewRating = false;
+                userRating = i;
+                StateHasChanged();
+            }
+            else
+            {
+                _snackbar.Add("Failed to save rating, try again.", Severity.Error);
+            }
         }
     }
     protected override void OnInitialized()

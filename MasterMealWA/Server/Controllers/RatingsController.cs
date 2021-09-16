@@ -47,7 +47,7 @@ namespace MasterMealWA.Server.Controllers
 
         // PUT: api/Ratings/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+        [HttpPut]
         public async Task<IActionResult> PutRating(RatingEditDto dto)
         {
             var rating = await _context.Rating.Where(r => r.ChefId == dto.ChefId && r.RecipeId == dto.RecipeId).FirstOrDefaultAsync();
@@ -77,7 +77,6 @@ namespace MasterMealWA.Server.Controllers
         {
             _context.Rating.Add(rating);
             var recipe = await _context.Recipe.Where(r => r.Id == rating.RecipeId).FirstOrDefaultAsync();
-            recipe.Ratings.Add(rating);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetRating", new { id = rating.Id }, rating);

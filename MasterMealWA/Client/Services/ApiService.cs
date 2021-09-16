@@ -326,9 +326,15 @@ namespace MasterMealWA.Client.Services
 
         public async Task<bool> UpdateRatingAsync(int recipeId, string userId, int rating)
         {
+            RatingEditDto dto = new()
+            {
+                RecipeId = recipeId,
+                ChefId = userId,
+                NewRating = rating
+            };
             try
             {
-                await _http.PutAsJsonAsync($"api/ratings/{recipeId}", rating);
+                await _http.PutAsJsonAsync($"api/ratings/", dto);
                 return true;
             }
             catch (Exception)
