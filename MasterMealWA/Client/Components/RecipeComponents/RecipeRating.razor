@@ -1,5 +1,4 @@
 ﻿@inject IApiService _api
-<h3>RecipeRating</h3>
 <MudHidden IsHidden="@string.IsNullOrEmpty(UserId)">
     <MudRating SelectedValue="userRating"  ReadOnly="ReadOnly" SelectedValueChanged="(int i)=>SaveRating(i)"></MudRating>
 </MudHidden>
