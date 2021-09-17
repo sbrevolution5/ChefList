@@ -399,6 +399,7 @@ namespace MasterMealWA.Server.Data
                 AddStep("Serve and top with pico de gallo and lime crema", 10, beefTostada.Id)
             };
             beefTostada.Supplies = beefSupplies;
+            beefTostada.Ingredients = beefIng;
             await context.AddRangeAsync(beefSteps);
             await context.AddRangeAsync(beefIng);
             await context.SaveChangesAsync();
@@ -458,6 +459,7 @@ namespace MasterMealWA.Server.Data
                 AddStep("Serve meat on buns, topped with pickle ", 10, anchoBBQ.Id)
             };
             anchoBBQ.Supplies = anchSupplies;
+            anchoBBQ.Ingredients = anchIng;
             await context.AddRangeAsync(anchSteps);
             await context.AddRangeAsync(anchIng);
             await context.SaveChangesAsync();
@@ -522,7 +524,7 @@ namespace MasterMealWA.Server.Data
                 AddStep("Transfer roasted green beans to a large bowl; add 1 TBS butter and toss until melted.", 12, buffaloChk.Id),
                 AddStep("Drizzle chicken with creamy buffalo sauce and honey.", 13, buffaloChk.Id)
             };
-
+            buffaloChk.Ingredients = buffIng;
             await context.AddRangeAsync(buffSteps);
             await context.AddRangeAsync(buffIng);
             #endregion
