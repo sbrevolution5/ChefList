@@ -23,6 +23,8 @@ else
             <MudItem xs="12">
 
                 <MudText Typo="Typo.h3">Recipe Create</MudText>
+                <MudButton ButtonType="ButtonType.Submit" FullWidth="true" Variant="Variant.Filled" Color="Color.Success" Class="ml-auto">Save Recipe</MudButton>
+
             </MudItem>
             <MudItem xs="12" sm="6" md="4">
 
@@ -45,11 +47,11 @@ else
                                         Icon="@Icons.Filled.Image"
                                         Label="Load picture"
                                         for="fileInput" />
-                                
-                                    <MudCard>
-                                        <MudCardMedia Image="@(imageString)">
-                                        </MudCardMedia>
-                                    </MudCard>
+
+                                <MudCard>
+                                    <MudCardMedia Image="@(imageString)">
+                                    </MudCardMedia>
+                                </MudCard>
                             </MudItem>
                             <MudItem xs="12">
 
@@ -86,6 +88,8 @@ else
                         </MudGrid>
                     </MudCardContent>
                 </MudCard>
+                <MudButton ButtonType="ButtonType.Submit" FullWidth="true" Variant="Variant.Filled" Color="Color.Success" Class="ml-auto">Save Recipe</MudButton>
+
             </MudItem>
             <MudItem xs="12" sm="6" md="4">
 
@@ -177,7 +181,6 @@ else
                 </MudCard>
             </MudItem>
         </MudGrid>
-        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Save Recipe</MudButton>
     </EditForm>
 }
 @code{
