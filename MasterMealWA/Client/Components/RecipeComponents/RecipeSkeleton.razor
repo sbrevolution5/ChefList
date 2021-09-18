@@ -1,0 +1,121 @@
+﻿<h3>RecipeSkeleton</h3>
+<MudItem xs="8">
+    <MudSkeleton ></MudSkeleton>
+
+    <MudCard>
+
+        <MudSkeleton Height="300px" SkeletonType="SkeletonType.Rectangle"></MudSkeleton>
+        <MudCardActions>
+            
+                <MudSkeleton SkeletonType="SkeletonType.Circle"></MudSkeleton>
+                <MudSkeleton SkeletonType="SkeletonType.Circle"></MudSkeleton>
+                <MudSkeleton SkeletonType="SkeletonType.Circle"></MudSkeleton>
+        </MudCardActions>
+        <MudCardContent>
+            <MudGrid>
+
+                <MudItem xs="6">
+                    <MudCard Elevation="2">
+
+                        <MudCardContent>
+
+                            <MudText>@recipe.Description</MudText>
+                        </MudCardContent>
+                        <MudCardActions>
+
+                            <MudText Class="d-flex justify-center mt-4">
+                                Source:
+                                <MudLink Href="@recipe.RecipeSourceUrl">@recipe.RecipeSource</MudLink>
+                            </MudText>
+                        </MudCardActions>
+                    </MudCard>
+                </MudItem>
+                <MudItem xs="2">
+                    <MudCard>
+                        <MudCardHeader>Ratings</MudCardHeader>
+                        <MudCardContent>
+                            <RecipeRating recipe="recipe" UserId="@UserId"></RecipeRating>
+                        </MudCardContent>
+                    </MudCard>
+                </MudItem>
+                <MudItem xs="4">
+
+                    <MudSimpleTable Elevation="2">
+                        <tbody>
+                            <tr>
+                                <td>Serves:</td>
+                                <td>@recipe.Servings</td>
+                            </tr>
+                            <tr>
+                                <td>Time To Cook:</td>
+                                <td>@recipe.CookingTime</td>
+                            </tr>
+                            <tr>
+                                <td>Tags:</td>
+                                <td>
+                                    @foreach (var tag in recipe.Tags)
+                                    {
+                                        <MudChip Color="@BadgeColor(tag.Category)">@tag.Name</MudChip>
+                                    }
+                                </td>
+                            </tr>
+                        </tbody>
+                    </MudSimpleTable>
+                </MudItem>
+            </MudGrid>
+        </MudCardContent>
+    </MudCard>
+</MudItem>
+<MudItem xs="4">
+
+    <MudCard>
+        <MudTabs>
+            <MudTabPanel Text="Ingredients">
+                <MudList>
+                    @foreach (var ingredient in recipe.Ingredients)
+                    {<MudListItem>
+                            <MudPaper Elevation="2">
+
+                                <MudText Class="h4">
+                                    @ingredient.Ingredient.Name
+                                </MudText>
+                                <MudText>@ingredient.Quantity</MudText>
+                                <MudText>@ingredient.Notes</MudText>
+                            </MudPaper>
+                        </MudListItem>
+                    }
+                </MudList>
+            </MudTabPanel>
+            <MudTabPanel Text="Supplies">
+                <MudList>
+
+                    @foreach (var supply in recipe.Supplies)
+                    {
+                        <MudListItem>
+
+                            <MudPaper Elevation="2">
+                                <MudText Class="h4">@supply.Quantity @supply.Supply.Name</MudText>
+                            </MudPaper>
+                        </MudListItem>
+                    }
+                </MudList>
+            </MudTabPanel>
+            <MudTabPanel Text="Steps">
+                <MudList>
+                    @foreach (var step in recipe.Steps.OrderBy(s => s.StepNumber))
+                    {
+                        <MudListItem>
+                            <MudPaper Elevation="2">
+                                <MudText>@step.StepNumber. @step.Text</MudText>
+                            </MudPaper>
+                        </MudListItem>
+                    }
+                </MudList>
+            </MudTabPanel>
+        </MudTabs>
+
+    </MudCard>
+</MudItem>
+@code {
+
+}
