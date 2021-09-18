@@ -195,7 +195,12 @@ namespace MasterMealWA.Server.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRecipe(int id)
         {
+            var userId = HttpContext.GetUserId();
             var recipe = await _context.Recipe.FindAsync(id);
+            if (recipe.AuthorId != userId)
+            {
+                return BadRequest();
+            }
             if (recipe == null)
             {
                 return NotFound();
