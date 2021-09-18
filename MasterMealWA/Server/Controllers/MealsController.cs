@@ -56,7 +56,8 @@ namespace MasterMealWA.Server.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutMeal(int id, Meal meal)
         {
-            if (id != meal.Id)
+            var userId = HttpContext.GetUserId();
+            if (id != meal.Id || meal.ChefId != userId)
             {
                 return BadRequest();
             }
@@ -97,7 +98,12 @@ namespace MasterMealWA.Server.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMeal(int id)
         {
+            var userId = HttpContext.GetUserId();
             var meal = await _context.Meal.FindAsync(id);
+            if (meal.ChefId != userId)
+            {
+                return BadRequest();
+            }
             if (meal == null)
             {
                 return NotFound();

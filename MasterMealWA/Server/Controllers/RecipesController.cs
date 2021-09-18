@@ -84,7 +84,12 @@ namespace MasterMealWA.Server.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutRecipe(int id, RecipeEditDto recipeDto)
         {
+            var userId = HttpContext.GetUserId();
             var recipe = recipeDto.Recipe;
+            if (recipe.AuthorId != userId)
+            {
+                return BadRequest();
+            }
             var tags = recipeDto.RecipeTags;
             var dbrecipe = await _context.Recipe.Include(r => r.Tags).FirstOrDefaultAsync(r => r.Id == id);
             dbrecipe.Tags.Where(tag => !recipeDto.RecipeTags.Any(id => id.Id == tag.Id)).ToList().ForEach(tag => dbrecipe.Tags.Remove(tag));
@@ -190,7 +195,12 @@ namespace MasterMealWA.Server.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRecipe(int id)
         {
+            var userId = HttpContext.GetUserId();
             var recipe = await _context.Recipe.FindAsync(id);
+            if (recipe.AuthorId != userId)
+            {
+                return BadRequest();
+            }
             if (recipe == null)
             {
                 return NotFound();
