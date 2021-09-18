@@ -14,6 +14,7 @@
         <MudItem xs="12">
 
             <MudText Typo="Typo.h3">Recipe Create</MudText>
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" FullWidth="true" Color="Color.Primary" Class="ml-auto">Save Recipe</MudButton>
         </MudItem>
         <MudItem xs="12" sm="6" md="4">
             <MudCard>
@@ -35,12 +36,12 @@
                                     Icon="@Icons.Filled.Image"
                                     Label="Load picture"
                                     for="fileInput" />
-                            @if (recipe.ImageId !=0)
+                            @if (recipe.ImageId != 0)
                             {
-                        <MudCard>
-                            <MudCardMedia Image="@(imageString)">
-                            </MudCardMedia>
-                        </MudCard>
+                                <MudCard>
+                                    <MudCardMedia Image="@(imageString)">
+                                    </MudCardMedia>
+                                </MudCard>
                             }
                             else
                             {
@@ -86,6 +87,7 @@
                     <MudCheckBox @bind-Checked="recipe.IsPrivate" Label="Hide Recipe from public search"></MudCheckBox>
                 </MudCardActions>
             </MudCard>
+            <MudButton ButtonType="ButtonType.Submit" FullWidth="true" Variant="Variant.Filled" Color="Color.Success" Class="ml-auto">Save Recipe</MudButton>
         </MudItem>
         <MudItem xs="12" sm="6" md="4">
 
@@ -174,7 +176,7 @@
             </MudCard>
         </MudItem>
     </MudGrid>
-    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Save Recipe</MudButton>
+    
 </EditForm>
 @code{
     public Recipe recipe { get; set; } = new();

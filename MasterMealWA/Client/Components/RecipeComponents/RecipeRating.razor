@@ -1,0 +1,57 @@
+﻿@inject IApiService _api
+@inject ISnackbar _snackbar
+<MudHidden IsHidden="@string.IsNullOrEmpty(UserId)">
+    <MudText Typo="Typo.subtitle2">Your Rating</MudText>
+    <MudRating SelectedValue="userRating"  ReadOnly="ReadOnly" SelectedValueChanged="(int i)=>SaveRating(i)"></MudRating>
+</MudHidden>
+<MudText Typo="Typo.subtitle2">Average Rating</MudText>
+<MudRating SelectedValue="AverageRating" ReadOnly="true"></MudRating>
+@code {
+    [Parameter]
+    public Recipe recipe { get; set; }
+    [Parameter]
+    public string UserId { get; set; }
+    public int AverageRating { get; set; }
+    public int userRating { get; set; } = 0;
+    public bool IsNewRating { get; set; }
+    public bool ReadOnly { get; set; }
+    public async Task SaveRating(int i)
+    {
+        if (i != 0 && i != userRating)
+        {
+
+            var res = await _api.CreateOrUpdateRatingAsync(recipe.Id, UserId, i, IsNewRating);
+            if (res)
+            {
+                _snackbar.Add("Rating Saved!", Severity.Success);
+                IsNewRating = false;
+                userRating = i;
+                StateHasChanged();
+            }
+            else
+            {
+                _snackbar.Add("Failed to save rating, try again.", Severity.Error);
+            }
+        }
+    }
+    protected override void OnInitialized()
+    {
+        if (recipe.Ratings.Any())
+        {
+            AverageRating = Convert.ToInt32(recipe.AvgRating);
+            if (!string.IsNullOrEmpty(UserId))
+            {
+                userRating = recipe.Ratings.Where(r => r.ChefId == UserId).FirstOrDefault().Stars;
+            }
+        }
+        else
+        {
+            AverageRating = 0;
+        }
+        if (userRating == 0)
+        {
+            IsNewRating = true;
+        }
+        base.OnInitialized();
+    }
+}

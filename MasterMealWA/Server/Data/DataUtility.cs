@@ -59,6 +59,7 @@ namespace MasterMealWA.Server.Data
             var userManagerSvc = svcProvider.GetRequiredService<UserManager<Chef>>();
             //TsTEP 1: This is the programmatic equivalent to Update-Database
             await dbContextSvc.Database.MigrateAsync();
+            await RepairRecipesAsync(dbContextSvc);
             await SeedDefaultImagesAsync(dbContextSvc);
             await SeedRolesAsync(userManagerSvc, roleManagerSvc);
             await SeedAdminUserAsync(userManagerSvc, roleManagerSvc);
@@ -70,6 +71,18 @@ namespace MasterMealWA.Server.Data
             await SeedSuppliesAsync(dbContextSvc);
             await SeedRecipesAsync(dbContextSvc, userManagerSvc);
         }
+
+        private static async Task RepairRecipesAsync(ApplicationDbContext dbContextSvc)
+        {
+            foreach (var recipe in await dbContextSvc.Recipe.ToListAsync())
+            {
+                if (recipe.Ratings == null)
+                {
+                    recipe.Ratings = new HashSet<Rating>();
+                }
+            }
+        }
+
         private static async Task SeedAdminUserAsync(UserManager<Chef> userManager, RoleManager<IdentityRole> roleManager)
         {
             //Seed Default Admin User
@@ -386,6 +399,7 @@ namespace MasterMealWA.Server.Data
                 AddStep("Serve and top with pico de gallo and lime crema", 10, beefTostada.Id)
             };
             beefTostada.Supplies = beefSupplies;
+            beefTostada.Ingredients = beefIng;
             await context.AddRangeAsync(beefSteps);
             await context.AddRangeAsync(beefIng);
             await context.SaveChangesAsync();
@@ -445,6 +459,7 @@ namespace MasterMealWA.Server.Data
                 AddStep("Serve meat on buns, topped with pickle ", 10, anchoBBQ.Id)
             };
             anchoBBQ.Supplies = anchSupplies;
+            anchoBBQ.Ingredients = anchIng;
             await context.AddRangeAsync(anchSteps);
             await context.AddRangeAsync(anchIng);
             await context.SaveChangesAsync();
@@ -509,7 +524,7 @@ namespace MasterMealWA.Server.Data
                 AddStep("Transfer roasted green beans to a large bowl; add 1 TBS butter and toss until melted.", 12, buffaloChk.Id),
                 AddStep("Drizzle chicken with creamy buffalo sauce and honey.", 13, buffaloChk.Id)
             };
-
+            buffaloChk.Ingredients = buffIng;
             await context.AddRangeAsync(buffSteps);
             await context.AddRangeAsync(buffIng);
             #endregion

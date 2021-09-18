@@ -11,6 +11,9 @@ namespace MasterMealWA.Client.Services.Interfaces
     public interface IApiService
     {
         Task CreateNewRecipeAsync(Recipe recipe);
+        Task<bool> CreateOrUpdateRatingAsync(int recipeId, string userId, int rating, bool isNew = true);
+        Task<bool> CreateNewRatingAsync(int recipeId, string userId, int rating);
+        Task<bool> UpdateRatingAsync(int recipeId, string userId, int rating);
         Task CreateNewTagAsync(RecipeTag type);
         Task CreateNewMealAsync(Meal meal);
         Task CreateNewIngredientAsync(Ingredient ingredient);

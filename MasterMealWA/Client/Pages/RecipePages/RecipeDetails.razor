@@ -11,11 +11,7 @@
 </MudItem>
 @if (recipe is null)
 {
-    <MudOverlay>
-
-        <Loader></Loader>
-
-    </MudOverlay>
+    <RecipeSkeleton></RecipeSkeleton>
 }
 else
 {
@@ -26,7 +22,7 @@ else
 
             <MudCardMedia Image="@(_imageReader.ReadImageData(recipe.Image.ImageData, recipe.Image.ContentType))"></MudCardMedia>
             <MudCardActions>
-                @if (userId == recipe.AuthorId)
+                @if (UserId == recipe.AuthorId)
                 {
 
                     <MudButtonGroup Color="Color.Primary" OverrideStyles="false">
@@ -72,7 +68,15 @@ else
                             </MudCardActions>
                         </MudCard>
                     </MudItem>
-                    <MudItem xs="6">
+                    <MudItem xs="2">
+                        <MudCard>
+                            <MudCardHeader>Ratings</MudCardHeader>
+                            <MudCardContent>
+                                <RecipeRating recipe="recipe" UserId="@UserId"></RecipeRating>
+                            </MudCardContent>
+                        </MudCard>
+                    </MudItem>
+                    <MudItem xs="4">
 
                         <MudSimpleTable Elevation="2">
                             <tbody>
@@ -157,7 +161,7 @@ else
     public string Id { get; set; }
     private Recipe recipe;
     private string imageData { get; set; }
-    private string userId { get; set; }
+    private string UserId { get; set; }
     private List<BreadcrumbItem> crumbList = new()
     {
             new BreadcrumbItem("Recipes", href: "/recipes")
@@ -187,8 +191,8 @@ else
     }
     protected override async Task OnInitializedAsync()
     {
-        userId = await _userService.GetUserIdAsync();
-        bool auth = !string.IsNullOrEmpty(userId);
+        UserId = await _userService.GetUserIdAsync();
+        bool auth = !string.IsNullOrEmpty(UserId);
         var options = new JsonSerializerOptions()
         {
             ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve,

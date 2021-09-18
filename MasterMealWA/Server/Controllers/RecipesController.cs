@@ -41,10 +41,10 @@ namespace MasterMealWA.Server.Controllers
         {
             if (!User.Identity.IsAuthenticated)
             {
-                return await _context.Recipe.Include(r => r.Author).Include(r => r.Image).Where(r => !r.IsPrivate).Include(r=>r.Tags).ToListAsync();
+                return await _context.Recipe.Include(r => r.Author).Include(r=>r.Ratings).Include(r => r.Image).Where(r => !r.IsPrivate).Include(r=>r.Tags).ToListAsync();
             }
             var userId = HttpContext.GetUserId();
-            return await _context.Recipe.Include(r => r.Author).Include(r=>r.Image).Where(r => !r.IsPrivate || r.AuthorId == userId).Include(r => r.Tags).ToListAsync();
+            return await _context.Recipe.Include(r => r.Author).Include(r=>r.Image).Where(r => !r.IsPrivate || r.AuthorId == userId).Include(r => r.Tags).Include(r=>r.Ratings).ToListAsync();
         }
         // GET: api/Recipes
         [HttpGet("myrecipes")]
@@ -52,7 +52,7 @@ namespace MasterMealWA.Server.Controllers
         {
             
             var userId = HttpContext.GetUserId();
-            return await _context.Recipe.Include(r => r.Author).Include(r => r.Image).Where(r => r.AuthorId == userId).ToListAsync();
+            return await _context.Recipe.Include(r => r.Author).Include(r=>r.Tags).Include(r=>r.Ratings).Include(r => r.Image).Where(r => r.AuthorId == userId).ToListAsync();
         }
 
         // GET: api/Recipes/5
@@ -67,6 +67,7 @@ namespace MasterMealWA.Server.Controllers
                                               .Include(r => r.Ingredients)
                                               .ThenInclude(r => r.Ingredient)
                                               .Include(r => r.Author)
+                                              .Include(r=>r.Ratings)
                                               .Include(r => r.Image)
                                               .FirstOrDefaultAsync(r => r.Id == id);
 
@@ -83,7 +84,12 @@ namespace MasterMealWA.Server.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutRecipe(int id, RecipeEditDto recipeDto)
         {
+            var userId = HttpContext.GetUserId();
             var recipe = recipeDto.Recipe;
+            if (recipe.AuthorId != userId)
+            {
+                return BadRequest();
+            }
             var tags = recipeDto.RecipeTags;
             var dbrecipe = await _context.Recipe.Include(r => r.Tags).FirstOrDefaultAsync(r => r.Id == id);
             dbrecipe.Tags.Where(tag => !recipeDto.RecipeTags.Any(id => id.Id == tag.Id)).ToList().ForEach(tag => dbrecipe.Tags.Remove(tag));
@@ -189,7 +195,12 @@ namespace MasterMealWA.Server.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRecipe(int id)
         {
+            var userId = HttpContext.GetUserId();
             var recipe = await _context.Recipe.FindAsync(id);
+            if (recipe.AuthorId != userId)
+            {
+                return BadRequest();
+            }
             if (recipe == null)
             {
                 return NotFound();
