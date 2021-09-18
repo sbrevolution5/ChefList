@@ -56,7 +56,8 @@ namespace MasterMealWA.Server.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutMeal(int id, Meal meal)
         {
-            if (id != meal.Id)
+            var userId = HttpContext.GetUserId();
+            if (id != meal.Id || meal.ChefId != userId)
             {
                 return BadRequest();
             }
