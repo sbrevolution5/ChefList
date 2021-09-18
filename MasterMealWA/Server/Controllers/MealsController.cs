@@ -98,7 +98,12 @@ namespace MasterMealWA.Server.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMeal(int id)
         {
+            var userId = HttpContext.GetUserId();
             var meal = await _context.Meal.FindAsync(id);
+            if (meal.ChefId != userId)
+            {
+                return BadRequest();
+            }
             if (meal == null)
             {
                 return NotFound();
