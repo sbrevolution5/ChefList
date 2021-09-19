@@ -34,6 +34,8 @@
     MudDialogInstance MudDialog { get; set; }
     [Parameter]
     public Recipe recipe { get; set; }
+    [Parameter]
+    public int? Servings { get; set; }
     private DateTime? mealdate { get; set; } = DateTime.Today;
     private Meal meal;
     private List<Recipe> recipes;
@@ -44,10 +46,14 @@
         {
             recipe = recipes.FirstOrDefault();
         }
+        if (Servings is null)
+        {
+            Servings = recipe.Servings;
+        }
         meal = new()
         {
             RecipeId = recipe.Id,
-            Serves = recipe.Servings,
+            Serves = Servings.Value,
             Date = DateTime.Today
         };
     }

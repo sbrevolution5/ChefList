@@ -178,7 +178,7 @@ else
     };
     public async Task AddMeal()
     {
-        var parameters = new DialogParameters { ["recipe"] = recipe };
+        var parameters = new DialogParameters { ["recipe"] = recipe, ["Servings"] = DesiredServings };
         var dialog = _dialogService.Show<MealCreate>("Schedule Meal", parameters);
         var result = await dialog.Result;
         if (!result.Cancelled)
