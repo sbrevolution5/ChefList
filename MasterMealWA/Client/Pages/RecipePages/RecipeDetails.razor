@@ -6,8 +6,16 @@
 @inject IImageReader _imageReader
 @inject NavigationManager _nav
 @attribute [AllowAnonymous]
-<MudItem xs="12">
+<MudItem xs="6">
     <MudBreadcrumbs Items="crumbList"></MudBreadcrumbs>
+</MudItem>
+<MudItem xs="6">
+    <EditForm OnValidSubmit="ScaleRecipe">
+
+        <MudNumericField Label="Desired Servings" Disabled="recipe is null" @bind-Value="DesiredServings">
+        </MudNumericField>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="recipe is null" ButtonType="ButtonType.Submit">Scale Recipe</MudButton>
+    </EditForm>
 </MudItem>
 @if (recipe is null)
 {
@@ -95,65 +103,65 @@ else
                                         {
                                             <MudChip Color="@BadgeColor(tag.Category)">@tag.Name</MudChip>
                                         }
-                                </td>
-                            </tr>
-                        </tbody>
-                    </MudSimpleTable>
-                </MudItem>
-            </MudGrid>
-        </MudCardContent>
-    </MudCard>
-</MudItem>
-<MudItem xs="4">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </MudSimpleTable>
+                    </MudItem>
+                </MudGrid>
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+    <MudItem xs="4">
 
-    <MudCard>
-        <MudTabs>
-            <MudTabPanel Text="Ingredients">
-                <MudList>
-                    @foreach (var ingredient in recipe.Ingredients)
-                    {<MudListItem>
-                            <MudPaper Elevation="2">
+        <MudCard>
+            <MudTabs>
+                <MudTabPanel Text="Ingredients">
+                    <MudList>
+                        @foreach (var ingredient in recipe.Ingredients)
+                        {<MudListItem>
+                                <MudPaper Elevation="2">
 
-                                <MudText Class="h4">
-                                    @ingredient.Ingredient.Name
-                                </MudText>
-                                <MudText>@ingredient.Quantity</MudText>
-                                <MudText>@ingredient.Notes</MudText>
-                            </MudPaper>
-                        </MudListItem>
-                    }
-                </MudList>
-            </MudTabPanel>
-            <MudTabPanel Text="Supplies">
-                <MudList>
+                                    <MudText Class="h4">
+                                        @ingredient.Ingredient.Name
+                                    </MudText>
+                                    <MudText>@ingredient.Quantity</MudText>
+                                    <MudText>@ingredient.Notes</MudText>
+                                </MudPaper>
+                            </MudListItem>
+                        }
+                    </MudList>
+                </MudTabPanel>
+                <MudTabPanel Text="Supplies">
+                    <MudList>
 
-                    @foreach (var supply in recipe.Supplies)
-                    {
-                        <MudListItem>
+                        @foreach (var supply in recipe.Supplies)
+                        {
+                            <MudListItem>
 
-                            <MudPaper Elevation="2">
-                                <MudText Class="h4">@supply.Quantity @supply.Supply.Name</MudText>
-                            </MudPaper>
-                        </MudListItem>
-                    }
-                </MudList>
-            </MudTabPanel>
-            <MudTabPanel Text="Steps">
-                <MudList>
-                    @foreach (var step in recipe.Steps.OrderBy(s => s.StepNumber))
-                    {
-                        <MudListItem>
-                            <MudPaper Elevation="2">
-                                <MudText>@step.StepNumber. @step.Text</MudText>
-                            </MudPaper>
-                        </MudListItem>
-                    }
-                </MudList>
-            </MudTabPanel>
-        </MudTabs>
+                                <MudPaper Elevation="2">
+                                    <MudText Class="h4">@supply.Quantity @supply.Supply.Name</MudText>
+                                </MudPaper>
+                            </MudListItem>
+                        }
+                    </MudList>
+                </MudTabPanel>
+                <MudTabPanel Text="Steps">
+                    <MudList>
+                        @foreach (var step in recipe.Steps.OrderBy(s => s.StepNumber))
+                        {
+                            <MudListItem>
+                                <MudPaper Elevation="2">
+                                    <MudText>@step.StepNumber. @step.Text</MudText>
+                                </MudPaper>
+                            </MudListItem>
+                        }
+                    </MudList>
+                </MudTabPanel>
+            </MudTabs>
 
-    </MudCard>
-</MudItem>
+        </MudCard>
+    </MudItem>
 }
 
 @code {
@@ -162,6 +170,7 @@ else
     private Recipe recipe;
     private string imageData { get; set; }
     private string UserId { get; set; }
+    private int DesiredServings { get; set; }
     private List<BreadcrumbItem> crumbList = new()
     {
             new BreadcrumbItem("Recipes", href: "/recipes")
@@ -199,6 +208,7 @@ else
             PropertyNamingPolicy = null
         };
         recipe = await _api.GetRecipeAsync(Convert.ToInt32(Id), auth);
+        DesiredServings = recipe.Servings;
         base.OnInitialized();
     }
     public async Task DeleteRecipe()
@@ -210,5 +220,9 @@ else
         {
             _nav.NavigateTo("/recipes");
         }
+    }
+    private async Task ScaleRecipe()
+    {
+
     }
 }
