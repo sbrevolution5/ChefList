@@ -22,7 +22,7 @@ namespace MasterMealWA.Server.Services
             var recipe = await _context.Recipe.Include(r => r.Ingredients).ThenInclude(r => r.Ingredient).AsNoTracking().FirstOrDefaultAsync(r => r.Id == recipeId);
             Recipe singleServe = ConvertRecipeToSingleServing(recipe);
             Recipe correctServing = UpscaleServing(singleServe, desiredServings);
-            throw new NotImplementedException();
+            return correctServing;
         }
 
         private Recipe ConvertRecipeToSingleServing(Recipe recipe)
