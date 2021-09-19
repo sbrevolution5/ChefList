@@ -1,5 +1,6 @@
 ﻿using MasterMealWA.Server.Data;
 using MasterMealWA.Shared.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,9 +18,30 @@ namespace MasterMealWA.Server.Services
         }
         public async Task<Recipe> ScaleRecipeAsync(int recipeId, int desiredServings)
         {
-            var singleServe = ConvertRecipeToSingleServing();
-            var correctServing = UpscaleServing()
+            var recipe = await _context.Recipe.Include(r => r.Ingredients).ThenInclude(r => r.Ingredient).AsNoTracking().FirstOrDefaultAsync(r=>r.Id == recipeId);
+            Recipe singleServe = ConvertRecipeToSingleServing(recipe);
+            Recipe correctServing = UpscaleServing(singleServe, desiredServings);
             throw new NotImplementedException();
+        }
+
+        private Recipe ConvertRecipeToSingleServing(Recipe recipe)
+        {
+            var defaultServings = recipe.Servings;
+            foreach (var ingredient in recipe.Ingredients)
+            {
+                ingredient.NumberOfUnits /= defaultServings;
+            }
+            return recipe;
+        }
+
+        private Recipe UpscaleServing(Recipe singleServe, int desiredServings)
+        {
+            foreach (var ingredient in singleServe.Ingredients)
+            {
+                ingredient.NumberOfUnits *= desiredServings;
+
+            }
+            return singleServe;
         }
     }
 }
