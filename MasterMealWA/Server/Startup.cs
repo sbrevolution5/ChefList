@@ -65,6 +65,7 @@ namespace MasterMealWA.Server
             services.AddScoped<IRecipeService, RecipeService>();
             services.AddScoped<ISupplyService, SupplyService>();
             services.AddScoped<IEmailSender, GmailEmailService>();
+            services.AddScoped<IServingService, ServingService>();
 
             services.AddControllersWithViews().AddJsonOptions(options =>
             {
