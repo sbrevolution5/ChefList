@@ -10,14 +10,12 @@
     <MudBreadcrumbs Items="crumbList"></MudBreadcrumbs>
 </MudItem>
 <MudItem xs="6">
-    <EditForm OnValidSubmit="ScaleRecipe">
 
         <MudNumericField Label="Desired Servings" Disabled="recipe is null" @bind-Value="DesiredServings">
         </MudNumericField>
         
         <MudButton Variant="Variant.Filled" Color="Color.Secondary" Disabled="recipe is null" OnClick="ResetScaling">Reset Scaling</MudButton>
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="recipe is null" ButtonType="ButtonType.Submit">Scale Recipe</MudButton>
-    </EditForm>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="recipe is null" OnClick="ScaleRecipe">Scale Recipe</MudButton>
 </MudItem>
 @if (recipe is null)
 {

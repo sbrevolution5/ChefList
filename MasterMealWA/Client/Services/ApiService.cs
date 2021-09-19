@@ -347,7 +347,7 @@ namespace MasterMealWA.Client.Services
         {
             try
             {
-                var recipe = await _http.GetFromJsonAsync<Recipe>($"api/recipe/{recipeId}/scale/{desiredServings}");
+                var recipe = await _http.GetFromJsonAsync<Recipe>($"api/recipes/{recipeId}/scale/{desiredServings}");
                 return recipe;
             }
             catch (Exception)
