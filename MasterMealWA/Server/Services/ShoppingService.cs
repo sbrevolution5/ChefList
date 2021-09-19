@@ -14,6 +14,7 @@ namespace MasterMealWA.Server.Services
     {
         private readonly ApplicationDbContext _context;
         private readonly IMeasurementService _measurementService;
+        private readonly IServingService _servingService;
 
         public ShoppingService(ApplicationDbContext context, IMeasurementService measurementService)
         {
@@ -28,6 +29,7 @@ namespace MasterMealWA.Server.Services
                                                   .ThenInclude(r => r.Ingredients)
                                                   .ThenInclude(q => q.Ingredient)
                                                   .Where(m => m.Date >= StartDate && m.Date <= EndDate)
+                                                  .AsNoTracking()
                                                   .ToListAsync();
             ShoppingList list = await CreateShoppingListFromMealsAsync(meals);
             list.ChefId = userId;
@@ -39,29 +41,8 @@ namespace MasterMealWA.Server.Services
         }
         private async Task<List<QIngredient>> GetMealWithServings(int recipeId, int desiredServings)
         {
-            var list = await ConvertToSingleServingAsync(recipeId);
-            var result = UpscaleServing(list, desiredServings);
+            var result = await _servingService.ScaleRecipeAsync(recipeId, desiredServings);
             return result;
-        }
-        private async Task<List<QIngredient>> ConvertToSingleServingAsync(int recipeId)
-        {
-            var recipe = await _context.Recipe.AsNoTracking().Where(r => r.Id == recipeId).Include(r=>r.Ingredients).ThenInclude(r=>r.Ingredient).AsNoTracking().FirstOrDefaultAsync();
-            var servings = recipe.Servings;
-            var result = new List<QIngredient>();
-            foreach (var ingredient in recipe.Ingredients)
-            {
-                ingredient.NumberOfUnits = ingredient.NumberOfUnits / servings;
-                result.Add(ingredient);
-            }
-            return result;
-        }
-        private List<QIngredient> UpscaleServing(List<QIngredient> singleServingIngredients, int desiredServings)
-        {
-            foreach (var ingredient in singleServingIngredients)
-            {
-                ingredient.NumberOfUnits *= desiredServings;
-            }
-            return singleServingIngredients;
         }
         private async Task<ShoppingList> CreateShoppingListFromMealsAsync(List<Meal> meals)
         {
