@@ -3,11 +3,16 @@
 @inject IApiService _api
 @inject NavigationManager nav
 @inject IUserService _userService
+@inject IDialogService _dialogService
+@inject ISnackbar _snackbar
+@inject IImageReader _imageReader
+@attribute [Authorize]
 @using System.Net.Http.Headers
 @using MasterMealWA.Shared.Models.Dtos
 @if (recipe is null)
 {
-    <MudText>Loading...</MudText>
+    <Loader></Loader>
+
 }
 else
 {
@@ -18,8 +23,10 @@ else
             <MudItem xs="12">
 
                 <MudText Typo="Typo.h3">Recipe Create</MudText>
+                <MudButton ButtonType="ButtonType.Submit" FullWidth="true" Variant="Variant.Filled" Color="Color.Success" Class="ml-auto">Save Recipe</MudButton>
+
             </MudItem>
-            <MudItem xs="4">
+            <MudItem xs="12" sm="6" md="4">
 
                 <MudCard>
                     <MudCardContent>
@@ -40,18 +47,11 @@ else
                                         Icon="@Icons.Filled.Image"
                                         Label="Load picture"
                                         for="fileInput" />
-                                @if (files != null)
-                                {
-                                    <MudText Typo="@Typo.h6">@files.Count() File@(files.Count() == 1 ? "" : "s"):</MudText>
-                                    <MudList>
-                                        @foreach (var file in files)
-                                        {
-                                            <MudListItem Icon="@Icons.Filled.AttachFile" @key="@file">
-                                                @file.Name <code>@file.Size bytes</code>
-                                            </MudListItem>
-                                        }
-                                    </MudList>
-                                }
+
+                                <MudCard>
+                                    <MudCardMedia Image="@(imageString)">
+                                    </MudCardMedia>
+                                </MudCard>
                             </MudItem>
                             <MudItem xs="12">
 
@@ -78,9 +78,9 @@ else
 
                                     <MudChipSet MultiSelection="true" @bind-SelectedChips="recipeTags" Filter="true">
 
-                                        @foreach (RecipeTag tag in Tags)
+                                        @foreach (RecipeTag tag in Tags.OrderBy(t => t.Category))
                                         {
-                                            <MudChip Tag="tag">@tag.Name</MudChip>
+                                            <MudChip Color="BadgeColor(tag.Category)" Default="@RecipeHasTag(tag)" Tag="tag">@tag.Name</MudChip>
                                         }
                                     </MudChipSet>
                                 </MudItem>
@@ -88,14 +88,16 @@ else
                         </MudGrid>
                     </MudCardContent>
                 </MudCard>
+                <MudButton ButtonType="ButtonType.Submit" FullWidth="true" Variant="Variant.Filled" Color="Color.Success" Class="ml-auto">Save Recipe</MudButton>
+
             </MudItem>
-            <MudItem xs="4">
+            <MudItem xs="12" sm="6" md="4">
 
                 <MudCard>
                     <MudCardHeader>Ingredients</MudCardHeader>
                     <MudCardContent>
                         <MudGrid>
-
+                            <MudFab OnClick="NewIngredient" Color="Color.Success" Icon="@Icons.Material.Filled.FiberNew" Label="Add ingredient not in list"></MudFab>
                             @foreach (var ingredient in recipe.Ingredients)
                             {
                                 <MudItem xs="12">
@@ -107,7 +109,7 @@ else
                                         </MudCardContent>
                                         <MudCardActions>
 
-                                            <MudButton Color="Color.Error" @onclick="(()=>recipe.Ingredients.Remove(ingredient))">Remove</MudButton>
+                                            <MudButton Color="Color.Error" Variant="Variant.Filled" @onclick="@(()=>RemoveIngredient(ingredient))">Remove</MudButton>
                                         </MudCardActions>
                                     </MudCard>
                                 </MudItem>
@@ -123,7 +125,7 @@ else
                     <MudCardHeader>Supplies</MudCardHeader>
                     <MudCardContent>
                         <MudGrid>
-
+                            <MudFab OnClick="NewSupply" Color="Color.Success" Icon="@Icons.Material.Filled.FiberNew" Label="Add supply not in list"></MudFab>
                             @foreach (var supply in recipe.Supplies)
                             {
                                 <MudItem xs="12">
@@ -135,7 +137,7 @@ else
                                         </MudCardContent>
                                         <MudCardActions>
 
-                                            <MudButton Color="Color.Error" @onclick="(()=>recipe.Supplies.Remove(supply))">Remove</MudButton>
+                                            <MudButton Color="Color.Error" Variant="Variant.Filled" @onclick="@(()=>RemoveSupply(supply))">Remove</MudButton>
                                         </MudCardActions>
                                     </MudCard>
                                 </MudItem>
@@ -148,7 +150,7 @@ else
                     </MudCardContent>
                 </MudCard>
             </MudItem>
-            <MudItem xs="4">
+            <MudItem xs="12" sm="6" md="4">
                 <MudCard>
                     <MudCardHeader>Steps</MudCardHeader>
                     <MudCardContent>
@@ -164,7 +166,7 @@ else
                                         </MudCardContent>
                                         <MudCardActions>
 
-                                            <MudButton Color="Color.Error" @onclick="(()=>recipe.Steps.Remove(step))">Remove</MudButton>
+                                            <MudButton Color="Color.Error" Variant="Variant.Filled" @onclick="@(()=>RemoveStep(step))">Remove</MudButton>
                                         </MudCardActions>
                                     </MudCard>
                                 </MudItem>
@@ -179,35 +181,97 @@ else
                 </MudCard>
             </MudItem>
         </MudGrid>
-        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Save Recipe</MudButton>
     </EditForm>
 }
 @code{
     [Parameter]
     public string id { get; set; }
-    public Recipe recipe { get; set; } = new();
+    public Recipe recipe { get; set; }
+    public DBImage image { get; set; }
     public List<RecipeTag> Tags { get; set; }
     public List<Ingredient> ingredients { get; set; }
+    public List<QIngredient> RemovedIngredients { get; set; } = new();
+    public List<QSupply> RemovedSupplies { get; set; } = new();
+    public List<Step> RemovedSteps { get; set; } = new();
     public List<Supply> supplyList { get; set; }
     public MudChip[] recipeTags { get; set; }
     public int ImgId { get; set; }
+    public string imageString { get; set; }
     protected override async Task OnInitializedAsync()
     {
-        recipe = await _api.GetRecipeAsync(Convert.ToInt32(id));
-        if (recipe.AuthorId != await _userService.GetUserIdAsync())
+        recipe = await _api.GetRecipeAsync(Convert.ToInt32(id), true);
+        if (recipe.AuthorId != await _userService.GetUserIdAsync() && !(await _userService.IsModeratorAsync()))
         {
             nav.NavigateTo("recipes");
         }
-        Tags = await _api.GetAllRecipeTypesAsync();
+        image = recipe.Image;
+        imageString = _imageReader.ReadImageData(image.ImageData, image.ContentType);
+        Tags = await _api.GetAllTagsAsync();
         ingredients = await _api.GetAllIngredientsAsync();
         supplyList = await _api.GetAllSuppliesAsync();
     }
+    public Color BadgeColor(CategoryType type)
+    {
+        if (type == CategoryType.Nationality)
+        {
+            return Color.Primary;
+        }
+        if (type == CategoryType.Protein)
+        {
+            return Color.Secondary;
+        }
+        return Color.Tertiary;
+
+    }
+    public void RemoveStep(Step step)
+    {
+        if (step.Id != 0)
+        {
+            RemovedSteps.Add(step);
+        }
+        recipe.Steps.Remove(step);
+    }
+    public void RemoveSupply(QSupply supply)
+    {
+        if (supply.Id != 0)
+        {
+            RemovedSupplies.Add(supply);
+        }
+        recipe.Supplies.Remove(supply);
+    }
+    public void RemoveIngredient(QIngredient ingredient)
+    {
+        if (ingredient.Id != 0)
+        {
+            RemovedIngredients.Add(ingredient);
+        }
+        recipe.Ingredients.Remove(ingredient);
+    }
+    public bool RecipeHasTag(RecipeTag tag)
+    {
+        if (recipe.Tags.Where(t => t.Id == tag.Id).Count() > 0)
+        {
+            return true;
+        }
+        return false;
+    }
     public async Task UpdateRecipeAsync()
     {
+        foreach (var ing in recipe.Ingredients)
+        {
+            ing.Ingredient = null;
+        }
+        foreach (var sup in recipe.Supplies)
+        {
+            sup.Supply = null;
+        }
         var Tags = recipeTags.Select(r => (RecipeTag)r.Tag).ToList();
         var fakeRecipe = recipe;
         RecipeEditDto dto = new()
         {
+            SuppliesToRemove = RemovedSupplies,
+            StepsToRemove = RemovedSteps,
+            IngredientsToRemove = RemovedIngredients,
             Recipe = fakeRecipe,
             RecipeTags = Tags,
             Id = recipe.Id,
@@ -215,24 +279,61 @@ else
         await _api.UpdateRecipeAsync(dto);
         nav.NavigateTo($"/recipes/details/{recipe.Id}");
     }
-    IList<IBrowserFile> files = new List<IBrowserFile>();
+    public async Task NewIngredient()
+    {
+        var dialog = _dialogService.Show<IngredientCreate>("New Ingredient");
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            ingredients = await _api.GetAllIngredientsAsync();
+        }
+    }
+    public async Task NewSupply()
+    {
+        var dialog = _dialogService.Show<SupplyCreate>("New Supply");
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            supplyList = await _api.GetAllSuppliesAsync();
+        }
+    }
+    public IBrowserFile file;
     private async Task UploadFiles(InputFileChangeEventArgs e)
     {
 
-        var imageFiles = e.GetMultipleFiles();
-        foreach (var imageFile in imageFiles)
+        var imageFile = e.File;
+        if (imageFile != null)
         {
-            if (imageFile != null)
-            {
-                var resizedFile = await imageFile.RequestImageFileAsync("image/png", 1000, 1000);
+            var resizedFile = await imageFile.RequestImageFileAsync("image/png", 1000, 1000);
 
-                using (var ms = resizedFile.OpenReadStream(resizedFile.Size))
+            using (var ms = resizedFile.OpenReadStream(resizedFile.Size))
+            {
+                var content = new MultipartFormDataContent();
+                content.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data");
+                content.Add(new StreamContent(ms, Convert.ToInt32(resizedFile.Size)), "image", imageFile.Name);
+                if (recipe.ImageId == 0 || recipe.ImageId == 1)
                 {
-                    var content = new MultipartFormDataContent();
-                    content.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data");
-                    content.Add(new StreamContent(ms, Convert.ToInt32(resizedFile.Size)), "image", imageFile.Name);
+
                     ImgId = await _api.UploadImageAsync(content);
-                    //await OnChange.InvokeAsync(ImgUrl);
+                    recipe.ImageId = ImgId;
+                    image = await _api.GetImageAsync(recipe.ImageId);
+                    imageString = _imageReader.ReadImageData(image.ImageData, image.ContentType);
+                    StateHasChanged();
+                }
+                else
+                {
+                    var res = await _api.UpdateImageAsync(content, recipe.ImageId);
+                    if (res)
+                    {
+                        _snackbar.Add("Image Updated", Severity.Success);
+                        image = await _api.GetImageAsync(recipe.ImageId);
+                        imageString = _imageReader.ReadImageData(image.ImageData, image.ContentType);
+                        StateHasChanged();
+                    }
+                    else
+                    {
+                        _snackbar.Add("Image Failed to update", Severity.Error);
+                    }
                 }
             }
         }

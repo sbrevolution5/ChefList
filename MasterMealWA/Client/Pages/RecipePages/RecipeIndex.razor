@@ -1,4 +1,5 @@
 ﻿@page "/recipes/{mine?}"
+@using MasterMealWA.Client.Models
 @inject HttpClient Http
 @inject IApiService _api
 @inject NavigationManager nav
@@ -6,114 +7,100 @@
 @inject ISnackbar snackbar
 @inject IImageReader _imageReader
 @inject IUserService _userService
+@inject IFilterService _filterService
 @attribute [AllowAnonymous]
-<MudItem xs="3">
+
+<MudItem xs="12" md="3">
+    <AuthorizeView Roles="Admin, Moderator">
+        <Authorized>
+            <MudButton @onclick='()=>nav.NavigateTo("/recipes/types")'>Manage Recipe Types</MudButton>
+        </Authorized>
+    </AuthorizeView>
     <MudFab Icon="@Icons.Material.Filled.Add" Color="Color.Primary" Label="Add Recipe" aria-label="add recipe" @onclick='()=>nav.NavigateTo("/recipes/create")' />
-    <MudPaper Width="250px" Class="py-3" Square="true">
-        <MudExpansionPanels MultiExpansion="true" Elevation="2">
-
-            <MudExpansionPanel Text="Author" IsInitiallyExpanded="true">
-                <MudSwitch Label="Only My Recipes" @bind-Checked="myRecipes"></MudSwitch>
-            </MudExpansionPanel>
-            <MudExpansionPanel Text="Supplies" IsInitiallyExpanded="true">
-                <MudSwitch Disabled="true" Label="I have Supplies" @bind-Checked="mySupplies"></MudSwitch>
-            </MudExpansionPanel>
-            <MudExpansionPanel Text="Categories" IsInitiallyExpanded="true">
-                <MudChipSet MultiSelection="true" Filter="true">
-                    @if (RecipeTypes is not null)
-                    {
-                        @foreach (var category in RecipeTypes)
-                        {
-
-                            <MudChip Text="@category.Name"></MudChip>
-                        }
-                    }
-                </MudChipSet>
-            </MudExpansionPanel>
-            <MudExpansionPanel Text="Rating" IsInitiallyExpanded="true">
-                <div class="d-flex flex-column align-center">
-                    <MudRating Color="Color.Secondary" @bind-SelectedValue="selectedRating" HoveredValueChanged="HandleHoveredValueChanged" />
-                    <MudText Typo="Typo.subtitle2" Class="mt-2">@RatingText</MudText>
-                </div>
-
-
-
-            </MudExpansionPanel>
-            <MudExpansionPanel Text="CookingTime" IsInitiallyExpanded="true">
-                <MudSwitch Disabled="true" Label="FilterByTime" @bind-Checked="timeFilter"></MudSwitch>
-
-                <MudItem xs="12">
-                    <MudNumericField @bind-Value="minTime" Label="Min Cooking Time" Variant="Variant.Text" Min="0" Max="60" />
-                </MudItem>
-                <MudItem xs="12">
-                    <MudNumericField @bind-Value="maxTime" Label="Max cooking time" Variant="Variant.Text" Min="0" Max="60" />
-                </MudItem>
-            </MudExpansionPanel>
-        </MudExpansionPanels>
-    </MudPaper>
+    <RecipeFilters Loaded="Loaded" Filters="Filters" RecipeTypes="RecipeTypes" userId="@userId" ReFilter="()=>FilterRecipes()" />
 </MudItem>
 
-<MudItem xs="9">
-    @if (recipes is null)
-    {
-        <MudOverlay>
 
-            <MudText>Loading....</MudText>
-        </MudOverlay>
+<MudItem xs="12" md="9">
+    @if (!Loaded)
+    {
+        <Loader></Loader>
     }
     else
     {
+
         <MudGrid>
-            @foreach (var recipe in pageRecipes)
+            @if (FilteredRecipes.Count == 0)
             {
-                <MudItem xs="4">
+                <MudText Typo="Typo.h3">No Recipes were found, please select a less restrictive filter.</MudText>
+            }
+            else
+            {
+                @foreach (var recipe in pageRecipes)
+                {
+                    <MudItem xs="12" md="4">
 
-                    <MudCard Elevation="2">
-                        <MudCardMedia Image="@(_imageReader.ReadImageData(recipe.Image.ImageData, recipe.Image.ContentType))"></MudCardMedia>
-                        <MudCardContent>
+                        <MudCard Elevation="2">
+                            <MudCardMedia Image="@(_imageReader.ReadImageData(recipe.Image.ImageData, recipe.Image.ContentType))"></MudCardMedia>
+                            <MudCardContent>
+                                <MudGrid>
+                                    <MudItem xs="8">
 
-                            <MudText>@recipe.Name</MudText>
-                            <MudText Typo="Typo.caption">@recipe.Author.DisplayName</MudText>
-                            <MudText>Cooking time: @recipe.CookingTime</MudText>
-                            <MudText>Servings: @recipe.Servings</MudText>
-                            @if (recipe.Ratings.Count > 1)
-                            {
+                                        <MudText>@recipe.Name</MudText>
+                                        <MudText Typo="Typo.caption">@recipe.Author.ScreenName</MudText>
+                                        <MudText>Cooking time: @recipe.CookingTime</MudText>
+                                        <MudText>Servings: @recipe.Servings</MudText>
+                                        @if (!string.IsNullOrWhiteSpace(recipe.RecipeSource))
+                                        {
+                                            @if (!string.IsNullOrWhiteSpace(recipe.RecipeSourceUrl))
+                                            {
+                                                <MudText>
+                                                    Source:
 
-                                <MudRating ReadOnly="true" SelectedValue="@Convert.ToInt32(recipe.AvgRating)"></MudRating>
-                            }
-                            @if (!string.IsNullOrWhiteSpace(recipe.RecipeSource))
-                            {
-                                @if (!string.IsNullOrWhiteSpace(recipe.RecipeSourceUrl))
+                                                    <MudLink Href="@recipe.RecipeSourceUrl">@recipe.RecipeSource</MudLink>
+                                                </MudText>
+                                            }
+                                            else
+                                            {
+                                                <MudText>Source: @recipe.RecipeSource</MudText>
+                                            }
+                                        }
+                                    </MudItem>
+                                    <MudItem xs="4">
+                                        <RecipeRating recipe="recipe" UserId="@userId"></RecipeRating>
+                                    </MudItem>
+                                </MudGrid>
+                            </MudCardContent>
+                            <MudCardActions>
+                                @if (userId == recipe.AuthorId)
                                 {
-                                    <MudText>
-                                        Source:
 
-                                        <MudLink Href="@recipe.RecipeSourceUrl">@recipe.RecipeSource</MudLink>
-                                    </MudText>
+                                    <MudIconButton Variant="Variant.Filled" Color="Color.Warning" Icon="@Icons.Material.Filled.Edit" Link=@($"/recipes/edit/{recipe.Id}")></MudIconButton>
+                                    <MudIconButton Variant="Variant.Filled" Color="Color.Error" Icon="@Icons.Material.Filled.Delete" OnClick="()=>DeleteRecipe(recipe)"></MudIconButton>
+                                    <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Icon="@Icons.Material.Filled.CalendarToday" OnClick="@(()=>AddMeal(recipe))"></MudIconButton>
                                 }
                                 else
                                 {
-                                    <MudText>Source: @recipe.RecipeSource</MudText>
+                                    <AuthorizeView Roles="Admin, Moderator">
+                                        <Authorized>
+                                            <MudIconButton Variant="Variant.Filled" Color="Color.Warning" Icon="@Icons.Material.Filled.Edit" Link=@($"/recipes/edit/{recipe.Id}")></MudIconButton>
+                                            <MudIconButton Variant="Variant.Filled" Color="Color.Error" Icon="@Icons.Material.Filled.Delete" OnClick="()=>DeleteRecipe(recipe)"></MudIconButton>
+                                            @*<MudIconButton Variant="Variant.Filled" Color="Color.Primary" Icon="@Icons.Material.Filled.CalendarToday" OnClick="@(()=>AddMeal(recipe))"></MudIconButton>*@
+                                        </Authorized>
+                                    </AuthorizeView>
+                                    <AuthorizeView>
+                                        <Authorized>
+
+                                            <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Icon="@Icons.Material.Filled.CalendarToday" OnClick="@(()=>AddMeal(recipe))"></MudIconButton>
+                                        </Authorized>
+                                    </AuthorizeView>
                                 }
-                            }
-                        </MudCardContent>
-                        <MudCardActions>
-                            @if (userId == recipe.AuthorId)
-                            {
+                                <MudLink Href="@($"/recipes/details/{recipe.Id}")">Details</MudLink>
+                            </MudCardActions>
+                        </MudCard>
+                    </MudItem>
 
-                                <MudIconButton Variant="Variant.Filled" Color="Color.Warning" Icon="@Icons.Material.Filled.Edit" Link=@($"/recipes/edit/{recipe.Id}")></MudIconButton>
-                                <MudIconButton Variant="Variant.Filled" Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Link=@($"/recipes/delete/{recipe.Id}")></MudIconButton>
-                                <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Icon="@Icons.Material.Filled.CalendarToday" OnClick="@(()=>AddMeal(recipe))"></MudIconButton>
-                            }
-                            else
-                            {
-                                <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Icon="@Icons.Material.Filled.CalendarToday" OnClick="@(()=>AddMeal(recipe))"></MudIconButton>
-                            }
-                            <MudLink Href="@($"/recipes/details/{recipe.Id}")">Details</MudLink>
-                        </MudCardActions>
-                    </MudCard>
-                </MudItem>
-
+                }
             }
         </MudGrid>
     }
@@ -123,18 +110,31 @@
 @code {
     [Parameter]
     public string mine { get; set; }
-    private List<Recipe> recipes;
+    public Filter Filters { get; set; } = new();
+    private List<Recipe> AllRecipes;
+    public List<Recipe> FilteredRecipes;
     private List<Recipe> pageRecipes { get; set; }
     private List<RecipeTag> RecipeTypes { get; set; }
     private bool mySupplies { get; set; }
     private bool myRecipes { get; set; }
-    private bool timeFilter { get; set; }
-    private int minTime { get; set; } = 1;
-    private int maxTime { get; set; } = 60;
-    private int selectedRating = 0;
     private int? activeRating;
     private int pageCount { get; set; } = 0;
     private string userId { get; set; }
+    public bool Auth { get; set; }
+    public Color BadgeColor(CategoryType type)
+    {
+        if (type == CategoryType.Nationality)
+        {
+            return Color.Primary;
+        }
+        if (type == CategoryType.Protein)
+        {
+            return Color.Secondary;
+        }
+        return Color.Tertiary;
+
+    }
+    public bool Loaded { get; set; } = false;
     private void HandleHoveredValueChanged(int? val) => activeRating = val;
     public async Task AddMeal(Recipe recipe)
     {
@@ -146,7 +146,7 @@
             snackbar.Add("Meal planned!");
         }
     }
-    private string RatingText => (activeRating ?? selectedRating) switch
+    private string RatingText => (activeRating ?? Filters.LowestRating) switch
     {
         1 => "1 Star or more",
         2 => "2 Stars or more",
@@ -163,6 +163,7 @@
     protected override async Task OnInitializedAsync()
     {
         userId = await _userService.GetUserIdAsync();
+        Auth = !string.IsNullOrEmpty(userId);
         mine = mine ?? "";
         var options = new JsonSerializerOptions()
         {
@@ -171,25 +172,47 @@
         };
         await GetRecipesAsync();
         ChangePage(1);
-        RecipeTypes = await _api.GetAllRecipeTypesAsync();
+        RecipeTypes = await _api.GetAllTagsAsync();
         base.OnInitialized();
+        Loaded = true;
+    }
+    public void FilterRecipes()
+    {
+        FilteredRecipes = _filterService.ApplyFilter(AllRecipes, Filters, userId);
+        pageCount = (FilteredRecipes.Count / 6) + 1;
+        ChangePage(1);
     }
     private async Task GetRecipesAsync()
     {
         if (mine.ToLower() == "myrecipes")
         {
 
-            recipes = await _api.GetMyRecipesAsync();
+            AllRecipes = await _api.GetMyRecipesAsync();
+            FilterRecipes();
         }
         else
         {
 
-            recipes = await _api.GetAllRecipesAsync();
+            AllRecipes = await _api.GetAllRecipesAsync(Auth);
+            FilterRecipes();
         }
-        pageCount = (recipes.Count / 6) + 1;
+        pageCount = (FilteredRecipes.Count / 6) + 1;
     }
     private void ChangePage(int page)
     {
-        pageRecipes = recipes.OrderBy(r => r.Id).Skip((page - 1) * 6).Take(6).ToList();
+        pageRecipes = FilteredRecipes.OrderBy(r => r.Id).Skip((page - 1) * 6).Take(6).ToList();
+        StateHasChanged();
+    }
+    public async Task DeleteRecipe(Recipe recipe)
+    {
+        var parameters = new DialogParameters { ["recipe"] = recipe };
+        var dialog = _dialogService.Show<RecipeDelete>("Are you sure you want to delete this recipe?", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            Loaded = false;
+            await GetRecipesAsync();
+            Loaded = true;
+        }
     }
 }

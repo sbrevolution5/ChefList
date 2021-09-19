@@ -135,10 +135,6 @@ namespace MasterMealWA.Server.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("text");
 
-                    b.Property<string>("DisplayName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
@@ -268,6 +264,7 @@ namespace MasterMealWA.Server.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("TypeId")
@@ -310,9 +307,6 @@ namespace MasterMealWA.Server.Migrations
 
                     b.Property<int>("ImageId")
                         .HasColumnType("integer");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
 
                     b.Property<int>("RecipeId")
                         .HasColumnType("integer");
@@ -441,6 +435,7 @@ namespace MasterMealWA.Server.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("ImageId")
@@ -450,7 +445,9 @@ namespace MasterMealWA.Server.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("Name")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
 
                     b.Property<string>("RecipeSource")
                         .HasColumnType("text");
@@ -477,7 +474,11 @@ namespace MasterMealWA.Server.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
+                    b.Property<int>("Category")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -559,6 +560,7 @@ namespace MasterMealWA.Server.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("Text")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -576,6 +578,7 @@ namespace MasterMealWA.Server.Migrations
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");

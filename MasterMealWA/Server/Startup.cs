@@ -1,17 +1,21 @@
 using MasterMealWA.Server.Data;
+using MasterMealWA.Server.Extensions;
 using MasterMealWA.Server.Services;
 using MasterMealWA.Server.Services.Interfaces;
 using MasterMealWA.Shared.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 
 namespace MasterMealWA.Server
@@ -31,7 +35,7 @@ namespace MasterMealWA.Server
         {
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseNpgsql(
-                    Configuration.GetConnectionString("DefaultConnection")));
+                    DataUtility.GetConnectionString(Configuration)));
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -39,7 +43,15 @@ namespace MasterMealWA.Server
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddIdentityServer()
-                .AddApiAuthorization<Chef, ApplicationDbContext>();
+                .AddSigningCredentials()
+                .AddApiAuthorization<Chef, ApplicationDbContext>(options =>
+                {
+                    options.IdentityResources["openid"].UserClaims.Add("name");
+                    options.ApiResources.Single().UserClaims.Add("name");
+                    options.IdentityResources["openid"].UserClaims.Add("role");
+                    options.ApiResources.Single().UserClaims.Add("role");
+                });
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("role");
 
             services.AddAuthentication()
                 .AddIdentityServerJwt();
@@ -52,11 +64,17 @@ namespace MasterMealWA.Server
             services.AddScoped<IMealService, MealService>();
             services.AddScoped<IRecipeService, RecipeService>();
             services.AddScoped<ISupplyService, SupplyService>();
+            services.AddScoped<IEmailSender, GmailEmailService>();
 
             services.AddControllersWithViews().AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
                 options.JsonSerializerOptions.PropertyNamingPolicy = null;
+            });
+            services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.ForwardedHeaders =
+                    ForwardedHeaders.XForwardedProto;
             });
             services.AddRazorPages();
         }
@@ -68,12 +86,14 @@ namespace MasterMealWA.Server
             {
                 app.UseDeveloperExceptionPage();
                 app.UseMigrationsEndPoint();
+                app.UseForwardedHeaders();
                 app.UseWebAssemblyDebugging();
             }
             else
             {
                 app.UseExceptionHandler("/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseForwardedHeaders();
                 app.UseHsts();
             }
 

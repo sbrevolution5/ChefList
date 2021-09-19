@@ -1,0 +1,32 @@
+﻿@inject IApiService _api
+@inject NavigationManager _nav
+<MudDialog>
+    <DialogContent>
+        <MudTextField Label="Tag Name" @bind-Value="Tag.Name"></MudTextField>
+        <MudSelect @bind-Value="Tag.Category" Label="Measurement Type">
+            @foreach (CategoryType tagType in Enum.GetValues(typeof(CategoryType)))
+            {
+
+                <MudSelectItem Value="@tagType">@tagType</MudSelectItem>
+            }
+        </MudSelect>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel" Variant="Variant.Filled" Color="Color.Dark">Cancel</MudButton>
+        <MudButton Color="Color.Success" OnClick="CreateTag" Variant="Variant.Filled">Save</MudButton>
+    </DialogActions>
+</MudDialog>
+@code {
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; }
+    private RecipeTag Tag { get; set; } = new();
+    public void Cancel()
+    {
+        MudDialog.Cancel();
+    }
+    public async Task CreateTag()
+    {
+        await _api.CreateNewTagAsync(Tag);
+        MudDialog.Close(DialogResult.Ok(Tag));
+    }
+}

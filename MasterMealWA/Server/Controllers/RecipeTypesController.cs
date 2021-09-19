@@ -25,6 +25,7 @@ namespace MasterMealWA.Server.Controllers
 
         // GET: api/RecipeTypes
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<RecipeTag>>> GetRecipeType()
         {
             var typelist = await _context.RecipeTag.ToListAsync();

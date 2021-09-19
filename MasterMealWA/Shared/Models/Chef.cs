@@ -16,8 +16,6 @@ namespace MasterMealWA.Shared.Models
         [Required]
         public string LastName { get; set; }
         [Required]
-        public string DisplayName { get; set; }
-        [Required]
         public string ScreenName { get; set; }
         public bool ShowFullName { get; set; }
         public int ImageId { get; set; }

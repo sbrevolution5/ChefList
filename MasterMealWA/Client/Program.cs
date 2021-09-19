@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using MudBlazor.Services;
 using MasterMealWA.Client.Services;
 using MasterMealWA.Client.Services.Interfaces;
+using MasterMealWA.Client.Factories;
 
 namespace MasterMealWA.Client
 {
@@ -23,14 +24,17 @@ namespace MasterMealWA.Client
 
             builder.Services.AddHttpClient("MasterMealWA.ServerAPI", client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
                 .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
+            builder.Services.AddHttpClient("MasterMealWA.NonAuthServerAPI",
+    client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress));
 
             // Supply HttpClient instances that include access tokens when making requests to the server project
             builder.Services.AddScoped<IApiService, ApiService>();
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IImageReader, ImageReader>();
+            builder.Services.AddScoped<IFilterService, FilterService>();
             builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("MasterMealWA.ServerAPI"));
             builder.Services.AddMudServices();
-            builder.Services.AddApiAuthorization();
+            builder.Services.AddApiAuthorization().AddAccountClaimsPrincipalFactory<CustomUserFactory>();
 
             await builder.Build().RunAsync();
         }

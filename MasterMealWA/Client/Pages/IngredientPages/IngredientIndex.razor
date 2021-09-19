@@ -1,25 +1,48 @@
 ﻿@page "/ingredients"
 @inject IApiService _api
 @inject IDialogService _dialogService
-<h3>IngredientIndex</h3>
 @if (Ingredients is null)
 {
+    <Loader></Loader>
 
 }
 else
 {
-    <MudList>
+    <MudGrid>
+        <MudItem xs="12">
 
-        @foreach (var ingredient in Ingredients)
-        {
-            <MudListItem>@ingredient.Name
-        <MudButtonGroup>
-            <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" OnClick="@(()=>EditIngredient(ingredient))"></MudIconButton>
-        </MudButtonGroup>
-        </MudListItem>
-        }
-    </MudList>
-    <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" OnClick="NewIngredient"/>
+            <MudCard>
+                <MudCardHeader>
+                    <MudText Typo="Typo.h3">IngredientIndex</MudText>
+                </MudCardHeader>
+                <MudCardContent>
+                    <MudGrid>
+                        @foreach (var ingredient in Ingredients)
+                        {
+                            <MudItem xs="12" sm="6" md="4" lg="3">
+
+                                <MudPaper Elevation="4" Style="padding-left:5px;margin:10px;">
+                                    <MudGrid>
+                                        <MudItem xs="9">
+                                            <MudText>
+
+                                                @ingredient.Name
+                                            </MudText>
+                                        </MudItem>
+
+                                        <MudItem xs="3">
+                                                <MudIconButton Variant="Variant.Filled" Color="Color.Warning" Icon="@Icons.Material.Filled.Edit" OnClick="@(()=>EditIngredient(ingredient))"></MudIconButton>
+                                        </MudItem>
+                                    </MudGrid>
+                                </MudPaper>
+                            </MudItem>
+                        }
+                    </MudGrid>
+                    <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" OnClick="NewIngredient" />
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
 }
 @code {
     public List<Ingredient> Ingredients { get; set; }
@@ -40,7 +63,7 @@ else
     public async Task EditIngredient(Ingredient ingredient)
     {
         var parameters = new DialogParameters { ["Ingredient"] = ingredient };
-        var dialog = _dialogService.Show<IngredientEdit>("Edit Ingredient",parameters);
+        var dialog = _dialogService.Show<IngredientEdit>("Edit Ingredient", parameters);
         var result = await dialog.Result;
         if (!result.Cancelled)
         {

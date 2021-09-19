@@ -13,10 +13,14 @@ namespace MasterMealWA.Shared.Models
         public virtual ICollection<QIngredient> Ingredients { get; set; } = new HashSet<QIngredient>();
         public virtual ICollection<Step> Steps { get; set; } = new HashSet<Step>();
         public int Servings { get; set; }
+        [Required]
+        [StringLength(30, ErrorMessage ="Please keep your recipe name below 40 characters.")]
         public string Name { get; set; }
+        [Required]
         public int CookingTime { get; set; }
+        [Required]
         public string Description { get; set; }
-        public virtual ICollection<Rating> Ratings { get; set; } = new HashSet<Rating>();
+        public ICollection<Rating> Ratings { get; set; } = new HashSet<Rating>();
         public string AuthorId { get; set; }
         public virtual Chef Author { get; set; }
         public int ImageId { get; set; }
@@ -25,7 +29,6 @@ namespace MasterMealWA.Shared.Models
         public string RecipeSource { get; set; } = "";
         public string RecipeSourceUrl { get; set; } = "";
         public bool IsPrivate { get; set; }
-        //Many to many, Not virtual!
         public ICollection<QSupply> Supplies { get; set; } = new HashSet<QSupply>();
         [NotMapped]
         public float AvgRating

@@ -14,14 +14,17 @@ namespace MasterMealWA.Client.Services
     public class ApiService : IApiService
     {
         private readonly HttpClient _http;
+        private readonly IHttpClientFactory _clientFactory;
+
         private readonly JsonSerializerOptions _options = new()
         {
             ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve,
             PropertyNamingPolicy = null
         };
-        public ApiService(HttpClient http)
+        public ApiService(HttpClient http, IHttpClientFactory clientFactory)
         {
             _http = http;
+            _clientFactory = clientFactory;
         }
 
         public async Task CreateNewIngredientAsync(Ingredient ingredient)
@@ -44,9 +47,9 @@ namespace MasterMealWA.Client.Services
             await _http.PostAsJsonAsync("api/recipes", recipe);
         }
 
-        public async Task CreateNewRecipeTypeAsync(RecipeTag type)
+        public async Task CreateNewTagAsync(RecipeTag tag)
         {
-            await _http.PostAsJsonAsync("api/recipeTypes", type);
+            await _http.PostAsJsonAsync("api/recipeTypes", tag);
         }
 
         public async Task CreateNewShoppingListAsync(ListCreateDto dto)
@@ -80,7 +83,7 @@ namespace MasterMealWA.Client.Services
             await _http.DeleteAsync($"api/recipes/{id}");
         }
 
-        public async Task DeleteRecipeTypeAsync(int id)
+        public async Task DeleteTagAsync(int id)
         {
             await _http.DeleteAsync($"api/recipetypes/{id}");
         }
@@ -113,15 +116,26 @@ namespace MasterMealWA.Client.Services
             return list;
         }
 
-        public async Task<List<Recipe>> GetAllRecipesAsync()
+        public async Task<List<Recipe>> GetAllRecipesAsync(bool auth)
         {
-            var list = await _http.GetFromJsonAsync<List<Recipe>>("api/recipes", _options);
+            List<Recipe> list;
+            if (auth)
+            {
+
+                list = await _http.GetFromJsonAsync<List<Recipe>>($"api/recipes", _options);
+            }
+            else
+            {
+                var client = _clientFactory.CreateClient("MasterMealWA.NonAuthServerAPI");
+                list = await client.GetFromJsonAsync<List<Recipe>>($"api/recipes", _options);
+            }
             return list;
         }
 
-        public async Task<List<RecipeTag>> GetAllRecipeTypesAsync()
+        public async Task<List<RecipeTag>> GetAllTagsAsync()
         {
-            var list = await _http.GetFromJsonAsync<List<RecipeTag>>("api/recipeTypes", _options);
+            var client = _clientFactory.CreateClient("MasterMealWA.NonAuthServerAPI");
+            var list = await client.GetFromJsonAsync<List<RecipeTag>>($"api/recipetypes", _options);
             return list;
         }
 
@@ -155,9 +169,19 @@ namespace MasterMealWA.Client.Services
             return meal;
         }
 
-        public async Task<Recipe> GetRecipeAsync(int id)
+        public async Task<Recipe> GetRecipeAsync(int id, bool auth)
         {
-            var recipe = await _http.GetFromJsonAsync<Recipe>($"api/recipes/{id}", _options);
+            Recipe recipe;
+            if (auth)
+            {
+
+                recipe = await _http.GetFromJsonAsync<Recipe>($"api/recipes/{id}", _options);
+            }
+            else
+            {
+                var client = _clientFactory.CreateClient("MasterMealWA.NonAuthServerAPI");
+                recipe = await client.GetFromJsonAsync<Recipe>($"api/recipes/{id}", _options);
+            }
             return recipe;
         }
 
@@ -202,9 +226,9 @@ namespace MasterMealWA.Client.Services
 
         }
 
-        public async Task UpdateRecipeTypeAsync(RecipeTag type)
+        public async Task UpdateTagAsync(RecipeTag tag)
         {
-            await _http.PutAsJsonAsync("api/recipetypes", type);
+            await _http.PutAsJsonAsync($"api/recipetypes/{tag.Id}", tag);
 
         }
 
@@ -246,6 +270,76 @@ namespace MasterMealWA.Client.Services
             {
 
                 throw;
+            }
+        }
+        public async Task<bool> UpdateImageAsync(MultipartFormDataContent content,int imageId)
+        {
+            try
+            {
+                var result = await _http.PutAsync($"api/dbimages/{imageId}", content);
+                return true;
+            }
+            catch (Exception)
+            {
+
+                return false;
+            }
+        }
+
+        public async Task<DBImage> GetImageAsync(int id)
+        {
+            DBImage result = await _http.GetFromJsonAsync<DBImage>($"api/dbimages/{id}");
+            return result;
+        }
+
+        public async Task<bool> CreateNewRatingAsync(int recipeId, string userId, int rating)
+        {
+            try
+            {
+                await _http.PostAsJsonAsync($"api/ratings", new Rating()
+                {
+                    Stars = rating,
+                    ChefId = userId,
+                    RecipeId = recipeId
+                });
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> CreateOrUpdateRatingAsync(int recipeId, string userId, int rating, bool isNew = true)
+        {
+            bool res;
+            if (isNew)
+            {
+                res = await CreateNewRatingAsync(recipeId, userId, rating);
+            }
+            else
+            {
+                res = await UpdateRatingAsync(recipeId, userId, rating);
+            }
+            return res;
+        }
+
+        public async Task<bool> UpdateRatingAsync(int recipeId, string userId, int rating)
+        {
+            RatingEditDto dto = new()
+            {
+                RecipeId = recipeId,
+                ChefId = userId,
+                NewRating = rating
+            };
+            try
+            {
+                await _http.PutAsJsonAsync($"api/ratings/", dto);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
             }
         }
     }

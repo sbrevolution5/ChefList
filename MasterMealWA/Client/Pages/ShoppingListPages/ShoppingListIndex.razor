@@ -1,22 +1,23 @@
 ﻿@page "/ShoppingLists"
 @inject IApiService _api
 @inject IDialogService _dialogService
-
+@attribute [Authorize]
 <MudText Typo="Typo.h1">Shopping lists</MudText>
 @if (shoppingLists is null)
 {
-    <MudText>Loading...</MudText>
+    <Loader></Loader>
+
 }
 else
 {
-<MudList>
-    @foreach (var list in shoppingLists)
-    {
-        <MudListItem>@list.Name</MudListItem>
-        <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Icon="@Icons.Material.Filled.List" Link=@($"shoppinglists/details/{list.Id}")></MudIconButton>
-        <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="()=>DeleteList(list)"></MudIconButton>
-    }
-</MudList>
+    <MudList>
+        @foreach (var list in shoppingLists)
+        {
+            <MudListItem>@list.Name</MudListItem>
+            <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Icon="@Icons.Material.Filled.List" Link=@($"shoppinglists/details/{list.Id}")></MudIconButton>
+            <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="()=>DeleteList(list)"></MudIconButton>
+        }
+    </MudList>
 }
 <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" OnClick="NewList" />
 @code {
@@ -36,7 +37,7 @@ else
     }
     public async Task DeleteList(ShoppingList list)
     {
-        var parameters = new DialogParameters { ["list"] = list};
+        var parameters = new DialogParameters { ["list"] = list };
         var dialog = _dialogService.Show<ListDelete>("Are you sure you want to delete this list?", parameters);
         var result = await dialog.Result;
         if (!result.Cancelled)

@@ -5,8 +5,8 @@
         <MudTextField Label="Supply Name" @bind-Value="supply.Name"></MudTextField>
     </DialogContent>
     <DialogActions>
-        <MudButton OnClick="Cancel">Cancel</MudButton>
-        <MudButton Color="Color.Success" OnClick="EditSupply">Save</MudButton>
+        <MudButton OnClick="Cancel" Variant="Variant.Filled" Color="Color.Dark">Cancel</MudButton>
+        <MudButton Color="Color.Success" OnClick="EditSupply" Variant="Variant.Filled">Save</MudButton>
     </DialogActions>
 </MudDialog>
 @code {

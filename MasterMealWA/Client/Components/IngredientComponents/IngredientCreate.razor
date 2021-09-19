@@ -5,7 +5,8 @@
         <MudTextField Label="Ingredient Name" @bind-Value="ingredient.Name"></MudTextField>
         @if (types is null)
         {
-            <MudText>Loading Types...</MudText>
+            <Loader></Loader>
+
         }
         else
         {
@@ -25,10 +26,11 @@
                 <MudSelectItem Value="@measure"> @measure  </MudSelectItem>
             }
         </MudSelect>
+        <MudText Color="Color.Error">Please do not add duplicate ingredients.  Make sure your ingredient is not already in the database before you save!</MudText>
     </DialogContent>
     <DialogActions>
-        <MudButton OnClick="Cancel">Cancel</MudButton>
-        <MudButton Color="Color.Success" OnClick="CreateIngredient">Save</MudButton>
+        <MudButton OnClick="Cancel" Variant="Variant.Filled" Color="Color.Dark">Cancel</MudButton>
+        <MudButton Color="Color.Success" OnClick="CreateIngredient" Variant="Variant.Filled">Save</MudButton>
     </DialogActions>
 </MudDialog>
 @code {

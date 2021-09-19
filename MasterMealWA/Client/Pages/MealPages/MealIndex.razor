@@ -2,10 +2,12 @@
 @inject IApiService _api
 @inject IDialogService _dialogService
 @inject ISnackbar _snackbar
+@attribute [Authorize]
 <MudText Typo="Typo.h1">Meals</MudText>
 <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.CalendarToday" aria-label="add" OnClick="AddMeal" />
 @if (meals is null)
 {
+    <Loader></Loader>
 
 }
 else
@@ -16,12 +18,18 @@ else
 
             <MudTimelineItem>
                 <ItemOpposite>
-                    <MudText>@meal.Recipe.Name</MudText>
+                    <MudPaper Style="padding: 5px;">
+
+                        <MudText>@meal.Recipe.Name</MudText>
+                    </MudPaper>
                 </ItemOpposite>
                 <ItemContent>
-                    <MudText>@meal.Date.ToShortDateString()</MudText>
-                    <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="()=>EditMeal(meal)"></MudIconButton>
-                    <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="()=>DeleteMeal(meal)"></MudIconButton>
+                    <MudPaper Style="padding: 5px;">
+
+                        <MudText>@meal.Date.ToShortDateString()</MudText>
+                        <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="()=>EditMeal(meal)"></MudIconButton>
+                        <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="()=>DeleteMeal(meal)"></MudIconButton>
+                    </MudPaper>
                 </ItemContent>
             </MudTimelineItem>
         }

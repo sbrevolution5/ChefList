@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using MasterMealWA.Server.Data;
 using MasterMealWA.Shared.Models;
 using Microsoft.AspNetCore.Authorization;
+using MasterMealWA.Shared.Models.Dtos;
+using MasterMealWA.Server.Extensions;
 
 namespace MasterMealWA.Server.Controllers
 {
@@ -46,14 +48,16 @@ namespace MasterMealWA.Server.Controllers
 
         // PUT: api/Ratings/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutRating(int id, Rating rating)
+        [HttpPut]
+        public async Task<IActionResult> PutRating(RatingEditDto dto)
         {
-            if (id != rating.Id)
+            var userId = HttpContext.GetUserId();
+            var rating = await _context.Rating.Where(r => r.ChefId == dto.ChefId && r.RecipeId == dto.RecipeId).FirstOrDefaultAsync();
+            if (rating.RecipeId != dto.RecipeId || rating.ChefId != dto.ChefId || userId != dto.ChefId)
             {
                 return BadRequest();
             }
-
+            rating.Stars = dto.NewRating;
             _context.Entry(rating).State = EntityState.Modified;
 
             try
@@ -62,14 +66,7 @@ namespace MasterMealWA.Server.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!RatingExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                throw;
             }
 
             return NoContent();
@@ -80,10 +77,28 @@ namespace MasterMealWA.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<Rating>> PostRating(Rating rating)
         {
+            var userId = HttpContext.GetUserId();
+            
+            if (await UserPreviouslyRatedRecipeAsync(userId, rating.RecipeId))
+            {
+                return BadRequest();
+            }
             _context.Rating.Add(rating);
+            var recipe = await _context.Recipe.Where(r => r.Id == rating.RecipeId).FirstOrDefaultAsync();
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetRating", new { id = rating.Id }, rating);
+        }
+
+        private async Task<bool> UserPreviouslyRatedRecipeAsync(string userId, int recipeId)
+        {
+            var recipe = await _context.Recipe.Where(r => r.Id == recipeId).Include(r => r.Ratings).FirstOrDefaultAsync();
+            var userRating = recipe.Ratings.Select(r => r.ChefId).Where(c => c == userId).FirstOrDefault();
+            if (userRating is null)
+            {
+                return false;
+            }
+            return true;
         }
 
         // DELETE: api/Ratings/5

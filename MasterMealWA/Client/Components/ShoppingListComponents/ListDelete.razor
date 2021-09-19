@@ -4,7 +4,8 @@
 
         @if (list is null)
         {
-            <p>Loading...</p>
+            <Loader></Loader>
+
         }
         else
         {
@@ -13,8 +14,8 @@
         }
     </DialogContent>
     <DialogActions>
-        <MudButton OnClick="Cancel">Cancel</MudButton>
-        <MudButton Color="Color.Success" OnClick="ConfirmDelete">Delete List</MudButton>
+        <MudButton OnClick="Cancel" Variant="Variant.Filled" Color="Color.Dark">Cancel</MudButton>
+        <MudButton Color="Color.Error" OnClick="ConfirmDelete" Variant="Variant.Filled">Delete List</MudButton>
     </DialogActions>
 </MudDialog>
 @code {

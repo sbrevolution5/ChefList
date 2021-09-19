@@ -12,11 +12,40 @@ using MasterMealWA.Shared.Enums;
 using MasterMealWA.Server.Services;
 using System.Diagnostics;
 using MasterMealWA.Server.Data;
+using Npgsql;
+using Microsoft.Extensions.Configuration;
 
 namespace MasterMealWA.Server.Data
 {
     public static class DataUtility
     {
+        public static string GetConnectionString(IConfiguration configuration)
+        {
+            //The default connection string will come from appSettings like usual
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
+            //It will be automatically overwritten if we are running on Heroku
+            var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+            return string.IsNullOrEmpty(databaseUrl) ? connectionString : BuildConnectionString(databaseUrl);
+        }
+
+        public static string BuildConnectionString(string databaseUrl)
+        {
+            //Provides an object representation of a uniform resource identifier (URI) and easy access to the parts of the URI.
+            var databaseUri = new Uri(databaseUrl);
+            var userInfo = databaseUri.UserInfo.Split(':');
+            //Provides a simple way to create and manage the contents of connection strings used by the NpgsqlConnection class.
+            var builder = new NpgsqlConnectionStringBuilder
+            {
+                Host = databaseUri.Host,
+                Port = databaseUri.Port,
+                Username = userInfo[0],
+                Password = userInfo[1],
+                Database = databaseUri.LocalPath.TrimStart('/'),
+                SslMode = SslMode.Prefer,
+                TrustServerCertificate = true
+            };
+            return builder.ToString();
+        }
         public static async Task ManageDataAsync(IHost host)
         {
 
@@ -30,6 +59,7 @@ namespace MasterMealWA.Server.Data
             var userManagerSvc = svcProvider.GetRequiredService<UserManager<Chef>>();
             //TsTEP 1: This is the programmatic equivalent to Update-Database
             await dbContextSvc.Database.MigrateAsync();
+            await RepairRecipesAsync(dbContextSvc);
             await SeedDefaultImagesAsync(dbContextSvc);
             await SeedRolesAsync(userManagerSvc, roleManagerSvc);
             await SeedAdminUserAsync(userManagerSvc, roleManagerSvc);
@@ -41,13 +71,24 @@ namespace MasterMealWA.Server.Data
             await SeedSuppliesAsync(dbContextSvc);
             await SeedRecipesAsync(dbContextSvc, userManagerSvc);
         }
+
+        private static async Task RepairRecipesAsync(ApplicationDbContext dbContextSvc)
+        {
+            foreach (var recipe in await dbContextSvc.Recipe.ToListAsync())
+            {
+                if (recipe.Ratings == null)
+                {
+                    recipe.Ratings = new HashSet<Rating>();
+                }
+            }
+        }
+
         private static async Task SeedAdminUserAsync(UserManager<Chef> userManager, RoleManager<IdentityRole> roleManager)
         {
             //Seed Default Admin User
             var defaultUser = new Chef
             {
                 UserName = "sethbcoding@gmail.com",
-                DisplayName = "sethbcoding@gmail.com",
                 Email = "sethbcoding@gmail.com",
                 FirstName = "Seth",
                 LastName = "Burleson",
@@ -81,7 +122,6 @@ namespace MasterMealWA.Server.Data
             var defaultUser = new Chef
             {
                 UserName = "softballcc11@yahoo.com",
-                DisplayName = "softballcc11@yahoo.com",
                 Email = "softballcc11@yahoo.com",
                 FirstName = "Cydney",
                 LastName = "Burleson",
@@ -114,7 +154,6 @@ namespace MasterMealWA.Server.Data
             var defaultUser = new Chef
             {
                 UserName = "sbrevolution5@aim.com",
-                DisplayName = "sbrevolution5@aim.com",
                 Email = "sbrevolution5@aim.com",
                 FirstName = "Seth",
                 LastName = "Burleson",
@@ -154,7 +193,7 @@ namespace MasterMealWA.Server.Data
             var mealImage = await context.DBImage.FirstOrDefaultAsync(i => i.Id == 1);
             if (mealImage == null)
             {
-                var file = $"{Directory.GetCurrentDirectory()}/Assets/DefaultRecipe.jpg";
+                var file = $"./wwwroot/Assets/DefaultRecipe.jpg";
                 var fileData = await File.ReadAllBytesAsync(file);
                 var newImage = new DBImage()
                 {
@@ -166,7 +205,7 @@ namespace MasterMealWA.Server.Data
             var userImage = await context.DBImage.FirstOrDefaultAsync(i => i.Id == 2);
             if (userImage == null)
             {
-                var file = $"{Directory.GetCurrentDirectory()}/Assets/DefaultUser.png";
+                var file = $"./wwwroot/Assets/DefaultUser.png";
                 var fileData = await File.ReadAllBytesAsync(file);
                 var defaultUserImage = new DBImage()
                 {
@@ -360,6 +399,7 @@ namespace MasterMealWA.Server.Data
                 AddStep("Serve and top with pico de gallo and lime crema", 10, beefTostada.Id)
             };
             beefTostada.Supplies = beefSupplies;
+            beefTostada.Ingredients = beefIng;
             await context.AddRangeAsync(beefSteps);
             await context.AddRangeAsync(beefIng);
             await context.SaveChangesAsync();
@@ -419,6 +459,7 @@ namespace MasterMealWA.Server.Data
                 AddStep("Serve meat on buns, topped with pickle ", 10, anchoBBQ.Id)
             };
             anchoBBQ.Supplies = anchSupplies;
+            anchoBBQ.Ingredients = anchIng;
             await context.AddRangeAsync(anchSteps);
             await context.AddRangeAsync(anchIng);
             await context.SaveChangesAsync();
@@ -483,7 +524,7 @@ namespace MasterMealWA.Server.Data
                 AddStep("Transfer roasted green beans to a large bowl; add 1 TBS butter and toss until melted.", 12, buffaloChk.Id),
                 AddStep("Drizzle chicken with creamy buffalo sauce and honey.", 13, buffaloChk.Id)
             };
-
+            buffaloChk.Ingredients = buffIng;
             await context.AddRangeAsync(buffSteps);
             await context.AddRangeAsync(buffIng);
             #endregion
@@ -526,7 +567,7 @@ namespace MasterMealWA.Server.Data
                 QuantityNumber = count,
                 NumberOfUnits = _measurementService.EncodeUnitMeasurement(count, Fraction.NoFraction)
             };
-            qing.RecipeId = rId;
+            //qing.RecipeId = rId;
             return qing;
         }
         private static QIngredient NewQIngredient(string name, int count, Fraction frac, VolumeMeasurementUnit unit, List<Ingredient> ingredients, int rId)
@@ -542,7 +583,7 @@ namespace MasterMealWA.Server.Data
                 NumberOfUnits = _measurementService.EncodeVolumeMeasurement(count, frac, unit)
             };
             qing.Quantity = _measurementService.DecodeVolumeMeasurement(qing.NumberOfUnits);
-            qing.RecipeId = rId;
+            //qing.RecipeId = rId;
             return qing;
         }
         private static QIngredient NewQIngredient(string name, int count, Fraction frac, MassMeasurementUnit mass, List<Ingredient> ingredients, int rId)
@@ -558,7 +599,7 @@ namespace MasterMealWA.Server.Data
                 NumberOfUnits = _measurementService.EncodeMassMeasurement(count, frac, mass)
             };
             qing.Quantity = _measurementService.DecodeMassMeasurement(qing.NumberOfUnits);
-            qing.RecipeId = rId;
+            //qing.RecipeId = rId;
             return qing;
         }
         private static async Task SeedRecipeTypesAsync(ApplicationDbContext context)
@@ -569,32 +610,154 @@ namespace MasterMealWA.Server.Data
                 {
                     new()
                     {
-                        Name = "American"
+                        Name = "American",
+                        Category = CategoryType.Nationality
                     },
                     new()
                     {
-                        Name = "Chicken"
+                        Name = "Chicken",
+                        Category = CategoryType.Protein
                     },
 
                     new()
                     {
-                        Name = "Mexican"
+                        Name = "Mexican",
+                        Category = CategoryType.Nationality
                     },
                     new()
                     {
-                        Name = "Seafood"
+                        Name = "Seafood",
+                        Category = CategoryType.Type
                     },
                     new()
                     {
-                        Name = "Italian"
+                        Name = "Italian",
+                        Category = CategoryType.Nationality
                     },
                     new()
                     {
-                        Name = "Breakfast"
+                        Name = "Breakfast",
+                        Category = CategoryType.Type
                     },
                     new()
                     {
-                        Name = "Asian"
+                        Name = "Pork",
+                        Category = CategoryType.Protein
+                    },
+                    new()
+                    {
+                        Name = "Beef",
+                        Category = CategoryType.Protein
+                    },
+                    new()
+                    {
+                        Name = "Fish",
+                        Category = CategoryType.Protein
+                    },
+                    new()
+                    {
+                        Name = "British",
+                        Category = CategoryType.Nationality
+                    },
+                    new()
+                    {
+                        Name = "Middle-Eastern",
+                        Category = CategoryType.Nationality
+                    },
+                    new()
+                    {
+                        Name = "African",
+                        Category = CategoryType.Nationality
+                    },
+                    new()
+                    {
+                        Name = "German",
+                        Category = CategoryType.Nationality
+                    },
+                    new()
+                    {
+                        Name = "Vegetarian",
+                        Category = CategoryType.Protein
+                    },
+                    new()
+                    {
+                        Name = "Lamb",
+                        Category = CategoryType.Protein
+                    },
+                    new()
+                    {
+                        Name = "Dessert",
+                        Category = CategoryType.Type
+                    },
+                    new()
+                    {
+                        Name = "Dinner",
+                        Category = CategoryType.Type
+                    },
+                    new()
+                    {
+                        Name = "Salad",
+                        Category = CategoryType.Type
+                    },
+                    new()
+                    {
+                        Name = "Stir-Fry",
+                        Category = CategoryType.Type
+                    },
+                    new()
+                    {
+                        Name = "Meatball",
+                        Category = CategoryType.Type
+                    },
+                    new()
+                    {
+                        Name = "Burger",
+                        Category = CategoryType.Type
+                    },
+                    new()
+                    {
+                        Name = "Taco",
+                        Category = CategoryType.Type
+                    },
+                    new()
+                    {
+                        Name = "Noodle",
+                        Category = CategoryType.Type
+                    },
+                    new()
+                    {
+                        Name = "Bowl",
+                        Category = CategoryType.Type
+                    },
+                    new()
+                    {
+                        Name = "Flatbread",
+                        Category = CategoryType.Type
+                    },
+                    new()
+                    {
+                        Name = "Pasta",
+                        Category = CategoryType.Type
+                    },
+                    new()
+                    {
+                        Name = "Indian",
+                        Category = CategoryType.Nationality
+                    },
+                    new()
+                    {
+                        Name = "Korean",
+                        Category = CategoryType.Nationality
+                    },
+                    new()
+                    {
+                        Name = "Mediterranean",
+                        Category = CategoryType.Nationality
+                    },
+                    new()
+                    {
+                        Name = "Latin American",
+                        Category = CategoryType.Nationality
                     }
                 };
                 context.AddRange(types);
