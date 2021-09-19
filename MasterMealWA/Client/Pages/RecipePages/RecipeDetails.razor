@@ -232,7 +232,7 @@ else
             snackbar.Add("Recipe is already scaled to this amount!", Severity.Warning);
             return;
         }
-        recipe await _api.ScaleRecipeAsync();
+        recipe = await _api.ScaleRecipeAsync(recipe.Id,DesiredServings);
 
     }
     private async Task ResetScaling()
