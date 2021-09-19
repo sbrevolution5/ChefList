@@ -99,11 +99,11 @@ namespace MasterMealWA.Server.Services
             if (measure == MeasurementType.Volume)
             {
 
-                result.QuantityString = _measurementService.DecodeVolumeMeasurement(totalQuantity) + " " + ingredient.Name;
+                result.QuantityString = $"{_measurementService.DecodeVolumeMeasurement(totalQuantity)} {ingredient.Name}";
             }
             else if (measure == MeasurementType.Mass)
             {
-                result.QuantityString = _measurementService.DecodeVolumeMeasurement(totalQuantity) + " " + ingredient.Name;
+                result.QuantityString = $"{_measurementService.DecodeVolumeMeasurement(totalQuantity)} {ingredient.Name}";
             }
             else if (measure == MeasurementType.Count)
             {
