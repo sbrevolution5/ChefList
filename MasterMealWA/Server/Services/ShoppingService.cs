@@ -16,10 +16,11 @@ namespace MasterMealWA.Server.Services
         private readonly IMeasurementService _measurementService;
         private readonly IServingService _servingService;
 
-        public ShoppingService(ApplicationDbContext context, IMeasurementService measurementService)
+        public ShoppingService(ApplicationDbContext context, IMeasurementService measurementService, IServingService servingService)
         {
             _context = context;
             _measurementService = measurementService;
+            _servingService = servingService;
         }
 
         public async Task<ShoppingList> CreateShoppingListForDateRangeAsync(DateTime EndDate, DateTime StartDate, string userId)
@@ -31,7 +32,11 @@ namespace MasterMealWA.Server.Services
                                                   .Where(m => m.Date >= StartDate && m.Date <= EndDate)
                                                   .AsNoTracking()
                                                   .ToListAsync();
-            ShoppingList list = await CreateShoppingListFromMealsAsync(meals);
+            foreach (var meal in meals)
+            {
+                meal.Recipe.Ingredients = await GetScaledIngredientList(meal.RecipeId, meal.Serves);
+            }
+            ShoppingList list = CreateShoppingListFromMeals(meals);
             list.ChefId = userId;
             list.Name = $"Meals before {EndDate.ToShortDateString()}";
             list.Created = DateTime.Now;
@@ -39,25 +44,17 @@ namespace MasterMealWA.Server.Services
             await _context.SaveChangesAsync();
             return list;
         }
-        private async Task<List<QIngredient>> GetMealWithServings(int recipeId, int desiredServings)
+        private async Task<ICollection<QIngredient>> GetScaledIngredientList(int recipeId, int desiredServings)
         {
             var result = await _servingService.ScaleRecipeAsync(recipeId, desiredServings);
-            return result;
+            return result.Ingredients;
         }
-        private async Task<ShoppingList> CreateShoppingListFromMealsAsync(List<Meal> meals)
+        private ShoppingList CreateShoppingListFromMeals(List<Meal> meals)
         {
             List<QIngredient> qIngredients = new();
             foreach (var meal in meals)
             {
-                if (meal.Serves == meal.Recipe.Servings)
-                {
-
-                    qIngredients.AddRange(meal.Recipe.Ingredients);
-                }
-                else
-                {
-                    qIngredients.AddRange(await GetMealWithServings(meal.RecipeId, meal.Serves));
-                }
+                qIngredients.AddRange(meal.Recipe.Ingredients);
             }
             List<ShoppingIngredient> list = CreateShoppingIngredientsFromQIngredients(qIngredients.OrderByDescending(q => q.IngredientId).ToList());
             ShoppingList dbList = new();
@@ -95,8 +92,6 @@ namespace MasterMealWA.Server.Services
             Ingredient ingredient = listOfOneIngredient.First().Ingredient;
             ShoppingIngredient result = new()
             {
-                IngredientId = listOfOneIngredient.First().IngredientId,
-                Ingredient = ingredient,
                 Notes = notes
             };
             var measure = ingredient.MeasurementType;
