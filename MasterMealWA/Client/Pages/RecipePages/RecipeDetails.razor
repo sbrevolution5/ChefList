@@ -14,6 +14,8 @@
 
         <MudNumericField Label="Desired Servings" Disabled="recipe is null" @bind-Value="DesiredServings">
         </MudNumericField>
+        
+        <MudButton Variant="Variant.Filled" Color="Color.Secondary" Disabled="recipe is null" OnClick="ResetScaling">Reset Scaling</MudButton>
         <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="recipe is null" ButtonType="ButtonType.Submit">Scale Recipe</MudButton>
     </EditForm>
 </MudItem>
@@ -171,6 +173,7 @@ else
     private string imageData { get; set; }
     private string UserId { get; set; }
     private int DesiredServings { get; set; }
+    private int InitialServings { get; set; }
     private List<BreadcrumbItem> crumbList = new()
     {
         new BreadcrumbItem("Recipes", href: "/recipes")
