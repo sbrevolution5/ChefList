@@ -173,8 +173,8 @@ else
     private int DesiredServings { get; set; }
     private List<BreadcrumbItem> crumbList = new()
     {
-            new BreadcrumbItem("Recipes", href: "/recipes")
-        };
+        new BreadcrumbItem("Recipes", href: "/recipes")
+    };
     public async Task AddMeal()
     {
         var parameters = new DialogParameters { ["recipe"] = recipe };
@@ -223,6 +223,11 @@ else
     }
     private async Task ScaleRecipe()
     {
+        if (recipe.Servings == DesiredServings)
+        {
+            snackbar.Add("Recipe is already scaled to this amount!", Severity.Warning);
+            return;
+        }
 
     }
 }
