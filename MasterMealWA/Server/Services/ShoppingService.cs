@@ -85,13 +85,14 @@ namespace MasterMealWA.Server.Services
                 //If string has Notes (it always has shopping notes due to quantity)
                 if (!string.IsNullOrWhiteSpace(qingredient.Notes))
                 {
-                    notes.Add(qingredient.ShoppingNotes);
+                    notes.Add($"{qingredient.ShoppingNotes} {qingredient.Recipe.Name}");
                 }
             }
 
             Ingredient ingredient = listOfOneIngredient.First().Ingredient;
             ShoppingIngredient result = new()
             {
+                IngredientTypeId = ingredient.TypeId,
                 Notes = notes
             };
             var measure = ingredient.MeasurementType;
