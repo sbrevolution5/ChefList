@@ -342,5 +342,18 @@ namespace MasterMealWA.Client.Services
                 return false;
             }
         }
+
+        public async Task<Recipe> ScaleRecipeAsync(int recipeId, int desiredServings)
+        {
+            try
+            {
+                var recipe = await _http.GetFromJsonAsync<Recipe>($"api/recipe/{recipeId}/scale/{desiredServings}");
+                return recipe;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }

@@ -212,6 +212,7 @@ else
         };
         recipe = await _api.GetRecipeAsync(Convert.ToInt32(Id), auth);
         DesiredServings = recipe.Servings;
+        InitialServings = recipe.Servings;
         base.OnInitialized();
     }
     public async Task DeleteRecipe()
@@ -231,6 +232,11 @@ else
             snackbar.Add("Recipe is already scaled to this amount!", Severity.Warning);
             return;
         }
+        recipe await _api.ScaleRecipeAsync();
 
+    }
+    private async Task ResetScaling()
+    {
+        await OnInitializedAsync();
     }
 }
