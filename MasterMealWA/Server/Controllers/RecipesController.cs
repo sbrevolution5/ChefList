@@ -221,6 +221,30 @@ namespace MasterMealWA.Server.Controllers
             {
 
                 var result = await _servingService.ScaleRecipeAsync(recipeId, desiredServings);
+                foreach (var ingredient in result.Ingredients)
+                {
+                    //ingredient.RecipeId = recipe.Id;
+                    if (ingredient.MeasurementType == MeasurementType.Volume)
+                    {
+                        ingredient.MassMeasurementUnit = null;
+                        ingredient.NumberOfUnits = _measurementService.EncodeVolumeMeasurement(ingredient.QuantityNumber, ingredient.Fraction, ingredient.VolumeMeasurementUnit.Value);
+                        ingredient.Quantity = _measurementService.DecodeVolumeMeasurement(ingredient.NumberOfUnits);
+                    }
+                    else if (ingredient.MeasurementType == MeasurementType.Mass)
+                    {
+                        ingredient.VolumeMeasurementUnit = null;
+                        ingredient.NumberOfUnits = _measurementService.EncodeMassMeasurement(ingredient.QuantityNumber, ingredient.Fraction, ingredient.MassMeasurementUnit.Value);
+                        ingredient.Quantity = _measurementService.DecodeMassMeasurement(ingredient.NumberOfUnits);
+                    }
+                    else if (ingredient.MeasurementType == MeasurementType.Count)
+                    {
+                        ingredient.VolumeMeasurementUnit = null;
+                        ingredient.MassMeasurementUnit = null;
+                        ingredient.NumberOfUnits = _measurementService.EncodeUnitMeasurement(ingredient.QuantityNumber, ingredient.Fraction);
+                        ingredient.Quantity = _measurementService.DecodeUnitMeasurement(ingredient.NumberOfUnits);
+                    }
+                    _context.Add(ingredient);
+                }
                 return result;
             }
             catch (Exception)
