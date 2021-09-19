@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MasterMealWA.Server.Services
 {
-    public class ServingService
+    public class ServingService : IServingService
     {
         private readonly ApplicationDbContext _context;
 
@@ -18,7 +18,7 @@ namespace MasterMealWA.Server.Services
         }
         public async Task<Recipe> ScaleRecipeAsync(int recipeId, int desiredServings)
         {
-            var recipe = await _context.Recipe.Include(r => r.Ingredients).ThenInclude(r => r.Ingredient).AsNoTracking().FirstOrDefaultAsync(r=>r.Id == recipeId);
+            var recipe = await _context.Recipe.Include(r => r.Ingredients).ThenInclude(r => r.Ingredient).AsNoTracking().FirstOrDefaultAsync(r => r.Id == recipeId);
             Recipe singleServe = ConvertRecipeToSingleServing(recipe);
             Recipe correctServing = UpscaleServing(singleServe, desiredServings);
             throw new NotImplementedException();
