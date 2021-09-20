@@ -55,8 +55,8 @@ namespace MasterMealWA.Server.Services
             else if (fracTSP < 8)
             {
                 //Only used if we end up with < 1/3 tsp due to serving size conversion!!!!
-                unitString = "Dash (less than 1/3 TSP)";
-                var dashMeasure = "1" + " " + unitString + "(" + ozConversion + " oz.)";
+                unitString = "A Dash/Pinch (less than 1/3 TSP) ";
+                var dashMeasure = unitString + "(" + ozConversion + " oz.)";
                 return dashMeasure;
             }
             else //Must be Teaspoon or less
