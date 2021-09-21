@@ -93,7 +93,9 @@ else
                                     <td>
                                         @InitialServings @if (IsScaled)
                                     {
-                                       @: Scaled to (DesiredServings)
+                                       <MudText Style="font-weight:bold;" Color="Color.Primary">
+                                         Scaled to (@DesiredServings)
+                                           </MudText>
                                     }
                                     </td>
                                 </tr>
@@ -209,6 +211,7 @@ else
     }
     protected override async Task OnInitializedAsync()
     {
+        IsScaled = false;
         UserId = await _userService.GetUserIdAsync();
         bool auth = !string.IsNullOrEmpty(UserId);
         var options = new JsonSerializerOptions()
@@ -240,7 +243,7 @@ else
         }
         recipe.Servings = DesiredServings;
         recipe.Ingredients = (await _api.ScaleRecipeAsync(recipe.Id, DesiredServings)).Ingredients;
-
+        IsScaled = true;
     }
     private async Task ResetScaling()
     {
