@@ -170,6 +170,8 @@ else
     private Recipe recipe;
     private string imageData { get; set; }
     private string UserId { get; set; }
+    private bool IsScaled { get; set; }
+    private List<QIngredient> ScaledIngredients { get; set; }
     private int DesiredServings { get; set; }
     private int InitialServings { get; set; }
     private List<BreadcrumbItem> crumbList = new()
