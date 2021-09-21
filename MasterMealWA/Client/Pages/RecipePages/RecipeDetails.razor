@@ -11,11 +11,11 @@
 </MudItem>
 <MudItem xs="6">
 
-        <MudNumericField Label="Desired Servings" Disabled="recipe is null" @bind-Value="DesiredServings">
-        </MudNumericField>
-        
-        <MudButton Variant="Variant.Filled" Color="Color.Secondary" Disabled="recipe is null" OnClick="ResetScaling">Reset Scaling</MudButton>
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="recipe is null" OnClick="ScaleRecipe">Scale Recipe</MudButton>
+    <MudNumericField Label="Desired Servings" Disabled="recipe is null" @bind-Value="DesiredServings">
+    </MudNumericField>
+
+    <MudButton Variant="Variant.Filled" Color="Color.Secondary" Disabled="recipe is null" OnClick="ResetScaling">Reset Scaling</MudButton>
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="recipe is null" OnClick="ScaleRecipe">Scale Recipe</MudButton>
 </MudItem>
 @if (recipe is null)
 {
@@ -90,7 +90,12 @@ else
                             <tbody>
                                 <tr>
                                     <td>Serves:</td>
-                                    <td>@recipe.Servings</td>
+                                    <td>
+                                        @InitialServings @if (IsScaled)
+                                    {
+                                       @: Scaled to (DesiredServings)
+                                    }
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Time To Cook:</td>
@@ -119,7 +124,8 @@ else
                 <MudTabPanel Text="Ingredients">
                     <MudList>
                         @foreach (var ingredient in recipe.Ingredients)
-                        {<MudListItem>
+                        {
+                            <MudListItem>
                                 <MudPaper Elevation="2">
 
                                     <MudText Class="h4">
@@ -176,8 +182,8 @@ else
     private int InitialServings { get; set; }
     private List<BreadcrumbItem> crumbList = new()
     {
-        new BreadcrumbItem("Recipes", href: "/recipes")
-    };
+            new BreadcrumbItem("Recipes", href: "/recipes")
+        };
     public async Task AddMeal()
     {
         var parameters = new DialogParameters { ["recipe"] = recipe, ["Servings"] = DesiredServings };
@@ -233,7 +239,7 @@ else
             return;
         }
         recipe.Servings = DesiredServings;
-        recipe.Ingredients = (await _api.ScaleRecipeAsync(recipe.Id,DesiredServings)).Ingredients;
+        recipe.Ingredients = (await _api.ScaleRecipeAsync(recipe.Id, DesiredServings)).Ingredients;
 
     }
     private async Task ResetScaling()
