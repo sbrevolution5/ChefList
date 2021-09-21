@@ -127,71 +127,71 @@ else
                     @if (!IsScaled)
                     {
 
-                     <MudList>
-                        @foreach (var ingredient in recipe.Ingredients)
-                        {
-                            <MudListItem>
-                                <MudPaper Elevation="2">
-
-                                    <MudText Class="h4">
-                                        @ingredient.Ingredient.Name
-                                    </MudText>
-                                    <MudText>@ingredient.Quantity</MudText>
-                                    <MudText>@ingredient.Notes</MudText>
-                                </MudPaper>
-                            </MudListItem>
-                        }
-                    </MudList>
-                    }
-                            else
+                        <MudList>
+                            @foreach (var ingredient in recipe.Ingredients)
                             {
-                                <MudGrid>
-                                    <MudItem xs="6">
-                                        <MudList>
-                                            <MudListItem>
-                                                <MudPaper Elevation="2">
-                                                    <MudText Style="font-weight:bold;" Color="Color.Primary">Original Measurements (@InitialServings servings)</MudText>
-                                                </MudPaper>
-                                            </MudListItem>
-                                            @foreach (var ingredient in recipe.Ingredients)
-                                            {
-                                                <MudListItem>
-                                                    <MudPaper Elevation="2">
+                                <MudListItem>
+                                    <MudPaper Elevation="2">
 
-                                                        <MudText Class="h4">
-                                                            @ingredient.Ingredient.Name
-                                                        </MudText>
-                                                        <MudText>@ingredient.Quantity</MudText>
-                                                        <MudText>@ingredient.Notes</MudText>
-                                                    </MudPaper>
-                                                </MudListItem>
-                                            }
-                                        </MudList>
-                                    </MudItem>
-                                    <MudItem xs="6">
-                                        <MudList>
-                                            <MudListItem>
-                                                <MudPaper Elevation="2">
-                                                    <MudText Style="font-weight:bold;" Color="Color.Primary">Scaled for @DesiredServings servings</MudText>
-                                                </MudPaper>
-                                            </MudListItem>
-                                            @foreach (var ingredient in ScaledIngredients)
-                                            {
-                                                <MudListItem>
-                                                    <MudPaper Elevation="2">
-
-                                                        <MudText Class="h4">
-                                                            @ingredient.Ingredient.Name
-                                                        </MudText>
-                                                        <MudText>@ingredient.Quantity</MudText>
-                                                        <MudText>@ingredient.Notes</MudText>
-                                                    </MudPaper>
-                                                </MudListItem>
-                                            }
-                                        </MudList>
-                                    </MudItem>
-                                </MudGrid>
+                                        <MudText Class="h4">
+                                            @ingredient.Ingredient.Name
+                                        </MudText>
+                                        <MudText>@ingredient.Quantity</MudText>
+                                        <MudText>@ingredient.Notes</MudText>
+                                    </MudPaper>
+                                </MudListItem>
                             }
+                        </MudList>
+                    }
+                    else
+                    {
+                        <MudGrid>
+                            <MudItem xs="6">
+                                <MudList>
+                                    <MudListItem>
+                                        <MudPaper Elevation="2">
+                                            <MudText Style="font-weight:bold;" Color="Color.Primary">Original Measurements (@InitialServings servings)</MudText>
+                                        </MudPaper>
+                                    </MudListItem>
+                                    @foreach (var ingredient in recipe.Ingredients)
+                                    {
+                                        <MudListItem>
+                                            <MudPaper Elevation="2">
+
+                                                <MudText Class="h4">
+                                                    @ingredient.Ingredient.Name
+                                                </MudText>
+                                                <MudText>@ingredient.Quantity</MudText>
+                                                <MudText>@ingredient.Notes</MudText>
+                                            </MudPaper>
+                                        </MudListItem>
+                                    }
+                                </MudList>
+                            </MudItem>
+                            <MudItem xs="6">
+                                <MudList>
+                                    <MudListItem>
+                                        <MudPaper Elevation="2">
+                                            <MudText Style="font-weight:bold;" Color="Color.Primary">Scaled for @DesiredServings servings</MudText>
+                                        </MudPaper>
+                                    </MudListItem>
+                                    @foreach (var ingredient in ScaledIngredients)
+                                    {
+                                        <MudListItem>
+                                            <MudPaper Elevation="2">
+
+                                                <MudText Class="h4">
+                                                    @ingredient.Ingredient.Name
+                                                </MudText>
+                                                <MudText>@ingredient.Quantity</MudText>
+                                                <MudText>@ingredient.Notes</MudText>
+                                            </MudPaper>
+                                        </MudListItem>
+                                    }
+                                </MudList>
+                            </MudItem>
+                        </MudGrid>
+                    }
                 </MudTabPanel>
                 <MudTabPanel Text="Supplies">
                     <MudList>
