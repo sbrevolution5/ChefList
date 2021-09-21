@@ -52,10 +52,10 @@ namespace MasterMealWA.Server.Services
                 unit = VolumeMeasurementUnit.Tablespoon;
                 conversionFactor = 3 * 24;
             }
-            else if (fracTSP < 8)
+            else if (fracTSP < 6)
             {
-                //Only used if we end up with < 1/3 tsp due to serving size conversion!!!!
-                unitString = "A Dash/Pinch (less than 1/3 TSP) ";
+                //Only used if we end up with < 1/4 tsp due to serving size conversion!!!!
+                unitString = "A Dash/Pinch (less than 1/4 TSP) ";
                 var dashMeasure = unitString + "(" + ozConversion + " oz.)";
                 return dashMeasure;
             }
