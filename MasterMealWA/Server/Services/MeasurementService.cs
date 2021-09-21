@@ -14,6 +14,7 @@ namespace MasterMealWA.Server.Services
             VolumeMeasurementUnit unit;
             int conversionFactor;
             string unitString;
+            float ozConversion = (float)fracTSP / (24f * 3f * 2f);
             if (fracTSP >= 4 * 2 * 2 * 8 * 2 * 3 * 24)
             {
                 unitString = "Gallon";
@@ -51,6 +52,13 @@ namespace MasterMealWA.Server.Services
                 unit = VolumeMeasurementUnit.Tablespoon;
                 conversionFactor = 3 * 24;
             }
+            else if (fracTSP < 6)
+            {
+                //Only used if we end up with < 1/4 tsp due to serving size conversion!!!!
+                unitString = "A Dash/Pinch (less than 1/4 TSP) ";
+                var dashMeasure = unitString + "(" + ozConversion + " oz.)";
+                return dashMeasure;
+            }
             else //Must be Teaspoon or less
             {
                 unitString = "Teaspoon";
@@ -62,7 +70,6 @@ namespace MasterMealWA.Server.Services
             string measurement = "";
             int remainder = fracTSP % conversionFactor;
             int howMany;
-            float ozConversion = (float)fracTSP / (24f * 3f * 2f);
             if (remainder > 0)
             {
                 //Add s to unit

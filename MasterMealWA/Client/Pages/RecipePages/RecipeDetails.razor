@@ -6,8 +6,16 @@
 @inject IImageReader _imageReader
 @inject NavigationManager _nav
 @attribute [AllowAnonymous]
-<MudItem xs="12">
+<MudItem xs="6">
     <MudBreadcrumbs Items="crumbList"></MudBreadcrumbs>
+</MudItem>
+<MudItem xs="6">
+
+    <MudNumericField Label="Desired Servings" Disabled="recipe is null" @bind-Value="DesiredServings">
+    </MudNumericField>
+
+    <MudButton Variant="Variant.Filled" Color="Color.Secondary" Disabled="recipe is null" OnClick="ResetScaling">Reset Scaling</MudButton>
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="recipe is null" OnClick="ScaleRecipe">Scale Recipe</MudButton>
 </MudItem>
 @if (recipe is null)
 {
@@ -82,7 +90,14 @@ else
                             <tbody>
                                 <tr>
                                     <td>Serves:</td>
-                                    <td>@recipe.Servings</td>
+                                    <td>
+                                        @InitialServings @if (IsScaled)
+                                        {
+                                            <MudText Style="font-weight:bold;" Color="Color.Primary">
+                                                Scaled to (@DesiredServings)
+                                            </MudText>
+                                        }
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Time To Cook:</td>
@@ -95,65 +110,140 @@ else
                                         {
                                             <MudChip Color="@BadgeColor(tag.Category)">@tag.Name</MudChip>
                                         }
-                                </td>
-                            </tr>
-                        </tbody>
-                    </MudSimpleTable>
-                </MudItem>
-            </MudGrid>
-        </MudCardContent>
-    </MudCard>
-</MudItem>
-<MudItem xs="4">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </MudSimpleTable>
+                    </MudItem>
+                </MudGrid>
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+    <MudItem xs="4">
 
-    <MudCard>
-        <MudTabs>
-            <MudTabPanel Text="Ingredients">
-                <MudList>
-                    @foreach (var ingredient in recipe.Ingredients)
-                    {<MudListItem>
-                            <MudPaper Elevation="2">
-
-                                <MudText Class="h4">
-                                    @ingredient.Ingredient.Name
-                                </MudText>
-                                <MudText>@ingredient.Quantity</MudText>
-                                <MudText>@ingredient.Notes</MudText>
-                            </MudPaper>
-                        </MudListItem>
-                    }
-                </MudList>
-            </MudTabPanel>
-            <MudTabPanel Text="Supplies">
-                <MudList>
-
-                    @foreach (var supply in recipe.Supplies)
+        <MudCard>
+            <MudTabs>
+                <MudTabPanel Text="Ingredients">
+                    @if (!IsScaled)
                     {
-                        <MudListItem>
 
-                            <MudPaper Elevation="2">
-                                <MudText Class="h4">@supply.Quantity @supply.Supply.Name</MudText>
-                            </MudPaper>
-                        </MudListItem>
+                        <MudList>
+                            @foreach (var ingredient in recipe.Ingredients)
+                            {
+                                <MudListItem>
+                                    <MudPaper Elevation="2">
+
+                                        <MudText Class="h4">
+                                            @ingredient.Ingredient.Name
+                                        </MudText>
+                                        <MudText>@ingredient.Quantity</MudText>
+                                        <MudText>@ingredient.Notes</MudText>
+                                    </MudPaper>
+                                </MudListItem>
+                            }
+                        </MudList>
                     }
-                </MudList>
-            </MudTabPanel>
-            <MudTabPanel Text="Steps">
-                <MudList>
-                    @foreach (var step in recipe.Steps.OrderBy(s => s.StepNumber))
+                    else
                     {
-                        <MudListItem>
-                            <MudPaper Elevation="2">
-                                <MudText>@step.StepNumber. @step.Text</MudText>
-                            </MudPaper>
-                        </MudListItem>
-                    }
-                </MudList>
-            </MudTabPanel>
-        </MudTabs>
+                        <MudGrid>
+                            <MudItem xs="6">
+                                <MudList>
+                                    <MudListItem>
+                                        <MudPaper Elevation="2">
+                                            <MudText Style="font-weight:bold;" Color="Color.Primary">Original Measurements (@InitialServings servings)</MudText>
+                                        </MudPaper>
+                                    </MudListItem>
+                                    @foreach (var ingredient in recipe.Ingredients)
+                                    {
+                                        <MudListItem>
+                                            <MudPaper Elevation="2">
 
-    </MudCard>
-</MudItem>
+                                                <MudText Class="h4">
+                                                    @ingredient.Ingredient.Name
+                                                </MudText>
+                                                <MudText>@ingredient.Quantity</MudText>
+                                                <MudText>@ingredient.Notes</MudText>
+                                            </MudPaper>
+                                        </MudListItem>
+                                    }
+                                </MudList>
+                            </MudItem>
+                            <MudItem xs="6">
+                                <MudList>
+                                    <MudListItem>
+                                        <MudPaper Elevation="2">
+                                            <MudText Style="font-weight:bold;" Color="Color.Primary">Scaled for @DesiredServings servings</MudText>
+                                        </MudPaper>
+                                    </MudListItem>
+                                    @foreach (var ingredient in ScaledIngredients)
+                                    {
+                                        <MudListItem>
+                                            <MudPaper Elevation="2">
+
+                                                <MudText Class="h4">
+                                                    @ingredient.Ingredient.Name
+                                                </MudText>
+                                                <MudText>@ingredient.Quantity</MudText>
+                                                <MudText>@ingredient.Notes</MudText>
+                                            </MudPaper>
+                                        </MudListItem>
+                                    }
+                                </MudList>
+                            </MudItem>
+                        </MudGrid>
+                    }
+                </MudTabPanel>
+                <MudTabPanel Text="Supplies">
+                    <MudList>
+                        @if (IsScaled)
+                        {
+                            <MudListItem>
+                                <MudPaper Elevation="2">
+
+                                    <MudText Style="font-weight:bold;" Color="Color.Error">
+                                        Recipe has been scaled from @InitialServings servings to @DesiredServings servings, but supplies were not scaled.
+                                    </MudText>
+                                </MudPaper>
+                            </MudListItem>
+                        }
+                        @foreach (var supply in recipe.Supplies)
+                        {
+                            <MudListItem>
+
+                                <MudPaper Elevation="2">
+                                    <MudText Class="h4">@supply.Quantity @supply.Supply.Name</MudText>
+                                </MudPaper>
+                            </MudListItem>
+                        }
+                    </MudList>
+                </MudTabPanel>
+                <MudTabPanel Text="Steps">
+                    <MudList>
+                        @if (IsScaled)
+                        {
+                            <MudListItem>
+                                <MudPaper Elevation="2">
+
+                                    <MudText Style="font-weight:bold;" Color="Color.Error">
+                                        Recipe has been scaled from @InitialServings servings to @DesiredServings servings, but any measurements written in steps were not scaled.</MudText><MudText> (i.e. Add 2 tsp will still say add 2 tsp even if recipe now calls for more or less).  Please reference the ingredients tab to see measurement scaling results.
+                                    </MudText>
+                                </MudPaper>
+                            </MudListItem>
+                        }
+                        @foreach (var step in recipe.Steps.OrderBy(s => s.StepNumber))
+                        {
+                            <MudListItem>
+                                <MudPaper Elevation="2">
+                                    <MudText>@step.StepNumber. @step.Text</MudText>
+                                </MudPaper>
+                            </MudListItem>
+                        }
+                    </MudList>
+                </MudTabPanel>
+            </MudTabs>
+
+        </MudCard>
+    </MudItem>
 }
 
 @code {
@@ -162,13 +252,17 @@ else
     private Recipe recipe;
     private string imageData { get; set; }
     private string UserId { get; set; }
+    private bool IsScaled { get; set; }
+    private ICollection<QIngredient> ScaledIngredients { get; set; }
+    private int DesiredServings { get; set; }
+    private int InitialServings { get; set; }
     private List<BreadcrumbItem> crumbList = new()
     {
             new BreadcrumbItem("Recipes", href: "/recipes")
         };
     public async Task AddMeal()
     {
-        var parameters = new DialogParameters { ["recipe"] = recipe };
+        var parameters = new DialogParameters { ["recipe"] = recipe, ["Servings"] = DesiredServings };
         var dialog = _dialogService.Show<MealCreate>("Schedule Meal", parameters);
         var result = await dialog.Result;
         if (!result.Cancelled)
@@ -191,6 +285,7 @@ else
     }
     protected override async Task OnInitializedAsync()
     {
+        IsScaled = false;
         UserId = await _userService.GetUserIdAsync();
         bool auth = !string.IsNullOrEmpty(UserId);
         var options = new JsonSerializerOptions()
@@ -199,6 +294,8 @@ else
             PropertyNamingPolicy = null
         };
         recipe = await _api.GetRecipeAsync(Convert.ToInt32(Id), auth);
+        DesiredServings = recipe.Servings;
+        InitialServings = recipe.Servings;
         base.OnInitialized();
     }
     public async Task DeleteRecipe()
@@ -210,5 +307,20 @@ else
         {
             _nav.NavigateTo("/recipes");
         }
+    }
+    private async Task ScaleRecipe()
+    {
+        if (recipe.Servings == DesiredServings)
+        {
+            snackbar.Add("Recipe is already scaled to this amount!", Severity.Warning);
+            return;
+        }
+        recipe.Servings = DesiredServings;
+        ScaledIngredients = (await _api.ScaleRecipeAsync(recipe.Id, DesiredServings)).Ingredients;
+        IsScaled = true;
+    }
+    private async Task ResetScaling()
+    {
+        await OnInitializedAsync();
     }
 }
