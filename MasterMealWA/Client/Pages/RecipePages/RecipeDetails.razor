@@ -230,6 +230,7 @@ else
             snackbar.Add("Recipe is already scaled to this amount!", Severity.Warning);
             return;
         }
+        recipe.Servings = DesiredServings;
         recipe.Ingredients = (await _api.ScaleRecipeAsync(recipe.Id,DesiredServings)).Ingredients;
 
     }
