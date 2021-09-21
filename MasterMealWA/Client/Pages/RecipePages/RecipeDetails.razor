@@ -92,11 +92,11 @@ else
                                     <td>Serves:</td>
                                     <td>
                                         @InitialServings @if (IsScaled)
-                                    {
-                                       <MudText Style="font-weight:bold;" Color="Color.Primary">
-                                         Scaled to (@DesiredServings)
-                                           </MudText>
-                                    }
+                                        {
+                                            <MudText Style="font-weight:bold;" Color="Color.Primary">
+                                                Scaled to (@DesiredServings)
+                                            </MudText>
+                                        }
                                     </td>
                                 </tr>
                                 <tr>
@@ -156,6 +156,17 @@ else
                 </MudTabPanel>
                 <MudTabPanel Text="Steps">
                     <MudList>
+                        @if (IsScaled)
+                        {
+                            <MudListItem>
+                                <MudPaper Elevation="2">
+
+                                    <MudText Style="font-weight:bold;" Color="Color.Error">
+                                        Recipe has been scaled from @InitialServings servings to @DesiredServings servings, but any measurements written in steps were not scaled. (i.e. Add 2 tsp will still say add 2 tsp even if recipe now calls for more or less).  Please reference the ingredients tab to see measurement scaling results.
+                                    </MudText>
+                                </MudPaper>
+                            </MudListItem>
+                        }
                         @foreach (var step in recipe.Steps.OrderBy(s => s.StepNumber))
                         {
                             <MudListItem>
