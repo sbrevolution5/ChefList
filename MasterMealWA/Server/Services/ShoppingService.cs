@@ -14,22 +14,29 @@ namespace MasterMealWA.Server.Services
     {
         private readonly ApplicationDbContext _context;
         private readonly IMeasurementService _measurementService;
+        private readonly IServingService _servingService;
 
-        public ShoppingService(ApplicationDbContext context, IMeasurementService measurementService)
+        public ShoppingService(ApplicationDbContext context, IMeasurementService measurementService, IServingService servingService)
         {
             _context = context;
             _measurementService = measurementService;
+            _servingService = servingService;
         }
 
-        public async Task<ShoppingList> CreateShoppingListForDateRangeAsync(DateTime EndDate, DateTime StartDate,string userId)
+        public async Task<ShoppingList> CreateShoppingListForDateRangeAsync(DateTime EndDate, DateTime StartDate, string userId)
         {
             //Get Meals that are in date range, including recipe, qingredients, ingredients
             List<Meal> meals = await _context.Meal.Include(m => m.Recipe)
                                                   .ThenInclude(r => r.Ingredients)
                                                   .ThenInclude(q => q.Ingredient)
                                                   .Where(m => m.Date >= StartDate && m.Date <= EndDate)
+                                                  .AsNoTracking()
                                                   .ToListAsync();
-            ShoppingList list = CreateShoppingListFromMealsAsync(meals);
+            foreach (var meal in meals)
+            {
+                meal.Recipe.Ingredients = await GetScaledIngredientList(meal.RecipeId, meal.Serves);
+            }
+            ShoppingList list = CreateShoppingListFromMeals(meals);
             list.ChefId = userId;
             list.Name = $"Meals before {EndDate.ToShortDateString()}";
             list.Created = DateTime.Now;
@@ -37,7 +44,12 @@ namespace MasterMealWA.Server.Services
             await _context.SaveChangesAsync();
             return list;
         }
-        private ShoppingList CreateShoppingListFromMealsAsync(List<Meal> meals)
+        private async Task<ICollection<QIngredient>> GetScaledIngredientList(int recipeId, int desiredServings)
+        {
+            var result = await _servingService.ScaleRecipeAsync(recipeId, desiredServings);
+            return result.Ingredients;
+        }
+        private ShoppingList CreateShoppingListFromMeals(List<Meal> meals)
         {
             List<QIngredient> qIngredients = new();
             foreach (var meal in meals)
@@ -71,27 +83,27 @@ namespace MasterMealWA.Server.Services
             {
                 totalQuantity += qingredient.NumberOfUnits;
                 //If string has Notes (it always has shopping notes due to quantity)
-                if (!string.IsNullOrWhiteSpace(qingredient.Notes) )
+                if (!string.IsNullOrWhiteSpace(qingredient.Notes))
                 {
-                    notes.Add(qingredient.ShoppingNotes);
+                    notes.Add($"{qingredient.ShoppingNotes} {qingredient.Recipe.Name}");
                 }
             }
 
             Ingredient ingredient = listOfOneIngredient.First().Ingredient;
             ShoppingIngredient result = new()
             {
-                IngredientId = listOfOneIngredient.First().IngredientId,
-                Ingredient = ingredient,
+                IngredientTypeId = ingredient.TypeId,
                 Notes = notes
             };
             var measure = ingredient.MeasurementType;
             if (measure == MeasurementType.Volume)
             {
 
-                result.QuantityString = _measurementService.DecodeVolumeMeasurement(totalQuantity) + " " + ingredient.Name;
-            }else if (measure == MeasurementType.Mass)
+                result.QuantityString = $"{_measurementService.DecodeVolumeMeasurement(totalQuantity)} {ingredient.Name}";
+            }
+            else if (measure == MeasurementType.Mass)
             {
-                result.QuantityString = _measurementService.DecodeVolumeMeasurement(totalQuantity) + " " + ingredient.Name;
+                result.QuantityString = $"{_measurementService.DecodeVolumeMeasurement(totalQuantity)} {ingredient.Name}";
             }
             else if (measure == MeasurementType.Count)
             {

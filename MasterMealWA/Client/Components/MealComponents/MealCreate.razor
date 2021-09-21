@@ -12,6 +12,7 @@
         else
         {
             <MudDatePicker Label="Date" HelperText="When do you plan to have the meal?" @bind-Date="mealdate"></MudDatePicker>
+            <MudNumericField Label="Servings" HelperText="How Many people will be eating?" @bind-Value="meal.Serves"></MudNumericField>
             <MudSelect Label="Recipe" @bind-Value="meal.RecipeId" HelperText="Which meal are you eating?">
                 @foreach (var recipe in recipes)
                     {
@@ -33,6 +34,8 @@
     MudDialogInstance MudDialog { get; set; }
     [Parameter]
     public Recipe recipe { get; set; }
+    [Parameter]
+    public int? Servings { get; set; }
     private DateTime? mealdate { get; set; } = DateTime.Today;
     private Meal meal;
     private List<Recipe> recipes;
@@ -43,9 +46,14 @@
         {
             recipe = recipes.FirstOrDefault();
         }
+        if (Servings is null)
+        {
+            Servings = recipe.Servings;
+        }
         meal = new()
         {
             RecipeId = recipe.Id,
+            Serves = Servings.Value,
             Date = DateTime.Today
         };
     }

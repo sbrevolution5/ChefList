@@ -26,12 +26,14 @@ namespace MasterMealWA.Server.Controllers
         private readonly IMeasurementService _measurementService;
         private readonly UserManager<Chef> _userManager;
         private readonly IFileService _fileService;
-        public RecipesController(ApplicationDbContext context, IMeasurementService measurementService, UserManager<Chef> userManager, IFileService fileService)
+        private readonly IServingService _servingService;
+        public RecipesController(ApplicationDbContext context, IMeasurementService measurementService, UserManager<Chef> userManager, IFileService fileService, IServingService servingService)
         {
             _context = context;
             _measurementService = measurementService;
             _userManager = userManager;
             _fileService = fileService;
+            _servingService = servingService;
         }
 
         // GET: api/Recipes
@@ -41,18 +43,18 @@ namespace MasterMealWA.Server.Controllers
         {
             if (!User.Identity.IsAuthenticated)
             {
-                return await _context.Recipe.Include(r => r.Author).Include(r=>r.Ratings).Include(r => r.Image).Where(r => !r.IsPrivate).Include(r=>r.Tags).ToListAsync();
+                return await _context.Recipe.Include(r => r.Author).Include(r => r.Ratings).Include(r => r.Image).Where(r => !r.IsPrivate).Include(r => r.Tags).ToListAsync();
             }
             var userId = HttpContext.GetUserId();
-            return await _context.Recipe.Include(r => r.Author).Include(r=>r.Image).Where(r => !r.IsPrivate || r.AuthorId == userId).Include(r => r.Tags).Include(r=>r.Ratings).ToListAsync();
+            return await _context.Recipe.Include(r => r.Author).Include(r => r.Image).Where(r => !r.IsPrivate || r.AuthorId == userId).Include(r => r.Tags).Include(r => r.Ratings).ToListAsync();
         }
         // GET: api/Recipes
         [HttpGet("myrecipes")]
         public async Task<ActionResult<IEnumerable<Recipe>>> GetMyRecipes()
         {
-            
+
             var userId = HttpContext.GetUserId();
-            return await _context.Recipe.Include(r => r.Author).Include(r=>r.Tags).Include(r=>r.Ratings).Include(r => r.Image).Where(r => r.AuthorId == userId).ToListAsync();
+            return await _context.Recipe.Include(r => r.Author).Include(r => r.Tags).Include(r => r.Ratings).Include(r => r.Image).Where(r => r.AuthorId == userId).ToListAsync();
         }
 
         // GET: api/Recipes/5
@@ -67,7 +69,7 @@ namespace MasterMealWA.Server.Controllers
                                               .Include(r => r.Ingredients)
                                               .ThenInclude(r => r.Ingredient)
                                               .Include(r => r.Author)
-                                              .Include(r=>r.Ratings)
+                                              .Include(r => r.Ratings)
                                               .Include(r => r.Image)
                                               .FirstOrDefaultAsync(r => r.Id == id);
 
@@ -211,7 +213,42 @@ namespace MasterMealWA.Server.Controllers
 
             return NoContent();
         }
+        [Route("{recipeId}/scale/{desiredServings}")]
+        [HttpGet("{recipeId}/scale/{desiredServings}")]
+        public async Task<ActionResult<Recipe>> ScaleRecipe(int recipeId, int desiredServings)
+        {
+            try
+            {
 
+                var result = await _servingService.ScaleRecipeAsync(recipeId, desiredServings);
+                foreach (var ingredient in result.Ingredients)
+                {
+                    //ingredient.RecipeId = recipe.Id;
+                    if (ingredient.MeasurementType == MeasurementType.Volume)
+                    {
+                        ingredient.MassMeasurementUnit = null;
+                        ingredient.Quantity = _measurementService.DecodeVolumeMeasurement(ingredient.NumberOfUnits);
+                    }
+                    else if (ingredient.MeasurementType == MeasurementType.Mass)
+                    {
+                        ingredient.VolumeMeasurementUnit = null;
+                        ingredient.Quantity = _measurementService.DecodeMassMeasurement(ingredient.NumberOfUnits);
+                    }
+                    else if (ingredient.MeasurementType == MeasurementType.Count)
+                    {
+                        ingredient.VolumeMeasurementUnit = null;
+                        ingredient.MassMeasurementUnit = null;
+                        ingredient.Quantity = _measurementService.DecodeUnitMeasurement(ingredient.NumberOfUnits);
+                    }
+                }
+                return result;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
         private bool RecipeExists(int id)
         {
             return _context.Recipe.Any(e => e.Id == id);
