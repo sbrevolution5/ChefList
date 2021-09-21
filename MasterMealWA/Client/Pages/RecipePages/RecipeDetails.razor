@@ -195,7 +195,17 @@ else
                 </MudTabPanel>
                 <MudTabPanel Text="Supplies">
                     <MudList>
+                        @if (IsScaled)
+                        {
+                            <MudListItem>
+                                <MudPaper Elevation="2">
 
+                                    <MudText Style="font-weight:bold;" Color="Color.Error">
+                                        Recipe has been scaled from @InitialServings servings to @DesiredServings servings, but supplies were not scaled.
+                                    </MudText>
+                                </MudPaper>
+                            </MudListItem>
+                        }
                         @foreach (var supply in recipe.Supplies)
                         {
                             <MudListItem>
@@ -243,7 +253,7 @@ else
     private string imageData { get; set; }
     private string UserId { get; set; }
     private bool IsScaled { get; set; }
-    private List<QIngredient> ScaledIngredients { get; set; }
+    private ICollection<QIngredient> ScaledIngredients { get; set; }
     private int DesiredServings { get; set; }
     private int InitialServings { get; set; }
     private List<BreadcrumbItem> crumbList = new()
@@ -306,7 +316,7 @@ else
             return;
         }
         recipe.Servings = DesiredServings;
-        recipe.Ingredients = (await _api.ScaleRecipeAsync(recipe.Id, DesiredServings)).Ingredients;
+        ScaledIngredients = (await _api.ScaleRecipeAsync(recipe.Id, DesiredServings)).Ingredients;
         IsScaled = true;
     }
     private async Task ResetScaling()
