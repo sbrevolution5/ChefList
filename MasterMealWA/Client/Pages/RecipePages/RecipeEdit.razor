@@ -173,7 +173,7 @@ else
                             }
                             <MudItem>
 
-                                <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Steps.Add(new())" />
+                                <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Steps.Add(new(){StepNumber=recipe.Steps.Count+1 })" />
                             </MudItem>
                         </MudGrid>
 
