@@ -156,7 +156,7 @@ else
                     <MudCardContent>
                         <MudGrid>
 
-                            @foreach (var step in recipe.Steps)
+                            @foreach (var step in recipe.Steps.OrderBy(s => s.StepNumber))
                             {
                                 <MudItem xs="12">
                                     <MudCard Elevation="2">
