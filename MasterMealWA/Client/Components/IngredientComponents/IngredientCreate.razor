@@ -11,7 +11,7 @@
         else
         {
 
-            <MudSelect Label="Ingredient Type" HelperText="Where you'd find the ingredient while shopping'" @bind-Value="ingredient.TypeId">
+            <MudSelect Label="Ingredient Type" HelperText="Where you'd find the ingredient while shopping" @bind-Value="ingredient.TypeId">
                 @foreach (var type in types)
                     {
 
@@ -26,7 +26,11 @@
                 <MudSelectItem Value="@measure"> @measure  </MudSelectItem>
             }
         </MudSelect>
-        <MudText Color="Color.Error">Please do not add duplicate ingredients.  Make sure your ingredient is not already in the database before you save!</MudText>
+        <MudText Color="Color.Error">Please do not add duplicate ingredients.  Make sure your ingredient is not already in the database before you save!</MudText> 
+        <MudText Color="Color.Error">Each ingredient should be the <span>most generic version</span> of the ingredient.  Use the shopping notes to specify Brand, fat-free/low-calorie, frozen, and other things for your recipe.</MudText>
+        <MudText Color="Color.Primary">Example 1:  Your recipe calls for low sodium soy sauce.  The ingredient is soy sauce, specify "Low Sodium" in the shopping notes.</MudText>
+        <MudText Color="Color.Primary">Example 2:  Your recipe calls for Frank's red hot sauce.  The ingredient is hot sauce, specify "Frank's red hot sauce" in the shopping notes.</MudText>
+        <MudText>This is so that similar ingredients can be combined in a shopping list.  If there are two recipes on the list, both calling for 2tsp hot sauce, and one describing Frank's red hot sauce, you can buy a bottle of Frank's to use for both recipes.  If the recipes call for 2 different brands, they will both be listed under the "hot sauce" shopping item.</MudText>
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel" Variant="Variant.Filled" Color="Color.Dark">Cancel</MudButton>

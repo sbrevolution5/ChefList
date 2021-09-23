@@ -156,13 +156,13 @@
                 <MudCardHeader>Steps</MudCardHeader>
                 <MudCardContent>
                     <MudGrid>
-                        @foreach (var step in recipe.Steps)
+                        @foreach (var step in recipe.Steps.OrderBy(s=>s.StepNumber))
                         {
                             <MudItem xs="12">
                                 <MudCard Elevation="2">
                                     <MudCardContent>
 
-                                        <StepCreate step="step" numDefault="recipe.Steps.Count"></StepCreate>
+                                        <StepCreate step="step" stepmax="recipe.Steps.Count"></StepCreate>
                                     </MudCardContent>
                                     <MudCardActions>
 
@@ -172,7 +172,7 @@
                             </MudItem>
                         }
                         <MudItem>
-                            <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Steps.Add(new())" />
+                            <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Steps.Add(new() {StepNumber=recipe.Steps.Count+1 })" />
                         </MudItem>
                     </MudGrid>
                 </MudCardContent>
