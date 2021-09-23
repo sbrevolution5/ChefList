@@ -2,7 +2,7 @@
     <MudGrid>
         <MudItem xs="2">
 
-            <MudNumericField Label="Step #" @bind-Value="step.StepNumber"></MudNumericField>
+            <MudNumericField Label="Step #" @bind-Value="step.StepNumber" Max="stepmax.Value" Min="1"></MudNumericField>
         </MudItem>
         <MudItem xs="10">
 
@@ -15,13 +15,9 @@
     [Parameter]
     public Step step { get; set; }
     [Parameter]
-    public int? numDefault { get; set; }
+    public int? stepmax { get; set; }
     protected override void OnInitialized()
     {
-        if (numDefault is not null)
-        {
-            step.StepNumber = numDefault.Value;
-        }
         base.OnInitialized();
     }
 }
