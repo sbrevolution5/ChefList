@@ -1,4 +1,5 @@
 ﻿@page "/recipes/details/{id}"
+@using MasterMealWA.Client.Models
 @inject IApiService _api
 @inject IDialogService _dialogService
 @inject ISnackbar snackbar
@@ -151,61 +152,40 @@ else
                                     <thead>
 
                                     <td>
+                                        Original Measurements (@InitialServings servings)
                                     </td>
                                     <td>
+                                        Scaled for @DesiredServings servings
                                     </td>
                                     </thead>
                                     <tbody>
                                         @foreach (var row in IngredientRows)
                                         {
+                                            <tr>
+                                                <td>
+                                                    <MudPaper Elevation="2">
 
+                                                        <MudText Class="h4">
+                                                            @row.old.Ingredient.Name
+                                                        </MudText>
+                                                        <MudText>@row.old.Quantity</MudText>
+                                                        <MudText>@row.old.Notes</MudText>
+                                                    </MudPaper>
+                                                </td>
+                                                <td>
+                                                    <MudPaper Elevation="2">
+
+                                                        <MudText Class="h4">
+                                                            @row.scaled.Ingredient.Name
+                                                        </MudText>
+                                                        <MudText>@row.scaled.Quantity</MudText>
+                                                        <MudText>@row.scaled.Notes</MudText>
+                                                    </MudPaper>
+                                                </td>
+                                            </tr>
                                         }
                                     </tbody>
                                 </MudSimpleTable>
-                            </MudItem>
-                            <MudItem xs="6">
-                                <MudList>
-                                    <MudListItem>
-                                        <MudPaper Elevation="2">
-                                            <MudText Style="font-weight:bold;" Color="Color.Primary">Original Measurements (@InitialServings servings)</MudText>
-                                        </MudPaper>
-                                    </MudListItem>
-                                    @foreach (var ingredient in recipe.Ingredients)
-                                    {
-                                        <MudListItem>
-                                            <MudPaper Elevation="2">
-
-                                                <MudText Class="h4">
-                                                    @ingredient.Ingredient.Name
-                                                </MudText>
-                                                <MudText>@ingredient.Quantity</MudText>
-                                                <MudText>@ingredient.Notes</MudText>
-                                            </MudPaper>
-                                        </MudListItem>
-                                    }
-                                </MudList>
-                            </MudItem>
-                            <MudItem xs="6">
-                                <MudList>
-                                    <MudListItem>
-                                        <MudPaper Elevation="2">
-                                            <MudText Style="font-weight:bold;" Color="Color.Primary">Scaled for @DesiredServings servings</MudText>
-                                        </MudPaper>
-                                    </MudListItem>
-                                    @foreach (var ingredient in ScaledIngredients)
-                                    {
-                                        <MudListItem>
-                                            <MudPaper Elevation="2">
-
-                                                <MudText Class="h4">
-                                                    @ingredient.Ingredient.Name
-                                                </MudText>
-                                                <MudText>@ingredient.Quantity</MudText>
-                                                <MudText>@ingredient.Notes</MudText>
-                                            </MudPaper>
-                                        </MudListItem>
-                                    }
-                                </MudList>
                             </MudItem>
                         </MudGrid>
                     }
@@ -275,10 +255,11 @@ else
     private ICollection<QIngredient> ScaledIngredients { get; set; }
     private int DesiredServings { get; set; }
     private int InitialServings { get; set; }
+    private IEnumerable<ScaledIngredient> IngredientRows { get; set; }
     private List<BreadcrumbItem> crumbList = new()
     {
-            new BreadcrumbItem("Recipes", href: "/recipes")
-        };
+        new BreadcrumbItem("Recipes", href: "/recipes")
+    };
     public async Task AddMeal()
     {
         var parameters = new DialogParameters { ["recipe"] = recipe, ["Servings"] = DesiredServings };
@@ -336,6 +317,7 @@ else
         }
         recipe.Servings = DesiredServings;
         ScaledIngredients = (await _api.ScaleRecipeAsync(recipe.Id, DesiredServings)).Ingredients;
+        IngredientRows = recipe.Ingredients.Zip(ScaledIngredients,(old,scaled)=> new ScaledIngredient() { old=old, scaled = scaled });
         IsScaled = true;
     }
     private async Task ResetScaling()
