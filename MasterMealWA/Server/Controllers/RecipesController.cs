@@ -213,6 +213,7 @@ namespace MasterMealWA.Server.Controllers
 
             return NoContent();
         }
+        [AllowAnonymous]
         [Route("{recipeId}/scale/{desiredServings}")]
         [HttpGet("{recipeId}/scale/{desiredServings}")]
         public async Task<ActionResult<Recipe>> ScaleRecipe(int recipeId, int desiredServings)
