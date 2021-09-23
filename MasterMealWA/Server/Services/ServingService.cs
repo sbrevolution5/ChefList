@@ -1,6 +1,7 @@
 ﻿using MasterMealWA.Server.Data;
 using MasterMealWA.Server.Services.Interfaces;
 using MasterMealWA.Shared.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,7 @@ namespace MasterMealWA.Server.Services
         {
             _context = context;
         }
+        [AllowAnonymous]
         public async Task<Recipe> ScaleRecipeAsync(int recipeId, int desiredServings)
         {
             var recipe = await _context.Recipe.Include(r => r.Ingredients).ThenInclude(r => r.Ingredient).AsNoTracking().FirstOrDefaultAsync(r => r.Id == recipeId);
