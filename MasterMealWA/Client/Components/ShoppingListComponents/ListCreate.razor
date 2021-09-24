@@ -27,7 +27,16 @@
             StartDate = startDate.Value,
             EndDate = endDate.Value
         };
-        await _api.CreateNewShoppingListAsync(dto);
-        MudDialog.Close(DialogResult.Ok(dto));
+        try
+        {
+
+            await _api.CreateAsync<ListCreateDto>("api/shoppinglists", dto);
+            _snackbar.Add("List Created", Severity.Success);
+            MudDialog.Close(DialogResult.Ok(dto));
+        }
+        catch (Exception e)
+        {
+            _snackbar.Add($"Creation failed {e.Message}", Severity.Error);
+        }
     }
 }
