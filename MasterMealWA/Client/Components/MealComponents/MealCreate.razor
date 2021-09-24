@@ -1,6 +1,6 @@
 ﻿@inject IApiService _api
 @inject IUserService _userService
-@inject ISnackbar _snackbar 
+@inject ISnackbar _snackbar
 @attribute [Authorize]
 <MudDialog>
     <DialogContent>
@@ -70,7 +70,11 @@
             MudDialog.Close(DialogResult.Ok(meal));
 
         }
-        _snackbar.Add("Something went wrong", Severity.Error);
+        else
+        {
+
+            _snackbar.Add("Something went wrong", Severity.Error);
+        }
 
     }
     public void Cancel()

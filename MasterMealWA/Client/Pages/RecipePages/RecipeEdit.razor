@@ -276,8 +276,20 @@ else
             RecipeTags = Tags,
             Id = recipe.Id,
         };
-        await _api.UpdateRecipeAsync(dto);
-        nav.NavigateTo($"/recipes/details/{recipe.Id}");
+        var result = await _api.UpdateAsync<RecipeEditDto>($"api/recipes/{recipe.Id}", dto);
+        if (result)
+        {
+            _snackbar.Add("Recipe Updated", Severity.Success);
+            nav.NavigateTo($"/recipes/details/{recipe.Id}");
+
+        }
+        else
+        {
+
+            _snackbar.Add("Update failed", Severity.Error);
+        }
+
+
     }
     public async Task NewIngredient()
     {
