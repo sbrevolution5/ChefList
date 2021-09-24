@@ -293,7 +293,7 @@ else
             ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve,
             PropertyNamingPolicy = null
         };
-        recipe = await _api.GetRecipeAsync(Convert.ToInt32(Id), auth);
+        recipe = await _api.GetAsync<Recipe>($"api/recipes/{Convert.ToInt32(Id)}");
         DesiredServings = recipe.Servings;
         InitialServings = recipe.Servings;
         base.OnInitialized();
