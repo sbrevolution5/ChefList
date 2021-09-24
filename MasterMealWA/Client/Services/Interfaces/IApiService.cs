@@ -22,7 +22,6 @@ namespace MasterMealWA.Client.Services.Interfaces
         Task CreateNewIngredientTypeAsync(IngredientType ingredientType);
         Task CreateNewSupplyAsync(Supply supply);
         Task UpdateTagAsync(RecipeTag tag);
-        Task UpdateMealAsync(Meal meal);
         Task UpdateIngredientAsync(Ingredient ingredient);
         Task UpdateIngredientTypeAsync(IngredientType ingredientType);
         Task UpdateShoppingListAsync(ListCreateDto dto);

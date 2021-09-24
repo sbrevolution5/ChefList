@@ -37,15 +37,26 @@
     protected override async Task OnInitializedAsync()
     {
 
-        recipes = await _api.GetAllRecipesAsync(true);
+        recipes = await _api.GetAsync<List<Recipe>>("api/recipes");
         recipe = recipes.Where(r => r.Id == meal.RecipeId).FirstOrDefault();
     }
     public async Task EditMeal()
     {
         meal.Date = mealdate.Value;
         meal.ImageId = recipes.Where(r => r.Id == meal.RecipeId).FirstOrDefault().ImageId;
-        await _api.UpdateMealAsync(meal);
-        MudDialog.Close(DialogResult.Ok(meal));
+        try
+        {
+
+            await _api.UpdateAsync<Meal>($"api/meals/{meal.Id}",meal);
+            _snackbar.Add("Meal updated", Severity.Success);
+            MudDialog.Close(DialogResult.Ok(meal));
+        }
+        catch (Exception e)
+        {
+            _snackbar.Add($"Edit failed {e.Message}", Severity.Error);
+
+            throw;
+        }
     }
     public void Cancel()
     {
