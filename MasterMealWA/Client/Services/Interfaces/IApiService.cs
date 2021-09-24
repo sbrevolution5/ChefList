@@ -10,10 +10,10 @@ namespace MasterMealWA.Client.Services.Interfaces
 {
     public interface IApiService
     {
-        Task<bool> CreateAsync<T>(string url, T content);
-        Task<bool> UpdateAsync<T>(string url, T content);
+        Task CreateAsync<T>(string url, T content);
+        Task UpdateAsync<T>(string url, T content);
         Task<TResult> GetAsync<TResult>(string url);
-        Task<bool> DeleteAsync(string url);
+        Task DeleteAsync(string url);
         Task<Recipe> ScaleRecipeAsync(int recipeId, int desiredServings);
         Task<bool> CreateOrUpdateRatingAsync(int recipeId, string userId, int rating, bool isNew = true);
         Task<bool> CreateNewRatingAsync(int recipeId, string userId, int rating);
