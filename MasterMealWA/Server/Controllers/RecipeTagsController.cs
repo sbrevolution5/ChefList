@@ -14,11 +14,11 @@ namespace MasterMealWA.Server.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class RecipeTypesController : ControllerBase
+    public class RecipeTagsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
 
-        public RecipeTypesController(ApplicationDbContext context)
+        public RecipeTagsController(ApplicationDbContext context)
         {
             _context = context;
         }

@@ -76,11 +76,6 @@ namespace MasterMealWA.Client.Services
         {
             await _http.PostAsJsonAsync("api/ingredientTypes", ingredientType);
         }
-        public async Task CreateNewRecipeAsync(Recipe recipe)
-        {
-            await _http.PostAsJsonAsync("api/recipes", recipe);
-        }
-
         public async Task CreateNewTagAsync(RecipeTag tag)
         {
             await _http.PostAsJsonAsync("api/recipeTypes", tag);
