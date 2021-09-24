@@ -285,24 +285,35 @@
                 if (recipe.ImageId == 0 || recipe.ImageId == 1)
                 {
 
-                    ImgId = await _api.UploadImageAsync(content);
-                    recipe.ImageId = ImgId;
-                    image = await _api.GetImageAsync(recipe.ImageId);
-                    imageString = _imageReader.ReadImageData(image.ImageData, image.ContentType);
-                    StateHasChanged();
+                    try
+                    {
+                        await _api.CreateAsync<MultipartFormDataContent>("/api/dbimages", content);
+                        _snackbar.Add("Image Updated", Severity.Success);
+                        image = await _api.GetAsync<DBImage>($"/api/dbimages/{recipe.ImageId}");
+                        recipe.ImageId = image.Id;
+                        imageString = _imageReader.ReadImageData(image.ImageData, image.ContentType);
+                        StateHasChanged();
+
+                    }
+                    catch (Exception ex)
+                    {
+                        _snackbar.Add($"Image Failed to update {ex.Message}", Severity.Error);
+                    }
                 }
                 else
                 {
-                    var res = await _api.UpdateImageAsync(content, recipe.ImageId);
-                    if (res)
+                    try
                     {
+
+                        await _api.UpdateAsync<MultipartFormDataContent>($"api/dbimages/{recipe.ImageId}", content);
                         _snackbar.Add("Image Updated", Severity.Success);
-                        image = await _api.GetImageAsync(recipe.ImageId);
+                        image = await _api.GetAsync<DBImage>($"/api/dbimages/{recipe.ImageId}");
                         imageString = _imageReader.ReadImageData(image.ImageData, image.ContentType);
                         StateHasChanged();
                     }
-                    else
+                    catch (Exception)
                     {
+
                         _snackbar.Add("Image Failed to update", Severity.Error);
                     }
                 }
