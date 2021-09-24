@@ -117,14 +117,6 @@ namespace MasterMealWA.Client.Services
             }
             return list;
         }
-
-        public async Task<List<RecipeTag>> GetAllTagsAsync()
-        {
-            var client = _clientFactory.CreateClient("MasterMealWA.NonAuthServerAPI");
-            var list = await client.GetFromJsonAsync<List<RecipeTag>>($"api/recipetags", _options);
-            return list;
-        }
-
         public async Task<List<ShoppingList>> GetMyShoppingListsAsync()
         {
             var list = await _http.GetFromJsonAsync<List<ShoppingList>>("api/shoppingLists", _options);
