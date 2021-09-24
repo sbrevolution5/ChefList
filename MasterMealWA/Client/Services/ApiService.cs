@@ -87,22 +87,6 @@ namespace MasterMealWA.Client.Services
             var list = await _http.GetFromJsonAsync<List<Meal>>("api/meals", _options);
             return list;
         }
-
-        public async Task<List<Recipe>> GetAllRecipesAsync(bool auth)
-        {
-            List<Recipe> list;
-            if (auth)
-            {
-
-                list = await _http.GetFromJsonAsync<List<Recipe>>($"api/recipes", _options);
-            }
-            else
-            {
-                var client = _clientFactory.CreateClient("MasterMealWA.NonAuthServerAPI");
-                list = await client.GetFromJsonAsync<List<Recipe>>($"api/recipes", _options);
-            }
-            return list;
-        }
         public async Task<List<ShoppingList>> GetMyShoppingListsAsync()
         {
             var list = await _http.GetFromJsonAsync<List<ShoppingList>>("api/shoppingLists", _options);

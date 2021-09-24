@@ -42,7 +42,7 @@
     private List<Recipe> recipes;
     protected override async Task OnInitializedAsync()
     {
-        recipes = await _api.GetAllRecipesAsync(true);
+        recipes = await _api.GetAsync<List<Recipe>>("api/recipes");
         if (recipe is null)
         {
             recipe = recipes.FirstOrDefault();
