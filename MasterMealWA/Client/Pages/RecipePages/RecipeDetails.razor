@@ -325,9 +325,19 @@ else
             return;
         }
         recipe.Servings = DesiredServings;
-        ScaledIngredients = await _api.GetAsync<List<QIngredient>>($"api/recipes/{recipe.Id}/scale/{DesiredServings}");
-        IngredientRows = recipe.Ingredients.Zip(ScaledIngredients,(old,scaled)=> new ScaledIngredient() { old=old, scaled = scaled });
-        IsScaled = true;
+        try
+        {
+            ScaledIngredients = await _api.GetAsync<List<QIngredient>>($"api/recipes/{recipe.Id}/scale/{DesiredServings}");
+            IngredientRows = recipe.Ingredients.Zip(ScaledIngredients, (old, scaled) => new ScaledIngredient() { old = old, scaled = scaled });
+            IsScaled = true;
+            _snackbar.Add("Recipe Scaled", Severity.Success);
+
+        }
+        catch (Exception e)
+        {
+
+            _snackbar.Add($"Recipe Scaling failed {e.Message}", Severity.Error);
+        }
     }
     private async Task ResetScaling()
     {

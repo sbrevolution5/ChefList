@@ -55,12 +55,6 @@ namespace MasterMealWA.Client.Services
         {
             await _http.PostAsJsonAsync("api/ingredientTypes", ingredientType);
         }
-        public async Task<List<IngredientType>> GetAllIngredientTypesAsync()
-        {
-            var list = await _http.GetFromJsonAsync<List<IngredientType>>("api/ingredientTypes", _options);
-            return list;
-        }
-
         public async Task<List<Meal>> GetMyMealsAsync()
         {
             var list = await _http.GetFromJsonAsync<List<Meal>>("api/meals", _options);
@@ -96,19 +90,6 @@ namespace MasterMealWA.Client.Services
         {
             DBImage result = await _http.GetFromJsonAsync<DBImage>($"api/dbimages/{id}");
             return result;
-        }
-        public async Task<Recipe> ScaleRecipeAsync(int recipeId, int desiredServings)
-        {
-            try
-            {
-                var recipe = await _http.GetFromJsonAsync<Recipe>($"api/recipes/{recipeId}/scale/{desiredServings}", options);
-
-                return recipe;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
         }
     }
 }

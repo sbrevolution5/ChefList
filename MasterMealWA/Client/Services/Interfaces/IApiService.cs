@@ -15,11 +15,9 @@ namespace MasterMealWA.Client.Services.Interfaces
         Task<TResult> GetAsync<TResult>(string url);
         Task<TResult> GetAnonAsync<TResult>(string url);
         Task DeleteAsync(string url);
-        Task<Recipe> ScaleRecipeAsync(int recipeId, int desiredServings);
         Task<DBImage> GetImageAsync(int id);
         Task<bool> UpdateImageAsync(MultipartFormDataContent content,int imageId);
         Task<int> UploadImageAsync(MultipartFormDataContent content);
         Task<List<Meal>> GetMyMealsAsync();
-        Task<List<IngredientType>> GetAllIngredientTypesAsync();
     }
 }
