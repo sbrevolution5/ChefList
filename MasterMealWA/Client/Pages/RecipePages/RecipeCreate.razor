@@ -239,15 +239,16 @@
         {
             sup.Supply = null;
         }
-        var result = await _api.CreateAsync<Recipe>("api/recipes", recipe);
-        if (result)
+        try
         {
+
+            await _api.CreateAsync<Recipe>("api/recipes", recipe);
             _snackbar.Add("Recipe Created", Severity.Success);
             nav.NavigateTo($"/recipes");
         }
-        else
+        catch (Exception e)
         {
-            _snackbar.Add("Creation failed!", Severity.Error);
+            _snackbar.Add($"Creation failed {e.Message}", Severity.Error);
         }
     }
     public async Task NewIngredient()

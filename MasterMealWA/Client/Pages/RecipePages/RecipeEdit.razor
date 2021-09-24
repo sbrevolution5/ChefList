@@ -276,24 +276,23 @@ else
             RecipeTags = Tags,
             Id = recipe.Id,
         };
-        var result = await _api.UpdateAsync<RecipeEditDto>($"api/recipes/{recipe.Id}", dto);
-        if (result)
+        try
         {
+
+            await _api.UpdateAsync<RecipeEditDto>($"api/recipes/{recipe.Id}", dto);
             _snackbar.Add("Recipe Updated", Severity.Success);
             nav.NavigateTo($"/recipes/details/{recipe.Id}");
-
         }
-        else
+        catch (Exception e)
         {
-
-            _snackbar.Add("Update failed", Severity.Error);
+            _snackbar.Add($"Update failed {e.Message}", Severity.Error);
         }
-
 
     }
     public async Task NewIngredient()
     {
-        var dialog = _dialogService.Show<IngredientCreate>("New Ingredient");
+        var dialog = _dialogService.Show<IngredientCreate>
+    ("New Ingredient");
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
@@ -302,7 +301,8 @@ else
     }
     public async Task NewSupply()
     {
-        var dialog = _dialogService.Show<SupplyCreate>("New Supply");
+        var dialog = _dialogService.Show<SupplyCreate>
+            ("New Supply");
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
