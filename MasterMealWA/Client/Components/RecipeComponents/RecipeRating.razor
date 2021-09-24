@@ -2,7 +2,7 @@
 @inject ISnackbar _snackbar
 <MudHidden IsHidden="@string.IsNullOrEmpty(UserId)">
     <MudText Typo="Typo.subtitle2">Your Rating</MudText>
-    <MudRating SelectedValue="userRating"  ReadOnly="ReadOnly" SelectedValueChanged="(int i)=>SaveRating(i)"></MudRating>
+    <MudRating SelectedValue="userRating" ReadOnly="ReadOnly" SelectedValueChanged="(int i)=>SaveRating(i)"></MudRating>
 </MudHidden>
 <MudText Typo="Typo.subtitle2">Average Rating</MudText>
 <MudRating SelectedValue="AverageRating" ReadOnly="true"></MudRating>
@@ -20,7 +20,45 @@
         if (i != 0 && i != userRating)
         {
 
-            var res = await _api.CreateOrUpdateRatingAsync(recipe.Id, UserId, i, IsNewRating);
+            if (IsNewRating)
+            {
+                try
+                {
+                    var ratingDto = new Rating()
+                    {
+                        ChefId = UserId,
+                        RecipeId = recipe.Id,
+                        Stars = i
+                    };
+                    await _api.CreateAsync<Rating>("/api/ratings", ratingDto);
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+        = await _api.CreateOrUpdateRatingAsync(recipe.Id, UserId, i, IsNewRating);
+
+            }
+            else
+            {
+                RatingEditDto dto = new()
+                {
+                    RecipeId = recipe.Id,
+                    ChefId = UserId,
+                    NewRating = i
+                };
+                try
+                {
+                    await _api.UpdateAsync<RatingEditDto>("/api/ratings/", dto);
+
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+            }
             if (res)
             {
                 _snackbar.Add("Rating Saved!", Severity.Success);
