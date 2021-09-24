@@ -173,13 +173,6 @@ namespace MasterMealWA.Client.Services
             var supply = await _http.GetFromJsonAsync<Supply>($"api/supplies/{id}", _options);
             return supply;
         }
-
-        public async Task UpdateIngredientAsync(Ingredient ingredient)
-        {
-            await _http.PutAsJsonAsync("api/ingredients", ingredient);
-
-        }
-
         public async Task UpdateIngredientTypeAsync(IngredientType ingredientType)
         {
             await _http.PutAsJsonAsync("api/ingredienttypes", ingredientType);

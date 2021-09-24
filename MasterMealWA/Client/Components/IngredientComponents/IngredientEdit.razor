@@ -49,7 +49,17 @@
     }
     public async Task EditIngredient()
     {
-        await _api.UpdateIngredientAsync(ingredient);
-        MudDialog.Close(DialogResult.Ok(ingredient));
+        try
+        {
+            await _api.UpdateAsync<Ingredient>($"api/ingredients/{ingredient.Id}",ingredient);
+            _snackbar.Add("Ingredient Updated", Severity.Success);
+            MudDialog.Close(DialogResult.Ok(ingredient));
+
+        }
+        catch (Exception e)
+        {
+            _snackbar.Add($"Update failed {e.Message}", Severity.Error);
+
+        }
     }
 }
