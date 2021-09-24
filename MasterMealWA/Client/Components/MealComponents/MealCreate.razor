@@ -1,5 +1,6 @@
 ﻿@inject IApiService _api
 @inject IUserService _userService
+@inject ISnackbar _snackbar
 @attribute [Authorize]
 <MudDialog>
     <DialogContent>
@@ -41,7 +42,7 @@
     private List<Recipe> recipes;
     protected override async Task OnInitializedAsync()
     {
-        recipes = await _api.GetAllRecipesAsync(true);
+        recipes = await _api.GetAsync<List<Recipe>>("api/recipes");
         if (recipe is null)
         {
             recipe = recipes.FirstOrDefault();
@@ -62,8 +63,18 @@
         meal.Date = mealdate.Value;
         meal.ChefId = await _userService.GetUserIdAsync();
         meal.ImageId = recipes.Where(r => r.Id == meal.RecipeId).FirstOrDefault().ImageId;
-        await _api.CreateNewMealAsync(meal);
-        MudDialog.Close(DialogResult.Ok(meal));
+        try
+        {
+
+            await _api.CreateAsync<Meal>("api/meals", meal);
+            _snackbar.Add("Created meal", Severity.Success);
+            MudDialog.Close(DialogResult.Ok(meal));
+        }
+        catch (Exception e)
+        {
+            _snackbar.Add($"Creation failed {e.Message}", Severity.Error);
+            throw;
+        }
     }
     public void Cancel()
     {

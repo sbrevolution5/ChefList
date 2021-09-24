@@ -4,7 +4,6 @@
 @inject IUserService _userService
 @inject NavigationManager nav
 @inject IDialogService _dialogService
-@inject ISnackbar _snackbar
 @inject IImageReader _imageReader
 @using System.Net.Http.Headers
 <EditForm Model="@recipe" OnValidSubmit="CreateRecipeAsync">
@@ -156,7 +155,7 @@
                 <MudCardHeader>Steps</MudCardHeader>
                 <MudCardContent>
                     <MudGrid>
-                        @foreach (var step in recipe.Steps.OrderBy(s=>s.StepNumber))
+                        @foreach (var step in recipe.Steps.OrderBy(s => s.StepNumber))
                         {
                             <MudItem xs="12">
                                 <MudCard Elevation="2">
@@ -179,7 +178,7 @@
             </MudCard>
         </MudItem>
     </MudGrid>
-    
+
 </EditForm>
 @code{
     public Recipe recipe { get; set; } = new();
@@ -196,9 +195,9 @@
     {
         recipe.Servings = 2;
         recipe.CookingTime = 30;
-        Tags = await _api.GetAllTagsAsync();
-        Ingredients = await _api.GetAllIngredientsAsync();
-        supplyList = await _api.GetAllSuppliesAsync();
+        Tags = await _api.GetAsync<List<RecipeTag>>("api/recipeTags");
+        Ingredients = await _api.GetAsync<List<Ingredient>>("api/ingredients");
+        supplyList = await _api.GetAsync<List<Supply>>("api/Supplies");
         ImgId = 1;
         if (recipe.Ingredients.Count == 0)
         {
@@ -239,8 +238,17 @@
         {
             sup.Supply = null;
         }
-        await _api.CreateNewRecipeAsync(recipe);
-        nav.NavigateTo($"/recipes");
+        try
+        {
+
+            await _api.CreateAsync<Recipe>("api/recipes", recipe);
+            _snackbar.Add("Recipe Created", Severity.Success);
+            nav.NavigateTo($"/recipes");
+        }
+        catch (Exception e)
+        {
+            _snackbar.Add($"Creation failed {e.Message}", Severity.Error);
+        }
     }
     public async Task NewIngredient()
     {
@@ -248,7 +256,7 @@
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-            Ingredients = await _api.GetAllIngredientsAsync();
+            Ingredients = await _api.GetAsync<List<Ingredient>>("api/ingredients");
         }
     }
     public async Task NewSupply()
@@ -257,7 +265,7 @@
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-            supplyList = await _api.GetAllSuppliesAsync();
+            supplyList = await _api.GetAsync<List<Supply>>("api/supplies"); ;
         }
     }
     IBrowserFile file;
@@ -277,24 +285,35 @@
                 if (recipe.ImageId == 0 || recipe.ImageId == 1)
                 {
 
-                    ImgId = await _api.UploadImageAsync(content);
-                    recipe.ImageId = ImgId;
-                    image = await _api.GetImageAsync(recipe.ImageId);
-                    imageString = _imageReader.ReadImageData(image.ImageData, image.ContentType);
-                    StateHasChanged();
+                    try
+                    {
+                        await _api.CreateAsync<MultipartFormDataContent>("/api/dbimages", content);
+                        _snackbar.Add("Image Updated", Severity.Success);
+                        image = await _api.GetAsync<DBImage>($"/api/dbimages/{recipe.ImageId}");
+                        recipe.ImageId = image.Id;
+                        imageString = _imageReader.ReadImageData(image.ImageData, image.ContentType);
+                        StateHasChanged();
+
+                    }
+                    catch (Exception ex)
+                    {
+                        _snackbar.Add($"Image Failed to update {ex.Message}", Severity.Error);
+                    }
                 }
                 else
                 {
-                    var res = await _api.UpdateImageAsync(content, recipe.ImageId);
-                    if (res)
+                    try
                     {
+
+                        await _api.UpdateAsync<MultipartFormDataContent>($"api/dbimages/{recipe.ImageId}", content);
                         _snackbar.Add("Image Updated", Severity.Success);
-                        image = await _api.GetImageAsync(recipe.ImageId);
+                        image = await _api.GetAsync<DBImage>($"/api/dbimages/{recipe.ImageId}");
                         imageString = _imageReader.ReadImageData(image.ImageData, image.ContentType);
                         StateHasChanged();
                     }
-                    else
+                    catch (Exception)
                     {
+
                         _snackbar.Add("Image Failed to update", Severity.Error);
                     }
                 }

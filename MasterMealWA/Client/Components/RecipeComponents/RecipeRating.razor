@@ -2,7 +2,7 @@
 @inject ISnackbar _snackbar
 <MudHidden IsHidden="@string.IsNullOrEmpty(UserId)">
     <MudText Typo="Typo.subtitle2">Your Rating</MudText>
-    <MudRating SelectedValue="userRating"  ReadOnly="ReadOnly" SelectedValueChanged="(int i)=>SaveRating(i)"></MudRating>
+    <MudRating SelectedValue="userRating" ReadOnly="ReadOnly" SelectedValueChanged="(int i)=>SaveRating(i)"></MudRating>
 </MudHidden>
 <MudText Typo="Typo.subtitle2">Average Rating</MudText>
 <MudRating SelectedValue="AverageRating" ReadOnly="true"></MudRating>
@@ -20,17 +20,47 @@
         if (i != 0 && i != userRating)
         {
 
-            var res = await _api.CreateOrUpdateRatingAsync(recipe.Id, UserId, i, IsNewRating);
-            if (res)
+            if (IsNewRating)
             {
-                _snackbar.Add("Rating Saved!", Severity.Success);
-                IsNewRating = false;
-                userRating = i;
-                StateHasChanged();
+                try
+                {
+                    var ratingDto = new Rating()
+                    {
+                        ChefId = UserId,
+                        RecipeId = recipe.Id,
+                        Stars = i
+                    };
+                    await _api.CreateAsync<Rating>("/api/ratings", ratingDto);
+                    _snackbar.Add($"Rating saved", Severity.Success);
+                    IsNewRating = false;
+                    userRating = i;
+                    StateHasChanged();
+                }
+                catch (Exception e)
+                {
+                    _snackbar.Add($"Error saving rating {e.Message}", Severity.Error);
+                }
+
             }
             else
             {
-                _snackbar.Add("Failed to save rating, try again.", Severity.Error);
+                RatingEditDto dto = new()
+                {
+                    RecipeId = recipe.Id,
+                    ChefId = UserId,
+                    NewRating = i
+                };
+                try
+                {
+                    await _api.UpdateAsync<RatingEditDto>("/api/ratings", dto);
+                    _snackbar.Add($"Rating saved", Severity.Success);
+                    IsNewRating = false;
+                    userRating = i;
+                }
+                catch (Exception e)
+                {
+                    _snackbar.Add($"Error updating rating {e.Message}", Severity.Error);
+                }
             }
         }
     }

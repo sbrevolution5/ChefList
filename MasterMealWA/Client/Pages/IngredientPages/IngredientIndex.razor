@@ -48,7 +48,7 @@ else
     public List<Ingredient> Ingredients { get; set; }
     protected override async Task OnInitializedAsync()
     {
-        Ingredients = await _api.GetAllIngredientsAsync();
+        Ingredients = await _api.GetAsync<List<Ingredient>>("api/ingredients");
         base.OnInitialized();
     }
     public async Task NewIngredient()
@@ -57,7 +57,7 @@ else
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-            Ingredients = await _api.GetAllIngredientsAsync();
+            Ingredients = await _api.GetAsync<List<Ingredient>>("api/ingredients");
         }
     }
     public async Task EditIngredient(Ingredient ingredient)
@@ -67,7 +67,7 @@ else
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-            Ingredients = await _api.GetAllIngredientsAsync();
+            Ingredients = await _api.GetAsync<List<Ingredient>>("api/ingredients");
         }
     }
 }

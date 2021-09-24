@@ -20,7 +20,17 @@
     }
     public async Task CreateSupply()
     {
-        await _api.CreateNewSupplyAsync(supply);
-        MudDialog.Close(DialogResult.Ok(supply));
+        try
+        {
+
+            await _api.CreateAsync<Supply>("api/supplies",supply);
+            _snackbar.Add("Supply Created", Severity.Success);
+            MudDialog.Close(DialogResult.Ok(supply));
+        }
+        catch (Exception e)
+        {
+            _snackbar.Add($"Creation failed {e.Message}", Severity.Error);
+            throw;
+        }
     }
 }

@@ -293,7 +293,16 @@ else
             ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve,
             PropertyNamingPolicy = null
         };
-        recipe = await _api.GetRecipeAsync(Convert.ToInt32(Id), auth);
+        if (auth)
+        {
+
+            recipe = await _api.GetAsync<Recipe>($"api/recipes/{Convert.ToInt32(Id)}");
+        }
+        else
+        {
+
+            recipe = await _api.GetAnonAsync<Recipe>($"api/recipes/{Convert.ToInt32(Id)}");
+        }
         DesiredServings = recipe.Servings;
         InitialServings = recipe.Servings;
         base.OnInitialized();
@@ -316,9 +325,19 @@ else
             return;
         }
         recipe.Servings = DesiredServings;
-        ScaledIngredients = (await _api.ScaleRecipeAsync(recipe.Id, DesiredServings)).Ingredients;
-        IngredientRows = recipe.Ingredients.Zip(ScaledIngredients,(old,scaled)=> new ScaledIngredient() { old=old, scaled = scaled });
-        IsScaled = true;
+        try
+        {
+            ScaledIngredients = await _api.GetAsync<List<QIngredient>>($"api/recipes/{recipe.Id}/scale/{DesiredServings}");
+            IngredientRows = recipe.Ingredients.Zip(ScaledIngredients, (old, scaled) => new ScaledIngredient() { old = old, scaled = scaled });
+            IsScaled = true;
+            _snackbar.Add("Recipe Scaled", Severity.Success);
+
+        }
+        catch (Exception e)
+        {
+
+            _snackbar.Add($"Recipe Scaling failed {e.Message}", Severity.Error);
+        }
     }
     private async Task ResetScaling()
     {
