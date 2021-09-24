@@ -27,7 +27,22 @@ namespace MasterMealWA.Client.Services
             _http = http;
             _clientFactory = clientFactory;
         }
-
+        public async Task CreateAsync<T>(string url, T content)
+        {
+            await _http.PostAsJsonAsync<T>(url, content);
+        }
+        public async Task UpdateAsync<T>(string url, T content)
+        {
+            await _http.PostAsJsonAsync<T>(url, content);
+        }
+        public async Task GetAsync<T>(string url, T content)
+        {
+            await _http.PostAsJsonAsync<T>(url, content);
+        }
+        public async Task DeleteAsync<T>(string url, T content)
+        {
+            await _http.PostAsJsonAsync<T>(url, content);
+        }
         public async Task CreateNewIngredientAsync(Ingredient ingredient)
         {
             await _http.PostAsJsonAsync("api/ingredients", ingredient);
