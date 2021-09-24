@@ -4,7 +4,6 @@
 @inject NavigationManager nav
 @inject IUserService _userService
 @inject IDialogService _dialogService
-@inject ISnackbar _snackbar
 @inject IImageReader _imageReader
 @attribute [Authorize]
 @using System.Net.Http.Headers
@@ -206,7 +205,7 @@ else
         }
         image = recipe.Image;
         imageString = _imageReader.ReadImageData(image.ImageData, image.ContentType);
-        Tags = await _api.GetAllTagsAsync();
+        Tags = await _api.GetAsync<List<RecipeTag>>("api/recipeTags");
         ingredients = await _api.GetAllIngredientsAsync();
         supplyList = await _api.GetAllSuppliesAsync();
     }

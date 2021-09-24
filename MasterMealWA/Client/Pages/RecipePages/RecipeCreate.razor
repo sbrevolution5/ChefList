@@ -4,7 +4,6 @@
 @inject IUserService _userService
 @inject NavigationManager nav
 @inject IDialogService _dialogService
-@inject ISnackbar _snackbar
 @inject IImageReader _imageReader
 @using System.Net.Http.Headers
 <EditForm Model="@recipe" OnValidSubmit="CreateRecipeAsync">
@@ -196,7 +195,7 @@
     {
         recipe.Servings = 2;
         recipe.CookingTime = 30;
-        Tags = await _api.GetAllTagsAsync();
+        Tags = await _api.GetAsync<List<RecipeTag>>("api/recipeTags");
         Ingredients = await _api.GetAllIngredientsAsync();
         supplyList = await _api.GetAllSuppliesAsync();
         ImgId = 1;
