@@ -256,7 +256,7 @@
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-            Ingredients = await _api.GetAllIngredientsAsync();
+            Ingredients = await _api.GetAsync<List<Ingredient>>("api/ingredients");
         }
     }
     public async Task NewSupply()

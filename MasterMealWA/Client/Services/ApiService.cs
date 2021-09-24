@@ -76,13 +76,6 @@ namespace MasterMealWA.Client.Services
         {
             await _http.DeleteAsync($"api/supplies/{id}");
         }
-
-        public async Task<List<Ingredient>> GetAllIngredientsAsync()
-        {
-            var list = await _http.GetFromJsonAsync<List<Ingredient>>("api/ingredients", _options);
-            return list;
-        }
-
         public async Task<List<IngredientType>> GetAllIngredientTypesAsync()
         {
             var list = await _http.GetFromJsonAsync<List<IngredientType>>("api/ingredientTypes", _options);

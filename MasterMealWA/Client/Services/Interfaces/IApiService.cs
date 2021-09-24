@@ -39,7 +39,6 @@ namespace MasterMealWA.Client.Services.Interfaces
         Task<List<Recipe>> GetAllRecipesAsync(bool auth);
         Task<List<Recipe>> GetMyRecipesAsync();
         Task<List<Meal>> GetMyMealsAsync();
-        Task<List<Ingredient>> GetAllIngredientsAsync();
         Task<List<IngredientType>> GetAllIngredientTypesAsync();
         Task<List<ShoppingList>> GetMyShoppingListsAsync();
     }
