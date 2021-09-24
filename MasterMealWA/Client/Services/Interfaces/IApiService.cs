@@ -27,9 +27,6 @@ namespace MasterMealWA.Client.Services.Interfaces
         Task<bool> UpdateImageAsync(MultipartFormDataContent content,int imageId);
         Task<int> UploadImageAsync(MultipartFormDataContent content);
         Task DeleteRecipeAsync(int id);
-        Task DeleteTagAsync(int id);
-        Task DeleteIngredientAsync(int id);
-        Task DeleteSupplyAsync(int id);
         Task<ShoppingList> GetShoppingListAsync(int id);
         Task<List<Meal>> GetMyMealsAsync();
         Task<List<IngredientType>> GetAllIngredientTypesAsync();
