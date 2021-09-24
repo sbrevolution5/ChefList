@@ -73,12 +73,6 @@ namespace MasterMealWA.Client.Services
         {
             await _http.DeleteAsync($"api/recipetypes/{id}");
         }
-
-        public async Task DeleteShoppingListAsync(int id)
-        {
-            await _http.DeleteAsync($"api/shoppinglists/{id}");
-        }
-
         public async Task DeleteSupplyAsync(int id)
         {
             await _http.DeleteAsync($"api/supplies/{id}");
