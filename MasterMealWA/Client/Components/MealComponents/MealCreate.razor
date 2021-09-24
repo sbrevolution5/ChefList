@@ -1,5 +1,6 @@
 ﻿@inject IApiService _api
 @inject IUserService _userService
+@inject ISnackbar _snackbar 
 @attribute [Authorize]
 <MudDialog>
     <DialogContent>
@@ -62,8 +63,15 @@
         meal.Date = mealdate.Value;
         meal.ChefId = await _userService.GetUserIdAsync();
         meal.ImageId = recipes.Where(r => r.Id == meal.RecipeId).FirstOrDefault().ImageId;
-        await _api.CreateNewMealAsync(meal);
-        MudDialog.Close(DialogResult.Ok(meal));
+        var result = await _api.CreateAsync<Meal>("api/meals", meal);
+        if (result)
+        {
+            _snackbar.Add("Created meal", Severity.Success);
+            MudDialog.Close(DialogResult.Ok(meal));
+
+        }
+        _snackbar.Add("Something went wrong", Severity.Error);
+
     }
     public void Cancel()
     {
