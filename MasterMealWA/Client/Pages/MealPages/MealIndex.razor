@@ -39,7 +39,15 @@ else
     public List<Meal> meals { get; set; }
     protected override async Task OnInitializedAsync()
     {
-        meals = await _api.GetMyMealsAsync();
+        try
+        {
+
+            meals = await _api.GetAsync<List<Meal>>("/api/recipes/myrecipes");
+        }
+        catch (Exception e)
+        {
+            _snackbar.Add($"Error getting meals {e.Message}", Severity.Error);
+        }
         await base.OnInitializedAsync();
     }
     public async Task AddMeal()
@@ -51,7 +59,15 @@ else
         {
 
             _snackbar.Add("Meal planned!");
-            meals = await _api.GetMyMealsAsync();
+            try
+            {
+
+                meals = await _api.GetAsync<List<Meal>>("/api/recipes/myrecipes");
+            }
+            catch (Exception e)
+            {
+                _snackbar.Add($"Error getting meals {e.Message}", Severity.Error);
+            }
         }
     }
     public async Task EditMeal(Meal meal)
@@ -61,7 +77,15 @@ else
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-            meals = await _api.GetMyMealsAsync();
+            try
+            {
+
+                meals = await _api.GetAsync<List<Meal>>("/api/recipes/myrecipes");
+            }
+            catch (Exception e)
+            {
+                _snackbar.Add($"Error getting meals {e.Message}", Severity.Error);
+            }
         }
     }
     public async Task DeleteMeal(Meal meal)
@@ -71,7 +95,15 @@ else
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-            meals = await _api.GetMyMealsAsync();
+            try
+            {
+
+                meals = await _api.GetAsync<List<Meal>>("/api/recipes/myrecipes");
+            }
+            catch (Exception e)
+            {
+                _snackbar.Add($"Error getting meals {e.Message}", Severity.Error);
+            }
         }
     }
 }

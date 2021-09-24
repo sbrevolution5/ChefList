@@ -15,6 +15,5 @@ namespace MasterMealWA.Client.Services.Interfaces
         Task<TResult> GetAsync<TResult>(string url);
         Task<TResult> GetAnonAsync<TResult>(string url);
         Task DeleteAsync(string url);
-        Task<List<Meal>> GetMyMealsAsync();
     }
 }

@@ -51,10 +51,5 @@ namespace MasterMealWA.Client.Services
         {
             await _http.DeleteAsync(url);
         }
-        public async Task<List<Meal>> GetMyMealsAsync()
-        {
-            var list = await _http.GetFromJsonAsync<List<Meal>>("api/meals", _options);
-            return list;
-        }
     }
 }

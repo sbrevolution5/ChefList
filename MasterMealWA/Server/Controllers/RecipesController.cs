@@ -48,7 +48,7 @@ namespace MasterMealWA.Server.Controllers
             var userId = HttpContext.GetUserId();
             return await _context.Recipe.Include(r => r.Author).Include(r => r.Image).Where(r => !r.IsPrivate || r.AuthorId == userId).Include(r => r.Tags).Include(r => r.Ratings).ToListAsync();
         }
-        // GET: api/Recipes
+        // GET: api/Recipes/myrecipes
         [HttpGet("myrecipes")]
         public async Task<ActionResult<IEnumerable<Recipe>>> GetMyRecipes()
         {
