@@ -30,10 +30,6 @@ namespace MasterMealWA.Client.Services.Interfaces
         Task DeleteTagAsync(int id);
         Task DeleteIngredientAsync(int id);
         Task DeleteSupplyAsync(int id);
-        Task<RecipeTag> GetRecipeTypeAsync(int id);
-        Task<Meal> GetMealAsync(int id);
-        Task<Ingredient> GetIngredientAsync(int id);
-        Task<IngredientType> GetIngredientTypeAsync(int id);
         Task<ShoppingList> GetShoppingListAsync(int id);
         Task<Supply> GetSupplyAsync(int id);
         Task<List<Recipe>> GetMyRecipesAsync();
