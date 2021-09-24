@@ -32,7 +32,7 @@ namespace MasterMealWA.Client.Services
             try
             {
 
-            await _http.PostAsJsonAsync<T>(url, content);
+                await _http.PostAsJsonAsync<T>(url, content);
                 return true;
             }
             catch (Exception)
@@ -45,7 +45,7 @@ namespace MasterMealWA.Client.Services
             try
             {
 
-            await _http.PutAsJsonAsync<T>(url, content);
+                await _http.PutAsJsonAsync<T>(url, content);
                 return true;
             }
             catch (Exception)
@@ -72,21 +72,10 @@ namespace MasterMealWA.Client.Services
                 return false;
             }
         }
-        public async Task CreateNewIngredientAsync(Ingredient ingredient)
-        {
-            await _http.PostAsJsonAsync("api/ingredients", ingredient);
-        }
-
         public async Task CreateNewIngredientTypeAsync(IngredientType ingredientType)
         {
             await _http.PostAsJsonAsync("api/ingredientTypes", ingredientType);
         }
-
-        public async Task CreateNewMealAsync(Meal meal)
-        {
-            await _http.PostAsJsonAsync("api/meals", meal);
-        }
-
         public async Task CreateNewRecipeAsync(Recipe recipe)
         {
             await _http.PostAsJsonAsync("api/recipes", recipe);
@@ -317,7 +306,7 @@ namespace MasterMealWA.Client.Services
                 throw;
             }
         }
-        public async Task<bool> UpdateImageAsync(MultipartFormDataContent content,int imageId)
+        public async Task<bool> UpdateImageAsync(MultipartFormDataContent content, int imageId)
         {
             try
             {
@@ -397,7 +386,7 @@ namespace MasterMealWA.Client.Services
                     ReferenceHandler = ReferenceHandler.Preserve,
                     PropertyNameCaseInsensitive = true
                 };
-                var recipe = await _http.GetFromJsonAsync<Recipe>($"api/recipes/{recipeId}/scale/{desiredServings}",options);
+                var recipe = await _http.GetFromJsonAsync<Recipe>($"api/recipes/{recipeId}/scale/{desiredServings}", options);
 
                 return recipe;
             }
