@@ -54,13 +54,6 @@ namespace MasterMealWA.Client.Services
         {
             await _http.PostAsJsonAsync("api/ingredientTypes", ingredientType);
         }
-
-        public async Task CreateNewSupplyAsync(Supply supply)
-        {
-            await _http.PostAsJsonAsync("api/Supplies", supply);
-
-        }
-
         public async Task DeleteIngredientAsync(int id)
         {
             await _http.DeleteAsync($"api/ingredients/{id}");
