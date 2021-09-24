@@ -55,6 +55,6 @@ else
     public ShoppingList list { get; set; }
     protected override async Task OnInitializedAsync()
     {
-        list = await _api.GetShoppingListAsync(Convert.ToInt32(id));
+        list = await _api.GetAsync<ShoppingList>($"/api/shoppinglists/{Convert.ToInt32(id)}");
     }
 }
