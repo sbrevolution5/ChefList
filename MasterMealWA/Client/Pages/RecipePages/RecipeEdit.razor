@@ -104,7 +104,7 @@ else
                                     <MudCard Elevation="2">
                                         <MudCardContent>
 
-                                            <QIngredientCreate qIngredient="@ingredient" ingredientList="ingredients" />
+                                            <QIngredientCreate qIngredient="@ingredient" ingredientList="Ingredients" />
                                         </MudCardContent>
                                         <MudCardActions>
 
@@ -188,7 +188,7 @@ else
     public Recipe recipe { get; set; }
     public DBImage image { get; set; }
     public List<RecipeTag> Tags { get; set; }
-    public List<Ingredient> ingredients { get; set; }
+    public List<Ingredient> Ingredients { get; set; }
     public List<QIngredient> RemovedIngredients { get; set; } = new();
     public List<QSupply> RemovedSupplies { get; set; } = new();
     public List<Step> RemovedSteps { get; set; } = new();
@@ -206,8 +206,8 @@ else
         image = recipe.Image;
         imageString = _imageReader.ReadImageData(image.ImageData, image.ContentType);
         Tags = await _api.GetAsync<List<RecipeTag>>("api/recipeTags");
-        ingredients = await _api.GetAllIngredientsAsync();
-        supplyList = await _api.GetAllSuppliesAsync();
+        Ingredients = await _api.GetAsync<List<Ingredient>>("api/ingredients");
+        supplyList = await _api.GetAsync<List<Supply>>("api/Supplies");
     }
     public Color BadgeColor(CategoryType type)
     {
@@ -295,7 +295,7 @@ else
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-            ingredients = await _api.GetAllIngredientsAsync();
+            Ingredients = await _api.GetAsync<List<Ingredient>>("api/ingredients");
         }
     }
     public async Task NewSupply()
@@ -305,7 +305,7 @@ else
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-            supplyList = await _api.GetAllSuppliesAsync();
+            supplyList = await _api.GetAsync<List<Supply>>("api/supplies");
         }
     }
     public IBrowserFile file;

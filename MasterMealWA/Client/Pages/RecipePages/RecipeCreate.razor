@@ -265,7 +265,7 @@
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-            supplyList = await _api.GetAllSuppliesAsync();
+            supplyList = await _api.GetAsync<List<Supply>>("api/supplies"); ;
         }
     }
     IBrowserFile file;
