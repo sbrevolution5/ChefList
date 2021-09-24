@@ -71,7 +71,7 @@ namespace MasterMealWA.Client.Services
 
         public async Task DeleteTagAsync(int id)
         {
-            await _http.DeleteAsync($"api/recipetypes/{id}");
+            await _http.DeleteAsync($"api/recipetags/{id}");
         }
         public async Task DeleteSupplyAsync(int id)
         {
@@ -115,7 +115,7 @@ namespace MasterMealWA.Client.Services
         public async Task<List<RecipeTag>> GetAllTagsAsync()
         {
             var client = _clientFactory.CreateClient("MasterMealWA.NonAuthServerAPI");
-            var list = await client.GetFromJsonAsync<List<RecipeTag>>($"api/recipetypes", _options);
+            var list = await client.GetFromJsonAsync<List<RecipeTag>>($"api/recipetags", _options);
             return list;
         }
 
@@ -167,7 +167,7 @@ namespace MasterMealWA.Client.Services
 
         public async Task<RecipeTag> GetRecipeTypeAsync(int id)
         {
-            var type = await _http.GetFromJsonAsync<RecipeTag>($"api/recipetypes/{id}", _options);
+            var type = await _http.GetFromJsonAsync<RecipeTag>($"api/recipetags/{id}", _options);
             return type;
         }
 
@@ -201,7 +201,7 @@ namespace MasterMealWA.Client.Services
         }
         public async Task UpdateTagAsync(RecipeTag tag)
         {
-            await _http.PutAsJsonAsync($"api/recipetypes/{tag.Id}", tag);
+            await _http.PutAsJsonAsync($"api/recipetags/{tag.Id}", tag);
 
         }
 
