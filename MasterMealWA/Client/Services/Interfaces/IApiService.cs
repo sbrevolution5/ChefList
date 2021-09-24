@@ -16,9 +16,6 @@ namespace MasterMealWA.Client.Services.Interfaces
         Task<TResult> GetAnonAsync<TResult>(string url);
         Task DeleteAsync(string url);
         Task<Recipe> ScaleRecipeAsync(int recipeId, int desiredServings);
-        Task<bool> CreateOrUpdateRatingAsync(int recipeId, string userId, int rating, bool isNew = true);
-        Task<bool> CreateNewRatingAsync(int recipeId, string userId, int rating);
-        Task<bool> UpdateRatingAsync(int recipeId, string userId, int rating);
         Task<DBImage> GetImageAsync(int id);
         Task<bool> UpdateImageAsync(MultipartFormDataContent content,int imageId);
         Task<int> UploadImageAsync(MultipartFormDataContent content);

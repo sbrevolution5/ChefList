@@ -20,7 +20,8 @@ namespace MasterMealWA.Client.Services
         private readonly JsonSerializerOptions _options = new()
         {
             ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve,
-            PropertyNamingPolicy = null
+            PropertyNamingPolicy = null,
+            PropertyNameCaseInsensitive = true
         };
         public ApiService(HttpClient http, IHttpClientFactory clientFactory)
         {
@@ -96,63 +97,10 @@ namespace MasterMealWA.Client.Services
             DBImage result = await _http.GetFromJsonAsync<DBImage>($"api/dbimages/{id}");
             return result;
         }
-        public async Task<bool> CreateNewRatingAsync(int recipeId, string userId, int rating)
-        {
-            try
-            {
-                await _http.PostAsJsonAsync($"api/ratings", new Rating()
-                {
-                    Stars = rating,
-                    ChefId = userId,
-                    RecipeId = recipeId
-                });
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
-        public async Task<bool> CreateOrUpdateRatingAsync(int recipeId, string userId, int rating, bool isNew = true)
-        {
-            bool res;
-            if (isNew)
-            {
-                res = await CreateNewRatingAsync(recipeId, userId, rating);
-            }
-            else
-            {
-                res = await UpdateRatingAsync(recipeId, userId, rating);
-            }
-            return res;
-        }
-        public async Task<bool> UpdateRatingAsync(int recipeId, string userId, int rating)
-        {
-            RatingEditDto dto = new()
-            {
-                RecipeId = recipeId,
-                ChefId = userId,
-                NewRating = rating
-            };
-            try
-            {
-                await _http.PutAsJsonAsync($"api/ratings/", dto);
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
         public async Task<Recipe> ScaleRecipeAsync(int recipeId, int desiredServings)
         {
             try
             {
-                var options = new JsonSerializerOptions()
-                {
-                    ReferenceHandler = ReferenceHandler.Preserve,
-                    PropertyNameCaseInsensitive = true
-                };
                 var recipe = await _http.GetFromJsonAsync<Recipe>($"api/recipes/{recipeId}/scale/{desiredServings}", options);
 
                 return recipe;
