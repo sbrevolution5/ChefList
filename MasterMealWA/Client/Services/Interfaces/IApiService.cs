@@ -19,13 +19,9 @@ namespace MasterMealWA.Client.Services.Interfaces
         Task<bool> CreateOrUpdateRatingAsync(int recipeId, string userId, int rating, bool isNew = true);
         Task<bool> CreateNewRatingAsync(int recipeId, string userId, int rating);
         Task<bool> UpdateRatingAsync(int recipeId, string userId, int rating);
-        Task CreateNewIngredientTypeAsync(IngredientType ingredientType);
-        Task UpdateIngredientTypeAsync(IngredientType ingredientType);
-        Task UpdateShoppingListAsync(ListCreateDto dto);
         Task<DBImage> GetImageAsync(int id);
         Task<bool> UpdateImageAsync(MultipartFormDataContent content,int imageId);
         Task<int> UploadImageAsync(MultipartFormDataContent content);
-        Task DeleteRecipeAsync(int id);
         Task<List<Meal>> GetMyMealsAsync();
         Task<List<IngredientType>> GetAllIngredientTypesAsync();
     }

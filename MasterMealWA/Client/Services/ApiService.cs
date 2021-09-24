@@ -54,11 +54,6 @@ namespace MasterMealWA.Client.Services
         {
             await _http.PostAsJsonAsync("api/ingredientTypes", ingredientType);
         }
-        
-        public async Task DeleteRecipeAsync(int id)
-        {
-            await _http.DeleteAsync($"api/recipes/{id}");
-        }
         public async Task<List<IngredientType>> GetAllIngredientTypesAsync()
         {
             var list = await _http.GetFromJsonAsync<List<IngredientType>>("api/ingredientTypes", _options);
@@ -69,15 +64,6 @@ namespace MasterMealWA.Client.Services
         {
             var list = await _http.GetFromJsonAsync<List<Meal>>("api/meals", _options);
             return list;
-        }
-        public async Task UpdateIngredientTypeAsync(IngredientType ingredientType)
-        {
-            await _http.PutAsJsonAsync("api/ingredienttypes", ingredientType);
-
-        }
-        public async Task UpdateShoppingListAsync(ListCreateDto dto)
-        {
-            await _http.PutAsJsonAsync("api/shoppinglists", dto);
         }
         public async Task<int> UploadImageAsync(MultipartFormDataContent content)
         {
