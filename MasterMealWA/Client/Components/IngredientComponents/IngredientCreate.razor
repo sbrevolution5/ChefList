@@ -27,7 +27,7 @@
                 <MudSelectItem Value="@measure"> @measure  </MudSelectItem>
             }
         </MudSelect>
-        <MudText Color="Color.Error">Please do not add duplicate ingredients.  Make sure your ingredient is not already in the database before you save!</MudText> 
+        <MudText Color="Color.Error">Please do not add duplicate ingredients.  Make sure your ingredient is not already in the database before you save!</MudText>
         <MudText Color="Color.Error">Each ingredient should be the <span>most generic version</span> of the ingredient.  Use the shopping notes to specify Brand, fat-free/low-calorie, frozen, and other things for your recipe.</MudText>
         <MudText Color="Color.Primary">Example 1:  Your recipe calls for low sodium soy sauce.  The ingredient is soy sauce, specify "Low Sodium" in the shopping notes.</MudText>
         <MudText Color="Color.Primary">Example 2:  Your recipe calls for Frank's red hot sauce.  The ingredient is hot sauce, specify "Frank's red hot sauce" in the shopping notes.</MudText>
@@ -54,17 +54,18 @@
     }
     public async Task CreateIngredient()
     {
-        var result = await _api.CreateAsync<Ingredient>("api/ingredients",ingredient);
-        if (result)
+        try
         {
+
+            await _api.CreateAsync<Ingredient>("api/ingredients", ingredient);
             _snackbar.Add("Ingredient Created", Severity.Success);
             MudDialog.Close(DialogResult.Ok(ingredient));
 
         }
-        else
+        catch (Exception e)
         {
-            _snackbar.Add("Creation failed, please try again", Severity.Error);
-
+            _snackbar.Add($"Creation failed: {e.Message}", Severity.Error);
+            throw;
         }
     }
 }
