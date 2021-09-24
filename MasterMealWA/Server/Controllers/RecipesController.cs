@@ -216,7 +216,7 @@ namespace MasterMealWA.Server.Controllers
         [AllowAnonymous]
         [Route("{recipeId}/scale/{desiredServings}")]
         [HttpGet("{recipeId}/scale/{desiredServings}")]
-        public async Task<ActionResult<Recipe>> ScaleRecipe(int recipeId, int desiredServings)
+        public async Task<ActionResult<List<QIngredient>>> ScaleRecipe(int recipeId, int desiredServings)
         {
             try
             {
@@ -242,7 +242,7 @@ namespace MasterMealWA.Server.Controllers
                         ingredient.Quantity = _measurementService.DecodeUnitMeasurement(ingredient.NumberOfUnits);
                     }
                 }
-                return result;
+                return result.Ingredients.ToList();
             }
             catch (Exception)
             {
