@@ -1,5 +1,6 @@
 ﻿@inject IApiService _api
 @inject NavigationManager _nav
+@inject ISnackbar _snackbar
 <MudDialog>
     <DialogContent>
         <MudTextField Label="Ingredient Name" @bind-Value="ingredient.Name"></MudTextField>
@@ -53,7 +54,17 @@
     }
     public async Task CreateIngredient()
     {
-        await _api.CreateNewIngredientAsync(ingredient);
-        MudDialog.Close(DialogResult.Ok(ingredient));
+        var result = await _api.CreateAsync<Ingredient>("api/ingredients",ingredient);
+        if (result)
+        {
+            _snackbar.Add("Ingredient Created", Severity.Success);
+            MudDialog.Close(DialogResult.Ok(ingredient));
+
+        }
+        else
+        {
+            _snackbar.Add("Creation failed, please try again", Severity.Error);
+
+        }
     }
 }
