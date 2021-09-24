@@ -40,6 +40,12 @@ namespace MasterMealWA.Client.Services
             var result = await _http.GetFromJsonAsync<TResult>(url,_options);
             return result;
         }
+        public async Task<TResult> GetAnonAsync<TResult>(string url)
+        {
+            var client = _clientFactory.CreateClient("MasterMealWA.NonAuthServerAPI");
+            var result = await client.GetFromJsonAsync<TResult>(url,_options);
+            return result;
+        }
         public async Task DeleteAsync(string url)
         {
             await _http.DeleteAsync(url);
