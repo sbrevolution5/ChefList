@@ -58,7 +58,6 @@ namespace MasterMealWA.Client.Services
         {
             await _http.DeleteAsync($"api/ingredients/{id}");
         }
-
         public async Task DeleteIngredientTypeAsync(int id)
         {
             await _http.DeleteAsync($"api/ingredienttypes/{id}");
@@ -97,12 +96,6 @@ namespace MasterMealWA.Client.Services
             var list = await _http.GetFromJsonAsync<ShoppingList>($"api/shoppingLists/{id}", _options);
             return list;
         }
-
-        public async Task<Supply> GetSupplyAsync(int id)
-        {
-            var supply = await _http.GetFromJsonAsync<Supply>($"api/supplies/{id}", _options);
-            return supply;
-        }
         public async Task UpdateIngredientTypeAsync(IngredientType ingredientType)
         {
             await _http.PutAsJsonAsync("api/ingredienttypes", ingredientType);
@@ -118,21 +111,6 @@ namespace MasterMealWA.Client.Services
         {
             await _http.PutAsJsonAsync("api/shoppinglists", dto);
         }
-        public async Task<List<Recipe>> GetMyRecipesAsync()
-        {
-            try
-            {
-
-                var result = await _http.GetFromJsonAsync<List<Recipe>>("api/recipes/myrecipes", _options);
-                return result;
-            }
-            catch (Exception)
-            {
-
-                return new List<Recipe>();
-            }
-        }
-
         public async Task<int> UploadImageAsync(MultipartFormDataContent content)
         {
             try
@@ -159,13 +137,11 @@ namespace MasterMealWA.Client.Services
                 return false;
             }
         }
-
         public async Task<DBImage> GetImageAsync(int id)
         {
             DBImage result = await _http.GetFromJsonAsync<DBImage>($"api/dbimages/{id}");
             return result;
         }
-
         public async Task<bool> CreateNewRatingAsync(int recipeId, string userId, int rating)
         {
             try
@@ -183,7 +159,6 @@ namespace MasterMealWA.Client.Services
                 return false;
             }
         }
-
         public async Task<bool> CreateOrUpdateRatingAsync(int recipeId, string userId, int rating, bool isNew = true)
         {
             bool res;
@@ -197,7 +172,6 @@ namespace MasterMealWA.Client.Services
             }
             return res;
         }
-
         public async Task<bool> UpdateRatingAsync(int recipeId, string userId, int rating)
         {
             RatingEditDto dto = new()
@@ -216,7 +190,6 @@ namespace MasterMealWA.Client.Services
                 return false;
             }
         }
-
         public async Task<Recipe> ScaleRecipeAsync(int recipeId, int desiredServings)
         {
             try
