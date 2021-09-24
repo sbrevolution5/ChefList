@@ -201,15 +201,7 @@ namespace MasterMealWA.Client.Services
         public async Task UpdateShoppingListAsync(ListCreateDto dto)
         {
             await _http.PutAsJsonAsync("api/shoppinglists", dto);
-
         }
-
-        public async Task UpdateSupplyAsync(Supply supply)
-        {
-            await _http.PutAsJsonAsync("api/supplies", supply);
-
-        }
-
         public async Task<List<Recipe>> GetMyRecipesAsync()
         {
             try
