@@ -33,15 +33,16 @@ namespace MasterMealWA.Client.Services
         }
         public async Task UpdateAsync<T>(string url, T content)
         {
-            await _http.PostAsJsonAsync<T>(url, content);
+            await _http.PutAsJsonAsync<T>(url, content);
         }
-        public async Task GetAsync<T>(string url, T content)
+        public async Task<TResult> GetAsync<TResult>(string url)
         {
-            await _http.PostAsJsonAsync<T>(url, content);
+            var result = await _http.GetFromJsonAsync<TResult>(url);
+            return result;
         }
-        public async Task DeleteAsync<T>(string url, T content)
+        public async Task DeleteAsync(string url)
         {
-            await _http.PostAsJsonAsync<T>(url, content);
+            await _http.DeleteAsync(url);
         }
         public async Task CreateNewIngredientAsync(Ingredient ingredient)
         {
