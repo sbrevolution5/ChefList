@@ -15,11 +15,9 @@ namespace MasterMealWA.Client.Services.Interfaces
         Task<TResult> GetAsync<TResult>(string url);
         Task<bool> DeleteAsync(string url);
         Task<Recipe> ScaleRecipeAsync(int recipeId, int desiredServings);
-        
         Task<bool> CreateOrUpdateRatingAsync(int recipeId, string userId, int rating, bool isNew = true);
         Task<bool> CreateNewRatingAsync(int recipeId, string userId, int rating);
         Task<bool> UpdateRatingAsync(int recipeId, string userId, int rating);
-        Task CreateNewTagAsync(RecipeTag type);
         Task CreateNewIngredientTypeAsync(IngredientType ingredientType);
         Task CreateNewShoppingListAsync(ListCreateDto dto);
         Task CreateNewSupplyAsync(Supply supply);
