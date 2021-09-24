@@ -61,7 +61,7 @@ else
     public bool Loaded { get; set; }
     protected override async Task OnInitializedAsync()
     {
-        Tags = await _api.GetAllTagsAsync();
+        Tags = await _api.GetAsync<List<RecipeTag>>("api/recipeTags");
         base.OnInitialized();
         Loaded = true;
     }
@@ -71,7 +71,8 @@ else
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-            Tags = await _api.GetAllTagsAsync();
+            Tags = await _api.GetAsync<List<RecipeTag>>("api/recipeTags");
+
         }
     }
     public async Task EditTag(RecipeTag tag)
@@ -81,7 +82,7 @@ else
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-            Tags = await _api.GetAllTagsAsync();
+            Tags = await _api.GetAsync<List<RecipeTag>>("api/recipeTags");
         }
     }
 }

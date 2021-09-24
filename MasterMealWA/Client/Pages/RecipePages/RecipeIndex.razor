@@ -172,7 +172,7 @@
         };
         await GetRecipesAsync();
         ChangePage(1);
-        RecipeTypes = await _api.GetAllTagsAsync();
+        await GetTagsAsync();
         base.OnInitialized();
         Loaded = true;
     }
@@ -184,19 +184,28 @@
     }
     private async Task GetRecipesAsync()
     {
-        if (mine.ToLower() == "myrecipes")
+        if (Auth)
         {
-
-            AllRecipes = await _api.GetMyRecipesAsync();
-            FilterRecipes();
+                AllRecipes = await _api.GetAsync<List<Recipe>>("api/recipes");
+                FilterRecipes();
         }
         else
         {
-
-            AllRecipes = await _api.GetAllRecipesAsync(Auth);
+            AllRecipes = await _api.GetAnonAsync<List<Recipe>>("api/recipes");
             FilterRecipes();
         }
         pageCount = (FilteredRecipes.Count / 6) + 1;
+    }
+    private async Task GetTagsAsync()
+    {
+        if (Auth)
+        {
+                RecipeTypes = await _api.GetAsync<List<RecipeTag>>("api/recipeTags");
+        }
+        else
+        {
+            RecipeTypes = await _api.GetAnonAsync<List<RecipeTag>>("api/recipeTags");
+        }
     }
     private void ChangePage(int page)
     {

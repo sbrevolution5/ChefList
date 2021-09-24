@@ -27,7 +27,16 @@
     }
     public async Task EditTag()
     {
-        await _api.UpdateTagAsync(Tag);
-        MudDialog.Close(DialogResult.Ok(Tag));
+        try
+        {
+            await _api.UpdateAsync<RecipeTag>($"/api/recipeTags/{Tag.Id}",Tag);
+            _snackbar.Add("Tag updated", Severity.Success);
+            MudDialog.Close(DialogResult.Ok(Tag));
+
+        }
+        catch (Exception e)
+        {
+            _snackbar.Add($"Update failed {e.Message}", Severity.Error);
+        }
     }
 }

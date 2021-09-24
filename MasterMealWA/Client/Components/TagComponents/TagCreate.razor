@@ -1,5 +1,6 @@
 ﻿@inject IApiService _api
 @inject NavigationManager _nav
+@inject ISnackbar _snackbar
 <MudDialog>
     <DialogContent>
         <MudTextField Label="Tag Name" @bind-Value="Tag.Name"></MudTextField>
@@ -26,7 +27,15 @@
     }
     public async Task CreateTag()
     {
-        await _api.CreateNewTagAsync(Tag);
-        MudDialog.Close(DialogResult.Ok(Tag));
+        try
+        {
+            await _api.CreateAsync<RecipeTag>("api/recipeTags",Tag);
+            _snackbar.Add("Created Tag", Severity.Success);
+            MudDialog.Close(DialogResult.Ok(Tag));
+        }
+        catch (Exception e)
+        {
+            _snackbar.Add($"Creation failed {e.Message}", Severity.Error);
+        }
     }
 }

@@ -10,22 +10,16 @@ else
     <MudCard>
         <MudCardHeader>
             <MudText Typo="Typo.h3">Supplies</MudText>
-
         </MudCardHeader>
         <MudCardContent>
-
             <MudGrid>
-
                 @foreach (var supply in Supplies)
                 {
                     <MudItem xs="12" sm="6" md="4" lg="3">
                         <MudPaper Elevation="2" Style="padding-left:5px;margin:10px;">
                             <MudGrid>
-
                                 <MudItem xs="8">
-
                                     <MudText>
-
                                         @supply.Name
                                     </MudText>
                                 </MudItem>
@@ -45,7 +39,7 @@ else
     public List<Supply> Supplies { get; set; }
     protected override async Task OnInitializedAsync()
     {
-        Supplies = await _api.GetAllSuppliesAsync();
+        Supplies = await _api.GetAsync<List<Supply>>("api/supplies");
         base.OnInitialized();
     }
     public async Task NewSupply()
@@ -54,7 +48,7 @@ else
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-            Supplies = await _api.GetAllSuppliesAsync();
+            Supplies = await _api.GetAsync<List<Supply>>("api/supplies");
         }
     }
     public async Task EditSupply(Supply supply)
@@ -64,7 +58,7 @@ else
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-            Supplies = await _api.GetAllSuppliesAsync();
+            Supplies = await _api.GetAsync<List<Supply>>("api/supplies");
         }
     }
 }

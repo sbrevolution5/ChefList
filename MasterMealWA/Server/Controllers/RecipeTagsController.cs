@@ -14,16 +14,16 @@ namespace MasterMealWA.Server.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class RecipeTypesController : ControllerBase
+    public class RecipeTagsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
 
-        public RecipeTypesController(ApplicationDbContext context)
+        public RecipeTagsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: api/RecipeTypes
+        // GET: api/RecipeTags
         [HttpGet]
         [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<RecipeTag>>> GetRecipeType()
@@ -32,7 +32,7 @@ namespace MasterMealWA.Server.Controllers
             return typelist;
         }
 
-        // GET: api/RecipeTypes/5
+        // GET: api/RecipeTags/5
         [HttpGet("{id}")]
         public async Task<ActionResult<RecipeTag>> GetRecipeType(int id)
         {
@@ -46,7 +46,7 @@ namespace MasterMealWA.Server.Controllers
             return recipeType;
         }
 
-        // PUT: api/RecipeTypes/5
+        // PUT: api/RecipeTags/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutRecipeType(int id, RecipeTag recipeType)
@@ -77,7 +77,7 @@ namespace MasterMealWA.Server.Controllers
             return NoContent();
         }
 
-        // POST: api/RecipeTypes
+        // POST: api/RecipeTags
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<RecipeTag>> PostRecipeType(RecipeTag recipeType)
@@ -88,7 +88,7 @@ namespace MasterMealWA.Server.Controllers
             return CreatedAtAction("GetRecipeType", new { id = recipeType.Id }, recipeType);
         }
 
-        // DELETE: api/RecipeTypes/5
+        // DELETE: api/RecipeTags/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRecipeType(int id)
         {

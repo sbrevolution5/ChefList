@@ -23,11 +23,20 @@
     MudDialogInstance MudDialog { get; set; }
     [Parameter]
     public ShoppingList list { get; set; }
-    
+
     public async Task ConfirmDelete()
     {
-        await _api.DeleteShoppingListAsync(list.Id);
-        MudDialog.Close(DialogResult.Ok(list));
+        try
+        {
+            await _api.DeleteAsync($"api/shoppinglists/{list.Id}");
+            _snackbar.Add("List deleted", Severity.Success);
+            MudDialog.Close(DialogResult.Ok(list));
+
+        }
+        catch (Exception e)
+        {
+            _snackbar.Add($"Delete failed {e.Message}", Severity.Error);
+        }
     }
     public void Cancel()
     {

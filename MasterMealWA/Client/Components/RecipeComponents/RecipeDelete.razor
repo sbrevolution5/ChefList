@@ -17,8 +17,17 @@
     public Recipe recipe { get; set; }
     public async Task ConfirmDelete()
     {
-        await _api.DeleteRecipeAsync(recipe.Id);
-        MudDialog.Close(DialogResult.Ok(recipe));
+        try
+        {
+
+            await _api.DeleteAsync($"/api/recipes/{recipe.Id}");
+            _snackbar.Add("Recipe Deleted", Severity.Success);
+            MudDialog.Close(DialogResult.Ok(recipe));
+        }
+        catch (Exception e)
+        {
+            _snackbar.Add($"Delete failed {e.Message}", Severity.Error);
+        }
     }
     public void Cancel()
     {

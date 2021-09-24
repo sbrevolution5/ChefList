@@ -21,8 +21,17 @@
     private List<Recipe> recipes;
     public async Task ConfirmDelete()
     {
-        await _api.DeleteMealAsync(meal.Id);
+        try
+        {
+
+        await _api.DeleteAsync($"api/meals/{meal.Id}");
+            _snackbar.Add("Meal Deleted", Severity.Success);
         MudDialog.Close(DialogResult.Ok(meal));
+        }
+        catch (Exception e)
+        {
+            _snackbar.Add($"Delete failed: {e.Message}", Severity.Error);
+        }
     }
     public void Cancel()
     {
