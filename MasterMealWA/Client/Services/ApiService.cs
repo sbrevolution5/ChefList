@@ -37,7 +37,7 @@ namespace MasterMealWA.Client.Services
         }
         public async Task<TResult> GetAsync<TResult>(string url)
         {
-            var result = await _http.GetFromJsonAsync<TResult>(url);
+            var result = await _http.GetFromJsonAsync<TResult>(url,_options);
             return result;
         }
         public async Task DeleteAsync(string url)
