@@ -35,12 +35,13 @@
                                     Icon="@Icons.Filled.Image"
                                     Label="Load picture"
                                     for="fileInput" />
-                            @if (recipe.ImageId != 0)
+                            @if (recipe.ImageId != 0 || recipe.ImageId != 1)
                             {
                                 <MudCard>
                                     <MudCardMedia Image="@(imageString)">
                                     </MudCardMedia>
                                 </MudCard>
+                                <MudButton Color="Color.Warning" OnClick="ResetImage">Reset to default Image</MudButton>
                             }
                             else
                             {
@@ -269,6 +270,12 @@
         }
     }
     IBrowserFile file;
+    private async Task ResetImage()
+        {
+            //Warning dialog!
+            //Set recipe image to default, 
+            //delete old image
+        }
     private async Task UploadFiles(InputFileChangeEventArgs e)
     {
 
