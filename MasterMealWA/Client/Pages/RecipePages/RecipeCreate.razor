@@ -231,7 +231,6 @@
     {
         recipe.Tags = recipeTags.Select(r => (RecipeTag)r.Tag).ToList();
         recipe.AuthorId = await _userService.GetUserIdAsync();
-        recipe.ImageId = ImgId;
         foreach (var ing in recipe.Ingredients)
         {
             ing.Ingredient = null;
@@ -242,11 +241,6 @@
         }
         try
         {
-            var dto = new RecipeCreateDto()
-            {
-                Recipe = recipe,
-                ImageData = imageFormContent
-            };
             await _api.CreateAsync<Recipe>("api/recipes", recipe);
             _snackbar.Add("Recipe Created", Severity.Success);
             nav.NavigateTo($"/recipes");
