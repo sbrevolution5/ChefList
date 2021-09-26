@@ -271,11 +271,20 @@
     }
     IBrowserFile file;
     private async Task ResetImage()
+    {
+        //Warning dialog!
+        //delete old image
+        try
         {
-            //Warning dialog!
-            //Set recipe image to default, 
-            //delete old image
+            await _api.DeleteAsync($"api/dbimages/recipe/{recipe.ImageId}");
         }
+        catch (Exception)
+        {
+
+            throw;
+        }
+        //Set recipe image to default, 
+    }
     private async Task UploadFiles(InputFileChangeEventArgs e)
     {
 
