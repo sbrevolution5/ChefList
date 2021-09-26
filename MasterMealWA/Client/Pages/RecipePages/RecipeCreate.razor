@@ -296,40 +296,20 @@
                 imageFormContent = new MultipartFormDataContent();
                 imageFormContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data");
                 imageFormContent.Add(new StreamContent(ms, Convert.ToInt32(resizedFile.Size)), "image", file.Name);
-                if (recipe.ImageId == 0 || recipe.ImageId == 1)
+
+                try
                 {
+                    image = await _api.GetPreviewImage("/api/dbimages/tempimage", imageFormContent);
+                    _snackbar.Add("Image Updated", Severity.Success);
+                    imageString = _imageReader.ReadImageData(image.ImageData, image.ContentType);
+                    recipe.Image = image;
+                    StateHasChanged();
 
-                    try
-                    {
-                        image = await _api.GetPreviewImage("/api/dbimages/tempimage", imageFormContent);
-                        _snackbar.Add("Image Updated", Severity.Success);
-                        imageString = _imageReader.ReadImageData(image.ImageData, image.ContentType);
-                        StateHasChanged();
-
-                    }
-                    catch (Exception ex)
-                    {
-                        _snackbar.Add($"Image Failed to update {ex.Message}", Severity.Error);
-                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    try
-                    {
-
-                        await _api.UpdateAsync<MultipartFormDataContent>($"api/dbimages/{recipe.ImageId}", imageFormContent);
-                        _snackbar.Add("Image Updated", Severity.Success);
-                        image = await _api.GetAsync<DBImage>($"/api/dbimages/{recipe.ImageId}");
-                        imageString = _imageReader.ReadImageData(image.ImageData, image.ContentType);
-                        StateHasChanged();
-                    }
-                    catch (Exception)
-                    {
-
-                        _snackbar.Add("Image Failed to update", Severity.Error);
-                    }
+                    _snackbar.Add($"Image Failed to update {ex.Message}", Severity.Error);
                 }
-
             }
         }
     }
