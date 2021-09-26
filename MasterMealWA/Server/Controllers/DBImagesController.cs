@@ -141,9 +141,27 @@ namespace MasterMealWA.Server.Controllers
 
         
 
-        // DELETE: api/DBImages/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteDBImage(int id)
+        // DELETE: api/DBImages/recipe/5
+        [HttpDelete("/recipe/{id}/{recipeId}")]
+        public async Task<IActionResult> DeleteRecipeDBImage(int id,int recipeId)
+        {
+            var dBImage = await _context.DBImage.FindAsync(id);
+            if (dBImage == null)
+            {
+                return NotFound();
+            }
+            //Reset to default image
+            var recipe = await _context.Recipe.FindAsync(recipeId);
+            recipe.ImageId = 1;
+            _context.DBImage.Remove(dBImage);
+
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+        // DELETE: api/DBImages/recipe/5
+        [HttpDelete("/recipe/{id}")]
+        public async Task<IActionResult> DeleteUserDBImage(int id)
         {
             var dBImage = await _context.DBImage.FindAsync(id);
             if (dBImage == null)
