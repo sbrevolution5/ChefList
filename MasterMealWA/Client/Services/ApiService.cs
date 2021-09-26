@@ -55,9 +55,19 @@ namespace MasterMealWA.Client.Services
         public async Task<TResult> CreateAndRetrieveAsync<T, TResult>(string url, T content)
         {
             //Need to send the data to convert, and get a result
-            var result = await _http.PostAsJsonAsync(url,content);
-            var contentB = result.Content;
-            throw new NotImplementedException();
+            var result = await _http.PostAsync(url,content);
+            if (result.IsSuccessStatusCode)
+            {
+            return await result.Content.ReadFromJsonAsync<TResult>();
+
+            }
+            else
+            {
+                string errMsg = await result.Content.ReadAsStringAsync();
+                Console.WriteLine(errMsg);
+                throw new Exception(errMsg);
+            }
+
         }
     }
 }
