@@ -186,6 +186,7 @@
     public List<RecipeTag> Tags { get; set; }
     public List<Ingredient> Ingredients { get; set; }
     public List<Supply> supplyList { get; set; }
+    private MultipartFormDataContent imageFormContent { get; set; }
     private MudChip[] recipeTags { get; set; }
     private IBrowserFile bytefile { get; set; }
     private string contentType { get; set; }
@@ -241,7 +242,11 @@
         }
         try
         {
-
+            var dto = new RecipeCreateDto()
+            {
+                Recipe = recipe,
+                ImageData = imageFormContent
+            };
             await _api.CreateAsync<Recipe>("api/recipes", recipe);
             _snackbar.Add("Recipe Created", Severity.Success);
             nav.NavigateTo($"/recipes");
@@ -288,15 +293,15 @@
 
             using (var ms = resizedFile.OpenReadStream(resizedFile.Size))
             {
-                var content = new MultipartFormDataContent();
-                content.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data");
-                content.Add(new StreamContent(ms, Convert.ToInt32(resizedFile.Size)), "image", file.Name);
+                imageFormContent = new MultipartFormDataContent();
+                imageFormContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data");
+                imageFormContent.Add(new StreamContent(ms, Convert.ToInt32(resizedFile.Size)), "image", file.Name);
                 if (recipe.ImageId == 0 || recipe.ImageId == 1)
                 {
 
                     try
                     {
-                        await _api.CreateAsync<MultipartFormDataContent>("/api/dbimages", content);
+                        await _api.CreateAsync<MultipartFormDataContent,DBImage>("/api/dbimages/tempimage", imageFormContent);
                         _snackbar.Add("Image Updated", Severity.Success);
                         image = await _api.GetAsync<DBImage>($"/api/dbimages/{recipe.ImageId}");
                         recipe.ImageId = image.Id;
