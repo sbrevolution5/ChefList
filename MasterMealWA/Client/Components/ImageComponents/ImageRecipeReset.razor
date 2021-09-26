@@ -1,0 +1,33 @@
+﻿<h3>ImageRecipeReset</h3>
+<MudDialog>
+    <DialogContent></DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel" Variant="Variant.Filled" Color="Color.Dark">Cancel</MudButton>
+        <MudButton Color="Color.Error" OnClick="ConfirmDelete" Variant="Variant.Filled">Reset Image</MudButton>
+    </DialogActions>
+</MudDialog>
+@code {
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; }
+    [Parameter]
+    public ShoppingList list { get; set; }
+
+    public async Task ConfirmDelete()
+    {
+        try
+        {
+            await _api.DeleteAsync($"api/shoppinglists/{list.Id}");
+            _snackbar.Add("List deleted", Severity.Success);
+            MudDialog.Close(DialogResult.Ok(list));
+
+        }
+        catch (Exception e)
+        {
+            _snackbar.Add($"Delete failed {e.Message}", Severity.Error);
+        }
+    }
+    public void Cancel()
+    {
+        MudDialog.Cancel();
+    }
+}
