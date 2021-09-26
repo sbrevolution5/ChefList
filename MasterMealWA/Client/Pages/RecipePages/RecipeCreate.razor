@@ -273,17 +273,15 @@
     private async Task ResetImage()
     {
         //Warning dialog!
-        //delete old image
+        
         try
         {
-            await _api.DeleteAsync($"api/dbimages/recipe/{recipe.ImageId}");
+            await _api.DeleteAsync($"api/dbimages/recipe/{recipe.ImageId}/{recipe.Id}");
         }
-        catch (Exception)
+        catch (Exception e)
         {
-
-            throw;
+            _snackbar.Add($"Your image was not reset {e.Message}",Severity.Error);
         }
-        //Set recipe image to default, 
     }
     private async Task UploadFiles(InputFileChangeEventArgs e)
     {
