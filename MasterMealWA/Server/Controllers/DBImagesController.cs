@@ -64,6 +64,42 @@ namespace MasterMealWA.Server.Controllers
                 return StatusCode(500, $"Internal server error: {ex}");
             }
         }
+        //This method WILL NOT SAVE TO DATABASE, generates preview image.
+        [HttpPost("/tempImage")]
+        public async Task<IActionResult> UploadTemp()
+        {
+            try
+            {
+                var file = Request.Form.Files[0];
+                var imagedata = await _fileService.ConvertFileToByteArrayAsync(file);
+                string contentType = "";
+                if (file.Length > 0)
+                {
+                    if (file.ContentType is null)
+                    {
+                        var fileProvider = new FileExtensionContentTypeProvider();
+                        if (!fileProvider.TryGetContentType(file.FileName, out contentType))
+                        {
+                            return BadRequest();
+                        }
+                    }
+                    var image = new DBImage()
+                    {
+                        ContentType = file.ContentType ?? contentType,
+                        ImageData = imagedata
+                    };
+                    return Ok(image);
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex}");
+            }
+        }
         // GET: api/DBImages
         [HttpGet]
         public async Task<ActionResult<IEnumerable<DBImage>>> GetDBImage()
