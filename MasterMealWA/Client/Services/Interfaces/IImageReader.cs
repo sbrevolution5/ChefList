@@ -9,6 +9,6 @@ namespace MasterMealWA.Client.Services.Interfaces
     public interface IImageReader
     {
         string ReadImageData(byte[] data, string ContentType);
-        string CreateTempImage(MultipartFormDataContent);
+        string CreatePreviewImage(MultipartFormDataContent content);
     }
 }

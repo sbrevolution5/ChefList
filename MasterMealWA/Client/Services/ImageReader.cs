@@ -9,7 +9,7 @@ namespace MasterMealWA.Client.Services
 {
     public class ImageReader : IImageReader
     {
-        public string CreateTempImage(MultipartFormDataContent )
+        public string CreatePreviewImage(MultipartFormDataContent content)
         {
             throw new NotImplementedException();
         }
