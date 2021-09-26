@@ -52,13 +52,13 @@ namespace MasterMealWA.Client.Services
             await _http.DeleteAsync(url);
         }
 
-        public async Task<TResult> CreateAndRetrieveAsync<T, TResult>(string url, T content)
+        public async Task<DBImage> GetPreviewImage(string url, MultipartFormDataContent content)
         {
             //Need to send the data to convert, and get a result
             var result = await _http.PostAsync(url,content);
             if (result.IsSuccessStatusCode)
             {
-            return await result.Content.ReadFromJsonAsync<TResult>();
+                return await result.Content.ReadFromJsonAsync<DBImage>();
 
             }
             else

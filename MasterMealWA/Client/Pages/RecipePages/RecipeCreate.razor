@@ -301,10 +301,8 @@
 
                     try
                     {
-                        await _api.CreateAndRetrieveAsync<MultipartFormDataContent,DBImage>("/api/dbimages/tempimage", imageFormContent);
+                        image = await _api.GetPreviewImage("/api/dbimages/tempimage", imageFormContent);
                         _snackbar.Add("Image Updated", Severity.Success);
-                        image = await _api.GetAsync<DBImage>($"/api/dbimages/{recipe.ImageId}");
-                        recipe.ImageId = image.Id;
                         imageString = _imageReader.ReadImageData(image.ImageData, image.ContentType);
                         StateHasChanged();
 

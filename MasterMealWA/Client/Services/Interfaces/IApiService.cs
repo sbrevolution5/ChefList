@@ -11,7 +11,7 @@ namespace MasterMealWA.Client.Services.Interfaces
     public interface IApiService
     {
         Task CreateAsync<T>(string url, T content);
-        Task<TResult> CreateAndRetrieveAsync<T, TResult>(string url, T content);
+        Task<DBImage> GetPreviewImage(string url, MultipartFormDataContent content);
         Task UpdateAsync<T>(string url, T content);
         Task<TResult> GetAsync<TResult>(string url);
         Task<TResult> GetAnonAsync<TResult>(string url);
