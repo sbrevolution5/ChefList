@@ -273,10 +273,12 @@
     private async Task ResetImage()
     {
         //Warning dialog!
-        
+
         try
         {
             await _api.DeleteAsync($"api/dbimages/recipe/{recipe.ImageId}/{recipe.Id}");
+            _snackbar.Add("Your image was reset to the default", Severity.Success);
+
         }
         catch (Exception e)
         {
