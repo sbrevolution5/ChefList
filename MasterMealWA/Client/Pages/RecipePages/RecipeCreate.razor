@@ -301,7 +301,7 @@
 
                     try
                     {
-                        await _api.CreateAsync<MultipartFormDataContent,DBImage>("/api/dbimages/tempimage", imageFormContent);
+                        await _api.CreateAndRetrieveAsync<MultipartFormDataContent,DBImage>("/api/dbimages/tempimage", imageFormContent);
                         _snackbar.Add("Image Updated", Severity.Success);
                         image = await _api.GetAsync<DBImage>($"/api/dbimages/{recipe.ImageId}");
                         recipe.ImageId = image.Id;
@@ -319,7 +319,7 @@
                     try
                     {
 
-                        await _api.UpdateAsync<MultipartFormDataContent>($"api/dbimages/{recipe.ImageId}", content);
+                        await _api.UpdateAsync<MultipartFormDataContent>($"api/dbimages/{recipe.ImageId}", imageFormContent);
                         _snackbar.Add("Image Updated", Severity.Success);
                         image = await _api.GetAsync<DBImage>($"/api/dbimages/{recipe.ImageId}");
                         imageString = _imageReader.ReadImageData(image.ImageData, image.ContentType);

@@ -51,5 +51,13 @@ namespace MasterMealWA.Client.Services
         {
             await _http.DeleteAsync(url);
         }
+
+        public async Task<TResult> CreateAndRetrieveAsync<T, TResult>(string url, T content)
+        {
+            //Need to send the data to convert, and get a result
+            var result = await _http.PostAsJsonAsync(url,content);
+            var contentB = result.Content;
+            throw new NotImplementedException();
+        }
     }
 }

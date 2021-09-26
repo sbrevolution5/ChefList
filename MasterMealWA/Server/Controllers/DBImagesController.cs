@@ -65,7 +65,7 @@ namespace MasterMealWA.Server.Controllers
             }
         }
         //This method WILL NOT SAVE TO DATABASE, generates preview image.
-        [HttpPost("/tempImage")]
+        [HttpPost("tempimage")]
         public async Task<IActionResult> UploadTemp()
         {
             try
