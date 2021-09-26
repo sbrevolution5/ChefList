@@ -272,22 +272,11 @@
     IBrowserFile file;
     private async Task ResetImage()
     {
-        var dialog = _dialogService.Show<ImageRecipeReset>("Are you sure?");
-        var result = await dialog.Result;
-        if (!result.Cancelled)
+        if (image is null)
         {
-
-            try
-            {
-                await _api.DeleteAsync($"api/dbimages/recipe/{recipe.ImageId}/{recipe.Id}");
-                _snackbar.Add("Your image was reset to the default", Severity.Success);
-
-            }
-            catch (Exception e)
-            {
-                _snackbar.Add($"Your image was not reset {e.Message}", Severity.Error);
-            }
+            return;
         }
+        var dialog = _dialogService.Show<ImageRecipeReset>("Are you sure?");
     }
     private async Task UploadFiles(InputFileChangeEventArgs e)
     {
