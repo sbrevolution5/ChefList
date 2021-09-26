@@ -1,6 +1,9 @@
-﻿<h3>ImageRecipeReset</h3>
+﻿@inject IApiService _api
 <MudDialog>
-    <DialogContent></DialogContent>
+    <DialogContent>
+        <MudText>This will remove your image from the database, and replace this recipe's image with the default.</MudText>
+        <MudText Color="Color.Error">This action cannot be undone.</MudText>
+    </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel" Variant="Variant.Filled" Color="Color.Dark">Cancel</MudButton>
         <MudButton Color="Color.Error" OnClick="ConfirmDelete" Variant="Variant.Filled">Reset Image</MudButton>
@@ -10,20 +13,19 @@
     [CascadingParameter]
     MudDialogInstance MudDialog { get; set; }
     [Parameter]
-    public ShoppingList list { get; set; }
+    public Recipe recipe { get; set; }
 
     public async Task ConfirmDelete()
     {
         try
         {
-            await _api.DeleteAsync($"api/shoppinglists/{list.Id}");
-            _snackbar.Add("List deleted", Severity.Success);
-            MudDialog.Close(DialogResult.Ok(list));
-
+            await _api.DeleteAsync($"api/dbimages/recipe/{recipe.ImageId}/{recipe.Id}");
+            _snackbar.Add("Your image was reset to the default", Severity.Success);
+            MudDialog.Close();
         }
         catch (Exception e)
         {
-            _snackbar.Add($"Delete failed {e.Message}", Severity.Error);
+            _snackbar.Add($"Your image was not reset {e.Message}", Severity.Error);
         }
     }
     public void Cancel()
