@@ -313,10 +313,10 @@ else
     private async Task UploadFiles(InputFileChangeEventArgs e)
     {
 
-        var imageFile = e.File;
-        if (imageFile != null)
+        file = e.File;
+        if (file != null)
         {
-            var resizedFile = await imageFile.RequestImageFileAsync("image/png", 1000, 1000);
+            var resizedFile = await file.RequestImageFileAsync("image/png", 1000, 1000);
 
             using (var ms = resizedFile.OpenReadStream(resizedFile.Size))
             {
