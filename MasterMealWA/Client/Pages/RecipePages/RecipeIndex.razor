@@ -48,7 +48,8 @@
                     </MudSelect>
                 </MudItem>
                 <MudItem xs="6">
-                    <MudButton OnClick="ChangeSortAndUpdateView" Variant="Variant.Filled" Color="Color.Primary">Sort
+                    <MudButton OnClick="ChangeSortAndUpdateView" Variant="Variant.Filled" Color="Color.Primary">
+                        Sort
                     </MudButton>
                 </MudItem>
                 @foreach (var recipe in pageRecipes)
@@ -246,10 +247,14 @@
         }
         FilteredRecipes = AllRecipes;
         SortedRecipes = AllRecipes;
-        pageCount = (SortedRecipes.Count / 6);
-        if (pageCount < 1)
+        if (SortedRecipes.Count <= 6)
         {
             pageCount = 1;
+        }
+        else
+        {
+
+            pageCount = (SortedRecipes.Count / 6) + 1;
         }
     }
     private async Task GetTagsAsync()
