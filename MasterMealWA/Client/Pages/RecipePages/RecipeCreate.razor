@@ -35,8 +35,7 @@
                                     Icon="@Icons.Filled.Image"
                                     Label="Upload Image"
                                     for="fileInput" />
-                            @if (recipe.ImageId != 0 && recipe.ImageId != 1)
-                            {
+                            
                         <MudCard>
                             @if (!imageLoading)
                             {
@@ -49,12 +48,10 @@
                                 <Loader></Loader>
                             }
                         </MudCard>
-                                <MudButton Color="Color.Warning" Variant="Variant.Filled" OnClick="ResetImage">Reset to default Image</MudButton>
-                            }
-                            else
+                            @if (imageUploaded)
                             {
 
-                                <MudText Typo="@Typo.h6">No Image, will use default</MudText>
+                                <MudButton Color="Color.Warning" Variant="Variant.Filled" OnClick="ResetImage">Reset to default Image</MudButton>
                             }
                         </MudItem>
                         <MudItem xs="12">
@@ -202,6 +199,7 @@
     public DBImage image { get; set; }
     public string imageString { get; set; }
     public bool imageLoading { get; set; }
+    public bool imageUploaded { get; set; }
     protected override async Task OnInitializedAsync()
     {
         recipe.Servings = 2;
@@ -294,6 +292,7 @@
 
             image = await _api.GetAsync<DBImage>("api/dbimage/1");
             imageLoading = false;
+            imageUploaded = false;
             StateHasChanged();
         }
     }
@@ -320,6 +319,7 @@
                     imageString = _imageReader.ReadImageData(image.ImageData, image.ContentType);
                     recipe.Image = image;
                     imageLoading = false;
+                    imageUploaded = true;
                     StateHasChanged();
 
                 }
