@@ -102,7 +102,8 @@ namespace MasterMealWA.Server.Controllers
             else
             {
                 var img = await _context.DBImage.FindAsync(recipe.ImageId);
-                img = recipe.Image;
+                img.ImageData = recipe.Image.ImageData;
+                img.ContentType = recipe.Image.ContentType;
             }
             var tags = recipeDto.RecipeTags;
             var dbrecipe = await _context.Recipe.Include(r => r.Tags).FirstOrDefaultAsync(r => r.Id == id);
