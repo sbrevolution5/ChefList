@@ -37,10 +37,18 @@
                                     for="fileInput" />
                             @if (recipe.ImageId != 0 && recipe.ImageId != 1)
                             {
-                                <MudCard>
-                                    <MudCardMedia Image="@(imageString)">
-                                    </MudCardMedia>
-                                </MudCard>
+                        <MudCard>
+                            @if (!imageLoading)
+                            {
+
+                                <MudCardMedia Image="@(imageString)">
+                                </MudCardMedia>
+                            }
+                            else
+                            {
+                                <Loader></Loader>
+                            }
+                        </MudCard>
                                 <MudButton Color="Color.Warning" Variant="Variant.Filled" OnClick="ResetImage">Reset to default Image</MudButton>
                             }
                             else
@@ -193,6 +201,7 @@
     private int ImgId { get; set; }
     public DBImage image { get; set; }
     public string imageString { get; set; }
+    public bool imageLoading { get; set; }
     protected override async Task OnInitializedAsync()
     {
         recipe.Servings = 2;
@@ -269,13 +278,24 @@
         }
     }
     IBrowserFile file;
-    private void ResetImage()
+    private async Task ResetImage()
     {
-        if (image is null)
+        if (image is null||image.Id == 1)
         {
+            _snackbar.Add("You already have the default image", Severity.Warning);
             return;
         }
         var dialog = _dialogService.Show<ImageRecipeReset>("Are you sure?");
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            imageLoading = true;
+            StateHasChanged();
+
+            image = await _api.GetAsync<DBImage>("api/dbimage/1");
+            imageLoading = false;
+            StateHasChanged();
+        }
     }
     private async Task UploadFiles(InputFileChangeEventArgs e)
     {
@@ -293,10 +313,13 @@
 
                 try
                 {
+                    imageLoading = true;
+                    StateHasChanged();
                     image = await _api.GetPreviewImage("/api/dbimages/tempimage", imageFormContent);
                     _snackbar.Add("Image Updated", Severity.Success);
                     imageString = _imageReader.ReadImageData(image.ImageData, image.ContentType);
                     recipe.Image = image;
+                    imageLoading = false;
                     StateHasChanged();
 
                 }
