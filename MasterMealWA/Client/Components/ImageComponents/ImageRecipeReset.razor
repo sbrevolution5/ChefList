@@ -14,19 +14,30 @@
     MudDialogInstance MudDialog { get; set; }
     [Parameter]
     public Recipe recipe { get; set; }
+    [Parameter]
+    public bool CreationPage { get; set; }
 
     public async Task ConfirmDelete()
     {
-        try
+        if (!CreationPage)
         {
-            await _api.DeleteAsync($"api/dbimages/recipe/{recipe.ImageId}/{recipe.Id}");
+            try
+            {
+                await _api.DeleteAsync($"api/dbimages/recipe/{recipe.ImageId}/{recipe.Id}");
+                _snackbar.Add("Your image was reset to the default", Severity.Success);
+                MudDialog.Close();
+            }
+            catch (Exception e)
+            {
+                _snackbar.Add($"Your image was not reset {e.Message}", Severity.Error);
+            }
+        }
+        else
+        {
             _snackbar.Add("Your image was reset to the default", Severity.Success);
             MudDialog.Close();
         }
-        catch (Exception e)
-        {
-            _snackbar.Add($"Your image was not reset {e.Message}", Severity.Error);
-        }
+
     }
     public void Cancel()
     {
