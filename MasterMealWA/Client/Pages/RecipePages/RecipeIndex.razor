@@ -60,7 +60,7 @@
                             <MudCardMedia Image="@(_imageReader.ReadImageData(recipe.Image.ImageData, recipe.Image.ContentType))"></MudCardMedia>
                             <MudCardContent>
                                 <MudGrid>
-                                    <MudItem xs="8">
+                                    <MudItem xs="6">
 
                                         <MudText>@recipe.Name</MudText>
                                         <MudText Typo="Typo.caption">@recipe.Author.ScreenName</MudText>
@@ -82,7 +82,7 @@
                                             }
                                         }
                                     </MudItem>
-                                    <MudItem xs="4">
+                                    <MudItem xs="6">
                                         <RecipeRating recipe="recipe" UserId="@userId"></RecipeRating>
                                     </MudItem>
                                 </MudGrid>
