@@ -35,7 +35,7 @@
                                     Icon="@Icons.Filled.Image"
                                     Label="Load picture"
                                     for="fileInput" />
-                            @if (recipe.ImageId != 0 || recipe.ImageId != 1)
+                            @if (recipe.ImageId != 0 && recipe.ImageId != 1)
                             {
                                 <MudCard>
                                     <MudCardMedia Image="@(imageString)">
