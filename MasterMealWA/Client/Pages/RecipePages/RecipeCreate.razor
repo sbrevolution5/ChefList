@@ -208,6 +208,8 @@
         Ingredients = await _api.GetAsync<List<Ingredient>>("api/ingredients");
         supplyList = await _api.GetAsync<List<Supply>>("api/Supplies");
         ImgId = 1;
+        image = await _api.GetAsync<DBImage>("api/dbimages/1");
+        imageString = _imageReader.ReadImageData(image.ImageData, image.ContentType);
         if (recipe.Ingredients.Count == 0)
         {
             recipe.Ingredients.Add(new());
