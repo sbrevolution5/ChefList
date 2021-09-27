@@ -24,7 +24,11 @@
 <MudItem xs="12" md="9">
     @if (!Loaded)
     {
-        <Loader></Loader>
+
+            <div class="d-flex align-center justify-center">
+
+                <Loader></Loader>
+            </div>
     }
     else
     {
@@ -151,7 +155,7 @@
         ChangePage(CurrentPage);
         await GetTagsAsync();
         base.OnInitialized();
-        Loaded = true;
+        //Loaded = true;
     }
     public Color BadgeColor(CategoryType type)
     {

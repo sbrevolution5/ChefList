@@ -51,13 +51,15 @@ else
                                     @if (!imageLoading)
                                     {
 
-                                    <MudCardMedia Image="@(imageString)">
-                                    </MudCardMedia>
+                                        <MudCardMedia Image="@(imageString)">
+                                        </MudCardMedia>
                                     }
-                                            else
-                                            {
-                                                <Loader></Loader>
-                                            }
+                                    else
+                                    {
+                                        <div class="d-flex align-center justify-center">
+                                            <Loader />
+                                        </div>
+                                    }
                                 </MudCard>
                                 <MudButton Color="Color.Warning" Variant="Variant.Filled" OnClick="ResetImage">Reset to default Image</MudButton>
                             </MudItem>
@@ -79,7 +81,10 @@ else
                             </MudItem>
                             @if (Tags == null)
                             {
-                                <p>loading...</p>}
+                                <div class="d-flex align-center justify-center">
+                                    <Loader />
+                                </div>
+                            }
                             else
                             {
                                 <MudItem xs="12">
@@ -269,7 +274,7 @@ else
     }
     private async Task ResetImage()
     {
-        if (image is null || image.Id ==1)
+        if (image is null || image.Id == 1)
         {
             _snackbar.Add("The image is already the default", Severity.Warning);
             return;
