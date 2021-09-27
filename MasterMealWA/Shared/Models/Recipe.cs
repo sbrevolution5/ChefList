@@ -29,6 +29,7 @@ namespace MasterMealWA.Shared.Models
         public string RecipeSource { get; set; } = "";
         public string RecipeSourceUrl { get; set; } = "";
         public bool IsPrivate { get; set; }
+        public DateTime Created { get; set; }
         public ICollection<QSupply> Supplies { get; set; } = new HashSet<QSupply>();
         [NotMapped]
         public float AvgRating

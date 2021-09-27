@@ -179,6 +179,7 @@ namespace MasterMealWA.Server.Controllers
             await _context.SaveChangesAsync();
             recipe.ImageId = recipe.Image.Id;
             _context.UpdateRange(recipe.Tags);
+            recipe.Created = DateTime.Now;
             _context.Recipe.Add(recipe);
             foreach (var ingredient in recipe.Ingredients)
             {
