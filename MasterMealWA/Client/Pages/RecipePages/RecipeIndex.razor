@@ -130,6 +130,18 @@
     private string userId { get; set; }
     public bool Auth { get; set; }
     public int sortInt { get; set; } = 0;
+    public bool Loaded { get; set; } = false;
+    protected override async Task OnInitializedAsync()
+    {
+        userId = await _userService.GetUserIdAsync();
+        Auth = !string.IsNullOrEmpty(userId);
+        mine = mine ?? "";
+        await GetRecipesAsync();
+        ChangePage(1);
+        await GetTagsAsync();
+        base.OnInitialized();
+        Loaded = true;
+    }
     public Color BadgeColor(CategoryType type)
     {
         if (type == CategoryType.Nationality)
@@ -143,7 +155,6 @@
         return Color.Tertiary;
 
     }
-    public bool Loaded { get; set; } = false;
     private void HandleHoveredValueChanged(int? val) => activeRating = val;
     public async Task AddMeal(Recipe recipe)
     {
@@ -168,22 +179,6 @@
     {
         mine = mine ?? "";
         await GetRecipesAsync();
-    }
-    protected override async Task OnInitializedAsync()
-    {
-        userId = await _userService.GetUserIdAsync();
-        Auth = !string.IsNullOrEmpty(userId);
-        mine = mine ?? "";
-        var options = new JsonSerializerOptions()
-        {
-            ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve,
-            PropertyNamingPolicy = null
-        };
-        await GetRecipesAsync();
-        ChangePage(1);
-        await GetTagsAsync();
-        base.OnInitialized();
-        Loaded = true;
     }
     public void FilterRecipes()
     {
@@ -249,6 +244,7 @@
     }
     private void ChangePage(int page)
     {
+        SortRecipes();
         pageRecipes = SortedRecipes.Skip((page - 1) * 6).Take(6).ToList();
         StateHasChanged();
     }
