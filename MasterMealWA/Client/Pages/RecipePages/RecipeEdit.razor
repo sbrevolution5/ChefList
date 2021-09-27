@@ -278,6 +278,8 @@ else
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
+            image = await _api.GetAsync<DBImage>("api/dbimages/1");
+            imageString = _imageReader.ReadImageData(image.ImageData, image.ContentType);
 
             ImageReset = true;
         };
