@@ -208,7 +208,7 @@ else
     public bool ImageChange { get; set; }
     public int ImgId { get; set; }
     public string imageString { get; set; }
-    public bool imageLoading
+    public bool imageLoading { get; set; }
     protected override async Task OnInitializedAsync()
     {
         recipe = await _api.GetAsync<Recipe>($"api/recipes/{Convert.ToInt32(Id)}");
@@ -355,6 +355,7 @@ else
                 try
                 {
                     imageLoading = true;
+                    StateHasChanged();
                     image = await _api.GetPreviewImage("/api/dbimages/tempimage", imageFormContent);
                     _snackbar.Add("Image Updated", Severity.Success);
                     imageString = _imageReader.ReadImageData(image.ImageData, image.ContentType);

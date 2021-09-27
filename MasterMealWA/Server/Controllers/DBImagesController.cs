@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using MasterMealWA.Client.Services.Interfaces;
 using MasterMealWA.Server.Services.Interfaces;
 using Microsoft.AspNetCore.StaticFiles;
+using MasterMealWA.Server.Extensions;
 
 namespace MasterMealWA.Server.Controllers
 {
@@ -181,13 +182,23 @@ namespace MasterMealWA.Server.Controllers
         [HttpDelete("/recipe/{id}/{recipeId}")]
         public async Task<IActionResult> DeleteRecipeDBImage(int id,int recipeId)
         {
+            if (id < 3)
+            {
+                return BadRequest();
+            }
+
+            var recipe = await _context.Recipe.FindAsync(recipeId);
+            var userId = HttpContext.GetUserId();
+            if (recipe.AuthorId != userId)
+            {
+                return Unauthorized();
+            }
             var dBImage = await _context.DBImage.FindAsync(id);
             if (dBImage == null)
             {
                 return NotFound();
             }
             //Reset to default image
-            var recipe = await _context.Recipe.FindAsync(recipeId);
             recipe.ImageId = 1;
             _context.DBImage.Remove(dBImage);
 
@@ -199,6 +210,10 @@ namespace MasterMealWA.Server.Controllers
         [HttpDelete("/recipe/{id}")]
         public async Task<IActionResult> DeleteUserDBImage(int id)
         {
+            if (id< 3)
+            {
+                return BadRequest();
+            }
             var dBImage = await _context.DBImage.FindAsync(id);
             if (dBImage == null)
             {
