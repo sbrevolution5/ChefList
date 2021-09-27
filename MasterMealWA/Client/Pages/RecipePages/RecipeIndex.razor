@@ -17,7 +17,7 @@
         </Authorized>
     </AuthorizeView>
     <MudFab Icon="@Icons.Material.Filled.Add" Color="Color.Primary" Label="Add Recipe" aria-label="add recipe" @onclick='()=>nav.NavigateTo("/recipes/create")' />
-    <RecipeFilters Loaded="Loaded" Filters="Filters" RecipeTypes="RecipeTypes" userId="@userId" ReFilter="()=>FilterRecipes()" />
+    <RecipeFilters Loaded="Loaded" Filters="Filters" RecipeTypes="RecipeTypes" userId="@userId" ReFilter="()=>ChangeFilter()" />
 </MudItem>
 
 
@@ -36,7 +36,7 @@
             }
             else
             {
-                <MudSelect Label="Sort Recipes" T="int" @onchange="SortRecipes" @bind-Value="sortInt">
+                <MudSelect Label="Sort Recipes" T="int" @onchange="ChangeSortAndUpdateView" @bind-Value="sortInt">
                     <MudSelectItem Value="0">Default</MudSelectItem>
                     <MudSelectItem Value="1">Average Rating</MudSelectItem>
                     <MudSelectItem Value="2">A-Z</MudSelectItem>
@@ -131,13 +131,14 @@
     public bool Auth { get; set; }
     public int sortInt { get; set; } = 0;
     public bool Loaded { get; set; } = false;
+    public int CurrentPage { get; set; } = 1;
     protected override async Task OnInitializedAsync()
     {
         userId = await _userService.GetUserIdAsync();
         Auth = !string.IsNullOrEmpty(userId);
         mine = mine ?? "";
         await GetRecipesAsync();
-        ChangePage(1);
+        ChangePage(CurrentPage);
         await GetTagsAsync();
         base.OnInitialized();
         Loaded = true;
@@ -184,7 +185,20 @@
     {
         FilteredRecipes = _filterService.ApplyFilter(AllRecipes, Filters, userId);
         pageCount = (FilteredRecipes.Count / 6) + 1;
-        ChangePage(1);
+    }
+    private void ChangeFilter()
+    {
+        FilterRecipes();
+        ChangeSortAndUpdateView();
+    }
+    private void ChangeSortAndUpdateView()
+    {
+        SortRecipes();
+        if (CurrentPage > pageCount)
+        {
+            CurrentPage = pageCount;
+        }
+        ChangePage(CurrentPage);
     }
     private void SortRecipes()
     {
@@ -223,8 +237,8 @@
         {
             AllRecipes = await _api.GetAnonAsync<List<Recipe>>("api/recipes");
         }
-        FilterRecipes();
-        SortRecipes();
+        FilteredRecipes = AllRecipes;
+        SortedRecipes = AllRecipes;
         pageCount = (SortedRecipes.Count / 6);
         if (pageCount < 1)
         {
@@ -244,7 +258,7 @@
     }
     private void ChangePage(int page)
     {
-        SortRecipes();
+        CurrentPage = page;
         pageRecipes = SortedRecipes.Skip((page - 1) * 6).Take(6).ToList();
         StateHasChanged();
     }
