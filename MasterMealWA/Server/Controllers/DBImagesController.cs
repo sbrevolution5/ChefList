@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using MasterMealWA.Client.Services.Interfaces;
 using MasterMealWA.Server.Services.Interfaces;
 using Microsoft.AspNetCore.StaticFiles;
+using MasterMealWA.Server.Extensions;
 
 namespace MasterMealWA.Server.Controllers
 {
@@ -53,6 +54,42 @@ namespace MasterMealWA.Server.Controllers
                     _context.Add(image);
                     await _context.SaveChangesAsync();
                     return Ok(image.Id);
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex}");
+            }
+        }
+        //This method WILL NOT SAVE TO DATABASE, generates preview image.
+        [HttpPost("tempimage")]
+        public async Task<IActionResult> UploadTemp()
+        {
+            try
+            {
+                var file = Request.Form.Files[0];
+                var imagedata = await _fileService.ConvertFileToByteArrayAsync(file);
+                string contentType = "";
+                if (file.Length > 0)
+                {
+                    if (file.ContentType is null)
+                    {
+                        var fileProvider = new FileExtensionContentTypeProvider();
+                        if (!fileProvider.TryGetContentType(file.FileName, out contentType))
+                        {
+                            return BadRequest();
+                        }
+                    }
+                    var image = new DBImage()
+                    {
+                        ContentType = file.ContentType ?? contentType,
+                        ImageData = imagedata
+                    };
+                    return Ok(image);
                 }
                 else
                 {
@@ -141,10 +178,42 @@ namespace MasterMealWA.Server.Controllers
 
         
 
-        // DELETE: api/DBImages/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteDBImage(int id)
+        // DELETE: api/DBImages/recipe/5
+        [HttpDelete("/recipe/{id}/{recipeId}")]
+        public async Task<IActionResult> DeleteRecipeDBImage(int id,int recipeId)
         {
+            if (id < 3)
+            {
+                return BadRequest();
+            }
+
+            var recipe = await _context.Recipe.FindAsync(recipeId);
+            var userId = HttpContext.GetUserId();
+            if (recipe.AuthorId != userId)
+            {
+                return Unauthorized();
+            }
+            var dBImage = await _context.DBImage.FindAsync(id);
+            if (dBImage == null)
+            {
+                return NotFound();
+            }
+            //Reset to default image
+            recipe.ImageId = 1;
+            _context.DBImage.Remove(dBImage);
+
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+        // DELETE: api/DBImages/recipe/5
+        [HttpDelete("/recipe/{id}")]
+        public async Task<IActionResult> DeleteUserDBImage(int id)
+        {
+            if (id< 3)
+            {
+                return BadRequest();
+            }
             var dBImage = await _context.DBImage.FindAsync(id);
             if (dBImage == null)
             {

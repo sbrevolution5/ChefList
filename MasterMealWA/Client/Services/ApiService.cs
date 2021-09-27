@@ -30,11 +30,11 @@ namespace MasterMealWA.Client.Services
         }
         public async Task CreateAsync<T>(string url, T content)
         {
-            await _http.PostAsJsonAsync<T>(url, content);
+            await _http.PostAsJsonAsync<T>(url, content,_options);
         }
         public async Task UpdateAsync<T>(string url, T content)
         {
-            await _http.PutAsJsonAsync<T>(url, content);
+            await _http.PutAsJsonAsync<T>(url, content,_options);
         }
         public async Task<TResult> GetAsync<TResult>(string url)
         {
@@ -50,6 +50,24 @@ namespace MasterMealWA.Client.Services
         public async Task DeleteAsync(string url)
         {
             await _http.DeleteAsync(url);
+        }
+
+        public async Task<DBImage> GetPreviewImage(string url, MultipartFormDataContent content)
+        {
+            //Need to send the data to convert, and get a result
+            var result = await _http.PostAsync(url,content);
+            if (result.IsSuccessStatusCode)
+            {
+                return await result.Content.ReadFromJsonAsync<DBImage>();
+
+            }
+            else
+            {
+                string errMsg = await result.Content.ReadAsStringAsync();
+                Console.WriteLine(errMsg);
+                throw new Exception(errMsg);
+            }
+
         }
     }
 }
