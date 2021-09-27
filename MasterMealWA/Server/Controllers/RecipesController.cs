@@ -92,18 +92,27 @@ namespace MasterMealWA.Server.Controllers
             {
                 return BadRequest();
             }
-            if (recipe.ImageId == 1 && recipe.Image.Id != 1)
+            if (!recipeDto.ResetImage && recipeDto.ImageChanged)
             {
-                _context.Add(recipe.Image);
-                await _context.SaveChangesAsync();
-                recipe.ImageId = recipe.Image.Id;
 
+                if (recipe.ImageId == 1 && recipe.Image.Id != 1)
+                {
+                    _context.Add(recipe.Image);
+                    await _context.SaveChangesAsync();
+                    recipe.ImageId = recipe.Image.Id;
+
+                }
+                else
+                {
+                    var img = await _context.DBImage.FindAsync(recipe.ImageId);
+                    img.ImageData = recipe.Image.ImageData;
+                    img.ContentType = recipe.Image.ContentType;
+                }
             }
-            else
+            else if (recipeDto.ResetImage)
             {
-                var img = await _context.DBImage.FindAsync(recipe.ImageId);
-                img.ImageData = recipe.Image.ImageData;
-                img.ContentType = recipe.Image.ContentType;
+                recipe.Image = null;
+                recipe.ImageId = 1;
             }
             var tags = recipeDto.RecipeTags;
             var dbrecipe = await _context.Recipe.Include(r => r.Tags).FirstOrDefaultAsync(r => r.Id == id);

@@ -14,5 +14,7 @@ namespace MasterMealWA.Shared.Models.Dtos
         public List<QSupply> SuppliesToRemove { get; set; }
         public List<Step> StepsToRemove { get; set; }
         public List<RecipeTag> RecipeTags { get; set; }
+        public bool ResetImage { get; set; }
+        public bool ImageChanged { get; set; }
     }
 }

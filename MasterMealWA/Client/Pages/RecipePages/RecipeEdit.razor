@@ -195,6 +195,8 @@ else
     public List<Step> RemovedSteps { get; set; } = new();
     public List<Supply> supplyList { get; set; }
     public MudChip[] recipeTags { get; set; }
+    public bool ResetImage { get; set; }
+    public bool ImageChange { get; set; }
     public int ImgId { get; set; }
     public string imageString { get; set; }
     protected override async Task OnInitializedAsync()
@@ -275,6 +277,8 @@ else
             Recipe = fakeRecipe,
             RecipeTags = Tags,
             Id = recipe.Id,
+            ResetImage = ResetImage,
+            ImageChanged = ImageChange
         };
         try
         {
@@ -331,45 +335,14 @@ else
                     imageString = _imageReader.ReadImageData(image.ImageData, image.ContentType);
                     recipe.Image = image;
                     StateHasChanged();
+                    ImageChange = true;
+                    ResetImage = false;
 
                 }
                 catch (Exception ex)
                 {
                     _snackbar.Add($"Image Failed to update {ex.Message}", Severity.Error);
                 }
-                //if (recipe.ImageId == 0 || recipe.ImageId == 1)
-                //{
-                //    try
-                //    {
-                //        await _api.CreateAsync<MultipartFormDataContent>("/api/dbimages", content);
-                //        _snackbar.Add("Image Updated", Severity.Success);
-                //        image = await _api.GetAsync<DBImage>($"/api/dbimages/{recipe.ImageId}");
-                //        recipe.ImageId = image.Id;
-                //        imageString = _imageReader.ReadImageData(image.ImageData, image.ContentType);
-                //        StateHasChanged();
-
-                //    }
-                //    catch (Exception ex)
-                //    {
-                //        _snackbar.Add($"Image Failed to update {ex.Message}", Severity.Error);
-                //    }
-                //}
-                //else
-                //{
-                //    try
-                //    {
-
-                //        await _api.UpdateAsync<MultipartFormDataContent>($"api/dbimages/{recipe.ImageId}", content);
-                //        _snackbar.Add("Image Updated", Severity.Success);
-                //        image = await _api.GetAsync<DBImage>($"/api/dbimages/{recipe.ImageId}");
-                //        imageString = _imageReader.ReadImageData(image.ImageData, image.ContentType);
-                //        StateHasChanged();
-                //    }
-                //    catch (Exception ex)
-                //    {
-                //        _snackbar.Add($"Image Failed to update {ex.Message}", Severity.Error);
-                //    }
-                //}
             }
         }
     }
