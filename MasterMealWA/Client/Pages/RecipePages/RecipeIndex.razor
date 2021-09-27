@@ -186,21 +186,25 @@
     {
         if (Auth)
         {
-                AllRecipes = await _api.GetAsync<List<Recipe>>("api/recipes");
-                FilterRecipes();
+            AllRecipes = await _api.GetAsync<List<Recipe>>("api/recipes");
+            FilterRecipes();
         }
         else
         {
             AllRecipes = await _api.GetAnonAsync<List<Recipe>>("api/recipes");
             FilterRecipes();
         }
-        pageCount = (FilteredRecipes.Count / 6) + 1;
+        pageCount = (FilteredRecipes.Count / 6);
+        if (pageCount  <1)
+        {
+            pageCount = 1;
+        }
     }
     private async Task GetTagsAsync()
     {
         if (Auth)
         {
-                RecipeTypes = await _api.GetAsync<List<RecipeTag>>("api/recipeTags");
+            RecipeTypes = await _api.GetAsync<List<RecipeTag>>("api/recipeTags");
         }
         else
         {
