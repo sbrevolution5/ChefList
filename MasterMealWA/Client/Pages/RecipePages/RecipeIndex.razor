@@ -45,6 +45,8 @@
                         <MudSelectItem Value="3">Z-A</MudSelectItem>
                         <MudSelectItem Value="4">Cooking Time (low-high)</MudSelectItem>
                         <MudSelectItem Value="5">Cooking Time (high-low)</MudSelectItem>
+                        <MudSelectItem Value="6">Date Created(old-new)</MudSelectItem>
+                        <MudSelectItem Value="7">Date Created(new-old)</MudSelectItem>
                     </MudSelect>
                 </MudItem>
                 <MudItem xs="6">
@@ -230,6 +232,12 @@
 
             case 5:
                 SortedRecipes = FilteredRecipes.OrderByDescending(r => r.CookingTime).ToList();
+                break;
+            case 6:
+                SortedRecipes = FilteredRecipes.OrderBy(r => r.Created).ToList();
+                break;
+            case 7:
+                SortedRecipes = FilteredRecipes.OrderByDescending(r => r.Created).ToList();
                 break;
             default:
                 break;
