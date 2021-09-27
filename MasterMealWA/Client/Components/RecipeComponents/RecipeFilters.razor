@@ -1,9 +1,9 @@
 ﻿@using MasterMealWA.Client.Models
 
-<MudPaper Class="py-3" Square="true">
+<MudPaper Class="pa-3" Square="true">
 
 
-    <MudButton OnClick="ApplyFilter" FullWidth="true" Variant="Variant.Filled" Color="Color.Primary" Class="m-1 p-1">Apply Filters</MudButton>
+    <MudButton OnClick="ApplyFilter" FullWidth="true" Variant="Variant.Filled" Color="Color.Primary" Class="my-2">Apply Filters</MudButton>
     <MudExpansionPanels MultiExpansion="true" Elevation="2">
 
         <MudExpansionPanel Text="Author" IsInitiallyExpanded="@string.IsNullOrEmpty(userId)">
@@ -70,7 +70,7 @@
             </MudItem>
         </MudExpansionPanel>
     </MudExpansionPanels>
-    <MudButton OnClick="ApplyFilter" FullWidth="true" Variant="Variant.Filled" Color="Color.Primary">Apply Filters</MudButton>
+    <MudButton OnClick="ApplyFilter" FullWidth="true" Class="my-2" Variant="Variant.Filled" Color="Color.Primary">Apply Filters</MudButton>
 </MudPaper>
 
 @code {
