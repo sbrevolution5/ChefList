@@ -273,7 +273,8 @@ else
         {
             return;
         }
-        var dialog = _dialogService.Show<ImageRecipeReset>("Are you sure?");
+        var parameters = new DialogParameters { ["recipe"] = recipe };
+        var dialog = _dialogService.Show<ImageRecipeReset>("Are you sure?", parameters);
         var result = await dialog.Result;
         if (!result.Cancelled)
         {

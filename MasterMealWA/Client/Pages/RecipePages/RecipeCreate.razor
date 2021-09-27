@@ -283,14 +283,15 @@
             _snackbar.Add("You already have the default image", Severity.Warning);
             return;
         }
-        var dialog = _dialogService.Show<ImageRecipeReset>("Are you sure?");
+        var parameters = new DialogParameters { ["recipe"] = recipe };
+        var dialog = _dialogService.Show<ImageRecipeReset>("Are you sure?",parameters);
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
             imageLoading = true;
             StateHasChanged();
 
-            image = await _api.GetAsync<DBImage>("api/dbimage/1");
+            image = await _api.GetAsync<DBImage>("api/dbimages/1");
             imageLoading = false;
             imageUploaded = false;
             StateHasChanged();
