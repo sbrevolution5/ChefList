@@ -17,14 +17,18 @@
         </Authorized>
     </AuthorizeView>
     <MudFab Icon="@Icons.Material.Filled.Add" Color="Color.Primary" Label="Add Recipe" aria-label="add recipe" @onclick='()=>nav.NavigateTo("/recipes/create")' />
-    <RecipeFilters Loaded="Loaded" Filters="Filters" RecipeTypes="RecipeTypes" userId="@userId" ReFilter="()=>FilterRecipes()" />
+    <RecipeFilters Loaded="Loaded" Filters="Filters" RecipeTypes="RecipeTypes" userId="@userId" ReFilter="()=>ChangeFilter()" />
 </MudItem>
 
 
 <MudItem xs="12" md="9">
     @if (!Loaded)
     {
-        <Loader></Loader>
+
+            <div class="d-flex align-center justify-center">
+
+                <Loader></Loader>
+            </div>
     }
     else
     {
@@ -36,6 +40,24 @@
             }
             else
             {
+                <MudItem xs="6">
+
+                    <MudSelect Label="Sort Recipes" T="int" @bind-Value="sortInt">
+                        <MudSelectItem Value="0">Default</MudSelectItem>
+                        <MudSelectItem Value="1">Average Rating</MudSelectItem>
+                        <MudSelectItem Value="2">A-Z</MudSelectItem>
+                        <MudSelectItem Value="3">Z-A</MudSelectItem>
+                        <MudSelectItem Value="4">Cooking Time (low-high)</MudSelectItem>
+                        <MudSelectItem Value="5">Cooking Time (high-low)</MudSelectItem>
+                        <MudSelectItem Value="6">Date Created(old-new)</MudSelectItem>
+                        <MudSelectItem Value="7">Date Created(new-old)</MudSelectItem>
+                    </MudSelect>
+                </MudItem>
+                <MudItem xs="6">
+                    <MudButton OnClick="ChangeSortAndUpdateView" Variant="Variant.Filled" Color="Color.Primary">
+                        Sort
+                    </MudButton>
+                </MudItem>
                 @foreach (var recipe in pageRecipes)
                 {
                     <MudItem xs="12" md="4">
@@ -44,7 +66,7 @@
                             <MudCardMedia Image="@(_imageReader.ReadImageData(recipe.Image.ImageData, recipe.Image.ContentType))"></MudCardMedia>
                             <MudCardContent>
                                 <MudGrid>
-                                    <MudItem xs="8">
+                                    <MudItem xs="6">
 
                                         <MudText>@recipe.Name</MudText>
                                         <MudText Typo="Typo.caption">@recipe.Author.ScreenName</MudText>
@@ -66,7 +88,7 @@
                                             }
                                         }
                                     </MudItem>
-                                    <MudItem xs="4">
+                                    <MudItem xs="6">
                                         <RecipeRating recipe="recipe" UserId="@userId"></RecipeRating>
                                     </MudItem>
                                 </MudGrid>
@@ -85,7 +107,6 @@
                                         <Authorized>
                                             <MudIconButton Variant="Variant.Filled" Color="Color.Warning" Icon="@Icons.Material.Filled.Edit" Link=@($"/recipes/edit/{recipe.Id}")></MudIconButton>
                                             <MudIconButton Variant="Variant.Filled" Color="Color.Error" Icon="@Icons.Material.Filled.Delete" OnClick="()=>DeleteRecipe(recipe)"></MudIconButton>
-                                            @*<MudIconButton Variant="Variant.Filled" Color="Color.Primary" Icon="@Icons.Material.Filled.CalendarToday" OnClick="@(()=>AddMeal(recipe))"></MudIconButton>*@
                                         </Authorized>
                                     </AuthorizeView>
                                     <AuthorizeView>
@@ -113,6 +134,7 @@
     public Filter Filters { get; set; } = new();
     private List<Recipe> AllRecipes;
     public List<Recipe> FilteredRecipes;
+    public List<Recipe> SortedRecipes;
     private List<Recipe> pageRecipes { get; set; }
     private List<RecipeTag> RecipeTypes { get; set; }
     private bool mySupplies { get; set; }
@@ -121,6 +143,20 @@
     private int pageCount { get; set; } = 0;
     private string userId { get; set; }
     public bool Auth { get; set; }
+    public int sortInt { get; set; } = 0;
+    public bool Loaded { get; set; } = false;
+    public int CurrentPage { get; set; } = 1;
+    protected override async Task OnInitializedAsync()
+    {
+        userId = await _userService.GetUserIdAsync();
+        Auth = !string.IsNullOrEmpty(userId);
+        mine = mine ?? "";
+        await GetRecipesAsync();
+        ChangePage(CurrentPage);
+        await GetTagsAsync();
+        base.OnInitialized();
+        //Loaded = true;
+    }
     public Color BadgeColor(CategoryType type)
     {
         if (type == CategoryType.Nationality)
@@ -134,7 +170,6 @@
         return Color.Tertiary;
 
     }
-    public bool Loaded { get; set; } = false;
     private void HandleHoveredValueChanged(int? val) => activeRating = val;
     public async Task AddMeal(Recipe recipe)
     {
@@ -160,47 +195,85 @@
         mine = mine ?? "";
         await GetRecipesAsync();
     }
-    protected override async Task OnInitializedAsync()
-    {
-        userId = await _userService.GetUserIdAsync();
-        Auth = !string.IsNullOrEmpty(userId);
-        mine = mine ?? "";
-        var options = new JsonSerializerOptions()
-        {
-            ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve,
-            PropertyNamingPolicy = null
-        };
-        await GetRecipesAsync();
-        ChangePage(1);
-        await GetTagsAsync();
-        base.OnInitialized();
-        Loaded = true;
-    }
     public void FilterRecipes()
     {
         FilteredRecipes = _filterService.ApplyFilter(AllRecipes, Filters, userId);
         pageCount = (FilteredRecipes.Count / 6) + 1;
-        ChangePage(1);
+    }
+    private void ChangeFilter()
+    {
+        FilterRecipes();
+        ChangeSortAndUpdateView();
+    }
+    private void ChangeSortAndUpdateView()
+    {
+        SortRecipes();
+        if (CurrentPage > pageCount)
+        {
+            CurrentPage = pageCount;
+        }
+        ChangePage(CurrentPage);
+    }
+    private void SortRecipes()
+    {
+        switch (sortInt)
+        {
+            case 1:
+                SortedRecipes = FilteredRecipes.OrderByDescending(r => r.AvgRating).ToList();
+                break;
+
+            case 2:
+                SortedRecipes = FilteredRecipes.OrderBy(r => r.Name).ToList();
+                break;
+
+            case 3:
+                SortedRecipes = FilteredRecipes.OrderByDescending(r => r.Name).ToList();
+                break;
+
+            case 4:
+                SortedRecipes = FilteredRecipes.OrderBy(r => r.CookingTime).ToList();
+                break;
+
+            case 5:
+                SortedRecipes = FilteredRecipes.OrderByDescending(r => r.CookingTime).ToList();
+                break;
+            case 6:
+                SortedRecipes = FilteredRecipes.OrderBy(r => r.Created).ToList();
+                break;
+            case 7:
+                SortedRecipes = FilteredRecipes.OrderByDescending(r => r.Created).ToList();
+                break;
+            default:
+                break;
+        }
     }
     private async Task GetRecipesAsync()
     {
         if (Auth)
         {
-                AllRecipes = await _api.GetAsync<List<Recipe>>("api/recipes");
-                FilterRecipes();
+            AllRecipes = await _api.GetAsync<List<Recipe>>("api/recipes");
         }
         else
         {
             AllRecipes = await _api.GetAnonAsync<List<Recipe>>("api/recipes");
-            FilterRecipes();
         }
-        pageCount = (FilteredRecipes.Count / 6) + 1;
+        FilteredRecipes = AllRecipes;
+        SortedRecipes = AllRecipes;
+        if (SortedRecipes.Count <= 6)
+        {
+            pageCount = 1;
+        }
+        else
+        {
+
+            pageCount = (SortedRecipes.Count / 6) + 1;
+        }
     }
     private async Task GetTagsAsync()
     {
         if (Auth)
         {
-                RecipeTypes = await _api.GetAsync<List<RecipeTag>>("api/recipeTags");
+            RecipeTypes = await _api.GetAsync<List<RecipeTag>>("api/recipeTags");
         }
         else
         {
@@ -209,7 +282,8 @@
     }
     private void ChangePage(int page)
     {
-        pageRecipes = FilteredRecipes.OrderBy(r => r.Id).Skip((page - 1) * 6).Take(6).ToList();
+        CurrentPage = page;
+        pageRecipes = SortedRecipes.Skip((page - 1) * 6).Take(6).ToList();
         StateHasChanged();
     }
     public async Task DeleteRecipe(Recipe recipe)

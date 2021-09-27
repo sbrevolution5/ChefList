@@ -175,10 +175,19 @@ namespace MasterMealWA.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<Recipe>> PostRecipe(Recipe recipe)
         {
-            _context.DBImage.Add(recipe.Image);
-            await _context.SaveChangesAsync();
-            recipe.ImageId = recipe.Image.Id;
+            if (recipe.Image is not null && recipe.Image.Id != 1)
+            {
+
+                _context.DBImage.Add(recipe.Image);
+                await _context.SaveChangesAsync();
+                recipe.ImageId = recipe.Image.Id;
+            }
+            else
+            {
+                recipe.ImageId = 1;
+            }
             _context.UpdateRange(recipe.Tags);
+            recipe.Created = DateTime.Now;
             _context.Recipe.Add(recipe);
             foreach (var ingredient in recipe.Ingredients)
             {

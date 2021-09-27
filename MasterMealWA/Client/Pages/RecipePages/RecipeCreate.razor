@@ -45,7 +45,9 @@
                             }
                             else
                             {
-                                <Loader></Loader>
+                        <div class="d-flex align-center justify-center">
+                            <Loader />
+                        </div>
                             }
                         </MudCard>
                             @if (imageUploaded)
@@ -75,7 +77,10 @@
                         </MudItem>
                         @if (Tags == null)
                         {
-                            <p>loading...</p>}
+                    <div class="d-flex align-center justify-center">
+                        <Loader />
+                    </div>
+                    }
                         else
                         {
                             <MudItem xs="12">
