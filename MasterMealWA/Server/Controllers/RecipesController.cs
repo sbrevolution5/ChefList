@@ -92,6 +92,28 @@ namespace MasterMealWA.Server.Controllers
             {
                 return BadRequest();
             }
+            if (!recipeDto.ResetImage && recipeDto.ImageChanged)
+            {
+
+                if (recipe.ImageId == 1 && recipe.Image.Id != 1)
+                {
+                    _context.Add(recipe.Image);
+                    await _context.SaveChangesAsync();
+                    recipe.ImageId = recipe.Image.Id;
+
+                }
+                else
+                {
+                    var img = await _context.DBImage.FindAsync(recipe.ImageId);
+                    img.ImageData = recipe.Image.ImageData;
+                    img.ContentType = recipe.Image.ContentType;
+                }
+            }
+            else if (recipeDto.ResetImage)
+            {
+                recipe.Image = null;
+                recipe.ImageId = 1;
+            }
             var tags = recipeDto.RecipeTags;
             var dbrecipe = await _context.Recipe.Include(r => r.Tags).FirstOrDefaultAsync(r => r.Id == id);
             dbrecipe.Tags.Where(tag => !recipeDto.RecipeTags.Any(id => id.Id == tag.Id)).ToList().ForEach(tag => dbrecipe.Tags.Remove(tag));
@@ -153,7 +175,19 @@ namespace MasterMealWA.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<Recipe>> PostRecipe(Recipe recipe)
         {
+            if (recipe.Image is not null && recipe.Image.Id != 1)
+            {
+
+                _context.DBImage.Add(recipe.Image);
+                await _context.SaveChangesAsync();
+                recipe.ImageId = recipe.Image.Id;
+            }
+            else
+            {
+                recipe.ImageId = 1;
+            }
             _context.UpdateRange(recipe.Tags);
+            recipe.Created = DateTime.Now;
             _context.Recipe.Add(recipe);
             foreach (var ingredient in recipe.Ingredients)
             {

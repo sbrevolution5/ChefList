@@ -44,13 +44,24 @@ else
                                 <MudFab HtmlTag="label"
                                         Color="Color.Secondary"
                                         Icon="@Icons.Filled.Image"
-                                        Label="Load picture"
+                                        Label="Upload Image"
                                         for="fileInput" />
 
                                 <MudCard>
-                                    <MudCardMedia Image="@(imageString)">
-                                    </MudCardMedia>
+                                    @if (!imageLoading)
+                                    {
+
+                                        <MudCardMedia Image="@(imageString)">
+                                        </MudCardMedia>
+                                    }
+                                    else
+                                    {
+                                        <div class="d-flex align-center justify-center">
+                                            <Loader />
+                                        </div>
+                                    }
                                 </MudCard>
+                                <MudButton Color="Color.Warning" Variant="Variant.Filled" OnClick="ResetImage">Reset to default Image</MudButton>
                             </MudItem>
                             <MudItem xs="12">
 
@@ -70,7 +81,10 @@ else
                             </MudItem>
                             @if (Tags == null)
                             {
-                                <p>loading...</p>}
+                                <div class="d-flex align-center justify-center">
+                                    <Loader />
+                                </div>
+                            }
                             else
                             {
                                 <MudItem xs="12">
@@ -186,6 +200,7 @@ else
     [Parameter]
     public string Id { get; set; }
     public Recipe recipe { get; set; }
+    private MultipartFormDataContent imageFormContent { get; set; }
     public DBImage image { get; set; }
     public List<RecipeTag> Tags { get; set; }
     public List<Ingredient> Ingredients { get; set; }
@@ -194,8 +209,11 @@ else
     public List<Step> RemovedSteps { get; set; } = new();
     public List<Supply> supplyList { get; set; }
     public MudChip[] recipeTags { get; set; }
+    public bool ImageReset { get; set; }
+    public bool ImageChange { get; set; }
     public int ImgId { get; set; }
     public string imageString { get; set; }
+    public bool imageLoading { get; set; }
     protected override async Task OnInitializedAsync()
     {
         recipe = await _api.GetAsync<Recipe>($"api/recipes/{Convert.ToInt32(Id)}");
@@ -254,6 +272,24 @@ else
         }
         return false;
     }
+    private async Task ResetImage()
+    {
+        if (image is null || image.Id == 1)
+        {
+            _snackbar.Add("The image is already the default", Severity.Warning);
+            return;
+        }
+        var parameters = new DialogParameters { ["recipe"] = recipe };
+        var dialog = _dialogService.Show<ImageRecipeReset>("Are you sure?", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            image = await _api.GetAsync<DBImage>("api/dbimages/1");
+            imageString = _imageReader.ReadImageData(image.ImageData, image.ContentType);
+
+            ImageReset = true;
+        };
+    }
     public async Task UpdateRecipeAsync()
     {
         foreach (var ing in recipe.Ingredients)
@@ -274,6 +310,8 @@ else
             Recipe = fakeRecipe,
             RecipeTags = Tags,
             Id = recipe.Id,
+            ResetImage = ImageReset,
+            ImageChanged = ImageChange
         };
         try
         {
@@ -312,48 +350,35 @@ else
     private async Task UploadFiles(InputFileChangeEventArgs e)
     {
 
-        var imageFile = e.File;
-        if (imageFile != null)
+        file = e.File;
+        if (file != null)
         {
-            var resizedFile = await imageFile.RequestImageFileAsync("image/png", 1000, 1000);
+            var resizedFile = await file.RequestImageFileAsync("image/png", 1000, 1000);
 
             using (var ms = resizedFile.OpenReadStream(resizedFile.Size))
             {
-                var content = new MultipartFormDataContent();
-                content.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data");
-                content.Add(new StreamContent(ms, Convert.ToInt32(resizedFile.Size)), "image", imageFile.Name);
-                if (recipe.ImageId == 0 || recipe.ImageId == 1)
-                {
-                    try
-                    {
-                        await _api.CreateAsync<MultipartFormDataContent>("/api/dbimages", content);
-                        _snackbar.Add("Image Updated", Severity.Success);
-                        image = await _api.GetAsync<DBImage>($"/api/dbimages/{recipe.ImageId}");
-                        recipe.ImageId = image.Id;
-                        imageString = _imageReader.ReadImageData(image.ImageData, image.ContentType);
-                        StateHasChanged();
+                imageFormContent = new MultipartFormDataContent();
+                imageFormContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data");
+                imageFormContent.Add(new StreamContent(ms, Convert.ToInt32(resizedFile.Size)), "image", file.Name);
 
-                    }
-                    catch (Exception ex)
-                    {
-                        _snackbar.Add($"Image Failed to update {ex.Message}", Severity.Error);
-                    }
+                try
+                {
+                    imageLoading = true;
+                    StateHasChanged();
+                    image = await _api.GetPreviewImage("/api/dbimages/tempimage", imageFormContent);
+                    _snackbar.Add("Image Updated", Severity.Success);
+                    imageString = _imageReader.ReadImageData(image.ImageData, image.ContentType);
+                    recipe.Image = image;
+                    StateHasChanged();
+                    ImageChange = true;
+                    ImageReset = false;
+                    imageLoading = false;
+
                 }
-                else
+                catch (Exception ex)
                 {
-                    try
-                    {
-
-                        await _api.UpdateAsync<MultipartFormDataContent>($"api/dbimages/{recipe.ImageId}", content);
-                        _snackbar.Add("Image Updated", Severity.Success);
-                        image = await _api.GetAsync<DBImage>($"/api/dbimages/{recipe.ImageId}");
-                        imageString = _imageReader.ReadImageData(image.ImageData, image.ContentType);
-                        StateHasChanged();
-                    }
-                    catch (Exception ex)
-                    {
-                        _snackbar.Add($"Image Failed to update {ex.Message}", Severity.Error);
-                    }
+                    _snackbar.Add($"Image Failed to update {ex.Message}", Severity.Error);
+                    imageLoading = false;
                 }
             }
         }

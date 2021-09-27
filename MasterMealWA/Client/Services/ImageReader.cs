@@ -2,12 +2,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace MasterMealWA.Client.Services
 {
     public class ImageReader : IImageReader
     {
+        public string CreatePreviewImage(MultipartFormDataContent content)
+        {
+            throw new NotImplementedException();
+        }
+
         public string ReadImageData(byte[] data, string ContentType)
         {
             if (data == null)

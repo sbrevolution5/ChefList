@@ -7,7 +7,9 @@
 <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.CalendarToday" aria-label="add" OnClick="AddMeal" />
 @if (meals is null)
 {
-    <Loader></Loader>
+<div class="d-flex align-center justify-center">
+    <Loader />
+</div>
 
 }
 else
@@ -42,7 +44,7 @@ else
         try
         {
 
-            meals = await _api.GetAsync<List<Meal>>("/api/recipes/myrecipes");
+            meals = await _api.GetAsync<List<Meal>>("/api/meals");
         }
         catch (Exception e)
         {
