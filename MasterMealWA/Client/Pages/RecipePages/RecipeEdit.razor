@@ -269,8 +269,9 @@ else
     }
     private async Task ResetImage()
     {
-        if (image is null)
+        if (image is null || image.Id ==1)
         {
+            _snackbar.Add("The image is already the default", Severity.Warning);
             return;
         }
         var parameters = new DialogParameters { ["recipe"] = recipe };
