@@ -120,6 +120,7 @@
     public Filter Filters { get; set; } = new();
     private List<Recipe> AllRecipes;
     public List<Recipe> FilteredRecipes;
+    public List<Recipe> SortedRecipes;
     private List<Recipe> pageRecipes { get; set; }
     private List<RecipeTag> RecipeTypes { get; set; }
     private bool mySupplies { get; set; }
@@ -128,6 +129,7 @@
     private int pageCount { get; set; } = 0;
     private string userId { get; set; }
     public bool Auth { get; set; }
+    public int sortInt { get; set; } = 0;
     public Color BadgeColor(CategoryType type)
     {
         if (type == CategoryType.Nationality)
@@ -190,23 +192,46 @@
         ChangePage(1);
     }
     private void SortRecipes()
+    {
+        switch (sortInt)
         {
+            case 1:
+                SortedRecipes = FilteredRecipes.OrderByDescending(r => r.AvgRating).ToList();
+                break;
 
+            case 2:
+                SortedRecipes = FilteredRecipes.OrderBy(r => r.Name).ToList();
+                break;
+
+            case 3:
+                SortedRecipes = FilteredRecipes.OrderByDescending(r => r.Name).ToList();
+                break;
+
+            case 4:
+                SortedRecipes = FilteredRecipes.OrderBy(r => r.CookingTime).ToList();
+                break;
+
+            case 5:
+                SortedRecipes = FilteredRecipes.OrderByDescending(r => r.CookingTime).ToList();
+                break;
+            default:
+                break;
         }
+    }
     private async Task GetRecipesAsync()
     {
         if (Auth)
         {
             AllRecipes = await _api.GetAsync<List<Recipe>>("api/recipes");
-            FilterRecipes();
         }
         else
         {
             AllRecipes = await _api.GetAnonAsync<List<Recipe>>("api/recipes");
-            FilterRecipes();
         }
-        pageCount = (FilteredRecipes.Count / 6);
-        if (pageCount  <1)
+        FilterRecipes();
+        SortRecipes();
+        pageCount = (SortedRecipes.Count / 6);
+        if (pageCount < 1)
         {
             pageCount = 1;
         }
@@ -224,7 +249,7 @@
     }
     private void ChangePage(int page)
     {
-        pageRecipes = FilteredRecipes.OrderBy(r => r.Id).Skip((page - 1) * 6).Take(6).ToList();
+        pageRecipes = SortedRecipes.Skip((page - 1) * 6).Take(6).ToList();
         StateHasChanged();
     }
     public async Task DeleteRecipe(Recipe recipe)
