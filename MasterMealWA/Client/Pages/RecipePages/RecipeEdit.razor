@@ -195,7 +195,7 @@ else
     public List<Step> RemovedSteps { get; set; } = new();
     public List<Supply> supplyList { get; set; }
     public MudChip[] recipeTags { get; set; }
-    public bool ResetImage { get; set; }
+    public bool ImageReset { get; set; }
     public bool ImageChange { get; set; }
     public int ImgId { get; set; }
     public string imageString { get; set; }
@@ -257,6 +257,20 @@ else
         }
         return false;
     }
+    private async Task ResetImage()
+    {
+        if (image is null)
+        {
+            return;
+        }
+        var dialog = _dialogService.Show<ImageRecipeReset>("Are you sure?");
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+
+            ImageReset = true;
+        };
+    }
     public async Task UpdateRecipeAsync()
     {
         foreach (var ing in recipe.Ingredients)
@@ -277,7 +291,7 @@ else
             Recipe = fakeRecipe,
             RecipeTags = Tags,
             Id = recipe.Id,
-            ResetImage = ResetImage,
+            ResetImage = ImageReset,
             ImageChanged = ImageChange
         };
         try
@@ -336,7 +350,7 @@ else
                     recipe.Image = image;
                     StateHasChanged();
                     ImageChange = true;
-                    ResetImage = false;
+                    ImageReset = false;
 
                 }
                 catch (Exception ex)
