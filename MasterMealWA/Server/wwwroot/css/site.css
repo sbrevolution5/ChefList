@@ -24,8 +24,14 @@ html {
 .container {
   max-width: 960px;
 }
-.nav-item{
-    background-color:#
+.active {
+    background-color: #AC3B61 !important;
+}
+.nav-link {
+    color: #AC3B61;
+}
+.btn-primary {
+    background-color: #123C69;
 }
 .pricing-header {
   max-width: 700px;
