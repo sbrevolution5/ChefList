@@ -26,8 +26,4 @@
     <ProjectReference Include="..\Shared\MasterMealWA.Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Components\IngredientTypeComponents\" />
-  </ItemGroup>
-
 </Project>
