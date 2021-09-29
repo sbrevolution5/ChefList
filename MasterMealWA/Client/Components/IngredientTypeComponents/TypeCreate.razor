@@ -1,0 +1,34 @@
+﻿@inject IApiService _api
+@inject NavigationManager _nav
+@inject ISnackbar _snackbar
+<MudDialog>
+    <DialogContent>
+        <MudTextField Label="Type Name" @bind-Value="Type.Name"></MudTextField>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel" Variant="Variant.Filled" Color="Color.Dark">Cancel</MudButton>
+        <MudButton Color="Color.Success" OnClick="CreateTag" Variant="Variant.Filled">Save</MudButton>
+    </DialogActions>
+</MudDialog>
+@code {
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; }
+    private IngredientType Type { get; set; } = new();
+    public void Cancel()
+    {
+        MudDialog.Cancel();
+    }
+    public async Task CreateTag()
+    {
+        try
+        {
+            await _api.CreateAsync<IngredientType>("api/ingredientTypes", Type);
+            _snackbar.Add("Created Tag", Severity.Success);
+            MudDialog.Close(DialogResult.Ok(Type));
+        }
+        catch (Exception e)
+        {
+            _snackbar.Add($"Creation failed {e.Message}", Severity.Error);
+        }
+    }
+}
