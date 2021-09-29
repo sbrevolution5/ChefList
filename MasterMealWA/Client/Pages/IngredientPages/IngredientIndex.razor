@@ -1,6 +1,7 @@
 ﻿@page "/ingredients"
 @inject IApiService _api
 @inject IDialogService _dialogService
+@inject NavigationManager nav
 @if (Ingredients is null)
 {
     <Loader></Loader>
@@ -10,7 +11,14 @@ else
 {
     <MudGrid>
         <MudItem xs="12">
-
+            <MudItem xs="12" md="3">
+                <AuthorizeView Roles="Admin, Moderator">
+                    <Authorized>
+                        <MudButton @onclick='()=>nav.NavigateTo("/ingredients/types")'>Manage Ingredient Types</MudButton>
+                    </Authorized>
+                </AuthorizeView>
+                <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" OnClick="NewIngredient" />
+            </MudItem>
             <MudCard>
                 <MudCardHeader>
                     <MudText Typo="Typo.h3">IngredientIndex</MudText>
@@ -31,7 +39,7 @@ else
                                         </MudItem>
 
                                         <MudItem xs="3">
-                                                <MudIconButton Variant="Variant.Filled" Color="Color.Warning" Icon="@Icons.Material.Filled.Edit" OnClick="@(()=>EditIngredient(ingredient))"></MudIconButton>
+                                            <MudIconButton Variant="Variant.Filled" Color="Color.Warning" Icon="@Icons.Material.Filled.Edit" OnClick="@(()=>EditIngredient(ingredient))"></MudIconButton>
                                         </MudItem>
                                     </MudGrid>
                                 </MudPaper>

@@ -22,7 +22,7 @@
     {
         try
         {
-            await _api.UpdateAsync<IngredientType>($"/api/recipeTags/{Type.Id}", Type);
+            await _api.UpdateAsync<IngredientType>($"/api/ingredientTypes/{Type.Id}", Type);
             _snackbar.Add("Tag updated", Severity.Success);
             MudDialog.Close(DialogResult.Ok(Type));
 
