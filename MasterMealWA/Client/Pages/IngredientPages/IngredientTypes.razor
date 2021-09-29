@@ -1,4 +1,4 @@
-﻿@page "/recipes/types"
+﻿@page "/ingredients/types"
 @inject IApiService _api
 @inject IDialogService _dialogService
 @attribute [Authorize(Roles = "Admin, Moderator")]
@@ -69,7 +69,7 @@ else
     }
     public async Task NewSupply()
     {
-        var dialog = _dialogService.Show<TagCreate>("New Tag");
+        var dialog = _dialogService.Show<TypeCreate>("New Tag");
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
@@ -80,7 +80,7 @@ else
     public async Task EditTag(RecipeTag tag)
     {
         var parameters = new DialogParameters { ["Tag"] = tag };
-        var dialog = _dialogService.Show<TagEdit>("Edit Tag", parameters);
+        var dialog = _dialogService.Show<TypeEdit>("Edit Tag", parameters);
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
