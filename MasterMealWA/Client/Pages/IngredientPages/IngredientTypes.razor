@@ -1,0 +1,83 @@
+﻿@page "/ingredients/types"
+@inject IApiService _api
+@inject IDialogService _dialogService
+@attribute [Authorize(Roles = "Admin, Moderator")]
+@if (!Loaded)
+{
+
+
+    <div class="d-flex align-center justify-center">
+        <Loader />
+    </div>
+
+
+}
+else
+{
+    <MudCard>
+        <MudCardHeader>
+            <MudText Typo="Typo.h3">Ingredient Types</MudText>
+
+        </MudCardHeader>
+        <MudCardContent>
+
+            <MudGrid>
+
+                @foreach (var tag in Types)
+                {
+                    <MudItem MudItem xs="12" sm="6" md="4" lg="3">
+                        <MudPaper Elevation="2" Style="padding-left:5px;margin:10px;">
+                            <MudGrid>
+
+                                <MudItem xs="6">
+
+                                    <MudText>
+
+                                        @tag.Name
+                                    </MudText>
+                                </MudItem>
+                                <MudItem xs="6">
+
+                                    <MudButtonGroup>
+                                        <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" OnClick="@(() => EditTag(tag))"></MudIconButton>
+                                    </MudButtonGroup>
+                                </MudItem>
+                            </MudGrid>
+                        </MudPaper>
+                    </MudItem>
+                }
+            </MudGrid>
+            <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" OnClick="NewSupply" />
+        </MudCardContent>
+    </MudCard>
+}
+@code {
+    public List<IngredientType> Types{ get; set; }
+    public bool Loaded { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        Types = await _api.GetAsync<List<IngredientType>>("api/ingredientTypes");
+        base.OnInitialized();
+        Loaded = true;
+    }
+    public async Task NewSupply()
+    {
+        var dialog = _dialogService.Show<TypeCreate>("New Tag");
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            Types = await _api.GetAsync<List<IngredientType>>("api/ingredientTypes");
+
+        }
+    }
+    public async Task EditTag(IngredientType type)
+    {
+        var parameters = new DialogParameters { ["Type"] = type };
+        var dialog = _dialogService.Show<TypeEdit>("Edit Tag", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            Types = await _api.GetAsync<List<IngredientType>>("api/ingredientTypes");
+        }
+    }
+}

@@ -3,14 +3,7 @@
 @inject ISnackbar _snackbar
 <MudDialog>
     <DialogContent>
-        <MudTextField Label="Tag Name" @bind-Value="Tag.Name"></MudTextField>
-        <MudSelect @bind-Value="Tag.Category" Label="Tag Category">
-            @foreach (CategoryType tagType in Enum.GetValues(typeof(CategoryType)))
-            {
-
-                <MudSelectItem Value="@tagType">@tagType</MudSelectItem>
-            }
-        </MudSelect>
+        <MudTextField Label="Type Name" @bind-Value="Type.Name"></MudTextField>
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel" Variant="Variant.Filled" Color="Color.Dark">Cancel</MudButton>
@@ -20,7 +13,7 @@
 @code {
     [CascadingParameter]
     MudDialogInstance MudDialog { get; set; }
-    private RecipeTag Tag { get; set; } = new();
+    private IngredientType Type { get; set; } = new();
     public void Cancel()
     {
         MudDialog.Cancel();
@@ -29,9 +22,9 @@
     {
         try
         {
-            await _api.CreateAsync<RecipeTag>("api/recipeTags",Tag);
+            await _api.CreateAsync<IngredientType>("api/ingredientTypes", Type);
             _snackbar.Add("Created Tag", Severity.Success);
-            MudDialog.Close(DialogResult.Ok(Tag));
+            MudDialog.Close(DialogResult.Ok(Type));
         }
         catch (Exception e)
         {

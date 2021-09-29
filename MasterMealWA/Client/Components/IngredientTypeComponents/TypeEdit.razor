@@ -1,0 +1,35 @@
+﻿@inject IApiService _api
+@inject NavigationManager _nav
+<MudDialog>
+    <DialogContent>
+        <MudTextField Label="Type Name" @bind-Value="Type.Name"></MudTextField>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel" Variant="Variant.Filled" Color="Color.Dark">Cancel</MudButton>
+        <MudButton Color="Color.Success" OnClick="EditType" Variant="Variant.Filled">Save</MudButton>
+    </DialogActions>
+</MudDialog>
+@code {
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; }
+    [Parameter]
+    public IngredientType Type{ get; set; }
+    public void Cancel()
+    {
+        MudDialog.Cancel();
+    }
+    public async Task EditType()
+    {
+        try
+        {
+            await _api.UpdateAsync<IngredientType>($"/api/ingredientTypes/{Type.Id}", Type);
+            _snackbar.Add("Tag updated", Severity.Success);
+            MudDialog.Close(DialogResult.Ok(Type));
+
+        }
+        catch (Exception e)
+        {
+            _snackbar.Add($"Update failed {e.Message}", Severity.Error);
+        }
+    }
+}
