@@ -16,16 +16,16 @@ else
 {
     <MudCard>
         <MudCardHeader>
-            <MudText Typo="Typo.h3">Tags</MudText>
+            <MudText Typo="Typo.h3">Ingredient Types</MudText>
 
         </MudCardHeader>
         <MudCardContent>
 
-            <MudList>
+            <MudGrid>
 
                 @foreach (var tag in Types)
                 {
-                    <MudListItem>
+                    <MudItem MudItem xs="12" sm="6" md="4" lg="3">
                         <MudPaper Elevation="2" Style="padding-left:5px;margin:10px;">
                             <MudGrid>
 
@@ -44,9 +44,9 @@ else
                                 </MudItem>
                             </MudGrid>
                         </MudPaper>
-                    </MudListItem>
+                    </MudItem>
                 }
-            </MudList>
+            </MudGrid>
             <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" OnClick="NewSupply" />
         </MudCardContent>
     </MudCard>
