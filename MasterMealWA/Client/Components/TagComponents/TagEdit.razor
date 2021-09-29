@@ -3,7 +3,7 @@
 <MudDialog>
     <DialogContent>
         <MudTextField Label="Tag Name" @bind-Value="Tag.Name"></MudTextField>
-        <MudSelect @bind-Value="Tag.Category" Label="Measurement Type">
+        <MudSelect @bind-Value="Tag.Category" Label="Tag Category">
             @foreach (CategoryType tagType in Enum.GetValues(typeof(CategoryType)))
             {
 
