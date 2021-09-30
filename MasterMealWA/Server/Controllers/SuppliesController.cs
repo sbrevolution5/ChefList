@@ -42,9 +42,14 @@ namespace MasterMealWA.Server.Controllers
         [HttpPut("user")]
         public async Task<ActionResult> UpdateUserSupply(List<Supply> supplies)
         {
+            
             var userId = HttpContext.GetUserId();
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
-            user.ChefSupplies = supplies;
+            var user = await _context.Users.Include(u=>u.ChefSupplies).FirstOrDefaultAsync(u => u.Id == userId);
+            //Any tags on database recipe that aren't on the dto recipe must be removed
+            user.ChefSupplies.Where(sup => !supplies.Any(id => id.Id == sup.Id)).ToList()
+                         .ForEach(sup => user.ChefSupplies.Remove(sup));
+            //any tags on the incoming list that aren't on the database list need to be added
+            supplies.Where(sup => !user.ChefSupplies.Any(sup2 => sup2.Id == sup.Id)).ToList().ForEach(sup => user.ChefSupplies.Add(_context.Supply.Where(s => s.Id == sup.Id).First()));
             await _context.SaveChangesAsync();
             return NoContent();
         }
