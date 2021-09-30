@@ -118,8 +118,10 @@ namespace MasterMealWA.Server.Controllers
             #endregion Image
             var tags = recipeDto.RecipeTags;
             var dbrecipe = await _context.Recipe.Include(r => r.Tags).FirstOrDefaultAsync(r => r.Id == id);
+            //Any tags on database recipe that aren't on the dto recipe must be removed
             dbrecipe.Tags.Where(tag => !recipeDto.RecipeTags.Any(id => id.Id == tag.Id)).ToList()
                          .ForEach(tag => dbrecipe.Tags.Remove(tag));
+            //any tags on the dto recipe that aren't on the database recipe need to be added
             recipeDto.RecipeTags.Where(id => !dbrecipe.Tags.Any(tag => tag.Id == id.Id)).ToList().ForEach(id => dbrecipe.Tags.Add(_context.RecipeTag.Where(t => t.Id == id.Id).First()));
             if (id != dbrecipe.Id)
             {
