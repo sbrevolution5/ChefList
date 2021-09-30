@@ -1,11 +1,12 @@
 ﻿@page "/supplies"
 @inject IApiService _api
 @inject IDialogService _dialogService
+@inject IUserService _userService
 @if (Supplies is null)
 {
-<div class="d-flex align-center justify-center">
-    <Loader />
-</div>
+    <div class="d-flex align-center justify-center">
+        <Loader />
+    </div>
 }
 else
 {
@@ -13,7 +14,7 @@ else
         <MudCardHeader>
             <MudText Typo="Typo.h3">Supplies</MudText>
             <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" OnClick="NewSupply" />
-            <MudButton Color="Color.Primary" Variant="Variant.Filled"  aria-label="add" OnClick="SaveMySupplies" >Save My Supplies</MudButton>
+            <MudButton Color="Color.Primary" Variant="Variant.Filled" aria-label="add" OnClick="SaveMySupplies">Save My Supplies</MudButton>
         </MudCardHeader>
         <MudCardContent>
             <MudGrid>
@@ -23,13 +24,16 @@ else
                         <MudPaper Elevation="2" Style="padding-left:5px;margin:10px;">
                             <MudGrid>
                                 <MudItem xs="8">
-                                    <MudCheckBox></MudCheckBox>
+                                    <MudHidden IsHidden="Auth">
+
+                                        <MudCheckBox CheckedChanged="()=>UpdateUserSupplyList()" Tag="supply"></MudCheckBox>
+                                    </MudHidden>
                                     <MudText>
                                         @supply.Name
                                     </MudText>
                                 </MudItem>
                                 <MudItem xs="4">
-                                    <MudIconButton Color="Color.Warning" Variant="Variant.Filled" Icon="@Icons.Material.Filled.Edit" OnClick="@(()=>EditSupply(supply))"></MudIconButton>
+                                    <MudIconButton Color="Color.Warning" Variant="Variant.Filled" Icon="@Icons.Material.Filled.Edit" OnClick="@(() => EditSupply(supply))"></MudIconButton>
                                 </MudItem>
                             </MudGrid>
                         </MudPaper>
@@ -42,8 +46,13 @@ else
 }
 @code {
     public List<Supply> Supplies { get; set; }
+    public List<Supply> UserSupplies { get; set; }
+    private string userId { get; set; }
+    public bool Auth { get; set; }
     protected override async Task OnInitializedAsync()
     {
+        userId = await _userService.GetUserIdAsync();
+        Auth = !string.IsNullOrEmpty(userId);
         Supplies = await _api.GetAsync<List<Supply>>("api/supplies");
         base.OnInitialized();
     }
@@ -65,5 +74,13 @@ else
         {
             Supplies = await _api.GetAsync<List<Supply>>("api/supplies");
         }
+    }
+    private void UpdateUserSupplyList()
+    {
+        throw new NotImplementedException();
+    }
+    private void SaveMySupplies()
+    {
+        throw new NotImplementedException();
     }
 }
