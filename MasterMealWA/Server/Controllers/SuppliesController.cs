@@ -25,6 +25,7 @@ namespace MasterMealWA.Server.Controllers
 
         // GET: api/Supplies
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Supply>>> GetSupply()
         {
             return await _context.Supply.ToListAsync();
