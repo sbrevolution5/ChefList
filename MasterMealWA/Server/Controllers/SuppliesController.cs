@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using MasterMealWA.Server.Data;
 using MasterMealWA.Shared.Models;
 using Microsoft.AspNetCore.Authorization;
+using MasterMealWA.Server.Extensions;
 
 namespace MasterMealWA.Server.Controllers
 {
@@ -25,9 +26,32 @@ namespace MasterMealWA.Server.Controllers
 
         // GET: api/Supplies
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Supply>>> GetSupply()
         {
             return await _context.Supply.ToListAsync();
+        }
+        [HttpGet("user")]
+        public async Task<ActionResult<List<Supply>>> GetUserSupply()
+        {
+            var userId = HttpContext.GetUserId();
+            var user = await _context.Users.Include(u => u.ChefSupplies).FirstOrDefaultAsync(u => u.Id == userId);
+            var userSupplies = user.ChefSupplies.ToList();
+            return userSupplies;
+        }
+        [HttpPut("user")]
+        public async Task<ActionResult> UpdateUserSupply(List<Supply> supplies)
+        {
+            
+            var userId = HttpContext.GetUserId();
+            var user = await _context.Users.Include(u=>u.ChefSupplies).FirstOrDefaultAsync(u => u.Id == userId);
+            //Any tags on database recipe that aren't on the dto recipe must be removed
+            user.ChefSupplies.Where(sup => !supplies.Any(id => id.Id == sup.Id)).ToList()
+                         .ForEach(sup => user.ChefSupplies.Remove(sup));
+            //any tags on the incoming list that aren't on the database list need to be added
+            supplies.Where(sup => !user.ChefSupplies.Any(sup2 => sup2.Id == sup.Id)).ToList().ForEach(sup => user.ChefSupplies.Add(_context.Supply.Where(s => s.Id == sup.Id).First()));
+            await _context.SaveChangesAsync();
+            return NoContent();
         }
 
         // GET: api/Supplies/5

@@ -1,16 +1,29 @@
 ﻿@using MasterMealWA.Client.Models
-
+@inject IApiService _api
 <MudPaper Class="pa-3" Square="true">
 
 
     <MudButton OnClick="ApplyFilter" FullWidth="true" Variant="Variant.Filled" Color="Color.Primary" Class="my-2">Apply Filters</MudButton>
     <MudExpansionPanels MultiExpansion="true" Elevation="2">
 
-        <MudExpansionPanel Text="Author" IsInitiallyExpanded="@string.IsNullOrEmpty(userId)">
+        <MudExpansionPanel Text="Author" IsInitiallyExpanded="@(!string.IsNullOrEmpty(userId))">
             <MudSwitch Color="Color.Primary" Label="Only My Recipes" @bind-Checked="myRecipes" Disabled="@string.IsNullOrEmpty(userId)" />
         </MudExpansionPanel>
-        <MudExpansionPanel Text="Supplies" IsInitiallyExpanded="@string.IsNullOrEmpty(userId)">
-            <MudSwitch Disabled="true" Color="Color.Primary" Label="I have Supplies" @bind-Checked="mySupplies" />
+        <MudExpansionPanel Text="Supplies" IsInitiallyExpanded="@(!string.IsNullOrEmpty(userId))">
+            <MudSwitch Disabled="@string.IsNullOrEmpty(userId)" Color="Color.Primary" Label="I have Supplies" @bind-Checked="Filters.MySupplies" />
+            @if (!string.IsNullOrEmpty(userId))
+            {
+                @if (UserSupplies is null)
+                {
+                    <Loader></Loader>
+                }
+                else
+                {
+                    <MudBadge Content="@UserSupplies.Count()" Color="Color.Primary" Overlap="true" Bordered="true" Class="mx-6 my-4">
+                        <MudButton Variant="Variant.Filled" Color="Color.Warning" Link="/supplies">Edit My supplies </MudButton>
+                    </MudBadge>
+                }
+            }
         </MudExpansionPanel>
         @if (!Loaded)
         {
@@ -86,9 +99,19 @@
     public bool Loaded { get; set; }
     [Parameter]
     public Action ReFilter { get; set; }
+    public List<Supply> UserSupplies { get; set; }
     public MudChip[] NationalityChips { get; set; }
     public MudChip[] ProteinChips { get; set; }
     public MudChip[] TypeChips { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        if (!string.IsNullOrEmpty(userId))
+        {
+            UserSupplies = await _api.GetAsync<List<Supply>>("api/supplies/user");
+
+        }
+        await base.OnInitializedAsync();
+    }
     public void ApplyFilter()
     {
         if (ProteinChips is not null)
@@ -105,6 +128,10 @@
         {
 
             Filters.TypeList = TypeChips.Select(r => (RecipeTag)r.Tag).ToList();
+        }
+        if (!string.IsNullOrEmpty(userId))
+        {
+            Filters.SupplyList = UserSupplies;
         }
         ReFilter.Invoke();
     }

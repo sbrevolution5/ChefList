@@ -21,6 +21,7 @@ namespace MasterMealWA.Shared.Models
         public int ImageId { get; set; }
         public virtual DBImage Image { get; set; }
         public List<Recipe> FavoriteRecipes { get; set; }
+        public ICollection<Supply> ChefSupplies { get; set; } = new List<Supply>();
         [NotMapped]
         public string FullName
         {
