@@ -10,7 +10,7 @@
             <MudSwitch Color="Color.Primary" Label="Only My Recipes" @bind-Checked="myRecipes" Disabled="@string.IsNullOrEmpty(userId)" />
         </MudExpansionPanel>
         <MudExpansionPanel Text="Supplies" IsInitiallyExpanded="@(!string.IsNullOrEmpty(userId))">
-            <MudSwitch Disabled="@string.IsNullOrEmpty(userId)" Color="Color.Primary" Label="I have Supplies" @bind-Checked="mySupplies" />
+            <MudSwitch Disabled="@string.IsNullOrEmpty(userId)" Color="Color.Primary" Label="I have Supplies" @bind-Checked="Filters.MySupplies" />
         </MudExpansionPanel>
         @if (!Loaded)
         {
