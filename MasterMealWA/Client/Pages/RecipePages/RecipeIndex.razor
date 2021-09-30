@@ -244,6 +244,7 @@
                 SortedRecipes = FilteredRecipes.OrderByDescending(r => r.Created).ToList();
                 break;
             default:
+                SortedRecipes = FilteredRecipes;
                 break;
         }
     }
