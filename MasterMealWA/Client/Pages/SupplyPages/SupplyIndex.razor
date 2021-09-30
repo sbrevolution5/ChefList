@@ -12,6 +12,8 @@ else
     <MudCard>
         <MudCardHeader>
             <MudText Typo="Typo.h3">Supplies</MudText>
+            <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" OnClick="NewSupply" />
+            <MudButton Color="Color.Primary" Variant="Variant.Filled"  aria-label="add" OnClick="SaveMySupplies" >Save My Supplies</MudButton>
         </MudCardHeader>
         <MudCardContent>
             <MudGrid>
@@ -21,6 +23,7 @@ else
                         <MudPaper Elevation="2" Style="padding-left:5px;margin:10px;">
                             <MudGrid>
                                 <MudItem xs="8">
+                                    <MudCheckBox></MudCheckBox>
                                     <MudText>
                                         @supply.Name
                                     </MudText>
