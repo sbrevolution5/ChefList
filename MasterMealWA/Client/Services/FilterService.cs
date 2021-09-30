@@ -18,11 +18,6 @@ namespace MasterMealWA.Client.Services
             {
                 recipes = recipes.Where(r => r.AuthorId == userId).ToList();
             }
-            //MySupplies
-            if (filter.MySupplies)
-            {
-                //TODO: Supplies USER CURRENTLY HAS NO ABILITY TO DO THIS
-            }
             //Nationality
             if (filter.NationalityList is not null)
             {
@@ -76,6 +71,29 @@ namespace MasterMealWA.Client.Services
             if (filter.CookingTime)
             {
                 recipes = recipes.Where(r => r.CookingTime >= filter.MinCookingTime && r.CookingTime <= filter.MaxCookingTime).ToList();
+            }
+            //MySupplies
+            if (filter.MySupplies)
+            {
+                if (!string.IsNullOrEmpty(userId))
+                {
+                    var newList = new List<Recipe>();
+                    // Exclude recipes that require supplies that aren't in the user's supply list
+                    var myList = filter.SupplyList;
+                    foreach (var recipe in recipes)
+                    {
+                        var recipeSupplies = new List<Supply>();
+                        foreach (var supply in recipe.Supplies)
+                        {
+                            recipeSupplies.Add(supply.Supply);
+                        }
+                        if (!recipeSupplies.Except(myList).Any())
+                        {
+                            newList.Add(recipe);
+                        }
+                    }
+                    recipes = newList;
+                }
             }
             return recipes;
         }
