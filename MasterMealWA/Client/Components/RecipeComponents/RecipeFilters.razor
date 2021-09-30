@@ -17,7 +17,9 @@
             }
             else
             {
-                <MudLink Href="/supplies">Edit My supplies @UserSupplies.Count()</MudLink>
+                <MudBadge Content="@UserSupplies.Count()" Color="Color.Primary" Overlap="true" Bordered="true" Class="mx-6 my-4">
+                    <MudButton Variant="Variant.Filled" Color="Color.Warning" Link="/supplies">Edit My supplies </MudButton>
+                </MudBadge>
             }
         </MudExpansionPanel>
         @if (!Loaded)
