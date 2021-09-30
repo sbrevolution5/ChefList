@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using MasterMealWA.Server.Data;
 using MasterMealWA.Shared.Models;
 using Microsoft.AspNetCore.Authorization;
+using MasterMealWA.Server.Extensions;
 
 namespace MasterMealWA.Server.Controllers
 {
@@ -29,6 +30,22 @@ namespace MasterMealWA.Server.Controllers
         public async Task<ActionResult<IEnumerable<Supply>>> GetSupply()
         {
             return await _context.Supply.ToListAsync();
+        }
+        [HttpGet("/user")]
+        public async Task<ActionResult<IEnumerable<Supply>>> GetUserSupply()
+        {
+            var userId = HttpContext.GetUserId();
+            var user = await _context.Users.Include(u => u.ChefSupplies).FirstOrDefaultAsync(u => u.Id == userId);
+            var userSupplies = user.ChefSupplies.ToList();
+            return userSupplies;
+        }
+        [HttpPut("/user")]
+        public async Task<ActionResult<IEnumerable<Supply>>> GetUserSupply()
+        {
+            var userId = HttpContext.GetUserId();
+            var user = await _context.Users.Include(u => u.ChefSupplies).FirstOrDefaultAsync(u => u.Id == userId);
+            var userSupplies = user.ChefSupplies.ToList();
+            return userSupplies;
         }
 
         // GET: api/Supplies/5
