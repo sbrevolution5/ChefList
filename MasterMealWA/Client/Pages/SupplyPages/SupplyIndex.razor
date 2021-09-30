@@ -55,30 +55,7 @@ else
         userId = await _userService.GetUserIdAsync();
         Auth = !string.IsNullOrEmpty(userId);
         Supplies = await _api.GetAsync<List<Supply>>("api/supplies");
-        if (Auth)
-        {
-
-            UserSupplies = await _api.GetAsync<List<Supply>>("api/supplies/user");
-            foreach (var supply in Supplies)
-            {
-                if (UserSupplies.Contains(supply))
-                {
-                    UserHasSupplyDict.Add(supply, true);
-                }
-                else
-                {
-                    UserHasSupplyDict.Add(supply, false);
-
-                }
-            }
-        }
-        else
-        {
-            foreach (var supply in Supplies)
-            {
-                UserHasSupplyDict.Add(supply, false);
-            }
-        }
+        await InitUserSuppliesAsync();
         base.OnInitialized();
     }
     public async Task NewSupply()
@@ -107,5 +84,32 @@ else
     private void SaveMySupplies()
     {
         throw new NotImplementedException();
+    }
+    private async Task InitUserSuppliesAsync()
+    {
+        if (Auth)
+        {
+
+            UserSupplies = await _api.GetAsync<List<Supply>>("api/supplies/user");
+            foreach (var supply in Supplies)
+            {
+                if (UserSupplies.Contains(supply))
+                {
+                    UserHasSupplyDict.Add(supply, true);
+                }
+                else
+                {
+                    UserHasSupplyDict.Add(supply, false);
+
+                }
+            }
+        }
+        else
+        {
+            foreach (var supply in Supplies)
+            {
+                UserHasSupplyDict.Add(supply, false);
+            }
+        }
     }
 }
