@@ -26,7 +26,7 @@ else
                                 <MudItem xs="8">
                                     <MudHidden IsHidden="Auth">
 
-                                        <MudCheckBox CheckedChanged="()=>ToggleUserSupplyDict(supply.Id)" Tag="supply"></MudCheckBox>
+                                        <MudCheckBox @bind-Checked="UserHasSupplyDict[supply.Id]"></MudCheckBox>
                                     </MudHidden>
                                     <MudText>
                                         @supply.Name
@@ -77,14 +77,34 @@ else
             Supplies = await _api.GetAsync<List<Supply>>("api/supplies");
         }
     }
-    private void ToggleUserSupplyDict(int supplyId)
+    //private void ToggleUserSupplyDict(int supplyId)
+    //{
+    //    var current = UserHasSupplyDict[supplyId];
+    //    UserHasSupplyDict[supplyId] = !current;
+    //}
+    private async Task SaveMySupplies()
     {
-        var current = UserHasSupplyDict[supplyId];
-        UserHasSupplyDict[supplyId] = !current;
-    }
-    private void SaveMySupplies()
-    {
-        throw new NotImplementedException();
+        UserSupplies.Clear();
+        foreach (var supply in Supplies)
+        {
+            if (UserHasSupplyDict.TryGetValue(supply.Id, out bool res))
+            {
+                if (res)
+                {
+                    UserSupplies.Add(supply);
+                }
+            }
+        }
+        try
+        {
+            await _api.UpdateAsync<List<Supply>>("api/supplies/user", UserSupplies);
+            _snackbar.Add("Your supply list updated!", Severity.Success);
+        }
+        catch (Exception e)
+        {
+            _snackbar.Add($"Error updating supply list {e.Message}", Severity.Error);
+        }
+
     }
     private async Task InitUserSuppliesAsync()
     {
@@ -94,7 +114,7 @@ else
             UserSupplies = await _api.GetAsync<List<Supply>>("api/supplies/user");
             foreach (var supply in Supplies)
             {
-                if (UserSupplies.Select(s=>s.Id).Contains(supply.Id))
+                if (UserSupplies.Select(s => s.Id).Contains(supply.Id))
                 {
                     UserHasSupplyDict.Add(supply.Id, true);
                 }
