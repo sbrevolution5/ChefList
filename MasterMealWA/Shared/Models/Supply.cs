@@ -12,5 +12,6 @@ namespace MasterMealWA.Shared.Models
         public int Id { get; set; }
         [Required]
         public string Name { get; set; }
+        public ICollection<Chef> Chefs { get; set; } = new List<Chef>();
     }
 }
