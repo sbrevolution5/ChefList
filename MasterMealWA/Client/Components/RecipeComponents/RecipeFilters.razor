@@ -1,5 +1,5 @@
 ﻿@using MasterMealWA.Client.Models
-
+@inject IApiService _api
 <MudPaper Class="pa-3" Square="true">
 
 
@@ -86,9 +86,19 @@
     public bool Loaded { get; set; }
     [Parameter]
     public Action ReFilter { get; set; }
+    public List<Supply> UserSupplies { get; set; }
     public MudChip[] NationalityChips { get; set; }
     public MudChip[] ProteinChips { get; set; }
     public MudChip[] TypeChips { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        if (!string.IsNullOrEmpty(userId))
+        {
+            UserSupplies = await _api.GetAsync<List<Supply>>("api/supplies/user");
+
+        }
+        await base.OnInitializedAsync();
+    }
     public void ApplyFilter()
     {
         if (ProteinChips is not null)
@@ -105,6 +115,10 @@
         {
 
             Filters.TypeList = TypeChips.Select(r => (RecipeTag)r.Tag).ToList();
+        }
+        if (!string.IsNullOrEmpty(userId))
+        {
+            Filters.SupplyList = UserSupplies;
         }
         ReFilter.Invoke();
     }
