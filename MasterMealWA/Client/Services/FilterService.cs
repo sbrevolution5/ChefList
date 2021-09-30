@@ -23,12 +23,20 @@ namespace MasterMealWA.Client.Services
             {
                 if (!string.IsNullOrEmpty(userId))
                 {
-
+                    var newList = new List<Recipe>();
                     // Exclude recipes that require supplies that aren't in the user's supply list
                     var myList = filter.SupplyList;
                     foreach (var recipe in recipes)
                     {
-
+                        var recipeSupplies = new List<Supply>();
+                        foreach (var supply in recipe.Supplies)
+                        {
+                            recipeSupplies.Add(supply.Supply);
+                        }
+                        if (!recipeSupplies.Except(myList).Any())
+                        {
+                            newList.Add(recipe);
+                        }
                     }
                 }
             }
