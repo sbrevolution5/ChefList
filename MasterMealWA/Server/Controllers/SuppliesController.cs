@@ -31,15 +31,15 @@ namespace MasterMealWA.Server.Controllers
         {
             return await _context.Supply.ToListAsync();
         }
-        [HttpGet("/user")]
-        public async Task<ActionResult<IEnumerable<Supply>>> GetUserSupply()
+        [HttpGet("user")]
+        public async Task<ActionResult<List<Supply>>> GetUserSupply()
         {
             var userId = HttpContext.GetUserId();
             var user = await _context.Users.Include(u => u.ChefSupplies).FirstOrDefaultAsync(u => u.Id == userId);
             var userSupplies = user.ChefSupplies.ToList();
             return userSupplies;
         }
-        [HttpPut("/user")]
+        [HttpPut("user")]
         public async Task<ActionResult> UpdateUserSupply(List<Supply> supplies)
         {
             var userId = HttpContext.GetUserId();
