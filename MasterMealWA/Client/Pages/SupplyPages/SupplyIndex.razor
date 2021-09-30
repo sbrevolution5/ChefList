@@ -47,6 +47,7 @@ else
 @code {
     public List<Supply> Supplies { get; set; }
     public List<Supply> UserSupplies { get; set; }
+    public Dictionary<Supply, bool> UserHasSupplyDict { get; set; }
     private string userId { get; set; }
     public bool Auth { get; set; }
     protected override async Task OnInitializedAsync()
@@ -54,6 +55,30 @@ else
         userId = await _userService.GetUserIdAsync();
         Auth = !string.IsNullOrEmpty(userId);
         Supplies = await _api.GetAsync<List<Supply>>("api/supplies");
+        if (Auth)
+        {
+
+            UserSupplies = await _api.GetAsync<List<Supply>>("api/supplies/user");
+            foreach (var supply in Supplies)
+            {
+                if (UserSupplies.Contains(supply))
+                {
+                    UserHasSupplyDict.Add(supply, true);
+                }
+                else
+                {
+                    UserHasSupplyDict.Add(supply, false);
+
+                }
+            }
+        }
+        else
+        {
+            foreach (var supply in Supplies)
+            {
+                UserHasSupplyDict.Add(supply, false);
+            }
+        }
         base.OnInitialized();
     }
     public async Task NewSupply()
