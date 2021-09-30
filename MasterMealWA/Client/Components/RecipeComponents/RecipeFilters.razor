@@ -11,15 +11,18 @@
         </MudExpansionPanel>
         <MudExpansionPanel Text="Supplies" IsInitiallyExpanded="@(!string.IsNullOrEmpty(userId))">
             <MudSwitch Disabled="@string.IsNullOrEmpty(userId)" Color="Color.Primary" Label="I have Supplies" @bind-Checked="Filters.MySupplies" />
-            @if (UserSupplies is null)
+            @if (!string.IsNullOrEmpty(userId))
             {
-                <Loader></Loader>
-            }
-            else
-            {
-                <MudBadge Content="@UserSupplies.Count()" Color="Color.Primary" Overlap="true" Bordered="true" Class="mx-6 my-4">
-                    <MudButton Variant="Variant.Filled" Color="Color.Warning" Link="/supplies">Edit My supplies </MudButton>
-                </MudBadge>
+                @if (UserSupplies is null)
+                {
+                    <Loader></Loader>
+                }
+                else
+                {
+                    <MudBadge Content="@UserSupplies.Count()" Color="Color.Primary" Overlap="true" Bordered="true" Class="mx-6 my-4">
+                        <MudButton Variant="Variant.Filled" Color="Color.Warning" Link="/supplies">Edit My supplies </MudButton>
+                    </MudBadge>
+                }
             }
         </MudExpansionPanel>
         @if (!Loaded)
