@@ -24,10 +24,10 @@ else
                         <MudPaper Elevation="2" Style="padding-left:5px;margin:10px;">
                             <MudGrid>
                                 <MudItem xs="8">
-                                    <MudHidden IsHidden="Auth">
+                                    
 
-                                        <MudCheckBox @bind-Checked="UserHasSupplyDict[supply.Id]"></MudCheckBox>
-                                    </MudHidden>
+                                        <MudCheckBox Disabled="!Auth" @bind-Checked="UserHasSupplyDict[supply.Id]"></MudCheckBox>
+                                    
                                     <MudText>
                                         @supply.Name
                                     </MudText>
@@ -47,7 +47,7 @@ else
 @code {
     public List<Supply> Supplies { get; set; }
     public List<Supply> UserSupplies { get; set; }
-    public Dictionary<int, bool> UserHasSupplyDict { get; set; }
+    public Dictionary<int, bool> UserHasSupplyDict { get; set; } = new();
     private string userId { get; set; }
     public bool Auth { get; set; }
     protected override async Task OnInitializedAsync()
