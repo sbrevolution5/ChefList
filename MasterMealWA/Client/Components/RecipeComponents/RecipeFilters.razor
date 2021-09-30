@@ -11,7 +11,14 @@
         </MudExpansionPanel>
         <MudExpansionPanel Text="Supplies" IsInitiallyExpanded="@(!string.IsNullOrEmpty(userId))">
             <MudSwitch Disabled="@string.IsNullOrEmpty(userId)" Color="Color.Primary" Label="I have Supplies" @bind-Checked="Filters.MySupplies" />
-            <MudLink Href="/supplies">Edit My supplies</MudLink>
+            @if (UserSupplies is null)
+            {
+                <Loader></Loader>
+            }
+            else
+            {
+                <MudLink Href="/supplies">Edit My supplies @UserSupplies.Count()</MudLink>
+            }
         </MudExpansionPanel>
         @if (!Loaded)
         {
