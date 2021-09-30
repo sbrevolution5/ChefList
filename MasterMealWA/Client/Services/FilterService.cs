@@ -21,7 +21,16 @@ namespace MasterMealWA.Client.Services
             //MySupplies
             if (filter.MySupplies)
             {
-                //TODO: Supplies USER CURRENTLY HAS NO ABILITY TO DO THIS
+                if (!string.IsNullOrEmpty(userId))
+                {
+
+                    // Exclude recipes that require supplies that aren't in the user's supply list
+                    var myList = filter.SupplyList;
+                    foreach (var recipe in recipes)
+                    {
+
+                    }
+                }
             }
             //Nationality
             if (filter.NationalityList is not null)

@@ -11,6 +11,7 @@ namespace MasterMealWA.Client.Models
     {
         public bool MyRecipes { get; set; }
         public bool MySupplies { get; set; }
+        public List<Supply> SupplyList { get; set; }
         public List<RecipeTag> NationalityList { get; set; }
         public bool HasAllNationalities { get; set; }
         public List<RecipeTag> ProteinList { get; set; } 
