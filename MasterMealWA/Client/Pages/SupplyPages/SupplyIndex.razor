@@ -26,7 +26,7 @@ else
                                 <MudItem xs="8">
                                     <MudHidden IsHidden="Auth">
 
-                                        <MudCheckBox CheckedChanged="()=>UpdateUserSupplyList()" Tag="supply"></MudCheckBox>
+                                        <MudCheckBox CheckedChanged="()=>ToggleUserSupplyDict(supply.Id)" Tag="supply"></MudCheckBox>
                                     </MudHidden>
                                     <MudText>
                                         @supply.Name
@@ -47,7 +47,7 @@ else
 @code {
     public List<Supply> Supplies { get; set; }
     public List<Supply> UserSupplies { get; set; }
-    public Dictionary<Supply, bool> UserHasSupplyDict { get; set; }
+    public Dictionary<int, bool> UserHasSupplyDict { get; set; }
     private string userId { get; set; }
     public bool Auth { get; set; }
     protected override async Task OnInitializedAsync()
@@ -77,9 +77,10 @@ else
             Supplies = await _api.GetAsync<List<Supply>>("api/supplies");
         }
     }
-    private void UpdateUserSupplyList()
+    private void ToggleUserSupplyDict(int supplyId)
     {
-        throw new NotImplementedException();
+        var current = UserHasSupplyDict[supplyId];
+        UserHasSupplyDict[supplyId] = !current;
     }
     private void SaveMySupplies()
     {
@@ -93,13 +94,13 @@ else
             UserSupplies = await _api.GetAsync<List<Supply>>("api/supplies/user");
             foreach (var supply in Supplies)
             {
-                if (UserSupplies.Contains(supply))
+                if (UserSupplies.Select(s=>s.Id).Contains(supply.Id))
                 {
-                    UserHasSupplyDict.Add(supply, true);
+                    UserHasSupplyDict.Add(supply.Id, true);
                 }
                 else
                 {
-                    UserHasSupplyDict.Add(supply, false);
+                    UserHasSupplyDict.Add(supply.Id, false);
 
                 }
             }
@@ -108,7 +109,7 @@ else
         {
             foreach (var supply in Supplies)
             {
-                UserHasSupplyDict.Add(supply, false);
+                UserHasSupplyDict.Add(supply.Id, false);
             }
         }
     }
