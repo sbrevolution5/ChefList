@@ -54,7 +54,15 @@ else
     {
         userId = await _userService.GetUserIdAsync();
         Auth = !string.IsNullOrEmpty(userId);
-        Supplies = await _api.GetAsync<List<Supply>>("api/supplies");
+        if (Auth)
+        {
+            Supplies = await _api.GetAsync<List<Supply>>("api/supplies");
+        }
+        else
+        {
+            Supplies = await _api.GetAnonAsync<List<Supply>>("api/supplies");
+
+        }
         await InitUserSuppliesAsync();
         base.OnInitialized();
     }
