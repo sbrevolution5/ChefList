@@ -110,7 +110,6 @@ else
                     <MudCardHeader>Ingredients</MudCardHeader>
                     <MudCardContent>
                         <MudGrid>
-                            <MudFab OnClick="NewIngredient" Color="Color.Success" Icon="@Icons.Material.Filled.FiberNew" Label="Add ingredient not in list"></MudFab>
                             @foreach (var ingredient in recipe.Ingredients)
                             {
                                 <MudItem xs="12">
@@ -127,10 +126,12 @@ else
                                     </MudCard>
                                 </MudItem>
                             }
-                            <MudItem>
+                        <MudItem>
 
-                                <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Ingredients.Add(new())" />
-                            </MudItem>
+                            <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Ingredients.Add(new())" />
+                            <MudFab OnClick="NewIngredient" Color="Color.Success" Icon="@Icons.Material.Filled.FiberNew" Label="Add ingredient not in list" />
+
+                        </MudItem>
                         </MudGrid>
                     </MudCardContent>
                 </MudCard>
@@ -138,7 +139,6 @@ else
                     <MudCardHeader>Supplies</MudCardHeader>
                     <MudCardContent>
                         <MudGrid>
-                            <MudFab OnClick="NewSupply" Color="Color.Success" Icon="@Icons.Material.Filled.FiberNew" Label="Add supply not in list"></MudFab>
                             @foreach (var supply in recipe.Supplies)
                             {
                                 <MudItem xs="12">
@@ -155,10 +155,12 @@ else
                                     </MudCard>
                                 </MudItem>
                             }
-                            <MudItem>
+                        <MudItem>
 
-                                <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Supplies.Add(new())" />
-                            </MudItem>
+                            <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Supplies.Add(new())" />
+                            <MudFab OnClick="NewSupply" Color="Color.Success" Icon="@Icons.Material.Filled.FiberNew" Label="Add supply not in list"></MudFab>
+
+                        </MudItem>
                         </MudGrid>
                     </MudCardContent>
                 </MudCard>
