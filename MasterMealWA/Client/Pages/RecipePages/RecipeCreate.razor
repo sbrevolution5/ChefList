@@ -21,7 +21,7 @@
                     <MudGrid>
                         <MudItem xs="12">
 
-                            <MudTextField Label="Title" HelperText="The name of the recipe" @bind-Value="recipe.Name" For="@(()=> recipe.Name)" />
+                            <MudTextField Label="Title" HelperText="The name of the recipe" @bind-Value="recipe.Name" HelperTextOnFocus="true" For="@(()=> recipe.Name)" />
                         </MudItem>
                         <MudItem xs="12">
 
@@ -58,18 +58,18 @@
                         </MudItem>
                         <MudItem xs="12">
 
-                            <MudTextField Label="Source" HelperText="Where did you get the recipe?  (if its personal, leave blank)" @bind-Value="recipe.RecipeSource" For="@(()=> recipe.RecipeSource)" />
+                            <MudTextField Label="Source" HelperTextOnFocus="true" HelperText="Where did you get the recipe?  (if its personal, leave blank)" @bind-Value="recipe.RecipeSource" For="@(()=> recipe.RecipeSource)" />
                         </MudItem>
                         <MudItem xs="12">
 
-                            <MudTextField Label="Source Link" HelperText="Link to the page you found this recipe on.  Please prefix with https://" @bind-Value="recipe.RecipeSourceUrl" For="@(()=> recipe.RecipeSourceUrl)" />
+                            <MudTextField Label="Source Link" HelperText="Link to the page you found this recipe on.  Please prefix with https://" @bind-Value="recipe.RecipeSourceUrl" HelperTextOnFocus="true" For="@(()=> recipe.RecipeSourceUrl)" />
                         </MudItem>
                         <MudItem xs="6">
 
-                            <MudNumericField Label="Cooking Time" Min="15" Max="90" HelperText="Estimated minutes to cook recipe" @bind-Value="recipe.CookingTime" For="@(()=> recipe.CookingTime)" />
+                            <MudNumericField Label="Cooking Time" Min="15" Max="90" HelperTextOnFocus="true" HelperText="Estimated minutes to cook recipe" @bind-Value="recipe.CookingTime" For="@(()=> recipe.CookingTime)" />
                         </MudItem>
                         <MudItem xs="6">
-                            <MudSelect T="int" @bind-Value="recipe.Servings" Label="Servings" HelperText="How many people the recipe serves.  Users can select the serving size they'd like displayed or added to their shopping list.">
+                            <MudSelect T="int" HelperTextOnFocus="true" @bind-Value="recipe.Servings" Label="Servings" HelperText="How many people the recipe serves.  Users can select any serving size they'd like displayed or added to their shopping list, and the recipe will be scaled.">
                                 <MudSelectItem Value="1">1</MudSelectItem>
                                 <MudSelectItem Value="2">2</MudSelectItem>
                                 <MudSelectItem Value="4">4</MudSelectItem>
@@ -108,7 +108,6 @@
                 <MudCardHeader>Ingredients</MudCardHeader>
                 <MudCardContent>
                     <MudGrid>
-                        <MudFab OnClick="NewIngredient" Color="Color.Success" Icon="@Icons.Material.Filled.FiberNew" Label="Add ingredient not in list"></MudFab>
                         @foreach (var ingredient in recipe.Ingredients)
                         {
                             <MudItem xs="12">
@@ -125,17 +124,17 @@
                                 </MudCard>
                             </MudItem>
                         }
-                        <MudItem>
+                    <MudItem>
 
-                            <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Ingredients.Add(new())" />
-                        </MudItem>
+                        <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Ingredients.Add(new())" />
+                        <MudFab OnClick="NewIngredient" Color="Color.Success" Icon="@Icons.Material.Filled.FiberNew" Label="Add ingredient not in list"></MudFab>
+                    </MudItem>
 
                     </MudGrid>
                 </MudCardContent>
             </MudCard>
             <MudCard>
                 <MudCardHeader>Supplies</MudCardHeader>
-                <MudFab OnClick="NewSupply" Color="Color.Success" Icon="@Icons.Material.Filled.FiberNew" Label="Add supply not in list"></MudFab>
                 <MudCardContent>
                     <MudGrid>
                         @foreach (var supply in recipe.Supplies)
@@ -154,9 +153,10 @@
                                 </MudCard>
                             </MudItem>
                         }
-                        <MudItem>
-                            <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Supplies.Add(new())" />
-                        </MudItem>
+                    <MudItem>
+                        <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Supplies.Add(new())" />
+                        <MudFab OnClick="NewSupply" Color="Color.Success" Icon="@Icons.Material.Filled.FiberNew" Label="Add supply not in list"></MudFab>
+                    </MudItem>
                     </MudGrid>
                 </MudCardContent>
             </MudCard>

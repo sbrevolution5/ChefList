@@ -32,11 +32,11 @@ else
                         <MudGrid>
                             <MudItem xs="12">
 
-                                <MudTextField Label="Title" HelperText="The name of the recipe" @bind-Value="recipe.Name" For="@(()=> recipe.Name)" />
+                                <MudTextField Label="Title" HelperTextOnFocus="true" HelperText="The name of the recipe" @bind-Value="recipe.Name" For="@(()=> recipe.Name)" />
                             </MudItem>
                             <MudItem xs="12">
 
-                                <MudTextField Label="Description" HelperText="The description of the recipe" @bind-Value="recipe.Description" For="@(()=> recipe.Description)" />
+                                <MudTextField Label="Description" HelperTextOnFocus="true" HelperText="The description of the recipe" @bind-Value="recipe.Description" For="@(()=> recipe.Description)" />
                             </MudItem>
                             <MudItem xs="12">
 
@@ -65,19 +65,23 @@ else
                             </MudItem>
                             <MudItem xs="12">
 
-                                <MudTextField Label="Source" HelperText="Where did you get the recipe?  (if its personal, leave blank)" @bind-Value="recipe.RecipeSource" For="@(()=> recipe.RecipeSource)" />
+                                <MudTextField Label="Source" HelperTextOnFocus="true" HelperText="Where did you get the recipe?  (if its personal, leave blank)" @bind-Value="recipe.RecipeSource" For="@(()=> recipe.RecipeSource)" />
                             </MudItem>
                             <MudItem xs="12">
 
-                                <MudTextField Label="Source Link" HelperText="Link to the page you found this recipe on.  Please prefix with https://" @bind-Value="recipe.RecipeSourceUrl" For="@(()=> recipe.RecipeSourceUrl)" />
+                                <MudTextField Label="Source Link" HelperTextOnFocus="true" HelperText="Link to the page you found this recipe on.  Please prefix with https://" @bind-Value="recipe.RecipeSourceUrl" For="@(()=> recipe.RecipeSourceUrl)" />
                             </MudItem>
                             <MudItem xs="6">
 
-                                <MudNumericField Label="Cooking Time" Min="15" Max="90" HelperText="Estimated minutes to cook recipe" @bind-Value="recipe.CookingTime" For="@(()=> recipe.CookingTime)" />
+                                <MudNumericField Label="Cooking Time" Min="15" Max="90" HelperText="Estimated minutes to cook recipe" HelperTextOnFocus="true" @bind-Value="recipe.CookingTime" For="@(()=> recipe.CookingTime)" />
                             </MudItem>
                             <MudItem xs="6">
 
-                                <MudNumericField Label="Servings" HelperText="How many people the recipe Serves" Max="8" Min="1" @bind-Value="recipe.Servings" For="@(()=> recipe.Servings)" />
+                                <MudSelect T="int" @bind-Value="recipe.Servings" Label="Servings" HelperText="How many people the recipe serves.  Users can select any serving size they'd like displayed or added to their shopping list, and the recipe will be scaled.">
+                                    <MudSelectItem Value="1">1</MudSelectItem>
+                                    <MudSelectItem Value="2">2</MudSelectItem>
+                                    <MudSelectItem Value="4">4</MudSelectItem>
+                                </MudSelect>
                             </MudItem>
                             @if (Tags == null)
                             {
@@ -110,7 +114,6 @@ else
                     <MudCardHeader>Ingredients</MudCardHeader>
                     <MudCardContent>
                         <MudGrid>
-                            <MudFab OnClick="NewIngredient" Color="Color.Success" Icon="@Icons.Material.Filled.FiberNew" Label="Add ingredient not in list"></MudFab>
                             @foreach (var ingredient in recipe.Ingredients)
                             {
                                 <MudItem xs="12">
@@ -127,10 +130,12 @@ else
                                     </MudCard>
                                 </MudItem>
                             }
-                            <MudItem>
+                        <MudItem>
 
-                                <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Ingredients.Add(new())" />
-                            </MudItem>
+                            <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Ingredients.Add(new())" />
+                            <MudFab OnClick="NewIngredient" Color="Color.Success" Icon="@Icons.Material.Filled.FiberNew" Label="Add ingredient not in list" />
+
+                        </MudItem>
                         </MudGrid>
                     </MudCardContent>
                 </MudCard>
@@ -138,7 +143,6 @@ else
                     <MudCardHeader>Supplies</MudCardHeader>
                     <MudCardContent>
                         <MudGrid>
-                            <MudFab OnClick="NewSupply" Color="Color.Success" Icon="@Icons.Material.Filled.FiberNew" Label="Add supply not in list"></MudFab>
                             @foreach (var supply in recipe.Supplies)
                             {
                                 <MudItem xs="12">
@@ -155,10 +159,12 @@ else
                                     </MudCard>
                                 </MudItem>
                             }
-                            <MudItem>
+                        <MudItem>
 
-                                <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Supplies.Add(new())" />
-                            </MudItem>
+                            <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Supplies.Add(new())" />
+                            <MudFab OnClick="NewSupply" Color="Color.Success" Icon="@Icons.Material.Filled.FiberNew" Label="Add supply not in list"></MudFab>
+
+                        </MudItem>
                         </MudGrid>
                     </MudCardContent>
                 </MudCard>
