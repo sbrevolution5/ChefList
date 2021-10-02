@@ -32,11 +32,11 @@ else
                         <MudGrid>
                             <MudItem xs="12">
 
-                                <MudTextField Label="Title" HelperText="The name of the recipe" @bind-Value="recipe.Name" For="@(()=> recipe.Name)" />
+                                <MudTextField Label="Title" HelperTextOnFocus="true" HelperText="The name of the recipe" @bind-Value="recipe.Name" For="@(()=> recipe.Name)" />
                             </MudItem>
                             <MudItem xs="12">
 
-                                <MudTextField Label="Description" HelperText="The description of the recipe" @bind-Value="recipe.Description" For="@(()=> recipe.Description)" />
+                                <MudTextField Label="Description" HelperTextOnFocus="true" HelperText="The description of the recipe" @bind-Value="recipe.Description" For="@(()=> recipe.Description)" />
                             </MudItem>
                             <MudItem xs="12">
 
@@ -65,19 +65,19 @@ else
                             </MudItem>
                             <MudItem xs="12">
 
-                                <MudTextField Label="Source" HelperText="Where did you get the recipe?  (if its personal, leave blank)" @bind-Value="recipe.RecipeSource" For="@(()=> recipe.RecipeSource)" />
+                                <MudTextField Label="Source" HelperTextOnFocus="true" HelperText="Where did you get the recipe?  (if its personal, leave blank)" @bind-Value="recipe.RecipeSource" For="@(()=> recipe.RecipeSource)" />
                             </MudItem>
                             <MudItem xs="12">
 
-                                <MudTextField Label="Source Link" HelperText="Link to the page you found this recipe on.  Please prefix with https://" @bind-Value="recipe.RecipeSourceUrl" For="@(()=> recipe.RecipeSourceUrl)" />
+                                <MudTextField Label="Source Link" HelperTextOnFocus="true" HelperText="Link to the page you found this recipe on.  Please prefix with https://" @bind-Value="recipe.RecipeSourceUrl" For="@(()=> recipe.RecipeSourceUrl)" />
                             </MudItem>
                             <MudItem xs="6">
 
-                                <MudNumericField Label="Cooking Time" Min="15" Max="90" HelperText="Estimated minutes to cook recipe" @bind-Value="recipe.CookingTime" For="@(()=> recipe.CookingTime)" />
+                                <MudNumericField Label="Cooking Time" Min="15" Max="90" HelperText="Estimated minutes to cook recipe" HelperTextOnFocus="true" @bind-Value="recipe.CookingTime" For="@(()=> recipe.CookingTime)" />
                             </MudItem>
                             <MudItem xs="6">
 
-                                <MudNumericField Label="Servings" HelperText="How many people the recipe Serves" Max="8" Min="1" @bind-Value="recipe.Servings" For="@(()=> recipe.Servings)" />
+                                <MudNumericField Label="Servings" HelperTextOnFocus="true" HelperText="How many people the recipe Serves" Max="8" Min="1" @bind-Value="recipe.Servings" For="@(()=> recipe.Servings)" />
                             </MudItem>
                             @if (Tags == null)
                             {
