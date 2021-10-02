@@ -4,11 +4,11 @@
     <MudForm>
         <MudGrid>
 
-            <MudItem xs="4">
+            <MudItem xs="3">
 
                 <MudNumericField Label="Number" T="int" @bind-Value="qingredient.QuantityNumber"></MudNumericField>
             </MudItem>
-            <MudItem xs="8">
+            <MudItem xs="3">
                 <MudSelect Label="Fraction" T="Fraction" @bind-Value="qingredient.Fraction">
                     @foreach (Fraction frac in Enum.GetValues(typeof(Fraction)))
                     {
@@ -17,7 +17,7 @@
                 </MudSelect>
 
             </MudItem>
-            <MudItem xs="12">
+            <MudItem xs="6">
 
                 @if (measurementType == MeasurementType.Volume)
                 {
