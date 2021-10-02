@@ -19,13 +19,14 @@
                     }
             </MudSelect>
         }
-        <MudSelect @bind-Value="ingredient.MeasurementType" Label="Measurement Type">
+        <MudText Typo="Typo.body1">Measurement Type:</MudText>
+        <MudRadioGroup @bind-SelectedOption="ingredient.MeasurementType">
             @foreach (MeasurementType measure in Enum.GetValues(typeof(MeasurementType)))
             {
 
-                <MudSelectItem Value="@measure"> @measure  </MudSelectItem>
+                <MudRadio Option="@measure">@measure</MudRadio>
             }
-        </MudSelect>
+        </MudRadioGroup>
         <MudText Color="Color.Error">Please do not add duplicate ingredients.  Make sure your ingredient is not already in the database before you save!</MudText>
         <MudText Color="Color.Error">Each ingredient should be the <span>most generic version</span> of the ingredient.  Use the shopping notes to specify Brand, fat-free/low-calorie, frozen, and other things for your recipe.</MudText>
         <MudText Color="Color.Primary">Example 1:  Your recipe calls for low sodium soy sauce.  The ingredient is soy sauce, specify "Low Sodium" in the shopping notes.</MudText>
@@ -50,7 +51,7 @@
 
             types = await _api.GetAsync<List<IngredientType>>("/api/ingredientTypes");
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             _snackbar.Add($"Error getting ingredient types {e.Message}", Severity.Error);
         }
