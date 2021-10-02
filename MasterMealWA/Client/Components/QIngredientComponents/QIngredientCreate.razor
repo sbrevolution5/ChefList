@@ -1,4 +1,5 @@
-﻿<EditForm Model="qingredient">
+﻿@using MasterMealWA.Client.Extensions
+<EditForm Model="qingredient">
 
     <MudForm>
         <MudGrid>
@@ -11,7 +12,7 @@
                 <MudSelect Label="Fraction" T="Fraction" @bind-Value="qingredient.Fraction">
                     @foreach (Fraction frac in Enum.GetValues(typeof(Fraction)))
                     {
-                        <MudSelectItem Value="@frac">@frac</MudSelectItem>
+                        <MudSelectItem Value="@frac">@frac.GetDescription()</MudSelectItem>
                     }
                 </MudSelect>
 
