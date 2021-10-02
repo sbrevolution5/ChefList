@@ -6,6 +6,7 @@
 @inject IDialogService _dialogService
 @inject IImageReader _imageReader
 @using System.Net.Http.Headers
+@attribute [Authorize]
 <EditForm Model="@recipe" OnValidSubmit="CreateRecipeAsync">
     <DataAnnotationsValidator />
     <MudGrid>
@@ -35,21 +36,21 @@
                                     Icon="@Icons.Filled.Image"
                                     Label="Upload Image"
                                     for="fileInput" />
-                            
-                        <MudCard>
-                            @if (!imageLoading)
-                            {
 
-                                <MudCardMedia Image="@(imageString)">
-                                </MudCardMedia>
-                            }
-                            else
-                            {
-                        <div class="d-flex align-center justify-center">
-                            <Loader />
-                        </div>
-                            }
-                        </MudCard>
+                            <MudCard>
+                                @if (!imageLoading)
+                                {
+
+                                    <MudCardMedia Image="@(imageString)">
+                                    </MudCardMedia>
+                                }
+                                else
+                                {
+                                    <div class="d-flex align-center justify-center">
+                                        <Loader />
+                                    </div>
+                                }
+                            </MudCard>
                             @if (imageUploaded)
                             {
 
@@ -77,10 +78,10 @@
                         </MudItem>
                         @if (Tags == null)
                         {
-                    <div class="d-flex align-center justify-center">
-                        <Loader />
-                    </div>
-                    }
+                            <div class="d-flex align-center justify-center">
+                                <Loader />
+                            </div>
+                        }
                         else
                         {
                             <MudItem xs="12">
@@ -124,11 +125,11 @@
                                 </MudCard>
                             </MudItem>
                         }
-                    <MudItem>
+                        <MudItem>
 
-                        <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Ingredients.Add(new())" />
-                        <MudFab OnClick="NewIngredient" Color="Color.Success" Icon="@Icons.Material.Filled.FiberNew" Label="Add ingredient not in list"></MudFab>
-                    </MudItem>
+                            <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Ingredients.Add(new())" />
+                            <MudFab OnClick="NewIngredient" Color="Color.Success" Icon="@Icons.Material.Filled.FiberNew" Label="Add ingredient not in list"></MudFab>
+                        </MudItem>
 
                     </MudGrid>
                 </MudCardContent>
@@ -153,10 +154,10 @@
                                 </MudCard>
                             </MudItem>
                         }
-                    <MudItem>
-                        <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Supplies.Add(new())" />
-                        <MudFab OnClick="NewSupply" Color="Color.Success" Icon="@Icons.Material.Filled.FiberNew" Label="Add supply not in list"></MudFab>
-                    </MudItem>
+                        <MudItem>
+                            <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Supplies.Add(new())" />
+                            <MudFab OnClick="NewSupply" Color="Color.Success" Icon="@Icons.Material.Filled.FiberNew" Label="Add supply not in list"></MudFab>
+                        </MudItem>
                     </MudGrid>
                 </MudCardContent>
             </MudCard>
@@ -285,13 +286,13 @@
     IBrowserFile file;
     private async Task ResetImage()
     {
-        if (image is null||image.Id == 1)
+        if (image is null || image.Id == 1)
         {
             _snackbar.Add("You already have the default image", Severity.Warning);
             return;
         }
         var parameters = new DialogParameters { ["recipe"] = recipe, ["creationPage"] = true };
-        var dialog = _dialogService.Show<ImageRecipeReset>("Are you sure?",parameters);
+        var dialog = _dialogService.Show<ImageRecipeReset>("Are you sure?", parameters);
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
