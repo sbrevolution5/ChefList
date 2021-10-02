@@ -47,7 +47,7 @@
                 }
             </MudItem>
             <MudItem xs="12">
-                <MudAutocomplete HelperText="Start typing to search for an ingredient, If you can't find your ingredient, create a new one with the button above." Required="true" Label="Ingredient" T="Ingredient" ValueChanged="@((Ingredient i)=>MeasureChange(i))" Value="qingredient.Ingredient" ToStringFunc="@(i=> $"{i.Name} ({i.MeasurementType.ToString()})")" SearchFunc="@Search" MaxItems="null" HelperTextOnFocus="true"></MudAutocomplete>
+                <MudAutocomplete HelperText="Start typing to search for an ingredient, If you can't find your ingredient, create a new one with the button below." Required="true" Label="Ingredient" T="Ingredient" ValueChanged="@((Ingredient i)=>MeasureChange(i))" Value="qingredient.Ingredient" ToStringFunc="@(i=> $"{i.Name} ({i.MeasurementType.ToString()})")" SearchFunc="@Search" MaxItems="null"></MudAutocomplete>
             </MudItem>
             <MudItem xs="12">
                 <MudTextField Margin="Margin.Dense" Label="Shopping Notes" @bind-Value="qingredient.Notes" HelperText="Specify brand, fat-free/low calorie, frozen/fresh, or anything specific to your recipe.  These will show up as sub-items on the shopping list." HelperTextOnFocus="true"></MudTextField>

@@ -58,18 +58,18 @@
                         </MudItem>
                         <MudItem xs="12">
 
-                            <MudTextField Label="Source" HelperText="Where did you get the recipe?  (if its personal, leave blank)" @bind-Value="recipe.RecipeSource" For="@(()=> recipe.RecipeSource)" />
+                            <MudTextField Label="Source" HelperTextOnFocus="true" HelperText="Where did you get the recipe?  (if its personal, leave blank)" @bind-Value="recipe.RecipeSource" For="@(()=> recipe.RecipeSource)" />
                         </MudItem>
                         <MudItem xs="12">
 
-                            <MudTextField Label="Source Link" HelperText="Link to the page you found this recipe on.  Please prefix with https://" @bind-Value="recipe.RecipeSourceUrl" For="@(()=> recipe.RecipeSourceUrl)" />
+                            <MudTextField Label="Source Link" HelperText="Link to the page you found this recipe on.  Please prefix with https://" @bind-Value="recipe.RecipeSourceUrl" HelperTextOnFocus="true" For="@(()=> recipe.RecipeSourceUrl)" />
                         </MudItem>
                         <MudItem xs="6">
 
-                            <MudNumericField Label="Cooking Time" Min="15" Max="90" HelperText="Estimated minutes to cook recipe" @bind-Value="recipe.CookingTime" For="@(()=> recipe.CookingTime)" />
+                            <MudNumericField Label="Cooking Time" Min="15" Max="90" HelperTextOnFocus="true" HelperText="Estimated minutes to cook recipe" @bind-Value="recipe.CookingTime" For="@(()=> recipe.CookingTime)" />
                         </MudItem>
                         <MudItem xs="6">
-                            <MudSelect T="int" @bind-Value="recipe.Servings" Label="Servings" HelperText="How many people the recipe serves.  Users can select any serving size they'd like displayed or added to their shopping list, and the recipe will be scaled.">
+                            <MudSelect T="int" HelperTextOnFocus="true" @bind-Value="recipe.Servings" Label="Servings" HelperText="How many people the recipe serves.  Users can select any serving size they'd like displayed or added to their shopping list, and the recipe will be scaled.">
                                 <MudSelectItem Value="1">1</MudSelectItem>
                                 <MudSelectItem Value="2">2</MudSelectItem>
                                 <MudSelectItem Value="4">4</MudSelectItem>
