@@ -69,7 +69,7 @@
                             <MudNumericField Label="Cooking Time" Min="15" Max="90" HelperText="Estimated minutes to cook recipe" @bind-Value="recipe.CookingTime" For="@(()=> recipe.CookingTime)" />
                         </MudItem>
                         <MudItem xs="6">
-                            <MudSelect T="int" @bind-Value="recipe.Servings" Label="Servings" HelperText="How many people the recipe serves.  Users can select the serving size they'd like displayed or added to their shopping list.">
+                            <MudSelect T="int" @bind-Value="recipe.Servings" Label="Servings" HelperText="How many people the recipe serves.  Users can select any serving size they'd like displayed or added to their shopping list, and the recipe will be scaled.">
                                 <MudSelectItem Value="1">1</MudSelectItem>
                                 <MudSelectItem Value="2">2</MudSelectItem>
                                 <MudSelectItem Value="4">4</MudSelectItem>

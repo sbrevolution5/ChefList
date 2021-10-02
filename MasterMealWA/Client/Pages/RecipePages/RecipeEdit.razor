@@ -77,7 +77,11 @@ else
                             </MudItem>
                             <MudItem xs="6">
 
-                                <MudNumericField Label="Servings" HelperTextOnFocus="true" HelperText="How many people the recipe Serves" Max="8" Min="1" @bind-Value="recipe.Servings" For="@(()=> recipe.Servings)" />
+                                <MudSelect T="int" @bind-Value="recipe.Servings" Label="Servings" HelperText="How many people the recipe serves.  Users can select any serving size they'd like displayed or added to their shopping list, and the recipe will be scaled.">
+                                    <MudSelectItem Value="1">1</MudSelectItem>
+                                    <MudSelectItem Value="2">2</MudSelectItem>
+                                    <MudSelectItem Value="4">4</MudSelectItem>
+                                </MudSelect>
                             </MudItem>
                             @if (Tags == null)
                             {
