@@ -19,13 +19,14 @@
                     }
             </MudSelect>
         }
-        <MudSelect @bind-Value="ingredient.MeasurementType" Label="Measurement Type">
+        <MudText Typo="Typo.body1">Measurement Type:</MudText>
+        <MudRadioGroup @bind-SelectedOption="ingredient.MeasurementType" Label="Measurement Type">
             @foreach (MeasurementType measure in Enum.GetValues(typeof(MeasurementType)))
             {
 
-                <MudSelectItem Value="@measure">@measure</MudSelectItem>
+                <MudRadio Option="@measure">@measure</MudRadio>
             }
-        </MudSelect>
+        </MudRadioGroup>
         @*<EditForm OnValidSubmit="CreateIngredient"> </EditForm>*@
     </DialogContent>
     <DialogActions>
