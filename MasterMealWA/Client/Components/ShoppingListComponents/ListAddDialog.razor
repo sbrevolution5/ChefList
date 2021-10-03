@@ -1,9 +1,10 @@
-﻿<MudDialog>
+﻿@inject IApiService _api
+<MudDialog>
     <DialogContent>
 
         <MudTextField T="string" @bind-Text="listItem.QuantityString" Label="Type item quantity/name here." HelperText="Will add a simple plaintext element">
         </MudTextField>
-        <MudSelect Label="Ingredient Type" HelperText="Where you'd find the ingredient while shopping" @bind-Value="ingredient.TypeId">
+        <MudSelect Label="Ingredient Type" HelperText="Where you'd find the ingredient while shopping" @bind-Value="listItem.IngredientTypeId">
             @foreach (var type in types)
             {
                 <MudSelectItem Value="@type.Id">@type.Name</MudSelectItem>
@@ -31,5 +32,6 @@
     public void AddItem()
     {
 
+        _api.CreateAsync<ShoppingIngredient>()
     }
 }
