@@ -1,11 +1,12 @@
 ﻿@page "/shoppinglists/details/{id}"
 @inject IApiService _api
+@inject IDialogService _dialogService
 
 @if (list is null)
 {
-<div class="d-flex align-center justify-center">
-    <Loader />
-</div>
+    <div class="d-flex align-center justify-center">
+        <Loader />
+    </div>
 
 }
 else
@@ -55,12 +56,20 @@ else
     [Parameter]
     public string id { get; set; }
     public ShoppingList list { get; set; }
+    public List<IngredientType> typeList { get; set; }
     protected override async Task OnInitializedAsync()
     {
         list = await _api.GetAsync<ShoppingList>($"/api/shoppinglists/{Convert.ToInt32(id)}");
     }
-    public void AddItem()
-        {
+    public async Task AddItem()
+    {
 
+        var parameters = new DialogParameters { ["listId"] = list.Id, ["types"] = typeList};
+        var dialog = _dialogService.Show<ListAddDialog>("Add to list", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            list = await _api.GetAsync<ShoppingList>($"/api/shoppinglists/{Convert.ToInt32(id)}");
         }
+    }
 }

@@ -25,7 +25,7 @@
     public int listId { get; set; }
     [Parameter]
     public List<IngredientType> types { get; set; }
-    public ShoppingIngredient listItem { get; set; }
+    public ShoppingIngredient listItem { get; set; } = new();
     public void Cancel()
     {
         MudDialog.Cancel();
