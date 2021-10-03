@@ -45,7 +45,7 @@ else
                                     {
                                         <MudButtonGroup>
                                             <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="@(()=>EditItem(item))"></MudIconButton>
-                                            <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="DeleteItem"></MudIconButton>
+                                            <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@(()=>DeleteItem(item))"></MudIconButton>
                                         </MudButtonGroup>
                                     }
                                 </MudPaper>
@@ -89,11 +89,11 @@ else
             list = await _api.GetAsync<ShoppingList>($"/api/shoppinglists/{Convert.ToInt32(id)}");
         }
     }
-    public async Task DeleteItem()
+    public async Task DeleteItem(ShoppingIngredient item)
     {
 
-        var parameters = new DialogParameters { ["listId"] = list.Id, ["types"] = typeList };
-        var dialog = _dialogService.Show<ListAddDialog>("Add to list", parameters);
+        var parameters = new DialogParameters { ["listId"] = list.Id, ["ListItem"] = item };
+        var dialog = _dialogService.Show<ListAddDialog>("Delete Item", parameters);
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
