@@ -162,7 +162,7 @@
         typeList = (await _api.GetAsync<IEnumerable<IngredientType>>("api/IngredientTypes")).ToList();
         list = await _api.GetAsync<ShoppingList>($"/api/shoppinglists/{Convert.ToInt32(id)}");
         displayList = list.ShoppingIngredients;
-        ListCategories = list.ShoppingIngredients.Select(l => l.IngredientType).Distinct().ToList();
+        ListCategories = displayList.Select(l => l.IngredientType).Distinct().ToList();
     }
     public async Task AddItem()
     {
@@ -222,5 +222,6 @@
         {
             displayList = list.ShoppingIngredients;
         }
+        ListCategories = displayList.Select(l => l.IngredientType).Distinct().ToList();
     }
 }
