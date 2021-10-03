@@ -61,13 +61,17 @@ namespace MasterMealWA.Server.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutShoppingList(int id, ShoppingList shoppingList)
         {
-            var userId = _userManager.GetUserId(User);
+            var userId = HttpContext.GetUserId();
             if (id != shoppingList.Id||shoppingList.ChefId != userId)
             {
                 return BadRequest();
             }
 
             _context.Entry(shoppingList).State = EntityState.Modified;
+            foreach (var item in shoppingList.ShoppingIngredients)
+            {
+                _context.Entry(item).State = EntityState.Modified;
+            }
 
             try
             {
