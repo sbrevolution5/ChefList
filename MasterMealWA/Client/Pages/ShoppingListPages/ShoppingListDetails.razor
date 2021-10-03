@@ -2,144 +2,152 @@
 @inject IApiService _api
 @inject IDialogService _dialogService
 
-<MudText>With "Pantry Mode" on, you can check off items you already have, to remove them from the list when not in "pantry mode"</MudText>
-<MudDivider></MudDivider>
-@if (list is null)
-{
-    <div class="d-flex align-center justify-center">
-        <Loader />
-    </div>
+<MudGrid>
+    <MudItem xs="12">
 
-}
-else
-{
+        <MudText>With "Pantry Mode" on, you can check off items you already have, to remove them from the list when not in "pantry mode"</MudText>
+        <MudDivider></MudDivider>
+    </MudItem>
+    <MudItem xs="12">
 
-    <MudCard>
-        <MudCardHeader>
+        @if (list is null)
+        {
+            <div class="d-flex align-center justify-center">
+                <Loader />
+            </div>
 
-            <MudText Typo="Typo.h4">@list.Name</MudText>
-        </MudCardHeader>
-        <MudDivider>
+        }
+        else
+        {
 
-        </MudDivider>
-        <MudCardContent>
-            <MudRadioGroup T="ListMode" SelectedOptionChanged="(ListMode v)=>ModeChange(v)">
-                @foreach (ListMode mode in Enum.GetValues(typeof(ListMode)))
-                {
-                    <MudRadio Option="@mode">@mode</MudRadio>
-                }
-            </MudRadioGroup>
-            @if (CurrentMode == ListMode.Pantry)
-            {
-                <MudFab Color="Color.Success" Label="Save Pantry Items" Icon="@Icons.Material.Filled.Save" OnClick="UpdateList"></MudFab>
-            }
-            <MudFab Icon="@Icons.Material.Filled.Add" Color="Color.Success" OnClick="AddItem" Label="Add Shopping Item" />
-            <MudSwitch @bind-Checked="CategorySort" Label="Sort By Category"></MudSwitch>
-            <MudGrid>
-                <MudItem xs="12">
-                    @if (!CategorySort)
+            <MudCard>
+                <MudCardHeader>
+
+                    <MudText Typo="Typo.h4">@list.Name</MudText>
+                </MudCardHeader>
+                <MudDivider>
+
+                </MudDivider>
+                <MudCardContent>
+                    <MudRadioGroup T="ListMode" SelectedOptionChanged="(ListMode v)=>ModeChange(v)">
+                        @foreach (ListMode mode in Enum.GetValues(typeof(ListMode)))
+                        {
+                            <MudRadio Option="@mode">@mode</MudRadio>
+                        }
+                    </MudRadioGroup>
+                    @if (CurrentMode == ListMode.Pantry)
                     {
-                        <MudList>
-                            @foreach (var item in displayList)
+                        <MudFab Color="Color.Success" Label="Save Pantry Items" Icon="@Icons.Material.Filled.Save" OnClick="UpdateList"></MudFab>
+                    }
+                    <MudFab Icon="@Icons.Material.Filled.Add" Color="Color.Success" OnClick="AddItem" Label="Add Shopping Item" />
+                    <MudSwitch @bind-Checked="CategorySort" Label="Sort By Category"></MudSwitch>
+                    <MudGrid>
+                        <MudItem xs="12">
+                            @if (!CategorySort)
                             {
-                                <MudListItem>
-                                    <MudPaper Elevation="2">
-                                        @if (CurrentMode == ListMode.Pantry)
-                                        {
-
-                                            <MudCheckBox @bind-Checked="item.InPantry"  Label="@item.QuantityString" Color="Color.Secondary">
-                                            </MudCheckBox>
-                                        }
-                                        else if (CurrentMode == ListMode.Store)
-                                        {
-
-                                            <MudCheckBox @bind-Checked="item.InCart" Label="@item.QuantityString" Color="Color.Secondary">
-                                            </MudCheckBox>
-                                        }
-                                        else
-                                        {
-                                            <MudText>@item.QuantityString</MudText>
-                                        }
-                                        @if (item.Notes.Count > 0)
-                                        {
-                                            <MudList>
-                                                @foreach (var note in item.Notes)
+                                <MudList>
+                                    @foreach (var item in displayList)
+                                    {
+                                        <MudListItem>
+                                            <MudPaper Elevation="2">
+                                                @if (CurrentMode == ListMode.Pantry)
                                                 {
-                                                    <MudListItem>@note</MudListItem>
+
+                                                    <MudCheckBox @bind-Checked="item.InPantry" Label="@item.QuantityString" Color="Color.Secondary">
+                                                    </MudCheckBox>
                                                 }
-                                            </MudList>
-                                        }
-                                        @if (item.UserString && CurrentMode == ListMode.Pantry)
-                                        {
-                                            <MudButtonGroup>
-                                                <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="@(()=>EditItem(item))"></MudIconButton>
-                                                <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@(()=>DeleteItem(item))"></MudIconButton>
-                                            </MudButtonGroup>
-                                        }
-                                    </MudPaper>
-                                </MudListItem>
+                                                else if (CurrentMode == ListMode.Store)
+                                                {
 
+                                                    <MudCheckBox @bind-Checked="item.InCart" Label="@item.QuantityString" Color="Color.Secondary">
+                                                    </MudCheckBox>
+                                                }
+                                                else
+                                                {
+                                                    <MudText>@item.QuantityString</MudText>
+                                                }
+                                                @if (item.Notes.Count > 0)
+                                                {
+                                                    <MudList>
+                                                        @foreach (var note in item.Notes)
+                                                        {
+                                                            <MudListItem>@note</MudListItem>
+                                                        }
+                                                    </MudList>
+                                                }
+                                                @if (item.UserString && CurrentMode == ListMode.Pantry)
+                                                {
+                                                    <MudButtonGroup>
+                                                        <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="@(()=>EditItem(item))"></MudIconButton>
+                                                        <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@(()=>DeleteItem(item))"></MudIconButton>
+                                                    </MudButtonGroup>
+                                                }
+                                            </MudPaper>
+                                        </MudListItem>
+
+                                    }
+                                </MudList>
                             }
-                        </MudList>
-                    }
-                    else
-                    {
-                        <MudList>
-                            @foreach (var category in ListCategories)
+                            else
                             {
-                                <MudDivider />
-                                <MudListSubheader>
-                                    @category.Name
-                                </MudListSubheader>
-                                @foreach (var item in displayList.Where(i => i.IngredientTypeId == category.Id))
-                                {
-                                    <MudListItem>
-                                        <MudPaper Elevation="2">
+                                <MudList>
+                                    @foreach (var category in ListCategories)
+                                    {
+                                        <MudDivider />
+                                        <MudListSubheader>
+                                            @category.Name
+                                        </MudListSubheader>
+                                        @foreach (var item in displayList.Where(i => i.IngredientTypeId == category.Id))
+                                        {
+                                            <MudListItem>
+                                                <MudPaper Elevation="2">
 
-                                            @if (CurrentMode == ListMode.Pantry)
-                                            {
-
-                                                <MudCheckBox @bind-Checked="item.InPantry" Label="@item.QuantityString" Color="Color.Secondary">
-                                                </MudCheckBox>
-                                            }
-                                            else if (CurrentMode == ListMode.Store)
-                                            {
-
-                                                <MudCheckBox @bind-Checked="item.InCart" Label="@item.QuantityString" Color="Color.Secondary">
-                                                </MudCheckBox>
-                                            }
-                                            else
-                                            {
-                                                <MudText>@item.QuantityString</MudText>
-                                            }
-                                            @if (item.Notes.Count > 0)
-                                            {
-                                                <MudList>
-                                                    @foreach (var note in item.Notes)
+                                                    @if (CurrentMode == ListMode.Pantry)
                                                     {
-                                                        <MudListItem>@note</MudListItem>
-                                                    }
-                                                </MudList>
-                                            }
-                                            @if (item.UserString && CurrentMode == ListMode.Pantry)
-                                            {
-                                                <MudButtonGroup>
-                                                    <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="@(()=>EditItem(item))"></MudIconButton>
-                                                    <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@(()=>DeleteItem(item))"></MudIconButton>
-                                                </MudButtonGroup>
-                                            }
-                                        </MudPaper>
-                                    </MudListItem>
-                                }
-                            }
-                        </MudList>
-                    }
 
-                </MudItem>
-            </MudGrid>
-        </MudCardContent>
-    </MudCard>
-}
+                                                        <MudCheckBox @bind-Checked="item.InPantry" Label="@item.QuantityString" Color="Color.Secondary">
+                                                        </MudCheckBox>
+                                                    }
+                                                    else if (CurrentMode == ListMode.Store)
+                                                    {
+
+                                                        <MudCheckBox @bind-Checked="item.InCart" Label="@item.QuantityString" Color="Color.Secondary">
+                                                        </MudCheckBox>
+                                                    }
+                                                    else
+                                                    {
+                                                        <MudText>@item.QuantityString</MudText>
+                                                    }
+                                                    @if (item.Notes.Count > 0)
+                                                    {
+                                                        <MudList>
+                                                            @foreach (var note in item.Notes)
+                                                            {
+                                                                <MudListItem>@note</MudListItem>
+                                                            }
+                                                        </MudList>
+                                                    }
+                                                    @if (item.UserString && CurrentMode == ListMode.Pantry)
+                                                    {
+                                                        <MudButtonGroup>
+                                                            <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="@(()=>EditItem(item))"></MudIconButton>
+                                                            <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@(()=>DeleteItem(item))"></MudIconButton>
+                                                        </MudButtonGroup>
+                                                    }
+                                                </MudPaper>
+                                            </MudListItem>
+                                        }
+                                    }
+                                </MudList>
+                            }
+
+                        </MudItem>
+                    </MudGrid>
+                </MudCardContent>
+            </MudCard>
+        }
+    </MudItem>
+</MudGrid>
 @code {
     [Parameter]
     public string id { get; set; }
