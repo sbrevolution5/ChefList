@@ -31,7 +31,6 @@ else
                                 <MudPaper Elevation="2">
 
                                     <MudCheckBox @bind-Checked="item.InPantry" Label="@item.QuantityString" Color="Color.Secondary">
-
                                     </MudCheckBox>
                                     @if (item.Notes.Count > 0)
                                     {
@@ -41,6 +40,13 @@ else
                                                 <MudListItem>@note</MudListItem>
                                             }
                                         </MudList>
+                                    }
+                                    @if (item.UserString)
+                                    {
+                                        <MudButtonGroup>
+                                            <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="EditItem"></MudIconButton>
+                                            <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="DeleteItem"></MudIconButton>
+                                        </MudButtonGroup>
                                     }
                                 </MudPaper>
                             </MudListItem>
@@ -65,6 +71,28 @@ else
     {
 
         var parameters = new DialogParameters { ["listId"] = list.Id, ["types"] = typeList};
+        var dialog = _dialogService.Show<ListAddDialog>("Add to list", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            list = await _api.GetAsync<ShoppingList>($"/api/shoppinglists/{Convert.ToInt32(id)}");
+        }
+    }
+    public async Task EditItem()
+    {
+
+        var parameters = new DialogParameters { ["listId"] = list.Id, ["types"] = typeList };
+        var dialog = _dialogService.Show<ListAddDialog>("Add to list", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            list = await _api.GetAsync<ShoppingList>($"/api/shoppinglists/{Convert.ToInt32(id)}");
+        }
+    }
+    public async Task DeleteItem()
+    {
+
+        var parameters = new DialogParameters { ["listId"] = list.Id, ["types"] = typeList };
         var dialog = _dialogService.Show<ListAddDialog>("Add to list", parameters);
         var result = await dialog.Result;
         if (!result.Cancelled)
