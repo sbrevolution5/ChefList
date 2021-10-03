@@ -14,7 +14,7 @@
         <MudIconButton Icon="@Icons.Material.Filled.ModeNight" OnClick="@((e) => DarkMode())">Toggle Dark/Light Mode</MudIconButton>
         <LoginDisplay></LoginDisplay>
     </MudAppBar>
-    <MudDrawer @bind-Open="@_drawerOpen" ClipMode="DrawerClipMode.Never">
+    <MudDrawer @bind-Open="@_drawerOpen" ClipMode="DrawerClipMode.Docked">
         <NavMenu />
     </MudDrawer>
     <MudMainContent>
