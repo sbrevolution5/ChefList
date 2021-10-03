@@ -20,39 +20,80 @@ else
 
         </MudDivider>
         <MudCardContent>
-            <MudIconButton Icon="@Icons.Material.Filled.Add" OnClick="AddItem">Add Shopping Item</MudIconButton>
+            <MudIconButton Icon="@Icons.Material.Filled.Add" Variant="Variant.Filled" Color="Color.Success" OnClick="AddItem" Title="Add Shopping Item" />
+            <MudSwitch @bind-Checked="CategorySort" Label="Sort By Category"></MudSwitch>
             <MudGrid>
                 <MudItem xs="12">
+                    @if (!CategorySort)
+                    {
+                        <MudList>
+                            @foreach (var item in list.ShoppingIngredients)
+                            {
+                                <MudListItem>
+                                    <MudPaper Elevation="2">
 
-                    <MudList>
-                        @foreach (var item in list.ShoppingIngredients)
-                        {
-                            <MudListItem>
-                                <MudPaper Elevation="2">
+                                        <MudCheckBox @bind-Checked="item.InPantry" Label="@item.QuantityString" Color="Color.Secondary">
+                                        </MudCheckBox>
+                                        @if (item.Notes.Count > 0)
+                                        {
+                                            <MudList>
+                                                @foreach (var note in item.Notes)
+                                                {
+                                                    <MudListItem>@note</MudListItem>
+                                                }
+                                            </MudList>
+                                        }
+                                        @if (item.UserString)
+                                        {
+                                            <MudButtonGroup>
+                                                <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="@(()=>EditItem(item))"></MudIconButton>
+                                                <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@(()=>DeleteItem(item))"></MudIconButton>
+                                            </MudButtonGroup>
+                                        }
+                                    </MudPaper>
+                                </MudListItem>
 
-                                    <MudCheckBox @bind-Checked="item.InPantry" Label="@item.QuantityString" Color="Color.Secondary">
-                                    </MudCheckBox>
-                                    @if (item.Notes.Count > 0)
+                            }
+                        </MudList>
+                    }
+                    else
+                    {
+                        <MudList>
+                            @foreach (var category in ListCategories)
+                            {
+                                <MudListSubheader>
+                                    @category.Name
+                                </MudListSubheader>
+                                    @foreach (var item in list.ShoppingIngredients.Where(i => i.IngredientTypeId == category.Id))
                                     {
-                                        <MudList>
-                                            @foreach (var note in item.Notes)
-                                            {
-                                                <MudListItem>@note</MudListItem>
-                                            }
-                                        </MudList>
-                                    }
-                                    @if (item.UserString)
-                                    {
-                                        <MudButtonGroup>
-                                            <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="@(()=>EditItem(item))"></MudIconButton>
-                                            <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@(()=>DeleteItem(item))"></MudIconButton>
-                                        </MudButtonGroup>
-                                    }
-                                </MudPaper>
-                            </MudListItem>
+                                        <MudListItem>
+                                            <MudPaper Elevation="2">
 
-                        }
-                    </MudList>
+                                                <MudCheckBox @bind-Checked="item.InPantry" Label="@item.QuantityString" Color="Color.Secondary">
+                                                </MudCheckBox>
+                                                @if (item.Notes.Count > 0)
+                                                {
+                                                    <MudList>
+                                                        @foreach (var note in item.Notes)
+                                                        {
+                                                            <MudListItem>@note</MudListItem>
+                                                        }
+                                                    </MudList>
+                                                }
+                                                @if (item.UserString)
+                                                {
+                                                    <MudButtonGroup>
+                                                        <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="@(()=>EditItem(item))"></MudIconButton>
+                                                        <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@(()=>DeleteItem(item))"></MudIconButton>
+                                                    </MudButtonGroup>
+                                                }
+                                            </MudPaper>
+                                        </MudListItem>
+                                    }
+                            }
+                        </MudList>
+                    }
+
                 </MudItem>
             </MudGrid>
         </MudCardContent>
@@ -63,15 +104,18 @@ else
     public string id { get; set; }
     public ShoppingList list { get; set; }
     public List<IngredientType> typeList { get; set; }
+    public bool CategorySort { get; set; }
+    public List<IngredientType> ListCategories { get; set; }
     protected override async Task OnInitializedAsync()
     {
         typeList = (await _api.GetAsync<IEnumerable<IngredientType>>("api/IngredientTypes")).ToList();
         list = await _api.GetAsync<ShoppingList>($"/api/shoppinglists/{Convert.ToInt32(id)}");
+        ListCategories = list.ShoppingIngredients.Select(l => l.IngredientType).Distinct().ToList();
     }
     public async Task AddItem()
     {
 
-        var parameters = new DialogParameters { ["listId"] = list.Id, ["types"] = typeList};
+        var parameters = new DialogParameters { ["listId"] = list.Id, ["types"] = typeList };
         var dialog = _dialogService.Show<ListAddDialog>("Add to list", parameters);
         var result = await dialog.Result;
         if (!result.Cancelled)
@@ -82,7 +126,7 @@ else
     public async Task EditItem(ShoppingIngredient item)
     {
 
-        var parameters = new DialogParameters { ["listId"] = list.Id, ["types"] = typeList,["listItem"] = item };
+        var parameters = new DialogParameters { ["listId"] = list.Id, ["types"] = typeList, ["listItem"] = item };
         var dialog = _dialogService.Show<ListItemUserEdit>("Edit Item", parameters);
         var result = await dialog.Result;
         if (!result.Cancelled)
