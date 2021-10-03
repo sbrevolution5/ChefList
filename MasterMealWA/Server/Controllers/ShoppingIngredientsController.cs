@@ -113,6 +113,22 @@ namespace MasterMealWA.Server.Controllers
 
             return NoContent();
         }
+        [HttpDelete("{id}/{listId}")]
+        public async Task<IActionResult> DeleteShoppingIngredient(int id,int listId)
+        {
+            var shoppingList = await _context.ShoppingList.Include(s=>s.ShoppingIngredients).Where(s=>s.Id==listId).FirstOrDefaultAsync();
+            var shoppingIngredient = await _context.ShoppingIngredient.FindAsync(id);
+            if (shoppingIngredient == null)
+            {
+                return NotFound();
+            }
+
+            shoppingList.ShoppingIngredients.Remove(shoppingIngredient);
+            _context.ShoppingIngredient.Remove(shoppingIngredient);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
 
         private bool ShoppingIngredientExists(int id)
         {
