@@ -19,7 +19,7 @@ else
 
         </MudDivider>
         <MudCardContent>
-
+            <MudButton OnClick="AddItem">Add Shopping Item</MudButton>
             <MudGrid>
                 <MudItem xs="12">
 
@@ -59,4 +59,8 @@ else
     {
         list = await _api.GetAsync<ShoppingList>($"/api/shoppinglists/{Convert.ToInt32(id)}");
     }
+    public void AddItem()
+        {
+
+        }
 }
