@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MasterMealWA.Shared.Models.Dtos
 {
-    class AddToShoppingDto
+    public class AddToShoppingDto
     {
         public ShoppingIngredient Ingredient { get; set; }
         public int ListId { get; set; }

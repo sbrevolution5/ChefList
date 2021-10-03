@@ -1,4 +1,5 @@
-﻿@inject IApiService _api
+﻿@using MasterMealWA.Shared.Models.Dtos
+@inject IApiService _api
 <MudDialog>
     <DialogContent>
 
@@ -21,7 +22,7 @@
     [CascadingParameter]
     MudDialogInstance MudDialog { get; set; }
     [Parameter]
-    public ShoppingList myList { get; set; }
+    public int listId { get; set; }
     [Parameter]
     public List<IngredientType> types { get; set; }
     public ShoppingIngredient listItem { get; set; }
@@ -29,9 +30,23 @@
     {
         MudDialog.Cancel();
     }
-    public void AddItem()
+    public async Task AddItem()
     {
+        var dto = new AddToShoppingDto()
+        {
+            Ingredient = listItem,
+            ListId = listId
+        };
+        try
+        {
+            await _api.CreateAsync<AddToShoppingDto>("/api/ShoppingIngredients/AddToList/", dto);
+            _snackbar.Add("Added to shopping list!", Severity.Success);
+            MudDialog.Close(DialogResult.Ok<ShoppingIngredient>(listItem));
+        }
+        catch (Exception e)
+        {
+            _snackbar.Add($"Could not add to list {e.Message}", Severity.Error);
+        }
 
-        _api.CreateAsync<ShoppingIngredient>()
     }
 }

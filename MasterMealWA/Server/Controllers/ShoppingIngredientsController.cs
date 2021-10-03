@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MasterMealWA.Server.Data;
 using MasterMealWA.Shared.Models;
+using MasterMealWA.Shared.Models.Dtos;
 
 namespace MasterMealWA.Server.Controllers
 {
@@ -82,6 +83,19 @@ namespace MasterMealWA.Server.Controllers
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetShoppingIngredient", new { id = shoppingIngredient.Id }, shoppingIngredient);
+        }
+        //POST: api/ShoppingIngredients/AddToList/
+        [HttpPost("AddToList")]
+        public async Task<ActionResult<ShoppingIngredient>> PostShoppingIngredientAndAddToList(AddToShoppingDto dto)
+        {
+
+            var list=await _context.ShoppingList.FindAsync(dto.ListId);
+
+            _context.ShoppingIngredient.Add(dto.Ingredient);
+            list.ShoppingIngredients.Add(dto.Ingredient);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetShoppingIngredient", new { id = dto.Ingredient.Id }, dto.Ingredient);
         }
 
         // DELETE: api/ShoppingIngredients/5
