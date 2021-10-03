@@ -5,7 +5,7 @@
 <MudGrid>
     <MudItem xs="12">
 
-        <MudText>With "Pantry Mode" on, you can check off items you already have, to remove them from the list when not in "pantry mode"</MudText>
+        <MudText>With "Pantry Mode" on, you can check off items you already have, to remove them from the list when in "Store Mode".  Be sure to hit the save button!</MudText>
         <MudDivider></MudDivider>
     </MudItem>
     <MudItem xs="12">
@@ -53,7 +53,7 @@
                                                 @if (CurrentMode == ListMode.Pantry)
                                                 {
 
-                                                    <MudCheckBox @bind-Checked="item.InPantry" Label="@item.QuantityString" Color="Color.Secondary">
+                                                    <MudCheckBox UncheckedIcon="@Icons.Material.Filled.ShoppingCart" CheckedIcon="@Icons.Material.Filled.Home" @bind-Checked="item.InPantry" Label="@item.QuantityString" Color="Color.Secondary">
                                                     </MudCheckBox>
                                                 }
                                                 else if (CurrentMode == ListMode.Store)
