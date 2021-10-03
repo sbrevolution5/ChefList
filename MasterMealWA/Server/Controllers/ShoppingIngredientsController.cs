@@ -89,7 +89,7 @@ namespace MasterMealWA.Server.Controllers
         public async Task<ActionResult<ShoppingIngredient>> PostShoppingIngredientAndAddToList(AddToShoppingDto dto)
         {
 
-            var list=await _context.ShoppingList.FindAsync(dto.ListId);
+            var list=await _context.ShoppingList.Include(s=>s.ShoppingIngredients).Where(s=> s.Id==dto.ListId).FirstOrDefaultAsync();
 
             _context.ShoppingIngredient.Add(dto.Ingredient);
             list.ShoppingIngredients.Add(dto.Ingredient);
