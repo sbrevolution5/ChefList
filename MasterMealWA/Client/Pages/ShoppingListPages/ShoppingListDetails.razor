@@ -93,8 +93,8 @@ else
     public async Task DeleteItem(ShoppingIngredient item)
     {
 
-        var parameters = new DialogParameters { ["listId"] = list.Id, ["ListItem"] = item };
-        var dialog = _dialogService.Show<ListAddDialog>("Delete Item", parameters);
+        var parameters = new DialogParameters { ["listId"] = list.Id, ["item"] = item };
+        var dialog = _dialogService.Show<ListItemUserDelete>("Delete Item", parameters);
         var result = await dialog.Result;
         if (!result.Cancelled)
         {

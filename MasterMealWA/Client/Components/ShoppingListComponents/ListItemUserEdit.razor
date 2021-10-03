@@ -40,7 +40,7 @@
     {
         try
         {
-            await _api.UpdateAsync<ShoppingIngredient>("/api/ShoppingIngredients/", listItem);
+            await _api.UpdateAsync<ShoppingIngredient>($"/api/ShoppingIngredients/{listItem.Id}", listItem);
             _snackbar.Add("Item Edited", Severity.Success);
             MudDialog.Close(DialogResult.Ok<ShoppingIngredient>(listItem));
         }
