@@ -1,0 +1,58 @@
+﻿@using MasterMealWA.Shared.Models.Dtos
+@inject IApiService _api
+<MudDialog>
+    <DialogContent>
+
+        <MudTextField T="string" @bind-Text="listItem.QuantityString" Label="Type item quantity/name here." HelperText="Will add a simple plaintext element">
+        </MudTextField>
+        <MudSelect Label="Ingredient Type" HelperText="Where you'd find the ingredient while shopping" @bind-Value="listItem.IngredientTypeId">
+            @foreach (var type in types)
+            {
+                <MudSelectItem Value="@type.Id">@type.Name</MudSelectItem>
+            }
+        </MudSelect>
+
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel" Variant="Variant.Filled" Color="Color.Dark">Cancel</MudButton>
+        <MudButton Color="Color.Success" OnClick="AddItem" Variant="Variant.Filled">Save</MudButton>
+    </DialogActions>
+</MudDialog>
+@code {
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; }
+    [Parameter]
+    public int listId { get; set; }
+    [Parameter]
+    public List<IngredientType> types { get; set; }
+    public ShoppingIngredient listItem { get; set; } = new();
+    protected override void OnInitialized()
+    {
+        listItem.UserString = true;
+        listItem.Notes = new();
+        base.OnInitialized();
+    }
+    public void Cancel()
+    {
+        MudDialog.Cancel();
+    }
+    public async Task AddItem()
+    {
+        var dto = new AddToShoppingDto()
+        {
+            Ingredient = listItem,
+            ListId = listId
+        };
+        try
+        {
+            await _api.CreateAsync<AddToShoppingDto>("/api/ShoppingIngredients/AddToList/", dto);
+            _snackbar.Add("Added to shopping list!", Severity.Success);
+            MudDialog.Close(DialogResult.Ok<ShoppingIngredient>(listItem));
+        }
+        catch (Exception e)
+        {
+            _snackbar.Add($"Could not add to list {e.Message}", Severity.Error);
+        }
+
+    }
+}

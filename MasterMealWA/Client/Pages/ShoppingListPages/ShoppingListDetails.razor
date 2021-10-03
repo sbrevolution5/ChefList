@@ -1,62 +1,227 @@
 ﻿@page "/shoppinglists/details/{id}"
 @inject IApiService _api
+@inject IDialogService _dialogService
 
-@if (list is null)
-{
-<div class="d-flex align-center justify-center">
-    <Loader />
-</div>
+<MudGrid>
+    <MudItem xs="12">
 
-}
-else
-{
-    <MudCard>
-        <MudCardHeader>
+        <MudText>With "Pantry Mode" on, you can check off items you already have, to remove them from the list when in "Store Mode".  Be sure to hit the save button!</MudText>
+        <MudDivider></MudDivider>
+    </MudItem>
+    <MudItem xs="12">
 
-            <MudText Typo="Typo.h4">@list.Name</MudText>
-        </MudCardHeader>
-        <MudDivider>
+        @if (list is null)
+        {
+            <div class="d-flex align-center justify-center">
+                <Loader />
+            </div>
 
-        </MudDivider>
-        <MudCardContent>
+        }
+        else
+        {
 
-            <MudGrid>
-                <MudItem xs="12">
+            <MudCard>
+                <MudCardHeader>
 
-                    <MudList>
-                        @foreach (var item in list.ShoppingIngredients)
+                    <MudText Typo="Typo.h4">@list.Name</MudText>
+                </MudCardHeader>
+                <MudDivider>
+
+                </MudDivider>
+                <MudCardContent>
+                    <MudRadioGroup T="ListMode" SelectedOptionChanged="(ListMode v)=>ModeChange(v)">
+                        @foreach (ListMode mode in Enum.GetValues(typeof(ListMode)))
                         {
-                            <MudListItem>
-                                <MudPaper Elevation="2">
-
-                                    <MudCheckBox @bind-Checked="item.InPantry" Label="@item.QuantityString" Color="Color.Secondary">
-
-                                    </MudCheckBox>
-                                    @if (item.Notes.Count > 0)
-                                    {
-                                        <MudList>
-                                            @foreach (var note in item.Notes)
-                                            {
-                                                <MudListItem>@note</MudListItem>
-                                            }
-                                        </MudList>
-                                    }
-                                </MudPaper>
-                            </MudListItem>
-
+                            <MudRadio Option="@mode">@mode</MudRadio>
                         }
-                    </MudList>
-                </MudItem>
-            </MudGrid>
-        </MudCardContent>
-    </MudCard>
-}
+                    </MudRadioGroup>
+                    @if (CurrentMode == ListMode.Pantry)
+                    {
+                        <MudFab Color="Color.Success" Label="Save Pantry Items" Icon="@Icons.Material.Filled.Save" OnClick="UpdateList"></MudFab>
+                    }
+                    <MudFab Icon="@Icons.Material.Filled.Add" Color="Color.Success" OnClick="AddItem" Label="Add Shopping Item" />
+                    <MudSwitch @bind-Checked="CategorySort" Label="Sort By Category"></MudSwitch>
+                    <MudGrid>
+                        <MudItem xs="12">
+                            @if (!CategorySort)
+                            {
+                                <MudList>
+                                    @foreach (var item in displayList)
+                                    {
+                                        <MudListItem>
+                                            <MudPaper Elevation="2">
+                                                @if (CurrentMode == ListMode.Pantry)
+                                                {
+
+                                                    <MudCheckBox UncheckedIcon="@Icons.Material.Filled.ShoppingCart" CheckedIcon="@Icons.Material.Filled.Home" @bind-Checked="item.InPantry" Label="@item.QuantityString" Color="Color.Secondary">
+                                                    </MudCheckBox>
+                                                }
+                                                else if (CurrentMode == ListMode.Store)
+                                                {
+
+                                                    <MudCheckBox @bind-Checked="item.InCart" Label="@item.QuantityString" Color="Color.Secondary">
+                                                    </MudCheckBox>
+                                                }
+                                                else
+                                                {
+                                                    <MudText>@item.QuantityString</MudText>
+                                                }
+                                                @if (item.Notes.Count > 0)
+                                                {
+                                                    <MudList>
+                                                        @foreach (var note in item.Notes)
+                                                        {
+                                                            <MudListItem>@note</MudListItem>
+                                                        }
+                                                    </MudList>
+                                                }
+                                                @if (item.UserString && CurrentMode == ListMode.Pantry)
+                                                {
+                                                    <MudButtonGroup>
+                                                        <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="@(()=>EditItem(item))"></MudIconButton>
+                                                        <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@(()=>DeleteItem(item))"></MudIconButton>
+                                                    </MudButtonGroup>
+                                                }
+                                            </MudPaper>
+                                        </MudListItem>
+
+                                    }
+                                </MudList>
+                            }
+                            else
+                            {
+                                <MudList>
+                                    @foreach (var category in ListCategories)
+                                    {
+                                        <MudDivider />
+                                        <MudListSubheader>
+                                            @category.Name
+                                        </MudListSubheader>
+                                        @foreach (var item in displayList.Where(i => i.IngredientTypeId == category.Id))
+                                        {
+                                            <MudListItem>
+                                                <MudPaper Elevation="2">
+
+                                                    @if (CurrentMode == ListMode.Pantry)
+                                                    {
+
+                                                        <MudCheckBox @bind-Checked="item.InPantry" Label="@item.QuantityString" Color="Color.Secondary">
+                                                        </MudCheckBox>
+                                                    }
+                                                    else if (CurrentMode == ListMode.Store)
+                                                    {
+
+                                                        <MudCheckBox @bind-Checked="item.InCart" Label="@item.QuantityString" Color="Color.Secondary">
+                                                        </MudCheckBox>
+                                                    }
+                                                    else
+                                                    {
+                                                        <MudText>@item.QuantityString</MudText>
+                                                    }
+                                                    @if (item.Notes.Count > 0)
+                                                    {
+                                                        <MudList>
+                                                            @foreach (var note in item.Notes)
+                                                            {
+                                                                <MudListItem>@note</MudListItem>
+                                                            }
+                                                        </MudList>
+                                                    }
+                                                    @if (item.UserString && CurrentMode == ListMode.Pantry)
+                                                    {
+                                                        <MudButtonGroup>
+                                                            <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="@(()=>EditItem(item))"></MudIconButton>
+                                                            <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@(()=>DeleteItem(item))"></MudIconButton>
+                                                        </MudButtonGroup>
+                                                    }
+                                                </MudPaper>
+                                            </MudListItem>
+                                        }
+                                    }
+                                </MudList>
+                            }
+
+                        </MudItem>
+                    </MudGrid>
+                </MudCardContent>
+            </MudCard>
+        }
+    </MudItem>
+</MudGrid>
 @code {
     [Parameter]
     public string id { get; set; }
     public ShoppingList list { get; set; }
+    public List<ShoppingIngredient> displayList { get; set; }
+    public List<IngredientType> typeList { get; set; }
+    public bool CategorySort { get; set; }
+    public List<IngredientType> ListCategories { get; set; }
+    public ListMode CurrentMode { get; set; }
     protected override async Task OnInitializedAsync()
     {
+        typeList = (await _api.GetAsync<IEnumerable<IngredientType>>("api/IngredientTypes")).ToList();
         list = await _api.GetAsync<ShoppingList>($"/api/shoppinglists/{Convert.ToInt32(id)}");
+        displayList = list.ShoppingIngredients;
+        ListCategories = displayList.Select(l => l.IngredientType).Distinct().ToList();
+    }
+    public async Task AddItem()
+    {
+
+        var parameters = new DialogParameters { ["listId"] = list.Id, ["types"] = typeList };
+        var dialog = _dialogService.Show<ListAddDialog>("Add to list", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            list = await _api.GetAsync<ShoppingList>($"/api/shoppinglists/{Convert.ToInt32(id)}");
+        }
+    }
+    public async Task EditItem(ShoppingIngredient item)
+    {
+
+        var parameters = new DialogParameters { ["listId"] = list.Id, ["types"] = typeList, ["listItem"] = item };
+        var dialog = _dialogService.Show<ListItemUserEdit>("Edit Item", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            list = await _api.GetAsync<ShoppingList>($"/api/shoppinglists/{Convert.ToInt32(id)}");
+        }
+    }
+    public async Task DeleteItem(ShoppingIngredient item)
+    {
+
+        var parameters = new DialogParameters { ["listId"] = list.Id, ["item"] = item };
+        var dialog = _dialogService.Show<ListItemUserDelete>("Delete Item", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            list = await _api.GetAsync<ShoppingList>($"/api/shoppinglists/{Convert.ToInt32(id)}");
+        }
+    }
+    public async Task UpdateList()
+    {
+        try
+        {
+            await _api.UpdateAsync<ShoppingList>($"/api/shoppinglists/{Convert.ToInt32(id)}", list);
+            await _api.GetAsync<ShoppingList>($"/api/shoppinglists/{Convert.ToInt32(id)}");
+            _snackbar.Add("Updated list", Severity.Success);
+        }
+        catch (Exception e)
+        {
+            _snackbar.Add($"Failed to update {e.Message}", Severity.Error);
+
+        }
+    }
+    public void ModeChange(ListMode v)
+    {
+        CurrentMode = v;
+        if (CurrentMode == ListMode.Store)
+        {
+            displayList = list.ShoppingIngredients.Where(i => !i.InPantry).ToList();
+        }
+        else
+        {
+            displayList = list.ShoppingIngredients;
+        }
+        ListCategories = displayList.Select(l => l.IngredientType).Distinct().ToList();
     }
 }

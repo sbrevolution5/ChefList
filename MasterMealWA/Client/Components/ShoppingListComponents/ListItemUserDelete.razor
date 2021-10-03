@@ -1,0 +1,37 @@
+﻿@inject IApiService _api
+<MudDialog>
+    <DialogContent>
+        <MudText>Shopping Item: @item.QuantityString</MudText>
+        <MudText>Shopping Section: @item.IngredientType.Name</MudText>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel" Variant="Variant.Filled" Color="Color.Dark">Cancel</MudButton>
+        <MudButton Color="Color.Error" Variant="Variant.Filled" OnClick="ConfirmDelete">Delete Item</MudButton>
+    </DialogActions>
+</MudDialog>
+@code {
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; }
+    [Parameter]
+    public ShoppingIngredient item { get; set; }
+    [Parameter]
+    public int ListId { get; set; }
+    public async Task ConfirmDelete()
+    {
+        try
+        {
+
+            await _api.DeleteAsync($"/api/ShoppingIngredients/{item.Id}/{ListId}");
+            _snackbar.Add("Item Deleted", Severity.Success);
+            MudDialog.Close(DialogResult.Ok(item));
+        }
+        catch (Exception e)
+        {
+            _snackbar.Add($"Delete failed {e.Message}", Severity.Error);
+        }
+    }
+    public void Cancel()
+    {
+        MudDialog.Cancel();
+    }
+}

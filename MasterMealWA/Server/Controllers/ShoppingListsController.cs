@@ -45,7 +45,7 @@ namespace MasterMealWA.Server.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ShoppingList>> GetShoppingList(int id)
         {
-            var shoppingList = await _context.ShoppingList.Include(l => l.ShoppingIngredients).Where(l => l.Id == id).FirstOrDefaultAsync();
+            var shoppingList = await _context.ShoppingList.Include(l => l.ShoppingIngredients).ThenInclude(i=>i.IngredientType).Where(l => l.Id == id).FirstOrDefaultAsync();
             var userId = HttpContext.GetUserId();
 
             if (shoppingList == null || shoppingList.ChefId != userId)
@@ -61,13 +61,17 @@ namespace MasterMealWA.Server.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutShoppingList(int id, ShoppingList shoppingList)
         {
-            var userId = _userManager.GetUserId(User);
+            var userId = HttpContext.GetUserId();
             if (id != shoppingList.Id||shoppingList.ChefId != userId)
             {
                 return BadRequest();
             }
 
             _context.Entry(shoppingList).State = EntityState.Modified;
+            foreach (var item in shoppingList.ShoppingIngredients)
+            {
+                _context.Entry(item).State = EntityState.Modified;
+            }
 
             try
             {
