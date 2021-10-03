@@ -30,32 +30,76 @@ namespace MasterMealWA.Client.Services
         }
         public async Task CreateAsync<T>(string url, T content)
         {
-            await _http.PostAsJsonAsync<T>(url, content,_options);
+            try
+            {
+                await _http.PostAsJsonAsync<T>(url, content, _options);
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
         public async Task UpdateAsync<T>(string url, T content)
         {
-            await _http.PutAsJsonAsync<T>(url, content,_options);
+            try
+            {
+
+                await _http.PutAsJsonAsync<T>(url, content, _options);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
         public async Task<TResult> GetAsync<TResult>(string url)
         {
-            var result = await _http.GetFromJsonAsync<TResult>(url, _options);
-            return result;
+            try
+            {
+                var result = await _http.GetFromJsonAsync<TResult>(url, _options);
+                return result;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
         public async Task<TResult> GetAnonAsync<TResult>(string url)
         {
-            var client = _clientFactory.CreateClient("MasterMealWA.NonAuthServerAPI");
-            var result = await client.GetFromJsonAsync<TResult>(url, _options);
-            return result;
+            try
+            {
+
+                var client = _clientFactory.CreateClient("MasterMealWA.NonAuthServerAPI");
+                var result = await client.GetFromJsonAsync<TResult>(url, _options);
+                return result;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
         public async Task DeleteAsync(string url)
         {
-            await _http.DeleteAsync(url);
+            try
+            {
+                await _http.DeleteAsync(url);
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         public async Task<DBImage> GetPreviewImage(string url, MultipartFormDataContent content)
         {
             //Need to send the data to convert, and get a result
-            var result = await _http.PostAsync(url,content);
+            var result = await _http.PostAsync(url, content);
             if (result.IsSuccessStatusCode)
             {
                 return await result.Content.ReadFromJsonAsync<DBImage>();

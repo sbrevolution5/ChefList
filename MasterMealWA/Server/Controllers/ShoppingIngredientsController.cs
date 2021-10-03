@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MasterMealWA.Server.Data;
 using MasterMealWA.Shared.Models;
+using MasterMealWA.Shared.Models.Dtos;
 
 namespace MasterMealWA.Server.Controllers
 {
@@ -83,6 +84,19 @@ namespace MasterMealWA.Server.Controllers
 
             return CreatedAtAction("GetShoppingIngredient", new { id = shoppingIngredient.Id }, shoppingIngredient);
         }
+        //POST: api/ShoppingIngredients/AddToList/
+        [HttpPost("AddToList")]
+        public async Task<ActionResult<ShoppingIngredient>> PostShoppingIngredientAndAddToList(AddToShoppingDto dto)
+        {
+
+            var list=await _context.ShoppingList.Include(s=>s.ShoppingIngredients).Where(s=> s.Id==dto.ListId).FirstOrDefaultAsync();
+
+            _context.ShoppingIngredient.Add(dto.Ingredient);
+            list.ShoppingIngredients.Add(dto.Ingredient);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetShoppingIngredient", new { id = dto.Ingredient.Id }, dto.Ingredient);
+        }
 
         // DELETE: api/ShoppingIngredients/5
         [HttpDelete("{id}")]
@@ -94,6 +108,22 @@ namespace MasterMealWA.Server.Controllers
                 return NotFound();
             }
 
+            _context.ShoppingIngredient.Remove(shoppingIngredient);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+        [HttpDelete("{id}/{listId}")]
+        public async Task<IActionResult> DeleteShoppingIngredient(int id,int listId)
+        {
+            var shoppingList = await _context.ShoppingList.Include(s=>s.ShoppingIngredients).Where(s=>s.Id==listId).FirstOrDefaultAsync();
+            var shoppingIngredient = await _context.ShoppingIngredient.FindAsync(id);
+            if (shoppingIngredient == null)
+            {
+                return NotFound();
+            }
+
+            shoppingList.ShoppingIngredients.Remove(shoppingIngredient);
             _context.ShoppingIngredient.Remove(shoppingIngredient);
             await _context.SaveChangesAsync();
 

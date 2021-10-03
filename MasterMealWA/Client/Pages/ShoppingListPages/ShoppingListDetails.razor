@@ -1,11 +1,12 @@
 ﻿@page "/shoppinglists/details/{id}"
 @inject IApiService _api
+@inject IDialogService _dialogService
 
 @if (list is null)
 {
-<div class="d-flex align-center justify-center">
-    <Loader />
-</div>
+    <div class="d-flex align-center justify-center">
+        <Loader />
+    </div>
 
 }
 else
@@ -19,7 +20,7 @@ else
 
         </MudDivider>
         <MudCardContent>
-
+            <MudIconButton Icon="@Icons.Material.Filled.Add" OnClick="AddItem">Add Shopping Item</MudIconButton>
             <MudGrid>
                 <MudItem xs="12">
 
@@ -30,7 +31,6 @@ else
                                 <MudPaper Elevation="2">
 
                                     <MudCheckBox @bind-Checked="item.InPantry" Label="@item.QuantityString" Color="Color.Secondary">
-
                                     </MudCheckBox>
                                     @if (item.Notes.Count > 0)
                                     {
@@ -40,6 +40,13 @@ else
                                                 <MudListItem>@note</MudListItem>
                                             }
                                         </MudList>
+                                    }
+                                    @if (item.UserString)
+                                    {
+                                        <MudButtonGroup>
+                                            <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="@(()=>EditItem(item))"></MudIconButton>
+                                            <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@(()=>DeleteItem(item))"></MudIconButton>
+                                        </MudButtonGroup>
                                     }
                                 </MudPaper>
                             </MudListItem>
@@ -55,8 +62,43 @@ else
     [Parameter]
     public string id { get; set; }
     public ShoppingList list { get; set; }
+    public List<IngredientType> typeList { get; set; }
     protected override async Task OnInitializedAsync()
     {
+        typeList = (await _api.GetAsync<IEnumerable<IngredientType>>("api/IngredientTypes")).ToList();
         list = await _api.GetAsync<ShoppingList>($"/api/shoppinglists/{Convert.ToInt32(id)}");
+    }
+    public async Task AddItem()
+    {
+
+        var parameters = new DialogParameters { ["listId"] = list.Id, ["types"] = typeList};
+        var dialog = _dialogService.Show<ListAddDialog>("Add to list", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            list = await _api.GetAsync<ShoppingList>($"/api/shoppinglists/{Convert.ToInt32(id)}");
+        }
+    }
+    public async Task EditItem(ShoppingIngredient item)
+    {
+
+        var parameters = new DialogParameters { ["listId"] = list.Id, ["types"] = typeList,["listItem"] = item };
+        var dialog = _dialogService.Show<ListItemUserEdit>("Edit Item", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            list = await _api.GetAsync<ShoppingList>($"/api/shoppinglists/{Convert.ToInt32(id)}");
+        }
+    }
+    public async Task DeleteItem(ShoppingIngredient item)
+    {
+
+        var parameters = new DialogParameters { ["listId"] = list.Id, ["item"] = item };
+        var dialog = _dialogService.Show<ListItemUserDelete>("Delete Item", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            list = await _api.GetAsync<ShoppingList>($"/api/shoppinglists/{Convert.ToInt32(id)}");
+        }
     }
 }

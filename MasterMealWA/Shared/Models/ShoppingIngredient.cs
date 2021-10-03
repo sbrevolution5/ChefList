@@ -16,5 +16,6 @@ namespace MasterMealWA.Shared.Models
         public List<string> Notes { get; set; }
         public bool InPantry { get; set; }
         public bool InCart { get; set; }
+        public bool UserString { get; set; }
     }
 }
