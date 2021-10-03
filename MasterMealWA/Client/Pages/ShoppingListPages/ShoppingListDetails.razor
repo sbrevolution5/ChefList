@@ -31,7 +31,7 @@ else
             </MudRadioGroup>
             @if (CurrentMode == ListMode.Pantry)
             {
-                <MudFab Color="Color.Success" Label="Save Pantry Items" Icon="@Icons.Material.Filled.Save"></MudFab>
+                <MudFab Color="Color.Success" Label="Save Pantry Items" Icon="@Icons.Material.Filled.Save" OnClick="UpdateList"></MudFab>
             }
             <MudFab Icon="@Icons.Material.Filled.Add" Color="Color.Success" OnClick="AddItem" Label="Add Shopping Item" />
             <MudSwitch @bind-Checked="CategorySort" Label="Sort By Category"></MudSwitch>
@@ -189,12 +189,30 @@ else
             list = await _api.GetAsync<ShoppingList>($"/api/shoppinglists/{Convert.ToInt32(id)}");
         }
     }
+    public async Task UpdateList()
+    {
+        try
+        {
+            await _api.UpdateAsync<ShoppingList>($"/api/shoppinglists/{Convert.ToInt32(id)}", list);
+            await _api.GetAsync<ShoppingList>($"/api/shoppinglists/{Convert.ToInt32(id)}");
+            _snackbar.Add("Updated list", Severity.Success);
+        }
+        catch (Exception e)
+        {
+            _snackbar.Add($"Failed to update {e.Message}", Severity.Error);
+
+        }
+    }
     public void ModeChange(ListMode v)
     {
         CurrentMode = v;
         if (CurrentMode == ListMode.Store)
         {
             displayList = list.ShoppingIngredients.Where(i => !i.InPantry).ToList();
+        }
+        else
+        {
+            displayList = list.ShoppingIngredients;
         }
     }
 }
