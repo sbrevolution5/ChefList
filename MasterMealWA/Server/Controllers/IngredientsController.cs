@@ -81,6 +81,11 @@ namespace MasterMealWA.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<Ingredient>> PostIngredient(Ingredient ingredient)
         {
+            var duplicate = await _context.Ingredient.Where(i => (i.MeasurementType == ingredient.MeasurementType) && i.Name.ToLower() == ingredient.Name.ToLower()).FirstOrDefaultAsync();
+            if (duplicate is not null)
+            {
+                return BadRequest();
+            }
             _context.Ingredient.Add(ingredient);
             await _context.SaveChangesAsync();
 
