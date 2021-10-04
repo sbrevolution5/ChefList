@@ -246,7 +246,14 @@ namespace MasterMealWA.Server.Controllers
             {
                 return NotFound();
             }
-
+            if (recipe.ImageId != 1)
+            {
+                var image = await _context.DBImage.FindAsync(recipe.ImageId);
+                _context.DBImage.Remove(image);
+            }
+            _context.RemoveRange(recipe.Steps);
+            _context.RemoveRange(recipe.Supplies);
+            _context.RemoveRange(recipe.Ingredients);
             _context.Recipe.Remove(recipe);
             await _context.SaveChangesAsync();
 
