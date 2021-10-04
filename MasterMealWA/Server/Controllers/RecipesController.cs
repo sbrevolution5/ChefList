@@ -48,6 +48,23 @@ namespace MasterMealWA.Server.Controllers
             var userId = HttpContext.GetUserId();
             return await _context.Recipe.Include(r => r.Author).Include(r => r.Image).Include(r => r.Supplies).ThenInclude(s => s.Supply).Where(r => !r.IsPrivate || r.AuthorId == userId).Include(r => r.Tags).Include(r => r.Ratings).ToListAsync();
         }
+        // GET: api/Recipes/ingredients
+        [HttpGet("ingredients")]
+        [AllowAnonymous]
+        public async Task<ActionResult<IEnumerable<Recipe>>> GetRecipeForIngredientPage()
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return await _context.Recipe.Include(r=>r.Ingredients).ThenInclude(r=>r.Ingredient).Where(r => !r.IsPrivate).ToListAsync();
+            }
+            if (User.IsInRole("Admin")|| User.IsInRole("Moderator"))
+            {
+                return await _context.Recipe.Include(r => r.Ingredients).ThenInclude(r => r.Ingredient).ToListAsync();
+
+            }
+            var userId = HttpContext.GetUserId();
+            return await _context.Recipe.Include(r => r.Ingredients).ThenInclude(r => r.Ingredient).Where(r => !r.IsPrivate || r.AuthorId == userId).ToListAsync();
+        }
         // GET: api/Recipes/myrecipes
         [HttpGet("myrecipes")]
         public async Task<ActionResult<IEnumerable<Recipe>>> GetMyRecipes()

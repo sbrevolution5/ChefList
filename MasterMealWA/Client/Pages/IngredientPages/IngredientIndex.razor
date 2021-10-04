@@ -59,8 +59,10 @@ else
 }
 @code {
     public List<Ingredient> Ingredients { get; set; }
+    public List<Recipe> Recipes { get; set; }
     protected override async Task OnInitializedAsync()
     {
+        Recipes = await _api.GetAsync<List<Recipe>>("api/recipes/ingredientlist");
         Ingredients = await _api.GetAsync<List<Ingredient>>("api/ingredients");
         base.OnInitialized();
     }
