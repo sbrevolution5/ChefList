@@ -73,6 +73,11 @@ namespace MasterMealWA.Server.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutSupply(int id, Supply supply)
         {
+            var duplicate = await _context.Supply.Where(i => i.Id != supply.Id && i.Name.ToLower() == supply.Name.ToLower()).FirstOrDefaultAsync();
+            if (duplicate is not null)
+            {
+                return BadRequest();
+            }
             if (id != supply.Id)
             {
                 return BadRequest();
@@ -104,6 +109,11 @@ namespace MasterMealWA.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<Supply>> PostSupply(Supply supply)
         {
+            var duplicate = await _context.Supply.Where(i => i.Name.ToLower() == supply.Name.ToLower()).FirstOrDefaultAsync();
+            if (duplicate is not null)
+            {
+                return BadRequest();
+            }
             _context.Supply.Add(supply);
             await _context.SaveChangesAsync();
 
