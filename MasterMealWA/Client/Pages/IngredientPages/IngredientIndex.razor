@@ -27,24 +27,30 @@ else
                     <MudGrid>
                         @foreach (var ingredient in Ingredients)
                         {
+                            @{ 
+                                var count = Recipes.SelectMany(r => r.Ingredients).Where(i => i.IngredientId == ingredient.Id).Count();
+                            }
                             <MudItem xs="12" sm="6" md="4" lg="3">
 
                                 <MudPaper Elevation="4" Style="padding-left:5px;margin:10px;">
                                     <MudGrid>
                                         <MudItem xs="6">
                                             <MudText>
-
                                                 @ingredient.Name
                                             </MudText>
                                         </MudItem>
-                                        <MudItem xs="3">
-                                            <MudBadge Content="" Color="Color.Primary" Overlap="true" Bordered="true" Class="mx-6 my-4">
+                                        <MudItem xs="6">
+                                            <MudBadge Content="@Recipes.SelectMany(r=>r.Ingredients).Where(i=>i.IngredientId == ingredient.Id).Count()" Color="Color.Primary" Overlap="true" Bordered="true" Class="mx-6 my-4">
                                                 <MudButton Variant="Variant.Filled" Color="Color.Primary" Link="/supplies">View Recipes </MudButton>
                                             </MudBadge>
                                         </MudItem>
-
-                                        <MudItem xs="3">
+                                        <MudItem xs="12">
+                                        <AuthorizeView Roles="Admin, Moderator">
+                                            <Authorized>
                                             <MudIconButton Variant="Variant.Filled" Color="Color.Warning" Icon="@Icons.Material.Filled.Edit" OnClick="@(()=>EditIngredient(ingredient))"></MudIconButton>
+                                                <MudIconButton Variant="Variant.Filled" Color="Color.Warning" Icon="@Icons.Material.Filled.Delete" OnClick="@(()=>DeleteIngredient(ingredient,count))"></MudIconButton>
+                                            </Authorized>
+                                        </AuthorizeView>
                                         </MudItem>
                                     </MudGrid>
                                 </MudPaper>
@@ -62,7 +68,7 @@ else
     public List<Recipe> Recipes { get; set; }
     protected override async Task OnInitializedAsync()
     {
-        Recipes = await _api.GetAsync<List<Recipe>>("api/recipes/ingredientlist");
+        Recipes = await _api.GetAsync<List<Recipe>>("api/recipes/ingredients");
         Ingredients = await _api.GetAsync<List<Ingredient>>("api/ingredients");
         base.OnInitialized();
     }
@@ -79,6 +85,16 @@ else
     {
         var parameters = new DialogParameters { ["Ingredient"] = ingredient };
         var dialog = _dialogService.Show<IngredientEdit>("Edit Ingredient", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            Ingredients = await _api.GetAsync<List<Ingredient>>("api/ingredients");
+        }
+    }
+    public async Task DeleteIngredient(Ingredient ingredient, int count)
+    {
+        var parameters = new DialogParameters { ["Ingredient"] = ingredient, ["recipeNumber"] = count };
+        var dialog = _dialogService.Show<IngredientDelete>("Delete Ingredient", parameters);
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
