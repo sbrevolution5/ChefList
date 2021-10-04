@@ -29,7 +29,8 @@
         }
         catch (Exception e)
         {
-            _snackbar.Add($"Update failed {e.Message}", Severity.Error);
+            _snackbar.Add($"Update failed: {e.Message}, Your Supply is probably already in the database.", Severity.Error);
+
         }
     }
 }
