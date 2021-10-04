@@ -27,7 +27,7 @@ namespace MasterMealWA.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Ingredient>>> GetIngredient()
         {
-            var list = await _context.Ingredient.ToListAsync();
+            var list = await _context.Ingredient.Include(i=>i.Type).ToListAsync();
             return list;
         }
 

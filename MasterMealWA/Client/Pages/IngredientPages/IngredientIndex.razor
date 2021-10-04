@@ -27,9 +27,7 @@ else
                     <MudGrid>
                         @foreach (var ingredient in Ingredients)
                         {
-                            @{ 
-                                var count = Recipes.SelectMany(r => r.Ingredients).Where(i => i.IngredientId == ingredient.Id).Count();
-                            }
+                            var count = Recipes.SelectMany(r => r.Ingredients).Where(i => i.IngredientId == ingredient.Id).Count();
                             <MudItem xs="12" sm="6" md="4" lg="3">
 
                                 <MudPaper Elevation="4" Style="padding-left:5px;margin:10px;">
