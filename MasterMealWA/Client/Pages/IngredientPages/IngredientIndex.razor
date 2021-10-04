@@ -31,11 +31,16 @@ else
 
                                 <MudPaper Elevation="4" Style="padding-left:5px;margin:10px;">
                                     <MudGrid>
-                                        <MudItem xs="9">
+                                        <MudItem xs="6">
                                             <MudText>
 
                                                 @ingredient.Name
                                             </MudText>
+                                        </MudItem>
+                                        <MudItem xs="3">
+                                            <MudBadge Content="" Color="Color.Primary" Overlap="true" Bordered="true" Class="mx-6 my-4">
+                                                <MudButton Variant="Variant.Filled" Color="Color.Primary" Link="/supplies">View Recipes </MudButton>
+                                            </MudBadge>
                                         </MudItem>
 
                                         <MudItem xs="3">
