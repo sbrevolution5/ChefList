@@ -53,7 +53,7 @@ namespace MasterMealWA.Server.Controllers
             var duplicate = await _context.Ingredient.Where(i => i.Id != id && (i.MeasurementType == ingredient.MeasurementType) && i.Name.ToLower() == ingredient.Name.ToLower()).FirstOrDefaultAsync();
             if (duplicate is not null)
             {
-                return BadRequest();
+                return BadRequest("Duplicate Found");
             }
             if (id != ingredient.Id)
             {
@@ -89,7 +89,7 @@ namespace MasterMealWA.Server.Controllers
             var duplicate = await _context.Ingredient.Where(i => (i.MeasurementType == ingredient.MeasurementType) && i.Name.ToLower() == ingredient.Name.ToLower()).FirstOrDefaultAsync();
             if (duplicate is not null)
             {
-                return BadRequest();
+                return BadRequest("Duplicate Found");
             }
             _context.Ingredient.Add(ingredient);
             await _context.SaveChangesAsync();

@@ -76,7 +76,7 @@ namespace MasterMealWA.Server.Controllers
             var duplicate = await _context.Supply.Where(i => i.Id != supply.Id && i.Name.ToLower() == supply.Name.ToLower()).FirstOrDefaultAsync();
             if (duplicate is not null)
             {
-                return BadRequest();
+                return BadRequest("Duplicate Found");
             }
             if (id != supply.Id)
             {
@@ -112,7 +112,7 @@ namespace MasterMealWA.Server.Controllers
             var duplicate = await _context.Supply.Where(i => i.Name.ToLower() == supply.Name.ToLower()).FirstOrDefaultAsync();
             if (duplicate is not null)
             {
-                return BadRequest();
+                return BadRequest("Duplicate Found");
             }
             _context.Supply.Add(supply);
             await _context.SaveChangesAsync();
