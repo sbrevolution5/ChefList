@@ -29,8 +29,8 @@
         }
         catch (Exception e)
         {
-            _snackbar.Add($"Creation failed {e.Message}", Severity.Error);
-            throw;
+            _snackbar.Add($"Creation failed: {e.Message}, Your supply is probably already in the database.", Severity.Error);
+
         }
     }
 }

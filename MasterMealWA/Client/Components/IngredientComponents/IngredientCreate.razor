@@ -67,12 +67,10 @@
             await _api.CreateAsync<Ingredient>("api/ingredients", ingredient);
             _snackbar.Add("Ingredient Created", Severity.Success);
             MudDialog.Close(DialogResult.Ok(ingredient));
-
         }
         catch (Exception e)
         {
-            _snackbar.Add($"Creation failed: {e.Message}", Severity.Error);
-            throw;
+            _snackbar.Add($"Creation failed: {e.Message}, Your ingredient is probably already in the database.", Severity.Error);
         }
     }
 }
