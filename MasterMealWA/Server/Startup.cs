@@ -71,6 +71,7 @@ namespace MasterMealWA.Server
             {
                 options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
                 options.JsonSerializerOptions.PropertyNamingPolicy = null;
+                options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
             });
             services.Configure<ForwardedHeadersOptions>(options =>
             {
