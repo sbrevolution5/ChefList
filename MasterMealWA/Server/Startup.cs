@@ -35,7 +35,7 @@ namespace MasterMealWA.Server
         {
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseNpgsql(
-                    DataUtility.GetConnectionString(Configuration)));
+                    DataUtility.GetConnectionString(Configuration),o=>o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -71,7 +71,6 @@ namespace MasterMealWA.Server
             {
                 options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
                 options.JsonSerializerOptions.PropertyNamingPolicy = null;
-                options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
             });
             services.Configure<ForwardedHeadersOptions>(options =>
             {
