@@ -32,7 +32,7 @@ else
 
                                 <MudPaper Elevation="4" Style="padding-left:5px;margin:10px;">
                                     <MudGrid>
-                                        <MudItem xs="6">
+                                        <MudItem xs="4">
                                             <MudText>
                                                 @ingredient.Name
                                             </MudText>
@@ -42,7 +42,7 @@ else
                                                 <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="()=>OpenQuicklist(GetRecipeList(ingredient))">View Recipes </MudButton>
                                             </MudBadge>
                                         </MudItem>
-                                        <MudItem xs="12">
+                                        <MudItem xs="2">
                                         <AuthorizeView Roles="Admin, Moderator">
                                             <Authorized>
                                             <MudIconButton Variant="Variant.Filled" Color="Color.Warning" Icon="@Icons.Material.Filled.Edit" OnClick="@(()=>EditIngredient(ingredient))"></MudIconButton>
