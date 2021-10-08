@@ -46,7 +46,8 @@ namespace MasterMealWA.Client.Services
             try
             {
 
-                await _http.PutAsJsonAsync<T>(url, content, _options);
+                var result = await _http.PutAsJsonAsync<T>(url, content, _options);
+                result.EnsureSuccessStatusCode();
             }
             catch (Exception)
             {
