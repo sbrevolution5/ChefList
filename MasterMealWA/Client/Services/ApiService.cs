@@ -19,7 +19,7 @@ namespace MasterMealWA.Client.Services
 
         private readonly JsonSerializerOptions _options = new()
         {
-            ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve,
+            ReferenceHandler = ReferenceHandler.Preserve,
             PropertyNamingPolicy = null,
             PropertyNameCaseInsensitive = true
         };
