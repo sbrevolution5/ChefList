@@ -55,11 +55,11 @@ namespace MasterMealWA.Server.Controllers
         {
             if (!User.Identity.IsAuthenticated)
             {
-                return await _context.Recipe.Include(r=>r.Ingredients).ThenInclude(r=>r.Ingredient).Where(r => !r.IsPrivate).ToListAsync();
+                return await _context.Recipe.Include(r=>r.Author).Include(r=>r.Ingredients).ThenInclude(r=>r.Ingredient).Where(r => !r.IsPrivate).ToListAsync();
             }
             if (User.IsInRole("Admin")|| User.IsInRole("Moderator"))
             {
-                return await _context.Recipe.Include(r => r.Ingredients).ThenInclude(r => r.Ingredient).ToListAsync();
+                return await _context.Recipe.Include(r => r.Author).Include(r => r.Ingredients).ThenInclude(r => r.Ingredient).ToListAsync();
 
             }
             var userId = HttpContext.GetUserId();
