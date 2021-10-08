@@ -39,7 +39,7 @@ else
                                         </MudItem>
                                         <MudItem xs="6">
                                             <MudBadge Content="@Recipes.SelectMany(r=>r.Ingredients).Where(i=>i.IngredientId == ingredient.Id).Count()" Color="Color.Primary" Overlap="true" Bordered="true" Class="mx-6 my-4">
-                                                <MudButton Variant="Variant.Filled" Color="Color.Primary" Link="/supplies">View Recipes </MudButton>
+                                                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="()=>OpenQuicklist(GetRecipeList(ingredient))">View Recipes </MudButton>
                                             </MudBadge>
                                         </MudItem>
                                         <MudItem xs="12">
@@ -98,5 +98,14 @@ else
         {
             Ingredients = await _api.GetAsync<List<Ingredient>>("api/ingredients");
         }
+    }
+    public List<Recipe> GetRecipeList(Ingredient ingredient)
+    {
+        return Recipes.Where(r => r.Ingredients.Where(i => i.IngredientId == ingredient.Id).Any()).ToList();
+    }
+    public void OpenQuicklist(List<Recipe> recipeList)
+    {
+        var parameters = new DialogParameters { ["recipeList"] = recipeList };
+        var dialog = _dialogService.Show<QuickListDialog>("Recipes with this ingredient", parameters);
     }
 }

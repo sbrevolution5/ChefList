@@ -1,0 +1,40 @@
+﻿@inject IApiService _api
+<MudDialog>
+
+    <DialogContent>
+        <MudSimpleTable>
+            <thead>
+                <tr>
+
+                    <th>Name</th>
+                    <th>Author</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var recipe in recipeList)
+                {
+                <tr>
+                    <td>@recipe.Name</td>
+                    <td>@recipe.Author.ScreenName</td>
+                    <td><MudButton Link="@($"/recipes/details/{recipe.Id}")" Variant="Variant.Filled" Color="Color.Primary">View Details</MudButton></td>
+                </tr>
+                }
+            </tbody>
+        </MudSimpleTable>
+        
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel" Variant="Variant.Filled" Color="Color.Dark">Close</MudButton>
+    </DialogActions>
+</MudDialog>
+@code {
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; }
+    [Parameter]
+    public List<Recipe> recipeList { get; set; }
+    public void Cancel()
+    {
+        MudDialog.Cancel();
+    }
+}
