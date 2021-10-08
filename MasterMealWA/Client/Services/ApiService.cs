@@ -19,7 +19,7 @@ namespace MasterMealWA.Client.Services
 
         private readonly JsonSerializerOptions _options = new()
         {
-            ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve,
+            ReferenceHandler = ReferenceHandler.Preserve,
             PropertyNamingPolicy = null,
             PropertyNameCaseInsensitive = true
         };
@@ -46,7 +46,8 @@ namespace MasterMealWA.Client.Services
             try
             {
 
-                await _http.PutAsJsonAsync<T>(url, content, _options);
+                var result = await _http.PutAsJsonAsync<T>(url, content, _options);
+                result.EnsureSuccessStatusCode();
             }
             catch (Exception)
             {
