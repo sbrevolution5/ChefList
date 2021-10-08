@@ -1,0 +1,39 @@
+﻿@inject IApiService _api
+<MudDialog>
+    <DialogContent>
+        <MudText>@ingredient.Name</MudText>
+        <MudText>Used in @RecipeNumber Recipes</MudText>
+        <MudText>@ingredient.MeasurementType</MudText>
+        <MudText>@ingredient.Type.Name</MudText>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel" Variant="Variant.Filled" Color="Color.Dark">Cancel</MudButton>
+        <MudButton Color="Color.Error" Variant="Variant.Filled" OnClick="ConfirmDelete">Delete Ingredient</MudButton>
+    </DialogActions>
+</MudDialog>
+@code {
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; }
+    [Parameter]
+    public Ingredient ingredient { get; set; }
+    [Parameter]
+    public int RecipeNumber { get; set; }
+    public async Task ConfirmDelete()
+    {
+        try
+        {
+
+            await _api.DeleteAsync($"/api/ingredients/{ingredient.Id}");
+            _snackbar.Add("Ingredient Deleted", Severity.Success);
+            MudDialog.Close(DialogResult.Ok(ingredient));
+        }
+        catch (Exception e)
+        {
+            _snackbar.Add($"Delete failed {e.Message}", Severity.Error);
+        }
+    }
+    public void Cancel()
+    {
+        MudDialog.Cancel();
+    }
+}
