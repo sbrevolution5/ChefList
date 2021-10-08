@@ -27,7 +27,7 @@ namespace MasterMealWA.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Ingredient>>> GetIngredient()
         {
-            var list = await _context.Ingredient.ToListAsync();
+            var list = await _context.Ingredient.Include(i=>i.Type).ToListAsync();
             return list;
         }
 
@@ -50,6 +50,11 @@ namespace MasterMealWA.Server.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutIngredient(int id, Ingredient ingredient)
         {
+            var duplicate = await _context.Ingredient.Where(i => i.Id != id && (i.MeasurementType == ingredient.MeasurementType) && i.Name.ToLower() == ingredient.Name.ToLower()).FirstOrDefaultAsync();
+            if (duplicate is not null)
+            {
+                return BadRequest("Duplicate Found");
+            }
             if (id != ingredient.Id)
             {
                 return BadRequest();
@@ -81,6 +86,11 @@ namespace MasterMealWA.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<Ingredient>> PostIngredient(Ingredient ingredient)
         {
+            var duplicate = await _context.Ingredient.Where(i => (i.MeasurementType == ingredient.MeasurementType) && i.Name.ToLower() == ingredient.Name.ToLower()).FirstOrDefaultAsync();
+            if (duplicate is not null)
+            {
+                return BadRequest("Duplicate Found");
+            }
             _context.Ingredient.Add(ingredient);
             await _context.SaveChangesAsync();
 
