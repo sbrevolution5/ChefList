@@ -24,14 +24,12 @@ namespace MasterMealWA.Server.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IMeasurementService _measurementService;
-        private readonly UserManager<Chef> _userManager;
         private readonly IFileService _fileService;
         private readonly IServingService _servingService;
-        public RecipesController(ApplicationDbContext context, IMeasurementService measurementService, UserManager<Chef> userManager, IFileService fileService, IServingService servingService)
+        public RecipesController(ApplicationDbContext context, IMeasurementService measurementService, IFileService fileService, IServingService servingService)
         {
             _context = context;
             _measurementService = measurementService;
-            _userManager = userManager;
             _fileService = fileService;
             _servingService = servingService;
         }
