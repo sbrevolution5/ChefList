@@ -22,14 +22,12 @@ namespace MasterMealWA.Server.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IShoppingService _shoppingService;
-        private readonly UserManager<Chef> _userManager;
 
 
-        public ShoppingListsController(ApplicationDbContext context, IShoppingService shoppingService, UserManager<Chef> userManager)
+        public ShoppingListsController(ApplicationDbContext context, IShoppingService shoppingService)
         {
             _context = context;
             _shoppingService = shoppingService;
-            _userManager = userManager;
         }
 
         // GET: api/ShoppingLists
