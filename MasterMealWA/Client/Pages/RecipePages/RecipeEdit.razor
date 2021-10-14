@@ -382,6 +382,17 @@ else
         if (!result.Cancelled)
         {
             supplyList = await _api.GetAsync<List<Supply>>("api/supplies");
+            var nullList = recipe.Supplies.Where(i => i.Supply is null);
+            if (nullList.Count() > 0)
+            {
+                foreach (var sup in nullList)
+                {
+                    var supplyResult = result.Data as Supply;
+                    sup.Supply = supplyResult;
+                    sup.SupplyId = supplyResult.Id;
+                }
+                StateHasChanged();
+            }
         }
     }
     public IBrowserFile file;
