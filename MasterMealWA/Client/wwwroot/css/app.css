@@ -49,3 +49,6 @@ a, .btn-link {
         top: 0.5rem;
     }
 */
+.noHover {
+    pointer-events: none;
+}

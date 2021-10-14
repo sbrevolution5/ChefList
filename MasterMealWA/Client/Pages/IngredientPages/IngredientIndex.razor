@@ -25,9 +25,26 @@ else
                 </MudCardHeader>
                 <MudCardContent>
                     <MudGrid>
-                        @foreach (var ingredient in Ingredients)
+                        <MudItem xs="9">
+
+
+                            <MudSelect Label="Sort Ingredients" T="int" @bind-Value="sortInt">
+                                <MudSelectItem Value="0">Default</MudSelectItem>
+                                <MudSelectItem Value="5">A-Z</MudSelectItem>
+                                <MudSelectItem Value="6">Z-A</MudSelectItem>
+                                <MudSelectItem Value="1">Recipe Count (High-low)</MudSelectItem>
+                                <MudSelectItem Value="2">Recipe Count (Low-high)</MudSelectItem>
+                                <MudSelectItem Value="3">Ingredient Type (Ascending)</MudSelectItem>
+                                <MudSelectItem Value="4">Ingredient Type (Descending)</MudSelectItem>
+                            </MudSelect>
+
+                        </MudItem>
+                        <MudItem xs="3">
+                            <MudButton OnClick="SortIngredients" Variant="Variant.Filled" Color="Color.Primary">Sort</MudButton>
+                        </MudItem>
+                        @foreach (var ingredient in SortedIngredients)
                         {
-                            var count = Recipes.SelectMany(r => r.Ingredients).Where(i => i.IngredientId == ingredient.Id).Count();
+                            var count = CountDict.GetValueOrDefault(ingredient.Id);
                             <MudItem xs="12" sm="6" md="4" lg="3">
 
                                 <MudPaper Elevation="4" Style="padding-left:5px;margin:10px;">
@@ -36,19 +53,20 @@ else
                                             <MudText>
                                                 @ingredient.Name
                                             </MudText>
+                                            <MudText Typo="Typo.subtitle2">@ingredient.Type.Name</MudText>
                                         </MudItem>
                                         <MudItem xs="6">
-                                            <MudBadge Content="@Recipes.SelectMany(r=>r.Ingredients).Where(i=>i.IngredientId == ingredient.Id).Count()" Color="Color.Primary" Overlap="true" Bordered="true" Class="mx-6 my-4">
+                                            <MudBadge Content="count" Color="Color.Primary" Overlap="true" Bordered="true" Class="mx-6 my-4">
                                                 <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="()=>OpenQuicklist(GetRecipeList(ingredient))">View Recipes </MudButton>
                                             </MudBadge>
                                         </MudItem>
                                         <MudItem xs="2">
-                                        <AuthorizeView Roles="Admin, Moderator">
-                                            <Authorized>
-                                            <MudIconButton Variant="Variant.Filled" Color="Color.Warning" Icon="@Icons.Material.Filled.Edit" OnClick="@(()=>EditIngredient(ingredient))"></MudIconButton>
-                                                <MudIconButton Variant="Variant.Filled" Color="Color.Warning" Icon="@Icons.Material.Filled.Delete" OnClick="@(()=>DeleteIngredient(ingredient,count))"></MudIconButton>
-                                            </Authorized>
-                                        </AuthorizeView>
+                                            <AuthorizeView Roles="Admin, Moderator">
+                                                <Authorized>
+                                                    <MudIconButton Variant="Variant.Filled" Color="Color.Warning" Icon="@Icons.Material.Filled.Edit" OnClick="@(()=>EditIngredient(ingredient))"></MudIconButton>
+                                                    <MudIconButton Variant="Variant.Filled" Color="Color.Warning" Icon="@Icons.Material.Filled.Delete" OnClick="@(()=>DeleteIngredient(ingredient,count))"></MudIconButton>
+                                                </Authorized>
+                                            </AuthorizeView>
                                         </MudItem>
                                     </MudGrid>
                                 </MudPaper>
@@ -63,11 +81,19 @@ else
 }
 @code {
     public List<Ingredient> Ingredients { get; set; }
+    public List<Ingredient> SortedIngredients { get; set; }
     public List<Recipe> Recipes { get; set; }
+    public Dictionary<int, int> CountDict { get; set; } = new();
+    public int sortInt { get; set; } = 0;
     protected override async Task OnInitializedAsync()
     {
         Recipes = await _api.GetAsync<List<Recipe>>("api/recipes/ingredients");
         Ingredients = await _api.GetAsync<List<Ingredient>>("api/ingredients");
+        foreach (var ing in Ingredients)
+        {
+            CountDict.Add(ing.Id, Recipes.SelectMany(r => r.Ingredients).Where(i => i.IngredientId == ing.Id).Count());
+        }
+        SortIngredients();
         base.OnInitialized();
     }
     public async Task NewIngredient()
@@ -78,6 +104,7 @@ else
         {
             Ingredients = await _api.GetAsync<List<Ingredient>>("api/ingredients");
         }
+        SortIngredients();
     }
     public async Task EditIngredient(Ingredient ingredient)
     {
@@ -87,16 +114,50 @@ else
         if (!result.Cancelled)
         {
             Ingredients = await _api.GetAsync<List<Ingredient>>("api/ingredients");
+            SortIngredients();
+        }
+    }
+    public void SortIngredients()
+    {
+        switch (sortInt)
+        {
+            case 1:
+                SortedIngredients = Ingredients.OrderByDescending(r => CountDict.GetValueOrDefault(r.Id)).ToList();
+                break;
+
+            case 2:
+                SortedIngredients = Ingredients.OrderBy(r => CountDict.GetValueOrDefault(r.Id)).ToList();
+                break;
+
+            case 3:
+                SortedIngredients = Ingredients.OrderByDescending(r => r.TypeId).ToList();
+                break;
+
+            case 4:
+                SortedIngredients = Ingredients.OrderBy(r => r.TypeId).ToList();
+                break;
+
+            case 5:
+                SortedIngredients = Ingredients.OrderBy(r => r.Name).ToList();
+                break;
+            case 6:
+                SortedIngredients = Ingredients.OrderByDescending(r => r.Name).ToList();
+                break;
+            default:
+                SortedIngredients = Ingredients;
+                break;
         }
     }
     public async Task DeleteIngredient(Ingredient ingredient, int count)
     {
         var parameters = new DialogParameters { ["Ingredient"] = ingredient, ["recipeNumber"] = count };
-        var dialog = _dialogService.Show<IngredientDelete>("Delete Ingredient", parameters);
+        var dialog = _dialogService.Show<IngredientDelete>
+    ("Delete Ingredient", parameters);
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
             Ingredients = await _api.GetAsync<List<Ingredient>>("api/ingredients");
+            SortIngredients();
         }
     }
     public List<Recipe> GetRecipeList(Ingredient ingredient)

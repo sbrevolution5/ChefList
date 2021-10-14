@@ -52,9 +52,16 @@
                         <MudSelectItem Value="7">Date Created(new-old)</MudSelectItem>
                     </MudSelect>
                 </MudItem>
-                <MudItem xs="6">
+                <MudItem xs="3">
+                    <MudSelect Label="Recipes Per Page" T="int" @bind-Value="perPageInt">
+                        <MudSelectItem Value="6">6</MudSelectItem>
+                        <MudSelectItem Value="12">12</MudSelectItem>
+                        <MudSelectItem Value="24">24</MudSelectItem>
+                    </MudSelect>
+                </MudItem>
+                <MudItem xs="3">
                     <MudButton OnClick="ChangeSortAndUpdateView" Variant="Variant.Filled" Color="Color.Primary">
-                        Sort
+                        Apply
                     </MudButton>
                 </MudItem>
                 @foreach (var recipe in pageRecipes)
@@ -130,6 +137,7 @@
 @code {
     [Parameter]
     public string mine { get; set; }
+    public int perPageInt { get; set; } = 6;
     public Filter Filters { get; set; } = new();
     private List<Recipe> AllRecipes;
     public List<Recipe> FilteredRecipes;
@@ -192,7 +200,6 @@
     public void FilterRecipes()
     {
         FilteredRecipes = _filterService.ApplyFilter(AllRecipes, Filters, userId);
-        pageCount = (FilteredRecipes.Count / 6) + 1;
     }
     private void ChangeFilter()
     {
@@ -202,6 +209,7 @@
     private void ChangeSortAndUpdateView()
     {
         SortRecipes();
+        pageCount = (FilteredRecipes.Count / perPageInt) + 1;
         if (CurrentPage > pageCount)
         {
             CurrentPage = pageCount;
@@ -254,14 +262,14 @@
         }
         FilteredRecipes = AllRecipes;
         SortedRecipes = AllRecipes;
-        if (SortedRecipes.Count <= 6)
+        if (SortedRecipes.Count <= perPageInt)
         {
             pageCount = 1;
         }
         else
         {
 
-            pageCount = (SortedRecipes.Count / 6) + 1;
+            pageCount = (SortedRecipes.Count / perPageInt) + 1;
         }
     }
     private async Task GetTagsAsync()
@@ -278,7 +286,7 @@
     private void ChangePage(int page)
     {
         CurrentPage = page;
-        pageRecipes = SortedRecipes.Skip((page - 1) * 6).Take(6).ToList();
+        pageRecipes = SortedRecipes.Skip((page - 1) * perPageInt).Take(perPageInt).ToList();
         StateHasChanged();
     }
     public async Task DeleteRecipe(Recipe recipe)

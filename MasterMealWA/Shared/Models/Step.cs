@@ -11,7 +11,7 @@ namespace MasterMealWA.Shared.Models
         public int Id { get; set; }
         public int RecipeId { get; set; }
         [Required]
-        public int StepNumber { get; set; }
+        public int StepNumber { get; set; } = 1;
         [Required]
         public string Text { get; set; }
         public virtual Recipe Recipe { get; set; }
