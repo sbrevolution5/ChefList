@@ -19,7 +19,7 @@
             </MudItem>
             <MudItem xs="6">
 
-                @if (measurementType == MeasurementType.Volume)
+                @if (qingredient.MeasurementType == MeasurementType.Volume)
                 {
                     <MudSelect Label="Volume Measurement" T="VolumeMeasurementUnit?" @bind-Value="qingredient.VolumeMeasurementUnit">
                         @foreach (VolumeMeasurementUnit? measure in Enum.GetValues(typeof(VolumeMeasurementUnit)))
@@ -28,7 +28,7 @@
                         }
                     </MudSelect>
                 }
-                else if (measurementType == MeasurementType.Mass)
+                else if (qingredient.MeasurementType == MeasurementType.Mass)
                 {
                     <MudSelect Label="Mass Measurement" T="MassMeasurementUnit?" @bind-Value="qingredient.MassMeasurementUnit">
                         @foreach (MassMeasurementUnit? measure in Enum.GetValues(typeof(MassMeasurementUnit)))
@@ -37,7 +37,7 @@
                         }
                     </MudSelect>
                 }
-                else if (measurementType == MeasurementType.Count)
+                else if (qingredient.MeasurementType == MeasurementType.Count)
                 {
 
                 }

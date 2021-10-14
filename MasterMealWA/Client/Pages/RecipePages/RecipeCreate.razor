@@ -116,7 +116,7 @@
                                 <MudCard Elevation="2">
                                     <MudCardContent>
 
-                                        <QIngredientCreate qIngredient="@ingredient" ingredientList="Ingredients" />
+                                        <QIngredientCreate qingredient="@ingredient" ingredientList="Ingredients" />
                                     </MudCardContent>
                                     <MudCardActions>
 
@@ -292,6 +292,18 @@
         if (!result.Cancelled)
         {
             Ingredients = await _api.GetAsync<List<Ingredient>>("api/ingredients");
+            var nullList = recipe.Ingredients.Where(i => i.Ingredient is null);
+            if (nullList.Count() > 0)
+            {
+                foreach (var ing in nullList)
+                {
+                    var ingredientResult = result.Data as Ingredient;
+                    ing.Ingredient = ingredientResult;
+                    ing.IngredientId = ingredientResult.Id;
+                    ing.MeasurementType = ingredientResult.MeasurementType;
+                }
+                StateHasChanged();
+            }
         }
     }
     public async Task NewSupply()
@@ -300,7 +312,18 @@
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-            supplyList = await _api.GetAsync<List<Supply>>("api/supplies"); ;
+            supplyList = await _api.GetAsync<List<Supply>>("api/supplies");
+            var nullList = recipe.Supplies.Where(i => i.Supply is null);
+            if (nullList.Count() > 0)
+            {
+                foreach (var sup in nullList)
+                {
+                    var supplyResult = result.Data as Supply;
+                    sup.Supply = supplyResult;
+                    sup.SupplyId = supplyResult.Id;
+                }
+                StateHasChanged();
+            }
         }
     }
     IBrowserFile file;
