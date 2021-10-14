@@ -136,10 +136,10 @@ else
                 break;
 
             case 5:
-                SortedIngredients = Ingredients.OrderByDescending(r => r.Name).ToList();
+                SortedIngredients = Ingredients.OrderBy(r => r.Name).ToList();
                 break;
             case 6:
-                SortedIngredients = Ingredients.OrderBy(r => r.Name).ToList();
+                SortedIngredients = Ingredients.OrderByDescending(r => r.Name).ToList();
                 break;
             default:
                 SortedIngredients = Ingredients;
