@@ -44,7 +44,7 @@ else
                         </MudItem>
                         @foreach (var ingredient in Ingredients)
                         {
-                            var count = Recipes.SelectMany(r => r.Ingredients).Where(i => i.IngredientId == ingredient.Id).Count();
+                            var count = CountDict.GetValueOrDefault(ingredient.Id);
                             <MudItem xs="12" sm="6" md="4" lg="3">
 
                                 <MudPaper Elevation="4" Style="padding-left:5px;margin:10px;">
@@ -88,7 +88,10 @@ else
     {
         Recipes = await _api.GetAsync<List<Recipe>>("api/recipes/ingredients");
         Ingredients = await _api.GetAsync<List<Ingredient>>("api/ingredients");
-        CountDict = new
+        foreach (var ing in Ingredients)
+        {
+            CountDict.Add(ing.Id, Recipes.SelectMany(r => r.Ingredients).Where(i => i.IngredientId == ing.Id).Count());
+        }
         base.OnInitialized();
     }
     public async Task NewIngredient()
@@ -112,45 +115,43 @@ else
     }
     public async Task SortIngredients()
     {
-        private void SortRecipes()
+        switch (sortInt)
         {
-            switch (sortInt)
-            {
-                case 1:
-                    SortedIngredients = Ingredients.OrderByDescending(r => r.AvgRating).ToList();
-                    break;
+            case 1:
+                SortedIngredients = Ingredients.OrderByDescending(r => CountDict.GetValueOrDefault(r.Id)).ToList();
+                break;
 
-                case 2:
-                    SortedIngredients = Ingredients.OrderBy(r => r.Name).ToList();
-                    break;
+            case 2:
+                SortedIngredients = Ingredients.OrderBy(r => CountDict.GetValueOrDefault(r.Id)).ToList();
+                break;
 
-                case 3:
-                    SortedIngredients = Ingredients.OrderByDescending(r => r.Name).ToList();
-                    break;
+            case 3:
+                SortedIngredients = Ingredients.OrderByDescending(r => r.Name).ToList();
+                break;
 
-                case 4:
-                    SortedIngredients = Ingredients.OrderBy(r => r.CookingTime).ToList();
-                    break;
+            case 4:
+                SortedIngredients = Ingredients.OrderBy(r => r.CookingTime).ToList();
+                break;
 
-                case 5:
-                    SortedIngredients = Ingredients.OrderByDescending(r => r.CookingTime).ToList();
-                    break;
-                case 6:
-                    SortedIngredients = Ingredients.OrderBy(r => r.Created).ToList();
-                    break;
-                case 7:
-                    SortedIngredients = Ingredients.OrderByDescending(r => r.Created).ToList();
-                    break;
-                default:
-                    SortedIngredients = Ingredients;
-                    break;
-            }
+            case 5:
+                SortedIngredients = Ingredients.OrderByDescending(r => r.CookingTime).ToList();
+                break;
+            case 6:
+                SortedIngredients = Ingredients.OrderBy(r => r.Created).ToList();
+                break;
+            case 7:
+                SortedIngredients = Ingredients.OrderByDescending(r => r.Created).ToList();
+                break;
+            default:
+                SortedIngredients = Ingredients;
+                break;
         }
     }
     public async Task DeleteIngredient(Ingredient ingredient, int count)
     {
         var parameters = new DialogParameters { ["Ingredient"] = ingredient, ["recipeNumber"] = count };
-        var dialog = _dialogService.Show<IngredientDelete>("Delete Ingredient", parameters);
+        var dialog = _dialogService.Show<IngredientDelete>
+    ("Delete Ingredient", parameters);
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
