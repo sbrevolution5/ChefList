@@ -181,7 +181,7 @@ else
                                     <MudCard Elevation="2">
                                         <MudCardContent>
 
-                                            <StepCreate step="step" stepmax="recipe.Steps.Count"></StepCreate>
+                                            <StepCreate step="step" stepmax="recipe.Steps.Count" StepUp="()=>IncreaseStep(step)" StepDown="()=>DecreaseStep(step)"></StepCreate>
                                         </MudCardContent>
                                         <MudCardActions>
 
@@ -232,6 +232,26 @@ else
         Tags = await _api.GetAsync<List<RecipeTag>>("api/recipeTags");
         Ingredients = await _api.GetAsync<List<Ingredient>>("api/ingredients");
         supplyList = await _api.GetAsync<List<Supply>>("api/Supplies");
+    }
+    public void IncreaseStep(Step s)
+    {
+        if (s.StepNumber < recipe.Steps.Count)
+        {
+            var next = recipe.Steps.Where(nextStep => s.StepNumber + 1 == nextStep.StepNumber).FirstOrDefault();
+            next.StepNumber -= 1;
+            s.StepNumber += 1;
+            StateHasChanged();
+        }
+    }
+    public void DecreaseStep(Step s)
+    {
+        if (s.StepNumber > 1)
+        {
+            var previous = recipe.Steps.Where(prevStep => s.StepNumber - 1 == prevStep.StepNumber).FirstOrDefault();
+            previous.StepNumber += 1;
+            s.StepNumber -= 1;
+            StateHasChanged();
+        }
     }
     public Color BadgeColor(CategoryType type)
     {

@@ -1,11 +1,19 @@
 ﻿<EditForm Model="step">
     <MudGrid>
         <MudItem xs="2">
+            <MudButtonGroup VerticalAlign="true" OverrideStyles="false">
 
-            <MudNumericField Label="Step #" @bind-Value="step.StepNumber" Max="stepmax.Value" Min="1"></MudNumericField>
+                <MudIconButton Disabled="step.StepNumber <=1" Variant="Variant.Filled" Icon="@Icons.Material.Filled.ArrowUpward" OnClick="StepDown"></MudIconButton>
+                <MudButton Variant="Variant.Text" DisableRipple="true" Class="noHover" Style="cursor: default;">
+                    <MudText>
+                        @step.StepNumber
+                    </MudText>
+                </MudButton>
+
+                <MudIconButton Disabled="step.StepNumber == stepmax" Variant="Variant.Filled" Icon="@Icons.Material.Filled.ArrowDownward" OnClick="StepUp"></MudIconButton>
+            </MudButtonGroup>
         </MudItem>
         <MudItem xs="10">
-
             <MudTextField Label="Step Text" @bind-Value="@step.Text" Lines="5"></MudTextField>
         </MudItem>
     </MudGrid>
@@ -16,6 +24,10 @@
     public Step step { get; set; }
     [Parameter]
     public int? stepmax { get; set; }
+    [Parameter]
+    public Action StepUp { get; set; }
+    [Parameter]
+    public Action StepDown { get; set; }
     protected override void OnInitialized()
     {
         base.OnInitialized();
