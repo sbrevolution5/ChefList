@@ -272,6 +272,7 @@
             var next = recipe.Steps.Where(nextStep => s.StepNumber + 1 == nextStep.StepNumber).FirstOrDefault();
             next.StepNumber -= 1;
             s.StepNumber += 1;
+            StateHasChanged();
         }
     }
     public void DecreaseStep(Step s)
@@ -281,6 +282,7 @@
             var previous = recipe.Steps.Where(prevStep => s.StepNumber - 1 == prevStep.StepNumber).FirstOrDefault();
             previous.StepNumber += 1;
             s.StepNumber -= 1;
+            StateHasChanged();
         }
     }
     public async Task NewIngredient()
