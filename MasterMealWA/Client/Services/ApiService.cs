@@ -57,16 +57,10 @@ namespace MasterMealWA.Client.Services
         }
         public async Task<TResult> GetAsync<TResult>(string url)
         {
-            try
-            {
+            
                 var result = await _http.GetFromJsonAsync<TResult>(url, _options);
                 return result;
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
+            
         }
         public async Task<TResult> GetAnonAsync<TResult>(string url)
         {
