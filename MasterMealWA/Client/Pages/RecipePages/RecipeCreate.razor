@@ -116,7 +116,7 @@
                                 <MudCard Elevation="2">
                                     <MudCardContent>
 
-                                        <QIngredientCreate qIngredient="@ingredient" ingredientList="Ingredients" />
+                                        <QIngredientCreate qingredient="@ingredient" ingredientList="Ingredients" />
                                     </MudCardContent>
                                     <MudCardActions>
 
@@ -300,7 +300,9 @@
                     var ingredientResult = result.Data as Ingredient;
                     ing.Ingredient = ingredientResult;
                     ing.IngredientId = ingredientResult.Id;
+                    ing.MeasurementType = ingredientResult.MeasurementType;
                 }
+                StateHasChanged();
             }
         }
     }
