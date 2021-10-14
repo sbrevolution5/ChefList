@@ -4,7 +4,11 @@
             <MudButtonGroup VerticalAlign="true" OverrideStyles="false">
 
                 <MudIconButton Disabled="step.StepNumber <=1" Variant="Variant.Filled" Icon="@Icons.Material.Filled.ArrowUpward" OnClick="StepDown"></MudIconButton>
-                <MudButton Variant="Variant.Text" DisableRipple="true" Color="Color.Primary">@step.StepNumber</MudButton>
+                <MudButton Variant="Variant.Text" DisableRipple="true" Style="cursor: default;">
+                    <MudText>
+                        @step.StepNumber
+                    </MudText>
+                </MudButton>
 
                 <MudIconButton Disabled="step.StepNumber == stepmax" Variant="Variant.Filled" Icon="@Icons.Material.Filled.ArrowDownward" OnClick="StepUp"></MudIconButton>
             </MudButtonGroup>
