@@ -16,6 +16,9 @@
     public Step step { get; set; }
     [Parameter]
     public int? stepmax { get; set; }
+    [Parameter]
+    public Action StepUp { get; set; }
+    public Action StepDown { get; set; }
     protected override void OnInitialized()
     {
         base.OnInitialized();
