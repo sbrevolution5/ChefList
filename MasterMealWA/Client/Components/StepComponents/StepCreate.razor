@@ -1,10 +1,13 @@
 ﻿<EditForm Model="step">
     <MudGrid>
         <MudItem xs="2">
-            <MudIconButton Size="Size.Small" Disabled="step.StepNumber <=1" Variant="Variant.Filled" Icon="@Icons.Material.Filled.ArrowUpward" OnClick="StepDown"></MudIconButton>
-            <MudText >@step.StepNumber</MudText>
+            <MudButtonGroup VerticalAlign="true" OverrideStyles="false">
 
-            <MudIconButton Size="Size.Small" Disabled="step.StepNumber == stepmax" Variant="Variant.Filled" Icon="@Icons.Material.Filled.ArrowDownward" OnClick="StepUp"></MudIconButton>
+                <MudIconButton Disabled="step.StepNumber <=1" Variant="Variant.Filled" Icon="@Icons.Material.Filled.ArrowUpward" OnClick="StepDown"></MudIconButton>
+                <MudButton Variant="Variant.Text" DisableRipple="true" Color="Color.Primary">@step.StepNumber</MudButton>
+
+                <MudIconButton Disabled="step.StepNumber == stepmax" Variant="Variant.Filled" Icon="@Icons.Material.Filled.ArrowDownward" OnClick="StepUp"></MudIconButton>
+            </MudButtonGroup>
         </MudItem>
         <MudItem xs="10">
             <MudTextField Label="Step Text" @bind-Value="@step.Text" Lines="5"></MudTextField>
