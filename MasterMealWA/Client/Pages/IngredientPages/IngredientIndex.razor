@@ -126,21 +126,18 @@ else
                 break;
 
             case 3:
-                SortedIngredients = Ingredients.OrderByDescending(r => r.Name).ToList();
+                SortedIngredients = Ingredients.OrderByDescending(r => r.TypeId).ToList();
                 break;
 
             case 4:
-                SortedIngredients = Ingredients.OrderBy(r => r.CookingTime).ToList();
+                SortedIngredients = Ingredients.OrderBy(r => r.TypeId).ToList();
                 break;
 
             case 5:
-                SortedIngredients = Ingredients.OrderByDescending(r => r.CookingTime).ToList();
+                SortedIngredients = Ingredients.OrderByDescending(r => r.Name).ToList();
                 break;
             case 6:
-                SortedIngredients = Ingredients.OrderBy(r => r.Created).ToList();
-                break;
-            case 7:
-                SortedIngredients = Ingredients.OrderByDescending(r => r.Created).ToList();
+                SortedIngredients = Ingredients.OrderBy(r => r.Name).ToList();
                 break;
             default:
                 SortedIngredients = Ingredients;
