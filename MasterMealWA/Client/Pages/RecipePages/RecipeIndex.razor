@@ -153,8 +153,8 @@
         await GetRecipesAsync();
         ChangePage(CurrentPage);
         await GetTagsAsync();
-        base.OnInitialized();
         Loaded = true;
+        await base.OnInitializedAsync();
     }
     public Color BadgeColor(CategoryType type)
     {
@@ -189,11 +189,6 @@
         5 => "5 Stars",
         _ => "Any Rating"
     };
-    protected override async Task OnParametersSetAsync()
-    {
-        mine = mine ?? "";
-        await GetRecipesAsync();
-    }
     public void FilterRecipes()
     {
         FilteredRecipes = _filterService.ApplyFilter(AllRecipes, Filters, userId);
