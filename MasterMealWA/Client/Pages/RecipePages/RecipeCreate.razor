@@ -173,7 +173,7 @@
                                 <MudCard Elevation="2">
                                     <MudCardContent>
 
-                                        <StepCreate step="step" stepmax="recipe.Steps.Count"></StepCreate>
+                                        <StepCreate step="step" stepmax="recipe.Steps.Count" StepUp="()=>IncreaseStep(step)" StepDown="()=>DecreaseStep(step)"></StepCreate>
                                     </MudCardContent>
                                     <MudCardActions>
 
@@ -263,6 +263,20 @@
         catch (Exception e)
         {
             _snackbar.Add($"Creation failed {e.Message}", Severity.Error);
+        }
+    }
+    public void IncreaseStep(Step s)
+    {
+        if (s.StepNumber < recipe.Steps.Count)
+        {
+            //Next step needs to be decreased, this step needs to be increased
+        }
+    }
+    public void DecreaseStep(Step s)
+    {
+        if (s.StepNumber > 1)
+        {
+            //Previous step needs to be Increased, this step needs to be Decreased
         }
     }
     public async Task NewIngredient()
