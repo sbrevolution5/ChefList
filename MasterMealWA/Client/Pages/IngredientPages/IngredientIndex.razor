@@ -55,7 +55,7 @@ else
                                             </MudText>
                                         </MudItem>
                                         <MudItem xs="6">
-                                            <MudBadge Content="@Recipes.SelectMany(r=>r.Ingredients).Where(i=>i.IngredientId == ingredient.Id).Count()" Color="Color.Primary" Overlap="true" Bordered="true" Class="mx-6 my-4">
+                                            <MudBadge Content="count" Color="Color.Primary" Overlap="true" Bordered="true" Class="mx-6 my-4">
                                                 <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="()=>OpenQuicklist(GetRecipeList(ingredient))">View Recipes </MudButton>
                                             </MudBadge>
                                         </MudItem>
@@ -80,12 +80,15 @@ else
 }
 @code {
     public List<Ingredient> Ingredients { get; set; }
+    public List<Ingredient> SortedIngredients { get; set; }
     public List<Recipe> Recipes { get; set; }
-    public int SortInt { get; set; } = 0;
+    public Dictionary<int, int> CountDict { get; set; } = new();
+    public int sortInt { get; set; } = 0;
     protected override async Task OnInitializedAsync()
     {
         Recipes = await _api.GetAsync<List<Recipe>>("api/recipes/ingredients");
         Ingredients = await _api.GetAsync<List<Ingredient>>("api/ingredients");
+        CountDict = new
         base.OnInitialized();
     }
     public async Task NewIngredient()
@@ -105,6 +108,43 @@ else
         if (!result.Cancelled)
         {
             Ingredients = await _api.GetAsync<List<Ingredient>>("api/ingredients");
+        }
+    }
+    public async Task SortIngredients()
+    {
+        private void SortRecipes()
+        {
+            switch (sortInt)
+            {
+                case 1:
+                    SortedIngredients = Ingredients.OrderByDescending(r => r.AvgRating).ToList();
+                    break;
+
+                case 2:
+                    SortedIngredients = Ingredients.OrderBy(r => r.Name).ToList();
+                    break;
+
+                case 3:
+                    SortedIngredients = Ingredients.OrderByDescending(r => r.Name).ToList();
+                    break;
+
+                case 4:
+                    SortedIngredients = Ingredients.OrderBy(r => r.CookingTime).ToList();
+                    break;
+
+                case 5:
+                    SortedIngredients = Ingredients.OrderByDescending(r => r.CookingTime).ToList();
+                    break;
+                case 6:
+                    SortedIngredients = Ingredients.OrderBy(r => r.Created).ToList();
+                    break;
+                case 7:
+                    SortedIngredients = Ingredients.OrderByDescending(r => r.Created).ToList();
+                    break;
+                default:
+                    SortedIngredients = Ingredients;
+                    break;
+            }
         }
     }
     public async Task DeleteIngredient(Ingredient ingredient, int count)
