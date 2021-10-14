@@ -205,7 +205,6 @@
     public void FilterRecipes()
     {
         FilteredRecipes = _filterService.ApplyFilter(AllRecipes, Filters, userId);
-        pageCount = (FilteredRecipes.Count / perPageInt) + 1;
     }
     private void ChangeFilter()
     {
@@ -215,6 +214,7 @@
     private void ChangeSortAndUpdateView()
     {
         SortRecipes();
+        pageCount = (FilteredRecipes.Count / perPageInt) + 1;
         if (CurrentPage > pageCount)
         {
             CurrentPage = pageCount;
