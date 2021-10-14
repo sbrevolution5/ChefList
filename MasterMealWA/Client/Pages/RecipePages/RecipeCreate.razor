@@ -292,6 +292,16 @@
         if (!result.Cancelled)
         {
             Ingredients = await _api.GetAsync<List<Ingredient>>("api/ingredients");
+            var nullList = recipe.Ingredients.Where(i => i.Ingredient is null);
+            if (nullList.Count() > 0)
+            {
+                foreach (var ing in nullList)
+                {
+                    var ingredientResult = result.Data as Ingredient;
+                    ing.Ingredient = ingredientResult;
+                    ing.IngredientId = ingredientResult.Id;
+                }
+            }
         }
     }
     public async Task NewSupply()
