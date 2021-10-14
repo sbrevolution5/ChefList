@@ -25,6 +25,24 @@ else
                 </MudCardHeader>
                 <MudCardContent>
                     <MudGrid>
+                        <MudItem xs="9">
+
+
+                            <MudSelect Label="Sort Recipes" T="int" @bind-Value="sortInt">
+                                <MudSelectItem Value="0">Default</MudSelectItem>
+                                <MudSelectItem Value="1">Average Rating</MudSelectItem>
+                                <MudSelectItem Value="2">A-Z</MudSelectItem>
+                                <MudSelectItem Value="3">Z-A</MudSelectItem>
+                                <MudSelectItem Value="4">Cooking Time (low-high)</MudSelectItem>
+                                <MudSelectItem Value="5">Cooking Time (high-low)</MudSelectItem>
+                                <MudSelectItem Value="6">Date Created(old-new)</MudSelectItem>
+                                <MudSelectItem Value="7">Date Created(new-old)</MudSelectItem>
+                            </MudSelect>
+
+                        </MudItem>
+                        <MudItem xs="3">
+                            <MudButton>Sort</MudButton>
+                        </MudItem>
                         @foreach (var ingredient in Ingredients)
                         {
                             var count = Recipes.SelectMany(r => r.Ingredients).Where(i => i.IngredientId == ingredient.Id).Count();
@@ -43,12 +61,12 @@ else
                                             </MudBadge>
                                         </MudItem>
                                         <MudItem xs="2">
-                                        <AuthorizeView Roles="Admin, Moderator">
-                                            <Authorized>
-                                            <MudIconButton Variant="Variant.Filled" Color="Color.Warning" Icon="@Icons.Material.Filled.Edit" OnClick="@(()=>EditIngredient(ingredient))"></MudIconButton>
-                                                <MudIconButton Variant="Variant.Filled" Color="Color.Warning" Icon="@Icons.Material.Filled.Delete" OnClick="@(()=>DeleteIngredient(ingredient,count))"></MudIconButton>
-                                            </Authorized>
-                                        </AuthorizeView>
+                                            <AuthorizeView Roles="Admin, Moderator">
+                                                <Authorized>
+                                                    <MudIconButton Variant="Variant.Filled" Color="Color.Warning" Icon="@Icons.Material.Filled.Edit" OnClick="@(()=>EditIngredient(ingredient))"></MudIconButton>
+                                                    <MudIconButton Variant="Variant.Filled" Color="Color.Warning" Icon="@Icons.Material.Filled.Delete" OnClick="@(()=>DeleteIngredient(ingredient,count))"></MudIconButton>
+                                                </Authorized>
+                                            </AuthorizeView>
                                         </MudItem>
                                     </MudGrid>
                                 </MudPaper>
@@ -64,6 +82,7 @@ else
 @code {
     public List<Ingredient> Ingredients { get; set; }
     public List<Recipe> Recipes { get; set; }
+    public int SortInt { get; set; } = 0;
     protected override async Task OnInitializedAsync()
     {
         Recipes = await _api.GetAsync<List<Recipe>>("api/recipes/ingredients");
