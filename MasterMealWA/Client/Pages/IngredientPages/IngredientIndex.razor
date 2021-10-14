@@ -40,9 +40,9 @@ else
 
                         </MudItem>
                         <MudItem xs="3">
-                            <MudButton>Sort</MudButton>
+                            <MudButton OnClick="SortIngredients">Sort</MudButton>
                         </MudItem>
-                        @foreach (var ingredient in Ingredients)
+                        @foreach (var ingredient in SortedIngredients)
                         {
                             var count = CountDict.GetValueOrDefault(ingredient.Id);
                             <MudItem xs="12" sm="6" md="4" lg="3">
@@ -92,6 +92,7 @@ else
         {
             CountDict.Add(ing.Id, Recipes.SelectMany(r => r.Ingredients).Where(i => i.IngredientId == ing.Id).Count());
         }
+        SortIngredients();
         base.OnInitialized();
     }
     public async Task NewIngredient()
@@ -102,6 +103,7 @@ else
         {
             Ingredients = await _api.GetAsync<List<Ingredient>>("api/ingredients");
         }
+        SortIngredients();
     }
     public async Task EditIngredient(Ingredient ingredient)
     {
@@ -113,7 +115,7 @@ else
             Ingredients = await _api.GetAsync<List<Ingredient>>("api/ingredients");
         }
     }
-    public async Task SortIngredients()
+    public void SortIngredients()
     {
         switch (sortInt)
         {
