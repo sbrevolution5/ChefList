@@ -22,7 +22,6 @@
     {
         try
         {
-
             await _api.DeleteAsync($"/api/ingredients/{ingredient.Id}");
             _snackbar.Add("Ingredient Deleted", Severity.Success);
             MudDialog.Close(DialogResult.Ok(ingredient));

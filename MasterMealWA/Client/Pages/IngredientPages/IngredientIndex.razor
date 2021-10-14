@@ -114,6 +114,7 @@ else
         if (!result.Cancelled)
         {
             Ingredients = await _api.GetAsync<List<Ingredient>>("api/ingredients");
+            SortIngredients();
         }
     }
     public void SortIngredients()
@@ -156,6 +157,7 @@ else
         if (!result.Cancelled)
         {
             Ingredients = await _api.GetAsync<List<Ingredient>>("api/ingredients");
+            SortIngredients();
         }
     }
     public List<Recipe> GetRecipeList(Ingredient ingredient)
