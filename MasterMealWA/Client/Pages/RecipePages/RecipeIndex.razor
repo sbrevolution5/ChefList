@@ -52,9 +52,14 @@
                         <MudSelectItem Value="7">Date Created(new-old)</MudSelectItem>
                     </MudSelect>
                 </MudItem>
-                <MudItem xs="6">
+                <MudItem xs="3">
+                    <MudSelect Label="Recipes Per Page" T="int" @bind-Value="perPageInt">
+
+                    </MudSelect>
+                </MudItem>
+                <MudItem xs="3">
                     <MudButton OnClick="ChangeSortAndUpdateView" Variant="Variant.Filled" Color="Color.Primary">
-                        Sort
+                        Apply
                     </MudButton>
                 </MudItem>
                 @foreach (var recipe in pageRecipes)
@@ -130,6 +135,7 @@
 @code {
     [Parameter]
     public string mine { get; set; }
+    public int perPageInt { get; set; } = 6;
     public Filter Filters { get; set; } = new();
     private List<Recipe> AllRecipes;
     public List<Recipe> FilteredRecipes;
