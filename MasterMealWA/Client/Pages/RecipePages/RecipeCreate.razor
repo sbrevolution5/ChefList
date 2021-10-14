@@ -269,14 +269,18 @@
     {
         if (s.StepNumber < recipe.Steps.Count)
         {
-            //Next step needs to be decreased, this step needs to be increased
+            var next = recipe.Steps.Where(nextStep => s.StepNumber + 1 == nextStep.StepNumber).FirstOrDefault();
+            next.StepNumber -= 1;
+            s.StepNumber += 1;
         }
     }
     public void DecreaseStep(Step s)
     {
         if (s.StepNumber > 1)
         {
-            //Previous step needs to be Increased, this step needs to be Decreased
+            var previous = recipe.Steps.Where(prevStep => s.StepNumber - 1 == prevStep.StepNumber).FirstOrDefault();
+            previous.StepNumber += 1;
+            s.StepNumber -= 1;
         }
     }
     public async Task NewIngredient()
