@@ -153,8 +153,8 @@
         await GetRecipesAsync();
         ChangePage(CurrentPage);
         await GetTagsAsync();
-        base.OnInitialized();
         Loaded = true;
+        base.OnInitialized();
     }
     public Color BadgeColor(CategoryType type)
     {
