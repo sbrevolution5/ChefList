@@ -64,8 +64,9 @@
     {
         try
         {
-            await _api.CreateAsync<Ingredient>("api/ingredients", ingredient);
+            await _api.CreateAsync<Ingredient,Ingredient>("api/ingredients", ingredient);
             _snackbar.Add("Ingredient Created", Severity.Success);
+            
             MudDialog.Close(DialogResult.Ok(ingredient));
         }
         catch (Exception e)
