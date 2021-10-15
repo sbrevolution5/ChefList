@@ -41,6 +41,20 @@ namespace MasterMealWA.Client.Services
                 throw;
             }
         }
+        public async Task<TResult> CreateAsync<T,TResult>(string url, T content)
+        {
+            try
+            {
+                var result = await _http.PostAsJsonAsync<T>(url, content, _options);
+                result.EnsureSuccessStatusCode();
+                return await result.Content.ReadFromJsonAsync<TResult>(_options);
+            }
+            catch (Exception)
+            {
+                
+                throw;
+            }
+        }
         public async Task UpdateAsync<T>(string url, T content)
         {
             try
