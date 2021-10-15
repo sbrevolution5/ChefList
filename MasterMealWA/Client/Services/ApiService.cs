@@ -47,7 +47,7 @@ namespace MasterMealWA.Client.Services
             {
                 var result = await _http.PostAsJsonAsync<T>(url, content, _options);
                 result.EnsureSuccessStatusCode();
-                return await result.Content.ReadFromJsonAsync<TResult>();
+                return await result.Content.ReadFromJsonAsync<TResult>(_options);
             }
             catch (Exception)
             {
