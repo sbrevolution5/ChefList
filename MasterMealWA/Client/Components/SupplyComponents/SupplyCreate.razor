@@ -23,9 +23,9 @@
         try
         {
 
-            await _api.CreateAsync<Supply>("api/supplies",supply);
+            var supplyResult = await _api.CreateAsync<Supply,Supply>("api/supplies",supply);
             _snackbar.Add("Supply Created", Severity.Success);
-            MudDialog.Close(DialogResult.Ok(supply));
+            MudDialog.Close(DialogResult.Ok(supplyResult));
         }
         catch (Exception e)
         {
