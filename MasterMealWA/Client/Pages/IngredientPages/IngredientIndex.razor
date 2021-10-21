@@ -53,7 +53,10 @@ else
                                             <MudText>
                                                 @ingredient.Name
                                             </MudText>
+                                            <MudDivider Style="background-color: #424242ff" />
                                             <MudText Typo="Typo.subtitle2">@ingredient.Type.Name</MudText>
+                                            <MudDivider Style="background-color: #424242ff" />
+                                            <MudText Typo="Typo.subtitle2">@ingredient.MeasurementType.ToString()</MudText>
                                         </MudItem>
                                         <MudItem xs="6">
                                             <MudBadge Content="count" Color="Color.Primary" Overlap="true" Bordered="true" Class="mx-6 my-4">
