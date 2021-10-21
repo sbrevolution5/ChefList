@@ -52,3 +52,6 @@ a, .btn-link {
 .noHover {
     pointer-events: none;
 }
+.dividerDark {
+    background-color: #424242ff;
+}
