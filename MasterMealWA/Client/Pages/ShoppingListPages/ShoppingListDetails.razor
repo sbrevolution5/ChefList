@@ -164,6 +164,14 @@
         displayList = list.ShoppingIngredients;
         ListCategories = displayList.Select(l => l.IngredientType).Distinct().ToList();
     }
+    public Color GetPantryColor(bool chk)
+    {
+        if (chk)
+        {
+            return Color.Primary;
+        }
+        return Color.Secondary;
+    }
     public async Task AddItem()
     {
 
