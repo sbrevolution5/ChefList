@@ -26,12 +26,7 @@ else
                                 <MudPaper Elevation="2" Style="padding-left:5px;margin:10px;">
                                     <MudGrid>
                                         <MudItem xs="8">
-                                            <div class="d-flex">
-                                                <MudCheckBox Disabled="!Auth" @bind-Checked="UserHasSupplyDict[supply.Id]"></MudCheckBox>
-                                                <MudText>
-                                                    @supply.Name
-                                                </MudText>
-                                            </div>
+                                            <MudCheckBox Disabled="!Auth" @bind-Checked="UserHasSupplyDict[supply.Id]" Label="@supply.Name"></MudCheckBox>
                                         </MudItem>
                                         <MudItem xs="4">
                                             <MudIconButton Color="Color.Warning" Variant="Variant.Filled" Icon="@Icons.Material.Filled.Edit" OnClick="@(() => EditSupply(supply))"></MudIconButton>
@@ -45,9 +40,7 @@ else
                                 <MudPaper Elevation="2" Style="padding-left:5px;margin:10px;">
                                     <MudGrid>
                                         <MudItem xs="12">
-                                            <div class="d-flex">
                                                 <MudCheckBox Disabled="!Auth" @bind-Checked="UserHasSupplyDict[supply.Id]" Label="@supply.Name"></MudCheckBox>
-                                            </div>
                                         </MudItem>
                                     </MudGrid>
                                 </MudPaper>
