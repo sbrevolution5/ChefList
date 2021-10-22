@@ -46,10 +46,7 @@ else
                                     <MudGrid>
                                         <MudItem xs="12">
                                             <div class="d-flex">
-                                                <MudCheckBox Disabled="!Auth" @bind-Checked="UserHasSupplyDict[supply.Id]"></MudCheckBox>
-                                                <MudText>
-                                                    @supply.Name
-                                                </MudText>
+                                                <MudCheckBox Disabled="!Auth" @bind-Checked="UserHasSupplyDict[supply.Id]" Label="@supply.Name"></MudCheckBox>
                                             </div>
                                         </MudItem>
                                     </MudGrid>
