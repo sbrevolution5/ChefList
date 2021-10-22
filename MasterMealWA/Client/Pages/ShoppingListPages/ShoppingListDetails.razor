@@ -53,7 +53,7 @@
                                                 @if (CurrentMode == ListMode.Pantry)
                                                 {
 
-                                                    <MudCheckBox UncheckedIcon="@Icons.Material.Filled.ShoppingCart" CheckedIcon="@Icons.Material.Filled.Home" @bind-Checked="item.InPantry" Label="@item.QuantityString" Color="Color.Secondary">
+                                                    <MudCheckBox UncheckedIcon="@Icons.Material.Filled.ShoppingCart" CheckedIcon="@Icons.Material.Filled.Home" @bind-Checked="item.InPantry" Label="@item.QuantityString" Color="GetPantryColor(item.InPantry)">
                                                     </MudCheckBox>
                                                 }
                                                 else if (CurrentMode == ListMode.Store)
@@ -163,6 +163,14 @@
         list = await _api.GetAsync<ShoppingList>($"/api/shoppinglists/{Convert.ToInt32(id)}");
         displayList = list.ShoppingIngredients;
         ListCategories = displayList.Select(l => l.IngredientType).Distinct().ToList();
+    }
+    public Color GetPantryColor(bool chk)
+    {
+        if (chk)
+        {
+            return Color.Success;
+        }
+        return Color.Error;
     }
     public async Task AddItem()
     {
