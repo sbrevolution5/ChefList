@@ -8,8 +8,7 @@ namespace MasterMealWA.Shared.Enums
 {
     public enum ListMode
     {
-        Default,
-        Pantry,
-        Store
+        Store,
+        Pantry
     }
 }
