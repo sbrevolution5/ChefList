@@ -117,7 +117,7 @@
                                                                 @if (CurrentMode == ListMode.Pantry)
                                                                 {
 
-                                                                    <MudCheckBox @bind-Checked="item.InPantry" Label="@item.QuantityString" Color="Color.Secondary">
+                                                                    <MudCheckBox UncheckedIcon="@Icons.Material.Filled.ShoppingCart" CheckedIcon="@Icons.Material.Filled.Home" @bind-Checked="item.InPantry" Label="@item.QuantityString" Color="GetPantryColor(item.InPantry)">
                                                                     </MudCheckBox>
                                                                 }
                                                                 else if (CurrentMode == ListMode.Store)
@@ -169,7 +169,7 @@
     public ShoppingList list { get; set; }
     public List<ShoppingIngredient> displayList { get; set; }
     public List<IngredientType> typeList { get; set; }
-    public bool CategorySort { get; set; }
+    public bool CategorySort { get; set; }= true;
     public List<IngredientType> ListCategories { get; set; }
     public ListMode CurrentMode { get; set; }
     protected override async Task OnInitializedAsync()
