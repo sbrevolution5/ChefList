@@ -99,7 +99,7 @@
                                                     <MudText>
                                                         @category.Name
                                                     </MudText>
-                                                    <MudBadge Content="displayList.Where(i => i.IngredientTypeId == category.Id && i.InCart).Count()" Color="Color.Primary" Overlap="true" Class="d-flex ml-auto">
+                                                    <MudBadge Content="displayList.Where(i => i.IngredientTypeId == category.Id && !i.InCart).Count()" Color="Color.Primary" Overlap="true" Class="d-flex ml-auto">
                                                         <MudIcon Icon="@Icons.Material.Filled.KeyboardArrowDown" Color="Color.Default" />
                                                     </MudBadge>
                                                 </div>
