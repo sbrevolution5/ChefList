@@ -45,7 +45,7 @@
                         <MudItem xs="12">
                             @if (!CategorySort)
                             {
-                                <MudList>
+                                <MudList Dense="true">
                                     @foreach (var item in displayList)
                                     {
                                         <MudListItem>
@@ -68,7 +68,7 @@
                                                 }
                                                 @if (item.Notes.Count > 0)
                                                 {
-                                                    <MudList>
+                                                    <MudList Dense="true">
                                                         @foreach (var note in item.Notes)
                                                         {
                                                             <MudListItem>@note</MudListItem>
@@ -84,13 +84,12 @@
                                                 }
                                             </MudPaper>
                                         </MudListItem>
-
                                     }
                                 </MudList>
                             }
                             else
                             {
-                                <MudExpansionPanels Class="mt-2" MultiExpansion="true">
+                                <MudExpansionPanels Class="mt-2" MultiExpansion="true" Dense="true">
 
                                     @foreach (var category in ListCategories)
                                     {
@@ -100,13 +99,13 @@
                                                     <MudText>
                                                         @category.Name
                                                     </MudText>
-                                                    <MudBadge Content="displayList.Where(i => i.IngredientTypeId == category.Id).Count()" Color="Color.Primary" Overlap="true" Class="d-flex ml-auto">
+                                                    <MudBadge Content="displayList.Where(i => i.IngredientTypeId == category.Id && i.InCart).Count()" Color="Color.Primary" Overlap="true" Class="d-flex ml-auto">
                                                         <MudIcon Icon="@Icons.Material.Filled.KeyboardArrowDown" Color="Color.Default" />
                                                     </MudBadge>
                                                 </div>
                                             </TitleContent>
                                             <ChildContent>
-                                                <MudList>
+                                                <MudList Dense="true">
                                                     @foreach (var item in displayList.Where(i => i.IngredientTypeId == category.Id))
                                                     {
                                                         <MudListItem>
@@ -130,7 +129,7 @@
                                                                 }
                                                                 @if (item.Notes.Count > 0)
                                                                 {
-                                                                    <MudList>
+                                                                    <MudList Dense="true">
                                                                         @foreach (var note in item.Notes)
                                                                         {
                                                                             <MudListItem>@note</MudListItem>
