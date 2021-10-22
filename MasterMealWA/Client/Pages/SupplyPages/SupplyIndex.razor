@@ -20,24 +20,43 @@ else
             <MudGrid>
                 @foreach (var supply in Supplies)
                 {
-                    <MudItem xs="12" sm="6" md="4" lg="3">
-                        <MudPaper Elevation="2" Style="padding-left:5px;margin:10px;">
-                            <MudGrid>
-                                <MudItem xs="8">
-                                    
-
-                                        <MudCheckBox Disabled="!Auth" @bind-Checked="UserHasSupplyDict[supply.Id]"></MudCheckBox>
-                                    
-                                    <MudText>
-                                        @supply.Name
-                                    </MudText>
-                                </MudItem>
-                                <MudItem xs="4">
-                                    <MudIconButton Color="Color.Warning" Variant="Variant.Filled" Icon="@Icons.Material.Filled.Edit" OnClick="@(() => EditSupply(supply))"></MudIconButton>
-                                </MudItem>
-                            </MudGrid>
-                        </MudPaper>
-                    </MudItem>
+                    <AuthorizeView Roles="Admin, Moderator">
+                        <Authorized>
+                            <MudItem xs="12" sm="6" md="4" lg="3">
+                                <MudPaper Elevation="2" Style="padding-left:5px;margin:10px;">
+                                    <MudGrid>
+                                        <MudItem xs="8">
+                                            <div class="d-flex">
+                                                <MudCheckBox Disabled="!Auth" @bind-Checked="UserHasSupplyDict[supply.Id]"></MudCheckBox>
+                                                <MudText>
+                                                    @supply.Name
+                                                </MudText>
+                                            </div>
+                                        </MudItem>
+                                        <MudItem xs="4">
+                                            <MudIconButton Color="Color.Warning" Variant="Variant.Filled" Icon="@Icons.Material.Filled.Edit" OnClick="@(() => EditSupply(supply))"></MudIconButton>
+                                        </MudItem>
+                                    </MudGrid>
+                                </MudPaper>
+                            </MudItem>
+                        </Authorized>
+                        <NotAuthorized>
+                            <MudItem xs="12" sm="6" md="4" lg="3">
+                                <MudPaper Elevation="2" Style="padding-left:5px;margin:10px;">
+                                    <MudGrid>
+                                        <MudItem xs="12">
+                                            <div class="d-flex">
+                                                <MudCheckBox Disabled="!Auth" @bind-Checked="UserHasSupplyDict[supply.Id]"></MudCheckBox>
+                                                <MudText>
+                                                    @supply.Name
+                                                </MudText>
+                                            </div>
+                                        </MudItem>
+                                    </MudGrid>
+                                </MudPaper>
+                            </MudItem>
+                        </NotAuthorized>
+                    </AuthorizeView>
                 }
             </MudGrid>
             <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" OnClick="NewSupply" />
