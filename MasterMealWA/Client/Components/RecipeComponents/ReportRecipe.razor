@@ -2,8 +2,7 @@
 <MudDialog>
 
     <DialogContent>
-        <MudSimpleTable>
-            <MudForm Model="Report"></MudForm>
+        <MudForm Model="Report"></MudForm>
 
     </DialogContent>
     <DialogActions>
@@ -15,7 +14,7 @@
     MudDialogInstance MudDialog { get; set; }
     [Parameter]
     public Recipe Recipe { get; set; }
-    public Report Report
+    public Report Report { get; set; }
     public void Cancel()
     {
         MudDialog.Cancel();
