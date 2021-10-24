@@ -18,37 +18,45 @@ else
             <MudGrid>
                 @foreach (var report in Reports)
                 {
-                    <MudItem xs="12" sm="6" md="4" lg="3">
-                        <MudPaper Elevation="2" Style="padding-left:5px;margin:10px;">
-                            <MudSimpleTable>
-                                <tbody>
-                                    <tr>
-                                        <td>Reporter</td>
-                                        <td>@report.Submitter.ScreenName</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Author</td>
-                                        <td>@report.Recipe.Author.ScreenName</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Recipe</td>
-                                        <td>@report.Recipe.Name</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Reason</td>
-                                        <td>@report.Reason</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Date</td>
-                                        <td>@report.Submitted</td>
-                                    </tr>
-                                    <tr>
-                                        <td><MudButton Color="Color.Success" OnClick="async ()=>await Reviewed(report)">Review complete</MudButton></td>
-                                        <td><MudButton Color="Color.Primary" Link="@("/recipes/details/" +report.RecipeId.ToString())">View Details of recipe</MudButton></td>
-                                    </tr>
-                                </tbody>
-                            </MudSimpleTable>
-                        </MudPaper>
+                    <MudItem xs="12">
+
+                        <MudSimpleTable>
+                            <tbody>
+                                <tr>
+                                    <td>Reporter</td>
+                                    <td>@report.Submitter.ScreenName</td>
+                                </tr>
+                                <tr>
+                                    <td>Author</td>
+                                    <td>@report.Recipe.Author.ScreenName</td>
+                                </tr>
+                                <tr>
+                                    <td>Recipe</td>
+                                    <td>@report.Recipe.Name</td>
+                                </tr>
+                                <tr>
+                                    <td>Reason</td>
+                                    <td>@report.Reason</td>
+                                </tr>
+                                <tr>
+                                    <td>Date</td>
+                                    <td>@report.Submitted</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        @if (report.Reviewed)
+                                        {
+                                            <MudText>Reviewed on @report.ReviewDate</MudText>
+                                        }
+                                        else
+                                        {
+                                            <MudButton Color="Color.Success" OnClick="async ()=>await Reviewed(report)">Review complete</MudButton>
+                                        }
+                                    </td>
+                                    <td><MudButton Color="Color.Primary" Link="@("/recipes/details/" +report.RecipeId.ToString())">View Details of recipe</MudButton></td>
+                                </tr>
+                            </tbody>
+                        </MudSimpleTable>
                     </MudItem>
                 }
             </MudGrid>
@@ -67,5 +75,5 @@ else
         report.Reviewed = true;
         report.ReviewDate = DateTime.Now;
         await _api.UpdateAsync<Report>($"/api/reports/{report.Id}", report);
-        }
+    }
 }
