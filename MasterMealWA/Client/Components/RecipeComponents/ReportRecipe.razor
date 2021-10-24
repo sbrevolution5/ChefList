@@ -9,7 +9,7 @@
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel" Variant="Variant.Filled" Color="Color.Dark">Close</MudButton>
-        <MudButton OnClick="Cancel" Variant="Variant.Filled" Color="Color.Primary">Submit</MudButton>
+        <MudButton OnClick="Submit" Variant="Variant.Filled" Color="Color.Primary">Submit</MudButton>
     </DialogActions>
 </MudDialog>
 @code {
@@ -21,6 +21,12 @@
     protected override void OnInitialized()
     {
         Report.RecipeId = Recipe.Id;
+    }
+    public async void Submit()
+    {
+        await _api.CreateAsync<Report>($"/api/reports",Report);
+        _snackbar.Add("Report Submitted", Severity.Success);
+        MudDialog.Close(DialogResult.Ok(Report));
     }
     public void Cancel()
     {
