@@ -342,7 +342,13 @@ else
     }
     public async Task Report()
     {
-        throw new NotImplementedException();
+        var parameters = new DialogParameters { ["recipe"] = recipe};
+        var dialog = _dialogService.Show<ReportRecipe>("Report a recipe", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            snackbar.Add("Report Submitted!");
+        }
     }
     private async Task ResetScaling()
     {
