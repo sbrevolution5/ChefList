@@ -31,6 +31,7 @@ else
 
             <MudCardMedia Image="@(_imageReader.ReadImageData(recipe.Image.ImageData, recipe.Image.ContentType))"></MudCardMedia>
             <MudCardActions>
+                <MudButton Color="Color.Error" OnClick="ReportRecipe">Report Recipe</MudButton>
                 @if (UserId == recipe.AuthorId)
                 {
 
@@ -338,6 +339,10 @@ else
 
             _snackbar.Add($"Recipe Scaling failed {e.Message}", Severity.Error);
         }
+    }
+    public async Task Report()
+    {
+        throw new NotImplementedException();
     }
     private async Task ResetScaling()
     {
