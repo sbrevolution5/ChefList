@@ -31,6 +31,7 @@ else
 
             <MudCardMedia Image="@(_imageReader.ReadImageData(recipe.Image.ImageData, recipe.Image.ContentType))"></MudCardMedia>
             <MudCardActions>
+                <MudButton Color="Color.Error" OnClick="ReportThisRecipe">Report Recipe</MudButton>
                 @if (UserId == recipe.AuthorId)
                 {
 
@@ -337,6 +338,16 @@ else
         {
 
             _snackbar.Add($"Recipe Scaling failed {e.Message}", Severity.Error);
+        }
+    }
+    public async Task ReportThisRecipe()
+    {
+        var parameters = new DialogParameters { ["recipe"] = recipe};
+        var dialog = _dialogService.Show<ReportRecipe>("Report a recipe", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            snackbar.Add("Report Submitted!");
         }
     }
     private async Task ResetScaling()

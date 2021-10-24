@@ -4,20 +4,22 @@ using System.Collections.Generic;
 using MasterMealWA.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace MasterMealWA.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211024183515_021-Report")]
+    partial class _021Report
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 63)
-                .HasAnnotation("ProductVersion", "5.0.11")
+                .HasAnnotation("ProductVersion", "5.0.10")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
             modelBuilder.Entity("ChefSupply", b =>
@@ -589,14 +591,17 @@ namespace MasterMealWA.Server.Migrations
                     b.Property<DateTime>("Submitted")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<string>("SubmitterId")
+                    b.Property<Guid>("SubmitterId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("SubmitterId1")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
                     b.HasIndex("RecipeId");
 
-                    b.HasIndex("SubmitterId");
+                    b.HasIndex("SubmitterId1");
 
                     b.ToTable("Report");
                 });
@@ -975,7 +980,7 @@ namespace MasterMealWA.Server.Migrations
 
                     b.HasOne("MasterMealWA.Shared.Models.Chef", "Submitter")
                         .WithMany()
-                        .HasForeignKey("SubmitterId");
+                        .HasForeignKey("SubmitterId1");
 
                     b.Navigation("Recipe");
 

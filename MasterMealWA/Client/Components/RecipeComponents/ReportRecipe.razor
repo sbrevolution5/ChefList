@@ -1,0 +1,35 @@
+﻿@inject IApiService _api
+<MudDialog>
+
+    <DialogContent>
+        <MudForm Model="Report">
+            <MudTextField @bind-Value="Report.Reason" Label="Reason for report" Required="true"></MudTextField>
+        </MudForm>
+        <MudText>Submitting too many reports without cause may result in your account being banned.</MudText>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel" Variant="Variant.Filled" Color="Color.Dark">Close</MudButton>
+        <MudButton OnClick="Submit" Variant="Variant.Filled" Color="Color.Primary">Submit</MudButton>
+    </DialogActions>
+</MudDialog>
+@code {
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; }
+    [Parameter]
+    public Recipe Recipe { get; set; }
+    public Report Report { get; set; } = new();
+    protected override void OnInitialized()
+    {
+        Report.RecipeId = Recipe.Id;
+    }
+    public async void Submit()
+    {
+        await _api.CreateAsync<Report>($"/api/reports",Report);
+        _snackbar.Add("Report Submitted", Severity.Success);
+        MudDialog.Close(DialogResult.Ok(Report));
+    }
+    public void Cancel()
+    {
+        MudDialog.Cancel();
+    }
+}
