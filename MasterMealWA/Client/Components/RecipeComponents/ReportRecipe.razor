@@ -1,0 +1,23 @@
+﻿@inject IApiService _api
+<MudDialog>
+
+    <DialogContent>
+        <MudSimpleTable>
+            <MudForm Model="Report"></MudForm>
+
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel" Variant="Variant.Filled" Color="Color.Dark">Close</MudButton>
+    </DialogActions>
+</MudDialog>
+@code {
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; }
+    [Parameter]
+    public Recipe Recipe { get; set; }
+    public Report Report
+    public void Cancel()
+    {
+        MudDialog.Cancel();
+    }
+}
