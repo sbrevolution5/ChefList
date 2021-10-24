@@ -2,11 +2,14 @@
 <MudDialog>
 
     <DialogContent>
-        <MudForm Model="Report"></MudForm>
-
+        <MudForm Model="Report">
+            <MudTextField @bind-Value="Report.Reason" Label="Reason for report" Required="true"></MudTextField>
+        </MudForm>
+        <MudText>Submitting too many reports without cause may result in your account being banned.</MudText>
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel" Variant="Variant.Filled" Color="Color.Dark">Close</MudButton>
+        <MudButton OnClick="Cancel" Variant="Variant.Filled" Color="Color.Primary">Submit</MudButton>
     </DialogActions>
 </MudDialog>
 @code {
@@ -14,7 +17,11 @@
     MudDialogInstance MudDialog { get; set; }
     [Parameter]
     public Recipe Recipe { get; set; }
-    public Report Report { get; set; }
+    public Report Report { get; set; } = new();
+    protected override void OnInitialized()
+    {
+        Report.RecipeId = Recipe.Id;
+    }
     public void Cancel()
     {
         MudDialog.Cancel();
