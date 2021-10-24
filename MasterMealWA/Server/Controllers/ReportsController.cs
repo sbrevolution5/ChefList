@@ -14,7 +14,7 @@ namespace MasterMealWA.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    [Authorize(Roles ="Moderator, Admin")]
     public class ReportsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -28,7 +28,7 @@ namespace MasterMealWA.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Report>>> GetReport()
         {
-            return await _context.Report.ToListAsync();
+            return await _context.Report.Include(r=> r.Submitter).Include(r=>r.Recipe).ThenInclude(r=>r.Author).ToListAsync();
         }
 
         // GET: api/Reports/5
