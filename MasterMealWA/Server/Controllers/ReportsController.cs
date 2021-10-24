@@ -7,11 +7,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MasterMealWA.Server.Data;
 using MasterMealWA.Shared.Models.Social;
+using Microsoft.AspNetCore.Authorization;
+using MasterMealWA.Server.Extensions;
 
 namespace MasterMealWA.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ReportsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -78,6 +81,9 @@ namespace MasterMealWA.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<Report>> PostReport(Report report)
         {
+            report.Submitted = DateTime.Now;
+            var userId = HttpContext.GetUserId();
+            report.SubmitterId = userId;
             _context.Report.Add(report);
             await _context.SaveChangesAsync();
 
