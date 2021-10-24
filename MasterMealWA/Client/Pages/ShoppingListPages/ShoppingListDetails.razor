@@ -45,7 +45,7 @@
                         <MudItem xs="12">
                             @if (!CategorySort)
                             {
-                                <MudList>
+                                <MudList Dense="true">
                                     @foreach (var item in displayList)
                                     {
                                         <MudListItem>
@@ -53,7 +53,7 @@
                                                 @if (CurrentMode == ListMode.Pantry)
                                                 {
 
-                                                    <MudCheckBox UncheckedIcon="@Icons.Material.Filled.ShoppingCart" CheckedIcon="@Icons.Material.Filled.Home" @bind-Checked="item.InPantry" Label="@item.QuantityString" Color="Color.Secondary">
+                                                    <MudCheckBox UncheckedIcon="@Icons.Material.Filled.ShoppingCart" CheckedIcon="@Icons.Material.Filled.Home" @bind-Checked="item.InPantry" Label="@item.QuantityString" Color="GetPantryColor(item.InPantry)">
                                                     </MudCheckBox>
                                                 }
                                                 else if (CurrentMode == ListMode.Store)
@@ -68,7 +68,7 @@
                                                 }
                                                 @if (item.Notes.Count > 0)
                                                 {
-                                                    <MudList>
+                                                    <MudList Dense="true">
                                                         @foreach (var note in item.Notes)
                                                         {
                                                             <MudListItem>@note</MudListItem>
@@ -84,61 +84,69 @@
                                                 }
                                             </MudPaper>
                                         </MudListItem>
-
                                     }
                                 </MudList>
                             }
                             else
                             {
-                                <MudList>
+                                <MudExpansionPanels Class="mt-2" MultiExpansion="true" Dense="true">
+
                                     @foreach (var category in ListCategories)
                                     {
-                                        <MudDivider />
-                                        <MudListSubheader>
-                                            @category.Name
-                                        </MudListSubheader>
-                                        @foreach (var item in displayList.Where(i => i.IngredientTypeId == category.Id))
-                                        {
-                                            <MudListItem>
-                                                <MudPaper Elevation="2">
+                                        <MudExpansionPanel HideIcon="true" IsInitiallyExpanded="true">
+                                            <TitleContent>
+                                                <div class="d-flex">
+                                                    <MudText>
+                                                        @category.Name
+                                                    </MudText>
+                                                    <MudBadge Content="displayList.Where(i => i.IngredientTypeId == category.Id && !i.InCart).Count()" Color="Color.Primary" Overlap="true" Class="d-flex ml-auto">
+                                                        <MudIcon Icon="@Icons.Material.Filled.KeyboardArrowDown" Color="Color.Default" />
+                                                    </MudBadge>
+                                                </div>
+                                            </TitleContent>
+                                            <ChildContent>
+                                                <MudList Dense="true">
+                                                    @foreach (var item in displayList.Where(i => i.IngredientTypeId == category.Id))
+                                                    {
+                                                        <MudListItem>
+                                                            <MudPaper Elevation="2">
 
-                                                    @if (CurrentMode == ListMode.Pantry)
-                                                    {
+                                                                @if (CurrentMode == ListMode.Pantry)
+                                                                {
 
-                                                        <MudCheckBox @bind-Checked="item.InPantry" Label="@item.QuantityString" Color="Color.Secondary">
-                                                        </MudCheckBox>
-                                                    }
-                                                    else if (CurrentMode == ListMode.Store)
-                                                    {
+                                                                    <MudCheckBox UncheckedIcon="@Icons.Material.Filled.ShoppingCart" CheckedIcon="@Icons.Material.Filled.Home" @bind-Checked="item.InPantry" Label="@item.QuantityString" Color="GetPantryColor(item.InPantry)">
+                                                                    </MudCheckBox>
+                                                                }
+                                                                else if (CurrentMode == ListMode.Store)
+                                                                {
 
-                                                        <MudCheckBox @bind-Checked="item.InCart" Label="@item.QuantityString" Color="Color.Secondary">
-                                                        </MudCheckBox>
+                                                                    <MudCheckBox @bind-Checked="item.InCart" Label="@item.QuantityString" Color="Color.Secondary">
+                                                                    </MudCheckBox>
+                                                                }
+                                                                @if (item.Notes.Count > 0)
+                                                                {
+                                                                    <MudList Dense="true">
+                                                                        @foreach (var note in item.Notes)
+                                                                        {
+                                                                            <MudListItem>@note</MudListItem>
+                                                                        }
+                                                                    </MudList>
+                                                                }
+                                                                @if (item.UserString && CurrentMode == ListMode.Pantry)
+                                                                {
+                                                                    <MudButtonGroup>
+                                                                        <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="@(()=>EditItem(item))"></MudIconButton>
+                                                                        <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@(()=>DeleteItem(item))"></MudIconButton>
+                                                                    </MudButtonGroup>
+                                                                }
+                                                            </MudPaper>
+                                                        </MudListItem>
                                                     }
-                                                    else
-                                                    {
-                                                        <MudText>@item.QuantityString</MudText>
-                                                    }
-                                                    @if (item.Notes.Count > 0)
-                                                    {
-                                                        <MudList>
-                                                            @foreach (var note in item.Notes)
-                                                            {
-                                                                <MudListItem>@note</MudListItem>
-                                                            }
-                                                        </MudList>
-                                                    }
-                                                    @if (item.UserString && CurrentMode == ListMode.Pantry)
-                                                    {
-                                                        <MudButtonGroup>
-                                                            <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="@(()=>EditItem(item))"></MudIconButton>
-                                                            <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@(()=>DeleteItem(item))"></MudIconButton>
-                                                        </MudButtonGroup>
-                                                    }
-                                                </MudPaper>
-                                            </MudListItem>
-                                        }
+                                                </MudList>
+                                            </ChildContent>
+                                        </MudExpansionPanel>
                                     }
-                                </MudList>
+                                </MudExpansionPanels>
                             }
 
                         </MudItem>
@@ -154,7 +162,7 @@
     public ShoppingList list { get; set; }
     public List<ShoppingIngredient> displayList { get; set; }
     public List<IngredientType> typeList { get; set; }
-    public bool CategorySort { get; set; }
+    public bool CategorySort { get; set; }= true;
     public List<IngredientType> ListCategories { get; set; }
     public ListMode CurrentMode { get; set; }
     protected override async Task OnInitializedAsync()
@@ -163,6 +171,14 @@
         list = await _api.GetAsync<ShoppingList>($"/api/shoppinglists/{Convert.ToInt32(id)}");
         displayList = list.ShoppingIngredients;
         ListCategories = displayList.Select(l => l.IngredientType).Distinct().ToList();
+    }
+    public Color GetPantryColor(bool chk)
+    {
+        if (chk)
+        {
+            return Color.Success;
+        }
+        return Color.Error;
     }
     public async Task AddItem()
     {
