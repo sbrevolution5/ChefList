@@ -44,45 +44,43 @@
                                         <MudListItem>
                                             <MudPaper Elevation="2">
                                                 <MudGrid>
-
                                                     @if (CurrentMode == ListMode.Pantry)
                                                     {
-                                                        <MudItem xs="10">
-
-                                                            <MudCheckBox UncheckedIcon="@Icons.Material.Filled.ShoppingCart" CheckedIcon="@Icons.Material.Filled.Home" @bind-Checked="item.InPantry" Label="@item.QuantityString" Color="GetPantryColor(item.InPantry)">
-                                                            </MudCheckBox>
-                                                        </MudItem>
-                                                        <MudItem xs="2">
-                                                            @if (item.UserString)
-                                                            {
-                                                                <MudButtonGroup Size="Size.Small">
-                                                                    <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="@(()=>EditItem(item))"></MudIconButton>
-                                                                    <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@(()=>DeleteItem(item))"></MudIconButton>
-                                                                </MudButtonGroup>
-                                                            }
-                                                        </MudItem>
-                                                    }
-                                                    else if (CurrentMode == ListMode.Store)
-                                                    {
-                                                        <MudItem xs="12">
-
-                                                            <MudCheckBox @bind-Checked="item.InCart" Label="@item.QuantityString" Color="Color.Secondary">
-                                                            </MudCheckBox>
-                                                        </MudItem>
-                                                    }
-                                                    @if (item.Notes.Count > 0)
-                                                    {
-                                                        <MudItem xs="12">
-
-                                                            <MudList Dense="true">
-                                                                @foreach (var note in item.Notes)
+                                                        <MudItem xs="8" Class="px-0">
+                                                                <MudCheckBox UncheckedIcon="@Icons.Material.Filled.ShoppingCart" CheckedIcon="@Icons.Material.Filled.Home" @bind-Checked="item.InPantry" Label="@item.QuantityString" Color="GetPantryColor(item.InPantry)">
+                                                                </MudCheckBox>
+                                                            </MudItem>
+                                                            <MudItem xs="4" Class="px-0">
+                                                                @if (item.UserString)
                                                                 {
-                                                                    <MudListItem>@note</MudListItem>
+                                                                    <MudButtonGroup Size="Size.Small">
+                                                                        <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="@(()=>EditItem(item))"></MudIconButton>
+                                                                        <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@(()=>DeleteItem(item))"></MudIconButton>
+                                                                    </MudButtonGroup>
                                                                 }
-                                                            </MudList>
-                                                        </MudItem>
-                                                    }
-                                                </MudGrid>
+                                                            </MudItem>
+                                                            }
+                                                            else if (CurrentMode == ListMode.Store)
+                                                            {
+                                                            <MudItem xs="12">
+
+                                                                <MudCheckBox @bind-Checked="item.InCart" Label="@item.QuantityString" Color="Color.Secondary">
+                                                                </MudCheckBox>
+                                                            </MudItem>
+                                                            }
+                                                            @if (item.Notes.Count > 0)
+                                                            {
+                                                                <MudItem xs="12">
+
+                                                                    <MudList Dense="true">
+                                                                        @foreach (var note in item.Notes)
+                                                                        {
+                                                                            <MudListItem>@note</MudListItem>
+                                                                        }
+                                                                    </MudList>
+                                                                </MudItem>
+                                                            }
+                                                    </MudGrid>
                                             </MudPaper>
                                         </MudListItem>
                                     }
@@ -90,7 +88,7 @@
                             }
                             else
                             {
-                                <MudExpansionPanels Class="mt-2" MultiExpansion="true" Dense="true">
+                                <MudExpansionPanels Class="mt-2" MultiExpansion="true" Dense="true" DisableGutters="true">
 
                                     @foreach (var category in ListCategories)
                                     {
@@ -105,8 +103,8 @@
                                                     </MudBadge>
                                                 </div>
                                             </TitleContent>
-                                            <ChildContent>
-                                                <MudList Dense="true">
+                                            <ChildContent >
+                                                <MudList Dense="true" Class="px-0">
                                                     @foreach (var item in displayList.Where(i => i.IngredientTypeId == category.Id))
                                                     {
                                                         <MudListItem>
@@ -114,12 +112,12 @@
                                                                 <MudGrid>
                                                                     @if (CurrentMode == ListMode.Pantry)
                                                                     {
-                                                                        <MudItem xs="10">
+                                                                        <MudItem xs="8" Class="px-0">
 
                                                                             <MudCheckBox UncheckedIcon="@Icons.Material.Filled.ShoppingCart" CheckedIcon="@Icons.Material.Filled.Home" @bind-Checked="item.InPantry" Label="@item.QuantityString" Color="GetPantryColor(item.InPantry)">
                                                                             </MudCheckBox>
                                                                         </MudItem>
-                                                                        <MudItem xs="2">
+                                                                        <MudItem xs="4" Class="px-0">
                                                                             @if (item.UserString)
                                                                             {
                                                                                 <MudButtonGroup Size="Size.Small">
