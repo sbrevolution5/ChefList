@@ -93,12 +93,12 @@ namespace MasterMealWA.Server.Services
             ShoppingIngredient result = new()
             {
                 IngredientTypeId = ingredient.TypeId,
-                Notes = notes
+                Notes = notes,
+                Quantity = totalQuantity
             };
             var measure = ingredient.MeasurementType;
             if (measure == MeasurementType.Volume)
             {
-
                 result.QuantityString = $"{_measurementService.DecodeVolumeMeasurement(totalQuantity)} {ingredient.Name}";
             }
             else if (measure == MeasurementType.Mass)
