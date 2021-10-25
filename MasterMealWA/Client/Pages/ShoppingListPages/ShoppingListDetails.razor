@@ -54,8 +54,8 @@
                                                                 @if (item.UserString)
                                                                 {
                                                                     <MudButtonGroup Size="Size.Small">
-                                                                        <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="@(()=>EditItem(item))"></MudIconButton>
-                                                                        <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@(()=>DeleteItem(item))"></MudIconButton>
+                                                                        <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Warning" OnClick="@(()=>EditItem(item))"></MudIconButton>
+                                                                        <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@(()=>DeleteItem(item))"></MudIconButton>
                                                                     </MudButtonGroup>
                                                                 }
                                                             </MudItem>
@@ -120,10 +120,10 @@
                                                                         <MudItem xs="4" Class="px-0">
                                                                             @if (item.UserString)
                                                                             {
-                                                                                <MudButtonGroup Size="Size.Small">
-                                                                                    <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="@(()=>EditItem(item))"></MudIconButton>
-                                                                                    <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@(()=>DeleteItem(item))"></MudIconButton>
-                                                                                </MudButtonGroup>
+                                                                            <MudButtonGroup Size="Size.Small">
+                                                                                <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Warning" OnClick="@(()=>EditItem(item))"></MudIconButton>
+                                                                                <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@(()=>DeleteItem(item))"></MudIconButton>
+                                                                            </MudButtonGroup>
                                                                             }
                                                                         </MudItem>
                                                                     }
