@@ -1,7 +1,6 @@
 ﻿@page "/shoppinglists/details/{id}"
 @inject IApiService _api
 @inject IDialogService _dialogService
-
 <MudGrid>
     <MudItem xs="12">
 
@@ -9,25 +8,19 @@
         <MudDivider></MudDivider>
     </MudItem>
     <MudItem xs="12">
-
         @if (list is null)
         {
             <div class="d-flex align-center justify-center">
                 <Loader />
             </div>
-
         }
         else
         {
-
             <MudCard>
                 <MudCardHeader>
-
                     <MudText Typo="Typo.h4">@list.Name</MudText>
                 </MudCardHeader>
-                <MudDivider>
-
-                </MudDivider>
+                <MudDivider />
                 <MudCardContent>
                     <MudRadioGroup T="ListMode" SelectedOptionChanged="(ListMode v)=>ModeChange(v)">
                         @foreach (ListMode mode in Enum.GetValues(typeof(ListMode)))
@@ -162,7 +155,7 @@
     public ShoppingList list { get; set; }
     public List<ShoppingIngredient> displayList { get; set; }
     public List<IngredientType> typeList { get; set; }
-    public bool CategorySort { get; set; }= true;
+    public bool CategorySort { get; set; } = true;
     public List<IngredientType> ListCategories { get; set; }
     public ListMode CurrentMode { get; set; }
     protected override async Task OnInitializedAsync()
