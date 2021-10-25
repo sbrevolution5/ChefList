@@ -4,11 +4,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MasterMealWA.Shared.Models;
 
 namespace MasterMealWA.Server.Services
 {
     public class MeasurementService : IMeasurementService
     {
+        public ShoppingIngredient GetMeasurementForShoppingIngredient(ShoppingIngredient ingredient) {
+            throw new NotImplementedException();
+        }
         public string DecodeVolumeMeasurement(int fracTSP)
         {
             VolumeMeasurementUnit unit;
