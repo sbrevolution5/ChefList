@@ -43,6 +43,7 @@
                                     {
                                         <MudListItem>
                                             <MudPaper Elevation="2">
+
                                                 @if (CurrentMode == ListMode.Pantry)
                                                 {
 
@@ -54,10 +55,6 @@
 
                                                     <MudCheckBox @bind-Checked="item.InCart" Label="@item.QuantityString" Color="Color.Secondary">
                                                     </MudCheckBox>
-                                                }
-                                                else
-                                                {
-                                                    <MudText>@item.QuantityString</MudText>
                                                 }
                                                 @if (item.Notes.Count > 0)
                                                 {
