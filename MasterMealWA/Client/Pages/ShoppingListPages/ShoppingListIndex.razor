@@ -12,6 +12,10 @@
 }
 else
 {
+    if (shoppingLists.Count == 0)
+    {
+        <MudText>You have no shopping lists, make one after selecting meals for your <MudLink Href="/meals">meal plan</MudLink></MudText>
+    }
     <MudList>
         @foreach (var list in shoppingLists)
         {
