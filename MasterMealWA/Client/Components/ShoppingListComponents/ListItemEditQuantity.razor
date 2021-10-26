@@ -1,0 +1,108 @@
+﻿@using MasterMealWA.Shared.Models.Dtos
+@inject IApiService _api
+<MudDialog>
+    <DialogContent>
+        <EditForm Model="qingredient">
+
+            <MudForm>
+                <MudGrid>
+
+                    <MudItem xs="3">
+
+                        <MudNumericField Label="Number" T="int" @bind-Value="qingredient.QuantityNumber"></MudNumericField>
+                    </MudItem>
+                    <MudItem xs="3">
+                        <MudSelect Label="Fraction" T="Fraction" @bind-Value="qingredient.Fraction">
+                            @foreach (Fraction frac in Enum.GetValues(typeof(Fraction)))
+                            {
+                                <MudSelectItem Value="@frac">@frac.GetDescription()</MudSelectItem>
+                            }
+                        </MudSelect>
+
+                    </MudItem>
+                    <MudItem xs="6">
+
+                        @if (qingredient.MeasurementType == MeasurementType.Volume)
+                        {
+                            <MudSelect Label="Volume Measurement" T="VolumeMeasurementUnit?" @bind-Value="qingredient.VolumeMeasurementUnit">
+                                @foreach (VolumeMeasurementUnit? measure in Enum.GetValues(typeof(VolumeMeasurementUnit)))
+                                {
+                                    <MudSelectItem Value="@measure">@measure</MudSelectItem>
+                                }
+                            </MudSelect>
+                        }
+                        else if (qingredient.MeasurementType == MeasurementType.Mass)
+                        {
+                            <MudSelect Label="Mass Measurement" T="MassMeasurementUnit?" @bind-Value="qingredient.MassMeasurementUnit">
+                                @foreach (MassMeasurementUnit? measure in Enum.GetValues(typeof(MassMeasurementUnit)))
+                                {
+                                    <MudSelectItem Value="@measure">@measure</MudSelectItem>
+                                }
+                            </MudSelect>
+                        }
+                        else if (qingredient.MeasurementType == MeasurementType.Count)
+                        {
+
+                        }
+                        else
+                        {
+                            <MudText>Please select an ingredient</MudText>
+                        }
+                    </MudItem>
+                    <MudItem xs="12">
+                        <MudAutocomplete HelperText="Start typing to search for an ingredient, If you can't find your ingredient, create a new one with the button below." Required="true" Label="Ingredient" T="Ingredient" ValueChanged="@((Ingredient i)=>MeasureChange(i))" Value="qingredient.Ingredient" ToStringFunc="@(i=> $"{i.Name} ({i.MeasurementType.ToString()})")" SearchFunc="@Search" MaxItems="null"></MudAutocomplete>
+                    </MudItem>
+                    <MudItem xs="12">
+                        <MudTextField Margin="Margin.Dense" Label="Shopping Notes" @bind-Value="qingredient.Notes" HelperText="Specify brand, fat-free/low calorie, frozen/fresh, or anything specific to your recipe.  These will show up as sub-items on the shopping list." HelperTextOnFocus="true"></MudTextField>
+                    </MudItem>
+                </MudGrid>
+            </MudForm>
+        </EditForm>
+        <MudTextField T="string" @bind-Text="listItem.QuantityString" Label="Type item quantity/name here." HelperText="Will add a simple plaintext element">
+        </MudTextField>
+        <MudSelect Label="Ingredient Type" HelperText="Where you'd find the ingredient while shopping" @bind-Value="listItem.IngredientTypeId">
+            @foreach (var type in types)
+            {
+                <MudSelectItem Value="@type.Id">@type.Name</MudSelectItem>
+            }
+        </MudSelect>
+
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel" Variant="Variant.Filled" Color="Color.Dark">Cancel</MudButton>
+        <MudButton Color="Color.Success" OnClick="EditItem" Variant="Variant.Filled">Edit</MudButton>
+    </DialogActions>
+</MudDialog>
+@code {
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; }
+    [Parameter]
+    public int listId { get; set; }
+    [Parameter]
+    public List<IngredientType> types { get; set; }
+    [Parameter]
+    public ShoppingIngredient listItem { get; set; }
+    protected override void OnInitialized()
+    {
+        listItem.UserString = true;
+        base.OnInitialized();
+    }
+    public void Cancel()
+    {
+        MudDialog.Cancel();
+    }
+    public async Task EditItem()
+    {
+        try
+        {
+            await _api.UpdateAsync<ShoppingIngredient>($"/api/ShoppingIngredients/{listItem.Id}", listItem);
+            _snackbar.Add("Item Edited", Severity.Success);
+            MudDialog.Close(DialogResult.Ok<ShoppingIngredient>(listItem));
+        }
+        catch (Exception e)
+        {
+            _snackbar.Add($"Could not edit Item {e.Message}", Severity.Error);
+        }
+
+    }
+}
