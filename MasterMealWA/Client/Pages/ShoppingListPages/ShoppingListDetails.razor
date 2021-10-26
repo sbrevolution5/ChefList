@@ -53,7 +53,7 @@
                                                             <MudItem xs="4" Class="px-0">
                                                                 @if (item.UserString)
                                                                 {
-                                                                    <MudButtonGroup Size="Size.Small">
+                                                                    <MudButtonGroup Size="Size.Small" OverrideStyles="false">
                                                                         <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Warning" Variant="Variant.Filled" OnClick="@(()=>EditItem(item))"></MudIconButton>
                                                                         <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" Variant="Variant.Filled" OnClick="@(()=>DeleteItem(item))"></MudIconButton>
                                                                     </MudButtonGroup>
@@ -120,7 +120,7 @@
                                                                         <MudItem xs="4" Class="px-0">
                                                                             @if (item.UserString)
                                                                             {
-                                                                            <MudButtonGroup Size="Size.Small">
+                                                                            <MudButtonGroup Size="Size.Small" OverrideStyles="false">
                                                                                 <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Warning" Variant="Variant.Filled" OnClick="@(()=>EditItem(item))"></MudIconButton>
                                                                                 <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" Variant="Variant.Filled" OnClick="@(()=>DeleteItem(item))"></MudIconButton>
                                                                             </MudButtonGroup>
