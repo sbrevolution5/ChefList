@@ -261,4 +261,14 @@
         }
         ListCategories = displayList.Select(l => l.IngredientType).Distinct().ToList();
     }
+    public async Task AddNote(ShoppingIngredient item)
+    {
+        var parameters = new DialogParameters {["item"] = item };
+        var dialog = _dialogService.Show<AddNoteToShoppingItem>("Add a note", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            list = await _api.GetAsync<ShoppingList>($"/api/shoppinglists/{Convert.ToInt32(id)}");
+        }
+    }
 }
