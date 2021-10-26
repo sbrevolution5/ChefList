@@ -214,13 +214,26 @@
     }
     public async Task EditItem(ShoppingIngredient item)
     {
-
-        var parameters = new DialogParameters { ["listId"] = list.Id, ["types"] = typeList, ["listItem"] = item };
-        var dialog = _dialogService.Show<ListItemUserEdit>("Edit Item", parameters);
-        var result = await dialog.Result;
-        if (!result.Cancelled)
+        if (item.UserString)
         {
-            list = await _api.GetAsync<ShoppingList>($"/api/shoppinglists/{Convert.ToInt32(id)}");
+
+            var parameters = new DialogParameters { ["listId"] = list.Id, ["types"] = typeList, ["listItem"] = item };
+            var dialog = _dialogService.Show<ListItemUserEdit>("Edit Item", parameters);
+            var result = await dialog.Result;
+            if (!result.Cancelled)
+            {
+                list = await _api.GetAsync<ShoppingList>($"/api/shoppinglists/{Convert.ToInt32(id)}");
+            }
+        }
+        else
+        {
+            var parameters = new DialogParameters { ["listItem"] = item };
+            var dialog = _dialogService.Show<ListItemEditQuantity>("Edit Item", parameters);
+            var result = await dialog.Result;
+            if (!result.Cancelled)
+            {
+                list = await _api.GetAsync<ShoppingList>($"/api/shoppinglists/{Convert.ToInt32(id)}");
+            }
         }
     }
     public async Task DeleteItem(ShoppingIngredient item)
