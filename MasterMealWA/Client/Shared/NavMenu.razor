@@ -13,4 +13,9 @@
     <MudDivider Class="my-2"></MudDivider>
     <MudNavLink Href="https://github.com/sbrevolution5/ChefList/issues" Target="_blank" Icon="@Icons.Material.Filled.BugReport">Report a bug</MudNavLink>
     <MudNavLink Href="https://github.com/sbrevolution5/ChefList" Target="_blank" Icon="@Icons.Custom.Brands.GitHub">Contribute on Github</MudNavLink>
+    <AuthorizeView Roles="Admin, Moderator">
+        <Authorized>
+            <MudNavLink Href="/reports" Icon="@Icons.Material.Filled.Dangerous">Reports</MudNavLink>
+        </Authorized>
+    </AuthorizeView>
 </MudNavMenu>

@@ -1,5 +1,6 @@
 ﻿using IdentityServer4.EntityFramework.Options;
 using MasterMealWA.Shared.Models;
+using MasterMealWA.Shared.Models.Social;
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -18,6 +19,7 @@ namespace MasterMealWA.Server.Data
         {
 
         }
+        public DbSet<Report> Report { get; set; }
         public DbSet<Comment> Comment { get; set; }
         public DbSet<Ingredient> Ingredient { get; set; }
         public DbSet<Meal> Meal { get; set; }

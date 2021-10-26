@@ -4,20 +4,22 @@ using System.Collections.Generic;
 using MasterMealWA.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace MasterMealWA.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211024183515_021-Report")]
+    partial class _021Report
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 63)
-                .HasAnnotation("ProductVersion", "5.0.11")
+                .HasAnnotation("ProductVersion", "5.0.10")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
             modelBuilder.Entity("ChefSupply", b =>
@@ -511,34 +513,19 @@ namespace MasterMealWA.Server.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<int>("Fraction")
-                        .HasColumnType("integer");
-
                     b.Property<bool>("InCart")
                         .HasColumnType("boolean");
 
                     b.Property<bool>("InPantry")
                         .HasColumnType("boolean");
 
-                    b.Property<int?>("IngredientId")
-                        .HasColumnType("integer");
-
                     b.Property<int>("IngredientTypeId")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("MassMeasurementUnit")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("MeasurementType")
                         .HasColumnType("integer");
 
                     b.Property<List<string>>("Notes")
                         .HasColumnType("text[]");
 
                     b.Property<int>("Quantity")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("QuantityNumber")
                         .HasColumnType("integer");
 
                     b.Property<string>("QuantityString")
@@ -550,12 +537,7 @@ namespace MasterMealWA.Server.Migrations
                     b.Property<bool>("UserString")
                         .HasColumnType("boolean");
 
-                    b.Property<int?>("VolumeMeasurementUnit")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("IngredientId");
 
                     b.HasIndex("IngredientTypeId");
 
@@ -609,14 +591,17 @@ namespace MasterMealWA.Server.Migrations
                     b.Property<DateTime>("Submitted")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<string>("SubmitterId")
+                    b.Property<Guid>("SubmitterId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("SubmitterId1")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
                     b.HasIndex("RecipeId");
 
-                    b.HasIndex("SubmitterId");
+                    b.HasIndex("SubmitterId1");
 
                     b.ToTable("Report");
                 });
@@ -963,10 +948,6 @@ namespace MasterMealWA.Server.Migrations
 
             modelBuilder.Entity("MasterMealWA.Shared.Models.ShoppingIngredient", b =>
                 {
-                    b.HasOne("MasterMealWA.Shared.Models.Ingredient", "Ingredient")
-                        .WithMany()
-                        .HasForeignKey("IngredientId");
-
                     b.HasOne("MasterMealWA.Shared.Models.IngredientType", "IngredientType")
                         .WithMany()
                         .HasForeignKey("IngredientTypeId")
@@ -976,8 +957,6 @@ namespace MasterMealWA.Server.Migrations
                     b.HasOne("MasterMealWA.Shared.Models.ShoppingList", null)
                         .WithMany("ShoppingIngredients")
                         .HasForeignKey("ShoppingListId");
-
-                    b.Navigation("Ingredient");
 
                     b.Navigation("IngredientType");
                 });
@@ -1001,7 +980,7 @@ namespace MasterMealWA.Server.Migrations
 
                     b.HasOne("MasterMealWA.Shared.Models.Chef", "Submitter")
                         .WithMany()
-                        .HasForeignKey("SubmitterId");
+                        .HasForeignKey("SubmitterId1");
 
                     b.Navigation("Recipe");
 

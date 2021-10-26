@@ -1,0 +1,79 @@
+﻿@page "/reports"
+@inject IApiService _api
+@inject IDialogService _dialogService
+@inject IUserService _userService
+@if (Reports is null)
+{
+    <div class="d-flex align-center justify-center">
+        <Loader />
+    </div>
+}
+else
+{
+    <MudCard>
+        <MudCardHeader>
+            <MudText Typo="Typo.h3">Reports</MudText>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudGrid>
+                @foreach (var report in Reports)
+                {
+                    <MudItem xs="12">
+
+                        <MudSimpleTable>
+                            <tbody>
+                                <tr>
+                                    <td>Reporter</td>
+                                    <td>@report.Submitter.ScreenName</td>
+                                </tr>
+                                <tr>
+                                    <td>Author</td>
+                                    <td>@report.Recipe.Author.ScreenName</td>
+                                </tr>
+                                <tr>
+                                    <td>Recipe</td>
+                                    <td>@report.Recipe.Name</td>
+                                </tr>
+                                <tr>
+                                    <td>Reason</td>
+                                    <td>@report.Reason</td>
+                                </tr>
+                                <tr>
+                                    <td>Date</td>
+                                    <td>@report.Submitted</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        @if (report.Reviewed)
+                                        {
+                                            <MudText>Reviewed on @report.ReviewDate</MudText>
+                                        }
+                                        else
+                                        {
+                                            <MudButton Color="Color.Success" OnClick="async ()=>await Reviewed(report)">Review complete</MudButton>
+                                        }
+                                    </td>
+                                    <td><MudButton Color="Color.Primary" Link="@("/recipes/details/" +report.RecipeId.ToString())">View Details of recipe</MudButton></td>
+                                </tr>
+                            </tbody>
+                        </MudSimpleTable>
+                    </MudItem>
+                }
+            </MudGrid>
+        </MudCardContent>
+    </MudCard>
+}
+@code {
+    public List<Report> Reports { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        Reports = await _api.GetAsync<List<Report>>("/api/reports");
+        base.OnInitialized();
+    }
+    public async Task Reviewed(Report report)
+    {
+        report.Reviewed = true;
+        report.ReviewDate = DateTime.Now;
+        await _api.UpdateAsync<Report>($"/api/reports/{report.Id}", report);
+    }
+}
