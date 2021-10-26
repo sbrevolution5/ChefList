@@ -12,7 +12,6 @@ namespace MasterMealWA.Server.Services
     {
         public ShoppingIngredient GetMeasurementForShoppingIngredient(ShoppingIngredient ingredient) 
         {
-            //Ingredient has, ingredientId, totalquantity, notes, typeId
             if (ingredient.MeasurementType == MeasurementType.Volume)
             {
                 ingredient.QuantityString = $"{DecodeVolumeMeasurement(ingredient.Quantity)} {ingredient.Ingredient.Name}";
@@ -29,9 +28,7 @@ namespace MasterMealWA.Server.Services
                 ingredient.QuantityString = $"{DecodeUnitMeasurement(ingredient.Quantity)} {ingredient.Ingredient.Name}";
                 ingredient = ApplyUnitMeasurement(ingredient);
             }
-            throw new NotImplementedException();
             return ingredient;
-            //outgoing ingredient needs the measure itself if not unit, fraction, number
         }
 
         private ShoppingIngredient ApplyVolumeMeasurement(ShoppingIngredient ingredient)
@@ -102,12 +99,57 @@ namespace MasterMealWA.Server.Services
 
         private ShoppingIngredient ApplyMassMeasurement(ShoppingIngredient ingredient)
         {
-            throw new NotImplementedException();
+            MassMeasurementUnit unit;
+            int conversionFactor;
+            int fracOz = ingredient.Quantity;
+            if (fracOz >= 24 * 16 || fracOz == 24 * 8 || fracOz == 24 * 4 || fracOz == 24 * 12)
+            {
+                unit = MassMeasurementUnit.pound;
+                conversionFactor = 24 * 16;
+            }
+            else //Must be Ounce or less
+            {
+                unit = MassMeasurementUnit.ounce;
+                conversionFactor = 24;
+
+            }
+            //Get whats left from remainder
+            ingredient.MassMeasurementUnit = unit;
+            int remainder = fracOz % conversionFactor;
+            if (remainder > 0)
+            {
+                //round down to whole unit
+                fracOz -= remainder;
+                //if fraction > .75, just round to next whole number.
+                if (remainder / conversionFactor > 0.75)
+                {
+                    fracOz += conversionFactor;
+                    ingredient.QuantityNumber = fracOz / conversionFactor;
+                }
+                else
+                {
+                    //Round up to fraction
+                    ingredient.Fraction = DoubleToFraction(remainder / (double)conversionFactor);
+                    ingredient.QuantityNumber = fracOz / conversionFactor;
+                }
+
+            }
+            else
+            {
+                ingredient.QuantityNumber = fracOz / conversionFactor;
+
+            }
+            return ingredient;
         }
 
         private ShoppingIngredient ApplyUnitMeasurement(ShoppingIngredient ingredient)
         {
-            throw new NotImplementedException();
+            var numberOfUnits = ingredient.Quantity;
+            int remainder = numberOfUnits % 24;
+            ingredient.QuantityNumber= (numberOfUnits - remainder) / 24;
+            double fractionDec = remainder / 24d;
+            ingredient.Fraction = DoubleToFraction(fractionDec);
+            return ingredient;
         }
 
         public string DecodeVolumeMeasurement(int fracTSP)
