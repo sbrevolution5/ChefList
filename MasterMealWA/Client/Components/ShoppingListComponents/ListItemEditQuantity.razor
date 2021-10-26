@@ -4,7 +4,7 @@
 <MudDialog>
     <DialogContent>
         <EditForm Model="listItem">
-
+            <MudText>Editing @listItem.QuantityString</MudText>
             <MudForm>
                 <MudGrid>
 
@@ -45,23 +45,10 @@
                         {
 
                         }
-                        else
-                        {
-                            <MudText>Please select an ingredient</MudText>
-                        }
                     </MudItem>
                 </MudGrid>
             </MudForm>
         </EditForm>
-        <MudTextField T="string" @bind-Text="listItem.QuantityString" Label="Type item quantity/name here." HelperText="Will add a simple plaintext element">
-        </MudTextField>
-        <MudSelect Label="Ingredient Type" HelperText="Where you'd find the ingredient while shopping" @bind-Value="listItem.IngredientTypeId">
-            @foreach (var type in types)
-            {
-                <MudSelectItem Value="@type.Id">@type.Name</MudSelectItem>
-            }
-        </MudSelect>
-
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel" Variant="Variant.Filled" Color="Color.Dark">Cancel</MudButton>
@@ -79,7 +66,6 @@
     public ShoppingIngredient listItem { get; set; }
     protected override void OnInitialized()
     {
-        listItem.UserString = true;
         base.OnInitialized();
     }
     public void Cancel()
