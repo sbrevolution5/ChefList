@@ -53,9 +53,9 @@ namespace MasterMealWA.Server.Controllers
         {
             if (!User.Identity.IsAuthenticated)
             {
-                return await _context.Recipe.Include(r=>r.Author).Include(r=>r.Ingredients).ThenInclude(r=>r.Ingredient).Where(r => !r.IsPrivate).ToListAsync();
+                return await _context.Recipe.Include(r => r.Author).Include(r => r.Ingredients).ThenInclude(r => r.Ingredient).Where(r => !r.IsPrivate).ToListAsync();
             }
-            if (User.IsInRole("Admin")|| User.IsInRole("Moderator"))
+            if (User.IsInRole("Admin") || User.IsInRole("Moderator"))
             {
                 return await _context.Recipe.Include(r => r.Author).Include(r => r.Ingredients).ThenInclude(r => r.Ingredient).ToListAsync();
 
@@ -142,10 +142,33 @@ namespace MasterMealWA.Server.Controllers
             {
                 return BadRequest();
             }
-
             dbrecipe.AuthorId = recipe.AuthorId;
             dbrecipe.Steps = recipe.Steps;
             dbrecipe.Ingredients = recipe.Ingredients;
+            foreach (var ingredient in dbrecipe.Ingredients)
+            {
+                //ingredient.RecipeId = recipe.Id;
+                if (ingredient.MeasurementType == MeasurementType.Volume)
+                {
+                    ingredient.MassMeasurementUnit = null;
+                    ingredient.NumberOfUnits = _measurementService.EncodeVolumeMeasurement(ingredient.QuantityNumber, ingredient.Fraction, ingredient.VolumeMeasurementUnit.Value);
+                    ingredient.Quantity = _measurementService.DecodeVolumeMeasurement(ingredient.NumberOfUnits);
+                }
+                else if (ingredient.MeasurementType == MeasurementType.Mass)
+                {
+                    ingredient.VolumeMeasurementUnit = null;
+                    ingredient.NumberOfUnits = _measurementService.EncodeMassMeasurement(ingredient.QuantityNumber, ingredient.Fraction, ingredient.MassMeasurementUnit.Value);
+                    ingredient.Quantity = _measurementService.DecodeMassMeasurement(ingredient.NumberOfUnits);
+                }
+                else if (ingredient.MeasurementType == MeasurementType.Count)
+                {
+                    ingredient.VolumeMeasurementUnit = null;
+                    ingredient.MassMeasurementUnit = null;
+                    ingredient.NumberOfUnits = _measurementService.EncodeUnitMeasurement(ingredient.QuantityNumber, ingredient.Fraction);
+                    ingredient.Quantity = _measurementService.DecodeUnitMeasurement(ingredient.NumberOfUnits);
+                }
+                _context.Entry(ingredient).State = EntityState.Modified;
+            }
             dbrecipe.Supplies = recipe.Supplies;
             dbrecipe.Description = recipe.Description;
             dbrecipe.Name = recipe.Name;
@@ -162,10 +185,7 @@ namespace MasterMealWA.Server.Controllers
             {
                 _context.Entry(step).State = EntityState.Modified;
             }
-            foreach (var ingredient in dbrecipe.Ingredients)
-            {
-                _context.Entry(ingredient).State = EntityState.Modified;
-            }
+
             foreach (var supply in dbrecipe.Supplies)
             {
                 _context.Entry(supply).State = EntityState.Modified;
