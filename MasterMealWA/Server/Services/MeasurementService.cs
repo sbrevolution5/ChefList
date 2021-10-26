@@ -14,19 +14,19 @@ namespace MasterMealWA.Server.Services
         {
             if (ingredient.MeasurementType == MeasurementType.Volume)
             {
-                ingredient.QuantityString = $"{DecodeVolumeMeasurement(ingredient.Quantity)} {ingredient.Ingredient.Name}";
                 ingredient = ApplyVolumeMeasurement(ingredient);
+                ingredient.QuantityString = $"{DecodeVolumeMeasurement(ingredient.Quantity)} {ingredient.Ingredient.Name}";
             }
             else if (ingredient.MeasurementType == MeasurementType.Mass)
             {
-                ingredient.QuantityString = $"{DecodeMassMeasurement(ingredient.Quantity)} {ingredient.Ingredient.Name}";
                 ingredient = ApplyMassMeasurement(ingredient);
+                ingredient.QuantityString = $"{DecodeMassMeasurement(ingredient.Quantity)} {ingredient.Ingredient.Name}";
 
             }
             else if (ingredient.MeasurementType == MeasurementType.Count)
             {
-                ingredient.QuantityString = $"{DecodeUnitMeasurement(ingredient.Quantity)} {ingredient.Ingredient.Name}";
                 ingredient = ApplyUnitMeasurement(ingredient);
+                ingredient.QuantityString = $"{DecodeUnitMeasurement(ingredient.Quantity)} {ingredient.Ingredient.Name}";
             }
             //nullify virtual property so it isn't added to db
             ingredient.Ingredient = null;
