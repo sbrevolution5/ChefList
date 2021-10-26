@@ -13,7 +13,20 @@ namespace MasterMealWA.Server.Services
         public ShoppingIngredient GetMeasurementForShoppingIngredient(ShoppingIngredient ingredient) 
         {
             //Ingredient has, ingredientId, totalquantity, notes, typeId
+            if (ingredient.MeasurementType == MeasurementType.Volume)
+            {
+                result.QuantityString = $"{_measurementService.DecodeVolumeMeasurement(totalQuantity)} {ingredient.Name}";
+            }
+            else if (measure == MeasurementType.Mass)
+            {
+                result.QuantityString = $"{_measurementService.DecodeMassMeasurement(totalQuantity)} {ingredient.Name}";
+            }
+            else if (measure == MeasurementType.Count)
+            {
+                result.QuantityString = $"{_measurementService.DecodeUnitMeasurement(totalQuantity)} {ingredient.Name}";
+            }
             throw new NotImplementedException();
+            //outgoing ingredient needs a measurement type, maybe the measure itself if not unit, fraction, number, and quantityString
         }
         public string DecodeVolumeMeasurement(int fracTSP)
         {
