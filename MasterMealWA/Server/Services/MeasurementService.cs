@@ -15,19 +15,141 @@ namespace MasterMealWA.Server.Services
             //Ingredient has, ingredientId, totalquantity, notes, typeId
             if (ingredient.MeasurementType == MeasurementType.Volume)
             {
-                result.QuantityString = $"{_measurementService.DecodeVolumeMeasurement(totalQuantity)} {ingredient.Name}";
+                ingredient.QuantityString = $"{DecodeVolumeMeasurement(ingredient.Quantity)} {ingredient.Ingredient.Name}";
+                ingredient = ApplyVolumeMeasurement(ingredient);
             }
-            else if (measure == MeasurementType.Mass)
+            else if (ingredient.MeasurementType == MeasurementType.Mass)
             {
-                result.QuantityString = $"{_measurementService.DecodeMassMeasurement(totalQuantity)} {ingredient.Name}";
+                ingredient.QuantityString = $"{DecodeMassMeasurement(ingredient.Quantity)} {ingredient.Ingredient.Name}";
+                ingredient = ApplyMassMeasurement(ingredient);
+
             }
-            else if (measure == MeasurementType.Count)
+            else if (ingredient.MeasurementType == MeasurementType.Count)
             {
-                result.QuantityString = $"{_measurementService.DecodeUnitMeasurement(totalQuantity)} {ingredient.Name}";
+                ingredient.QuantityString = $"{DecodeUnitMeasurement(ingredient.Quantity)} {ingredient.Ingredient.Name}";
+                ingredient = ApplyUnitMeasurement(ingredient);
             }
             throw new NotImplementedException();
-            //outgoing ingredient needs a measurement type, maybe the measure itself if not unit, fraction, number, and quantityString
+            return ingredient;
+            //outgoing ingredient needs the measure itself if not unit, fraction, number
         }
+
+        private ShoppingIngredient ApplyVolumeMeasurement(ShoppingIngredient ingredient)
+        {
+            VolumeMeasurementUnit unit;
+            int conversionFactor;
+            string unitString;
+            int fracTSP = ingredient.Quantity;
+            if (fracTSP >= 4 * 2 * 2 * 8 * 2 * 3 * 24)
+            {
+                unitString = "Gallon";
+                unit = VolumeMeasurementUnit.Gallon;
+                conversionFactor = 4 * 2 * 2 * 8 * 2 * 3 * 24;
+            }
+            else if (fracTSP >= 2 * 2 * 8 * 2 * 3 * 24)
+            {
+                unitString = "Quart";
+                unit = VolumeMeasurementUnit.Quart;
+                conversionFactor = 2 * 2 * 8 * 2 * 3 * 24;
+            }
+            else if (fracTSP >= 2 * 8 * 2 * 3 * 24)
+            {
+                unitString = "Pint";
+                unit = VolumeMeasurementUnit.Pint;
+                conversionFactor = 2 * 8 * 2 * 3 * 24;
+            }
+            else if (fracTSP >= 4 * 3 * 24)
+            {
+                unitString = "Cup";
+                unit = VolumeMeasurementUnit.Cup;
+                conversionFactor = 8 * 2 * 3 * 24;
+
+            }
+            //else if (fracTSP >= 24 * 3 * 2)
+            //{
+            //    unitString = "Ounce";
+            //    unit = VolumeMeasurementUnit.Ounce;
+            //    conversionFactor = 2 * 3 * 24;
+            //}
+            else if (fracTSP >= 24 * 3 || fracTSP == 18 || fracTSP == 36 || fracTSP == 54)
+            {
+                unitString = "Tablespoon";
+                unit = VolumeMeasurementUnit.Tablespoon;
+                conversionFactor = 3 * 24;
+            }
+            else if (fracTSP < 6)
+            {
+                //Only used if we end up with < 1/4 tsp due to serving size conversion!!!!
+                unitString = "A Dash/Pinch (less than 1/4 TSP) ";
+                var dashMeasure = unitString + "(" + ozConversion + " oz.)";
+                return dashMeasure;
+            }
+            else //Must be Teaspoon or less
+            {
+                unitString = "Teaspoon";
+                unit = VolumeMeasurementUnit.Teaspoon;
+                conversionFactor = 24;
+
+            }
+            //Get whats left from remainder
+            string measurement = "";
+            int remainder = fracTSP % conversionFactor;
+            int howMany;
+            if (remainder > 0)
+            {
+                //Add s to unit
+                unitString += "s";
+                //round down to whole unit
+                fracTSP -= remainder;
+                //if fraction > .75, just round to next whole number.
+                if (remainder / conversionFactor > 0.75)
+                {
+                    fracTSP += conversionFactor;
+                    howMany = fracTSP / conversionFactor;
+                    measurement = howMany + " " + unitString + "(" + ozConversion + " oz.)";
+                }
+                else
+                {
+                    //Round up to fraction
+                    string fraction = RemainderToFraction(remainder, unit);
+                    howMany = fracTSP / conversionFactor;
+                    if (howMany == 0)
+                    {
+                        measurement = fraction + " " + unitString + "(" + ozConversion + " oz.)";
+
+                    }
+                    else
+                    {
+
+                        measurement = howMany + " " + fraction + " " + unitString + "(" + ozConversion + " oz.)";
+                    }
+                }
+
+            }
+            else
+            {
+                howMany = fracTSP / conversionFactor;
+                //add S to plurals
+                if (howMany != 1)
+                {
+                    unitString += "s";
+                }
+                measurement = howMany + " " + unitString + "(" + ozConversion + " oz.)";
+
+            }
+            return measurement;
+        }
+
+        private ShoppingIngredient ApplyMassMeasurement(ShoppingIngredient ingredient)
+        {
+            throw new NotImplementedException();
+        }
+
+        private ShoppingIngredient ApplyUnitMeasurement(ShoppingIngredient ingredient)
+        {
+            throw new NotImplementedException();
+        }
+
         public string DecodeVolumeMeasurement(int fracTSP)
         {
             VolumeMeasurementUnit unit;
