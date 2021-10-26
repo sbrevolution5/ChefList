@@ -1,0 +1,43 @@
+﻿@inject IApiService _api
+<MudDialog>
+
+    <DialogContent>
+        <MudForm Model="item">
+            @foreach (var note in item.Notes)
+            {
+                <MudText>@note</MudText>
+            }
+            <MudTextField @bind-Value="noteString" Label="New Note" Required="true"></MudTextField>
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel" Variant="Variant.Filled" Color="Color.Dark">Close</MudButton>
+        <MudButton OnClick="Submit" Variant="Variant.Filled" Color="Color.Primary">Add Note</MudButton>
+    </DialogActions>
+</MudDialog>
+@code {
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; }
+    [Parameter]
+    public ShoppingIngredient item { get; set; }
+    public string noteString { get; set; }
+    public async void Submit()
+    {
+        item.Notes.Add(noteString);
+        try
+        {
+            await _api.UpdateAsync<ShoppingIngredient>($"/api/shoppingingredients/{item.Id}", item);
+            _snackbar.Add("Report Submitted", Severity.Success);
+            MudDialog.Close(DialogResult.Ok(item));
+        }
+        catch (Exception e)
+        {
+            _snackbar.Add($"Failed to add Note: {e.Message}", Severity.Error);
+            throw;
+        }
+    }
+    public void Cancel()
+    {
+        MudDialog.Cancel();
+    }
+}

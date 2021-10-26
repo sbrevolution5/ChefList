@@ -50,15 +50,22 @@
                                                                 <MudCheckBox UncheckedIcon="@Icons.Material.Filled.ShoppingCart" CheckedIcon="@Icons.Material.Filled.Home" @bind-Checked="item.InPantry" Label="@item.QuantityString" Color="GetPantryColor(item.InPantry)">
                                                                 </MudCheckBox>
                                                             </MudItem>
-                                                            <MudItem xs="4" Class="px-0">
-                                                                @if (item.UserString)
-                                                                {
-                                                                    <MudButtonGroup Size="Size.Small">
-                                                                        <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Warning" Variant="Variant.Filled" OnClick="@(()=>EditItem(item))"></MudIconButton>
-                                                                        <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" Variant="Variant.Filled" OnClick="@(()=>DeleteItem(item))"></MudIconButton>
-                                                                    </MudButtonGroup>
-                                                                }
-                                                            </MudItem>
+                                                        <MudItem xs="4" Class="px-0">
+                                                            @if (item.UserString)
+                                                            {
+                                                                <MudButtonGroup Size="Size.Small" OverrideStyles="false">
+                                                                    <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Warning" Variant="Variant.Filled" OnClick="@(()=>EditItem(item))"></MudIconButton>
+                                                                    <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" Variant="Variant.Filled" OnClick="@(()=>DeleteItem(item))"></MudIconButton>
+                                                                </MudButtonGroup>
+                                                            }
+                                                            else
+                                                            {
+                                                                <MudButtonGroup Size="Size.Small" OverrideStyles="false">
+                                                                    <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Warning" Variant="Variant.Filled" OnClick="@(()=>EditItem(item))"></MudIconButton>
+                                                                    <MudIconButton Icon="@Icons.Material.Filled.EditNote" Color="Color.Success" Variant="Variant.Filled" OnClick="@(()=>AddNote(item))"></MudIconButton>
+                                                                </MudButtonGroup>
+                                                            }
+                                                        </MudItem>
                                                             }
                                                             else if (CurrentMode == ListMode.Store)
                                                             {
@@ -120,10 +127,17 @@
                                                                         <MudItem xs="4" Class="px-0">
                                                                             @if (item.UserString)
                                                                             {
-                                                                            <MudButtonGroup Size="Size.Small">
-                                                                                <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Warning" Variant="Variant.Filled" OnClick="@(()=>EditItem(item))"></MudIconButton>
-                                                                                <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" Variant="Variant.Filled" OnClick="@(()=>DeleteItem(item))"></MudIconButton>
-                                                                            </MudButtonGroup>
+                                                                                <MudButtonGroup Size="Size.Small" OverrideStyles="false">
+                                                                                    <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Warning" Variant="Variant.Filled" OnClick="@(() => EditItem(item))"></MudIconButton>
+                                                                                    <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" Variant="Variant.Filled" OnClick="@(() => DeleteItem(item))"></MudIconButton>
+                                                                                </MudButtonGroup>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <MudButtonGroup Size="Size.Small" OverrideStyles="false">
+                                                                                    <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Warning" Variant="Variant.Filled" OnClick="@(()=>EditItem(item))"></MudIconButton>
+                                                                                    <MudIconButton Icon="@Icons.Material.Filled.EditNote" Color="Color.Success" Variant="Variant.Filled" OnClick="@(()=>AddNote(item))"></MudIconButton>
+                                                                                </MudButtonGroup>
                                                                             }
                                                                         </MudItem>
                                                                     }
@@ -175,6 +189,10 @@
     protected override async Task OnInitializedAsync()
     {
         typeList = (await _api.GetAsync<IEnumerable<IngredientType>>("api/IngredientTypes")).ToList();
+        await GetListAsync();
+    }
+    private async Task GetListAsync()
+    {
         list = await _api.GetAsync<ShoppingList>($"/api/shoppinglists/{Convert.ToInt32(id)}");
         displayList = list.ShoppingIngredients;
         ListCategories = displayList.Select(l => l.IngredientType).Distinct().ToList();
@@ -195,18 +213,30 @@
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-            list = await _api.GetAsync<ShoppingList>($"/api/shoppinglists/{Convert.ToInt32(id)}");
+            await GetListAsync();
         }
     }
     public async Task EditItem(ShoppingIngredient item)
     {
-
-        var parameters = new DialogParameters { ["listId"] = list.Id, ["types"] = typeList, ["listItem"] = item };
-        var dialog = _dialogService.Show<ListItemUserEdit>("Edit Item", parameters);
-        var result = await dialog.Result;
-        if (!result.Cancelled)
+        if (item.UserString)
         {
-            list = await _api.GetAsync<ShoppingList>($"/api/shoppinglists/{Convert.ToInt32(id)}");
+
+            var parameters = new DialogParameters { ["listId"] = list.Id, ["types"] = typeList, ["listItem"] = item };
+            var dialog = _dialogService.Show<ListItemUserEdit>("Edit Item", parameters);
+            var result = await dialog.Result;
+            if (!result.Cancelled)
+            {
+            }
+        }
+        else
+        {
+            var parameters = new DialogParameters { ["listItem"] = item };
+            var dialog = _dialogService.Show<ListItemEditQuantity>("Edit Item", parameters);
+            var result = await dialog.Result;
+            if (!result.Cancelled)
+            {
+                await GetListAsync();
+            }
         }
     }
     public async Task DeleteItem(ShoppingIngredient item)
@@ -217,7 +247,7 @@
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-            list = await _api.GetAsync<ShoppingList>($"/api/shoppinglists/{Convert.ToInt32(id)}");
+            await GetListAsync();
         }
     }
     public async Task UpdateList()
@@ -225,7 +255,7 @@
         try
         {
             await _api.UpdateAsync<ShoppingList>($"/api/shoppinglists/{Convert.ToInt32(id)}", list);
-            await _api.GetAsync<ShoppingList>($"/api/shoppinglists/{Convert.ToInt32(id)}");
+            await GetListAsync();
             _snackbar.Add("Updated list", Severity.Success);
         }
         catch (Exception e)
@@ -246,5 +276,15 @@
             displayList = list.ShoppingIngredients;
         }
         ListCategories = displayList.Select(l => l.IngredientType).Distinct().ToList();
+    }
+    public async Task AddNote(ShoppingIngredient item)
+    {
+        var parameters = new DialogParameters {["item"] = item };
+        var dialog = _dialogService.Show<AddNoteToShoppingItem>("Add a note", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            await GetListAsync();
+        }
     }
 }

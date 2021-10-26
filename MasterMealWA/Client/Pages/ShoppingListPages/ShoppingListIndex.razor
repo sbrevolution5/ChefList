@@ -2,26 +2,51 @@
 @inject IApiService _api
 @inject IDialogService _dialogService
 @attribute [Authorize]
-<MudText Typo="Typo.h1">Shopping lists</MudText>
-@if (shoppingLists is null)
-{
-<div class="d-flex align-center justify-center">
-    <Loader />
-</div>
+<MudGrid>
+    <MudItem xs="12">
 
-}
-else
-{
-    <MudList>
-        @foreach (var list in shoppingLists)
+        <MudText Typo="Typo.h1">Shopping lists</MudText>
+    </MudItem>
+    <MudItem xs="12">
+        @if (shoppingLists is null)
         {
-            <MudListItem>@list.Name</MudListItem>
-            <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Icon="@Icons.Material.Filled.List" Link=@($"shoppinglists/details/{list.Id}")></MudIconButton>
-            <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="()=>DeleteList(list)"></MudIconButton>
+            <div class="d-flex align-center justify-center">
+                <Loader />
+            </div>
         }
-    </MudList>
-}
-<MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" OnClick="NewList" />
+        else
+        {
+            if (shoppingLists.Count == 0)
+            {
+                <MudText>You have no shopping lists, make one after selecting meals for your <MudLink Href="/meals">meal plan</MudLink></MudText>
+            }
+            else
+            {
+                <MudCard>
+                    <MudCardContent>
+
+                        <MudGrid>
+
+                            @foreach (var list in shoppingLists)
+                            {
+                                <MudItem xs="12" sm="6" md="4" lg="3">
+                                    <MudPaper Elevation="2"  Style="padding-left:5px;margin:10px;">
+                                        <MudText>
+                                            @list.Name
+                                        </MudText>
+                                        <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Icon="@Icons.Material.Filled.List" Link=@($"shoppinglists/details/{list.Id}")></MudIconButton>
+                                        <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="()=>DeleteList(list)"></MudIconButton>
+                                    </MudPaper>
+                                </MudItem>
+                            }
+                        </MudGrid>
+                    </MudCardContent>
+                </MudCard>
+            }
+        }
+    </MudItem>
+    <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" OnClick="NewList" />
+</MudGrid>
 @code {
     public List<ShoppingList> shoppingLists { get; set; }
     protected override async Task OnInitializedAsync()

@@ -43,7 +43,7 @@ namespace MasterMealWA.Server.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ShoppingList>> GetShoppingList(int id)
         {
-            var shoppingList = await _context.ShoppingList.Include(l => l.ShoppingIngredients).ThenInclude(i=>i.IngredientType).Where(l => l.Id == id).FirstOrDefaultAsync();
+            var shoppingList = await _context.ShoppingList.Include(l => l.ShoppingIngredients).ThenInclude(i=>i.IngredientType).Include(l => l.ShoppingIngredients).ThenInclude(i => i.Ingredient).Where(l => l.Id == id).FirstOrDefaultAsync();
             var userId = HttpContext.GetUserId();
 
             if (shoppingList == null || shoppingList.ChefId != userId)

@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MasterMealWA.Shared.Enums;
+using MasterMealWA.Shared.Models;
 
 namespace MasterMealWA.Server.Services.Interfaces
 {
     public interface IMeasurementService
     {
+        public ShoppingIngredient GetMeasurementForShoppingIngredient(ShoppingIngredient ingredient);
         public string DecodeVolumeMeasurement(int fracTSP);
         public int EncodeVolumeMeasurement(int wholeNumber, Fraction fraction, VolumeMeasurementUnit unit);
         public string DecodeMassMeasurement(int fracOz);

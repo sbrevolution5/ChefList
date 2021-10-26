@@ -90,25 +90,16 @@ namespace MasterMealWA.Server.Services
             }
 
             Ingredient ingredient = listOfOneIngredient.First().Ingredient;
-            ShoppingIngredient result = new()
+            ShoppingIngredient shoppingIngredient = new()
             {
+                IngredientId = ingredient.Id,
+                Ingredient = ingredient,
+                MeasurementType = ingredient.MeasurementType,
                 IngredientTypeId = ingredient.TypeId,
-                Notes = notes
+                Notes = notes,
+                Quantity = totalQuantity
             };
-            var measure = ingredient.MeasurementType;
-            if (measure == MeasurementType.Volume)
-            {
-
-                result.QuantityString = $"{_measurementService.DecodeVolumeMeasurement(totalQuantity)} {ingredient.Name}";
-            }
-            else if (measure == MeasurementType.Mass)
-            {
-                result.QuantityString = $"{_measurementService.DecodeVolumeMeasurement(totalQuantity)} {ingredient.Name}";
-            }
-            else if (measure == MeasurementType.Count)
-            {
-                result.QuantityString = $"{_measurementService.DecodeUnitMeasurement(totalQuantity)} {ingredient.Name}";
-            }
+            var result = _measurementService.GetMeasurementForShoppingIngredient(shoppingIngredient);
             _context.Add(result);
             return result;
         }

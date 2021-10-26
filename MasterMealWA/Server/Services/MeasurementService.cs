@@ -4,11 +4,156 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MasterMealWA.Shared.Models;
 
 namespace MasterMealWA.Server.Services
 {
     public class MeasurementService : IMeasurementService
     {
+        public ShoppingIngredient GetMeasurementForShoppingIngredient(ShoppingIngredient ingredient) 
+        {
+            if (ingredient.MeasurementType == MeasurementType.Volume)
+            {
+                ingredient = ApplyVolumeMeasurement(ingredient);
+                ingredient.QuantityString = $"{DecodeVolumeMeasurement(ingredient.Quantity)} {ingredient.Ingredient.Name}";
+            }
+            else if (ingredient.MeasurementType == MeasurementType.Mass)
+            {
+                ingredient = ApplyMassMeasurement(ingredient);
+                ingredient.QuantityString = $"{DecodeMassMeasurement(ingredient.Quantity)} {ingredient.Ingredient.Name}";
+
+            }
+            else if (ingredient.MeasurementType == MeasurementType.Count)
+            {
+                ingredient = ApplyUnitMeasurement(ingredient);
+                ingredient.QuantityString = $"{DecodeUnitMeasurement(ingredient.Quantity)} {ingredient.Ingredient.Name}";
+            }
+            //nullify virtual property so it isn't added to db
+            ingredient.Ingredient = null;
+            return ingredient;
+        }
+
+        private ShoppingIngredient ApplyVolumeMeasurement(ShoppingIngredient ingredient)
+        {
+            VolumeMeasurementUnit unit;
+            int conversionFactor;
+            int fracTSP = ingredient.Quantity;
+            if (fracTSP >= 4 * 2 * 2 * 8 * 2 * 3 * 24)
+            {
+                unit = VolumeMeasurementUnit.Gallon;
+                conversionFactor = 4 * 2 * 2 * 8 * 2 * 3 * 24;
+            }
+            else if (fracTSP >= 2 * 2 * 8 * 2 * 3 * 24)
+            {
+                unit = VolumeMeasurementUnit.Quart;
+                conversionFactor = 2 * 2 * 8 * 2 * 3 * 24;
+            }
+            else if (fracTSP >= 2 * 8 * 2 * 3 * 24)
+            {
+                unit = VolumeMeasurementUnit.Pint;
+                conversionFactor = 2 * 8 * 2 * 3 * 24;
+            }
+            else if (fracTSP >= 4 * 3 * 24)
+            {
+                unit = VolumeMeasurementUnit.Cup;
+                conversionFactor = 8 * 2 * 3 * 24;
+
+            }
+            else if (fracTSP >= 24 * 3 || fracTSP == 18 || fracTSP == 36 || fracTSP == 54)
+            {
+                unit = VolumeMeasurementUnit.Tablespoon;
+                conversionFactor = 3 * 24;
+            }
+            else //Must be Teaspoon or less
+            {
+                unit = VolumeMeasurementUnit.Teaspoon;
+                conversionFactor = 24;
+
+            }
+            //Get whats left from remainder
+            ingredient.VolumeMeasurementUnit = unit;
+            int remainder = fracTSP % conversionFactor;
+            if (remainder > 0)
+            {
+                //round down to whole unit
+                fracTSP -= remainder;
+                //if fraction > .75, just round to next whole number.
+                if (remainder / conversionFactor > 0.75)
+                {
+                    fracTSP += conversionFactor;
+                    ingredient.QuantityNumber = fracTSP / conversionFactor;
+                }
+                else
+                {
+                    //Round up to fraction
+                    ingredient.Fraction = DoubleToFraction(remainder/(double)conversionFactor);
+                    ingredient.QuantityNumber = fracTSP / conversionFactor;
+                }
+
+            }
+            else
+            {
+                ingredient.QuantityNumber = fracTSP / conversionFactor;
+
+            }
+            return ingredient;
+        }
+
+        private ShoppingIngredient ApplyMassMeasurement(ShoppingIngredient ingredient)
+        {
+            MassMeasurementUnit unit;
+            int conversionFactor;
+            int fracOz = ingredient.Quantity;
+            if (fracOz >= 24 * 16 || fracOz == 24 * 8 || fracOz == 24 * 4 || fracOz == 24 * 12)
+            {
+                unit = MassMeasurementUnit.pound;
+                conversionFactor = 24 * 16;
+            }
+            else //Must be Ounce or less
+            {
+                unit = MassMeasurementUnit.ounce;
+                conversionFactor = 24;
+
+            }
+            //Get whats left from remainder
+            ingredient.MassMeasurementUnit = unit;
+            int remainder = fracOz % conversionFactor;
+            if (remainder > 0)
+            {
+                //round down to whole unit
+                fracOz -= remainder;
+                //if fraction > .75, just round to next whole number.
+                if (remainder / conversionFactor > 0.75)
+                {
+                    fracOz += conversionFactor;
+                    ingredient.QuantityNumber = fracOz / conversionFactor;
+                }
+                else
+                {
+                    //Round up to fraction
+                    ingredient.Fraction = DoubleToFraction(remainder / (double)conversionFactor);
+                    ingredient.QuantityNumber = fracOz / conversionFactor;
+                }
+
+            }
+            else
+            {
+                ingredient.QuantityNumber = fracOz / conversionFactor;
+
+            }
+            return ingredient;
+        }
+
+        private ShoppingIngredient ApplyUnitMeasurement(ShoppingIngredient ingredient)
+        {
+            var numberOfUnits = ingredient.Quantity;
+            int remainder = numberOfUnits % 24;
+            ingredient.QuantityNumber= (numberOfUnits - remainder) / 24;
+            double fractionDec = remainder / 24d;
+            ingredient.Fraction = DoubleToFraction(fractionDec);
+            return ingredient;
+        }
+
         public string DecodeVolumeMeasurement(int fracTSP)
         {
             VolumeMeasurementUnit unit;

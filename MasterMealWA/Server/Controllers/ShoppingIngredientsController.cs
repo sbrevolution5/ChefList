@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using MasterMealWA.Server.Data;
 using MasterMealWA.Shared.Models;
 using MasterMealWA.Shared.Models.Dtos;
+using MasterMealWA.Server.Services.Interfaces;
 
 namespace MasterMealWA.Server.Controllers
 {
@@ -16,10 +17,12 @@ namespace MasterMealWA.Server.Controllers
     public class ShoppingIngredientsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly IMeasurementService _measurementService;
 
-        public ShoppingIngredientsController(ApplicationDbContext context)
+        public ShoppingIngredientsController(ApplicationDbContext context, IMeasurementService measurementService)
         {
             _context = context;
+            _measurementService = measurementService;
         }
 
         // GET: api/ShoppingIngredients
@@ -48,13 +51,34 @@ namespace MasterMealWA.Server.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutShoppingIngredient(int id, ShoppingIngredient shoppingIngredient)
         {
+            //if quantity has changed in any way, we need to recalculate measurement and add a note
             if (id != shoppingIngredient.Id)
             {
                 return BadRequest();
             }
+            if (shoppingIngredient.MeasurementType == Shared.Enums.MeasurementType.Volume)
+            {
 
+                shoppingIngredient.Quantity = _measurementService.EncodeVolumeMeasurement(shoppingIngredient.QuantityNumber, shoppingIngredient.Fraction, shoppingIngredient.VolumeMeasurementUnit.Value);
+            }
+            else if (shoppingIngredient.MeasurementType == Shared.Enums.MeasurementType.Mass)
+            {
+                shoppingIngredient.Quantity = _measurementService.EncodeMassMeasurement(shoppingIngredient.QuantityNumber, shoppingIngredient.Fraction, shoppingIngredient.MassMeasurementUnit.Value);
+            }
+            else
+            {
+                shoppingIngredient.Quantity = _measurementService.EncodeUnitMeasurement(shoppingIngredient.QuantityNumber, shoppingIngredient.Fraction);
+            }
+            var oldIngredient = await _context.ShoppingIngredient.Include(s => s.Ingredient).Include(s => s.IngredientType).AsNoTracking().FirstOrDefaultAsync(s => s.Id == id);
+            if (oldIngredient.Quantity != shoppingIngredient.Quantity)
+            {
+                shoppingIngredient = _measurementService.GetMeasurementForShoppingIngredient(shoppingIngredient);
+                if (!shoppingIngredient.Notes.Where(s => s.StartsWith("Edited")).Any())
+                {
+                    shoppingIngredient.Notes.Add($"Edited from: {oldIngredient.QuantityString}");
+                }
+            }
             _context.Entry(shoppingIngredient).State = EntityState.Modified;
-
             try
             {
                 await _context.SaveChangesAsync();
@@ -89,7 +113,7 @@ namespace MasterMealWA.Server.Controllers
         public async Task<ActionResult<ShoppingIngredient>> PostShoppingIngredientAndAddToList(AddToShoppingDto dto)
         {
 
-            var list=await _context.ShoppingList.Include(s=>s.ShoppingIngredients).Where(s=> s.Id==dto.ListId).FirstOrDefaultAsync();
+            var list = await _context.ShoppingList.Include(s => s.ShoppingIngredients).Where(s => s.Id == dto.ListId).FirstOrDefaultAsync();
 
             _context.ShoppingIngredient.Add(dto.Ingredient);
             list.ShoppingIngredients.Add(dto.Ingredient);
@@ -114,9 +138,9 @@ namespace MasterMealWA.Server.Controllers
             return NoContent();
         }
         [HttpDelete("{id}/{listId}")]
-        public async Task<IActionResult> DeleteShoppingIngredient(int id,int listId)
+        public async Task<IActionResult> DeleteShoppingIngredient(int id, int listId)
         {
-            var shoppingList = await _context.ShoppingList.Include(s=>s.ShoppingIngredients).Where(s=>s.Id==listId).FirstOrDefaultAsync();
+            var shoppingList = await _context.ShoppingList.Include(s => s.ShoppingIngredients).Where(s => s.Id == listId).FirstOrDefaultAsync();
             var shoppingIngredient = await _context.ShoppingIngredient.FindAsync(id);
             if (shoppingIngredient == null)
             {
