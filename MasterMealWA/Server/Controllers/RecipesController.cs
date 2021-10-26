@@ -53,9 +53,9 @@ namespace MasterMealWA.Server.Controllers
         {
             if (!User.Identity.IsAuthenticated)
             {
-                return await _context.Recipe.Include(r=>r.Author).Include(r=>r.Ingredients).ThenInclude(r=>r.Ingredient).Where(r => !r.IsPrivate).ToListAsync();
+                return await _context.Recipe.Include(r => r.Author).Include(r => r.Ingredients).ThenInclude(r => r.Ingredient).Where(r => !r.IsPrivate).ToListAsync();
             }
-            if (User.IsInRole("Admin")|| User.IsInRole("Moderator"))
+            if (User.IsInRole("Admin") || User.IsInRole("Moderator"))
             {
                 return await _context.Recipe.Include(r => r.Author).Include(r => r.Ingredients).ThenInclude(r => r.Ingredient).ToListAsync();
 
@@ -184,7 +184,8 @@ namespace MasterMealWA.Server.Controllers
             foreach (var step in dbrecipe.Steps)
             {
                 _context.Entry(step).State = EntityState.Modified;
-         
+            }
+
             foreach (var supply in dbrecipe.Supplies)
             {
                 _context.Entry(supply).State = EntityState.Modified;
