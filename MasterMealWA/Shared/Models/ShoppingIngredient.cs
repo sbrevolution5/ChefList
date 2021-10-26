@@ -13,9 +13,8 @@ namespace MasterMealWA.Shared.Models
         public int IngredientTypeId { get; set; }
         public virtual IngredientType IngredientType{ get; set; }
         public int Quantity { get; set; }
-        public int IngredientId { get; set; }
+        public int? IngredientId { get; set; }
         public virtual Ingredient Ingredient { get; set; }
-        [Required]
         public MeasurementType MeasurementType { get; set; }
         public MassMeasurementUnit? MassMeasurementUnit { get; set; }
         public VolumeMeasurementUnit? VolumeMeasurementUnit { get; set; }
