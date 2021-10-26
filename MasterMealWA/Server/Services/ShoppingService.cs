@@ -92,6 +92,7 @@ namespace MasterMealWA.Server.Services
             Ingredient ingredient = listOfOneIngredient.First().Ingredient;
             ShoppingIngredient result = new()
             {
+                IngredientId = ingredient.Id,
                 IngredientTypeId = ingredient.TypeId,
                 Notes = notes,
                 Quantity = totalQuantity

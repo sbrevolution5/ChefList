@@ -10,7 +10,9 @@ namespace MasterMealWA.Server.Services
 {
     public class MeasurementService : IMeasurementService
     {
-        public ShoppingIngredient GetMeasurementForShoppingIngredient(ShoppingIngredient ingredient) {
+        public ShoppingIngredient GetMeasurementForShoppingIngredient(ShoppingIngredient ingredient) 
+        {
+            //Ingredient has, ingredientId, totalquantity, notes, typeId
             throw new NotImplementedException();
         }
         public string DecodeVolumeMeasurement(int fracTSP)
