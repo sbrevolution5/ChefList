@@ -28,6 +28,8 @@ namespace MasterMealWA.Server.Services
                 ingredient.QuantityString = $"{DecodeUnitMeasurement(ingredient.Quantity)} {ingredient.Ingredient.Name}";
                 ingredient = ApplyUnitMeasurement(ingredient);
             }
+            //nullify virtual property so it isn't added to db
+            ingredient.Ingredient = null;
             return ingredient;
         }
 
