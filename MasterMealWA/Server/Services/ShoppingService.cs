@@ -94,6 +94,7 @@ namespace MasterMealWA.Server.Services
             {
                 IngredientId = ingredient.Id,
                 Ingredient = ingredient,
+                MeasurementType = ingredient.MeasurementType,
                 IngredientTypeId = ingredient.TypeId,
                 Notes = notes,
                 Quantity = totalQuantity
