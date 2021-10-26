@@ -1,18 +1,19 @@
 ﻿@using MasterMealWA.Shared.Models.Dtos
+@using MasterMealWA.Client.Extensions 
 @inject IApiService _api
 <MudDialog>
     <DialogContent>
-        <EditForm Model="qingredient">
+        <EditForm Model="listItem">
 
             <MudForm>
                 <MudGrid>
 
                     <MudItem xs="3">
 
-                        <MudNumericField Label="Number" T="int" @bind-Value="qingredient.QuantityNumber"></MudNumericField>
+                        <MudNumericField Label="Number" T="int" @bind-Value="listItem.QuantityNumber"></MudNumericField>
                     </MudItem>
                     <MudItem xs="3">
-                        <MudSelect Label="Fraction" T="Fraction" @bind-Value="qingredient.Fraction">
+                        <MudSelect Label="Fraction" T="Fraction" @bind-Value="listItem.Fraction">
                             @foreach (Fraction frac in Enum.GetValues(typeof(Fraction)))
                             {
                                 <MudSelectItem Value="@frac">@frac.GetDescription()</MudSelectItem>
@@ -22,25 +23,25 @@
                     </MudItem>
                     <MudItem xs="6">
 
-                        @if (qingredient.MeasurementType == MeasurementType.Volume)
+                        @if (listItem.MeasurementType == MeasurementType.Volume)
                         {
-                            <MudSelect Label="Volume Measurement" T="VolumeMeasurementUnit?" @bind-Value="qingredient.VolumeMeasurementUnit">
+                            <MudSelect Label="Volume Measurement" T="VolumeMeasurementUnit?" @bind-Value="listItem.VolumeMeasurementUnit">
                                 @foreach (VolumeMeasurementUnit? measure in Enum.GetValues(typeof(VolumeMeasurementUnit)))
                                 {
                                     <MudSelectItem Value="@measure">@measure</MudSelectItem>
                                 }
                             </MudSelect>
                         }
-                        else if (qingredient.MeasurementType == MeasurementType.Mass)
+                        else if (listItem.MeasurementType == MeasurementType.Mass)
                         {
-                            <MudSelect Label="Mass Measurement" T="MassMeasurementUnit?" @bind-Value="qingredient.MassMeasurementUnit">
+                            <MudSelect Label="Mass Measurement" T="MassMeasurementUnit?" @bind-Value="listItem.MassMeasurementUnit">
                                 @foreach (MassMeasurementUnit? measure in Enum.GetValues(typeof(MassMeasurementUnit)))
                                 {
                                     <MudSelectItem Value="@measure">@measure</MudSelectItem>
                                 }
                             </MudSelect>
                         }
-                        else if (qingredient.MeasurementType == MeasurementType.Count)
+                        else if (listItem.MeasurementType == MeasurementType.Count)
                         {
 
                         }
@@ -48,12 +49,6 @@
                         {
                             <MudText>Please select an ingredient</MudText>
                         }
-                    </MudItem>
-                    <MudItem xs="12">
-                        <MudAutocomplete HelperText="Start typing to search for an ingredient, If you can't find your ingredient, create a new one with the button below." Required="true" Label="Ingredient" T="Ingredient" ValueChanged="@((Ingredient i)=>MeasureChange(i))" Value="qingredient.Ingredient" ToStringFunc="@(i=> $"{i.Name} ({i.MeasurementType.ToString()})")" SearchFunc="@Search" MaxItems="null"></MudAutocomplete>
-                    </MudItem>
-                    <MudItem xs="12">
-                        <MudTextField Margin="Margin.Dense" Label="Shopping Notes" @bind-Value="qingredient.Notes" HelperText="Specify brand, fat-free/low calorie, frozen/fresh, or anything specific to your recipe.  These will show up as sub-items on the shopping list." HelperTextOnFocus="true"></MudTextField>
                     </MudItem>
                 </MudGrid>
             </MudForm>
