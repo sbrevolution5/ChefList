@@ -12,7 +12,7 @@
         {
 
             <MudSelect Label="Ingredient Type" HelperText="Where you'd find the ingredient while shopping'" @bind-Value="ingredient.TypeId">
-                @foreach (var type in types)
+                @foreach (var type in types.Where(t => !t.ShoppingOnly).ToList())
                     {
 
                     <MudSelectItem Value="@type.Id">@type.Name</MudSelectItem>
@@ -60,7 +60,7 @@
     {
         try
         {
-            await _api.UpdateAsync<Ingredient>($"api/ingredients/{ingredient.Id}",ingredient);
+            await _api.UpdateAsync<Ingredient>($"api/ingredients/{ingredient.Id}", ingredient);
             _snackbar.Add("Ingredient Updated", Severity.Success);
             MudDialog.Close(DialogResult.Ok(ingredient));
 
