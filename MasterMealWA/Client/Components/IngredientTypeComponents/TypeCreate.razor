@@ -4,6 +4,7 @@
 <MudDialog>
     <DialogContent>
         <MudTextField Label="Type Name" @bind-Value="Type.Name"></MudTextField>
+        <MudCheckBox @bind-Checked="Type.ShoppingOnly" Label="Shopping Only (i.e. Cereal, Toiletries)"></MudCheckBox>
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel" Variant="Variant.Filled" Color="Color.Dark">Cancel</MudButton>
