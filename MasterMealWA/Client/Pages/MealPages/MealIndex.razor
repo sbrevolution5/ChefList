@@ -29,8 +29,8 @@ else
                     <MudPaper Style="padding: 5px;">
 
                         <MudText>@meal.Date.ToShortDateString()</MudText>
-                        <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="()=>EditMeal(meal)"></MudIconButton>
-                        <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="()=>DeleteMeal(meal)"></MudIconButton>
+                        <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="()=>EditMeal(meal)" Variant="Variant.Filled" Color="Color.Warning"></MudIconButton>
+                        <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="()=>DeleteMeal(meal)" Variant="Variant.Filled" Color="Color.Error"></MudIconButton>
                     </MudPaper>
                 </ItemContent>
             </MudTimelineItem>
