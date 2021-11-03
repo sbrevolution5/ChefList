@@ -108,10 +108,10 @@
             <MudCard>
                 <MudCardHeader>Ingredients</MudCardHeader>
                 <MudCardContent>
-                    <MudGrid>
+                    <MudExpansionPanels>
                         @foreach (var ingredient in recipe.Ingredients)
                         {
-                            <MudItem xs="12">
+                            <MudExpansionPanel xs="12">
 
                                 <MudCard Elevation="2">
                                     <MudCardContent>
@@ -123,15 +123,15 @@
                                         <MudButton Color="Color.Error" Variant="Variant.Filled" @onclick="(()=>recipe.Ingredients.Remove(ingredient))">Remove</MudButton>
                                     </MudCardActions>
                                 </MudCard>
-                            </MudItem>
+                            </MudExpansionPanel>
                         }
-                        <MudItem>
+                    </MudExpansionPanels>
+                    <MudItem>
 
-                            <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Ingredients.Add(new())" />
-                            <MudFab OnClick="NewIngredient" Color="Color.Success" Icon="@Icons.Material.Filled.FiberNew" Label="Add ingredient not in list"></MudFab>
-                        </MudItem>
+                        <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Ingredients.Add(new())" />
+                        <MudFab OnClick="NewIngredient" Color="Color.Success" Icon="@Icons.Material.Filled.FiberNew" Label="Add ingredient not in list"></MudFab>
+                    </MudItem>
 
-                    </MudGrid>
                 </MudCardContent>
             </MudCard>
             <MudCard>
@@ -290,7 +290,7 @@
     public async Task NewIngredient()
     {
         var parameters = new DialogParameters { ["types"] = Types };
-        var dialog = _dialogService.Show<IngredientCreate>("New Ingredient",parameters);
+        var dialog = _dialogService.Show<IngredientCreate>("New Ingredient", parameters);
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
