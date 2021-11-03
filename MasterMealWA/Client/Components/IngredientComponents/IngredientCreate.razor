@@ -42,7 +42,8 @@
     [CascadingParameter]
     MudDialogInstance MudDialog { get; set; }
     private Ingredient ingredient { get; set; } = new();
-    private List<IngredientType> types { get; set; }
+    [Parameter]
+    public List<IngredientType> types { get; set; }
     protected override async Task OnInitializedAsync()
     {
         ingredient.TypeId = 1;
