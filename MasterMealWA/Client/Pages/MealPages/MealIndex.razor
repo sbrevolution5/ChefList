@@ -59,8 +59,6 @@ else
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-
-            _snackbar.Add("Meal planned!");
             try
             {
 
@@ -99,7 +97,6 @@ else
         {
             try
             {
-
                 meals = await _api.GetAsync<List<Meal>>("/api/recipes/myrecipes");
             }
             catch (Exception e)
