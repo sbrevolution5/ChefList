@@ -394,7 +394,7 @@ namespace MasterMealWA.Server.Services
                     howMany = fracOz / conversionFactor;
                     if (unitString != "Ounces")
                     {
-                        measurement = howMany + " " + unitString + "(" + ozConversion + " oz.)";
+                        measurement = howMany + " " + unitString + " (" + ozConversion + " oz.)";
                     }
                     else
                     {
@@ -411,7 +411,7 @@ namespace MasterMealWA.Server.Services
                     {
                         if (unitString != "Ounces")
                         {
-                            measurement = fraction + " " + unitString + "(" + ozConversion + " oz.)";
+                            measurement = fraction + " " + unitString + " (" + ozConversion + " oz.)";
                         }
                         else
                         {
@@ -423,7 +423,7 @@ namespace MasterMealWA.Server.Services
 
                         if (unitString != "Ounces")
                         {
-                            measurement = howMany + " " + fraction + " " + unitString + "(" + ozConversion + " oz.)";
+                            measurement = howMany + " " + fraction + " " + unitString + " (" + ozConversion + " oz.)";
                         }
                         else
                         {
@@ -443,7 +443,7 @@ namespace MasterMealWA.Server.Services
                 }
                 if (unitString != "Ounces")
                 {
-                    measurement = howMany + " " + unitString + "(" + ozConversion + " oz.)";
+                    measurement = howMany + " " + unitString + " (" + ozConversion + " oz.)";
                 }
                 else
                 {
