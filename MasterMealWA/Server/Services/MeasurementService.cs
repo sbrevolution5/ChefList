@@ -159,7 +159,8 @@ namespace MasterMealWA.Server.Services
             VolumeMeasurementUnit unit;
             int conversionFactor;
             string unitString;
-            float ozConversion = (float)fracTSP / (24f * 3f * 2f);
+            double ozConversionPreRounded = fracTSP / (24d * 3d * 2d);
+            double ozConversion = Math.Round(ozConversionPreRounded, 2);
             if (fracTSP >= 4 * 2 * 2 * 8 * 2 * 3 * 24)
             {
                 unitString = "Gallon";
@@ -201,7 +202,7 @@ namespace MasterMealWA.Server.Services
             {
                 //Only used if we end up with < 1/4 tsp due to serving size conversion!!!!
                 unitString = "A Dash/Pinch (less than 1/4 TSP) ";
-                var dashMeasure = unitString + "(" + ozConversion + " oz.)";
+                var dashMeasure = unitString + " (" + ozConversion + " oz.)";
                 return dashMeasure;
             }
             else //Must be Teaspoon or less
@@ -226,7 +227,7 @@ namespace MasterMealWA.Server.Services
                 {
                     fracTSP += conversionFactor;
                     howMany = fracTSP / conversionFactor;
-                    measurement = howMany + " " + unitString + "(" + ozConversion + " oz.)";
+                    measurement = howMany + " " + unitString + " (" + ozConversion + " oz.)";
                 }
                 else
                 {
@@ -235,13 +236,13 @@ namespace MasterMealWA.Server.Services
                     howMany = fracTSP / conversionFactor;
                     if (howMany == 0)
                     {
-                        measurement = fraction + " " + unitString + "(" + ozConversion + " oz.)";
+                        measurement = fraction + " " + unitString + " (" + ozConversion + " oz.)";
 
                     }
                     else
                     {
 
-                        measurement = howMany + " " + fraction + " " + unitString + "(" + ozConversion + " oz.)";
+                        measurement = howMany + " " + fraction + " " + unitString + " (" + ozConversion + " oz.)";
                     }
                 }
 
@@ -254,7 +255,7 @@ namespace MasterMealWA.Server.Services
                 {
                     unitString += "s";
                 }
-                measurement = howMany + " " + unitString + "(" + ozConversion + " oz.)";
+                measurement = howMany + " " + unitString + " (" + ozConversion + " oz.)";
 
             }
             return measurement;
@@ -375,7 +376,8 @@ namespace MasterMealWA.Server.Services
                 conversionFactor = 24;
 
             }
-            float ozConversion = (float)fracOz / 24f;
+            double ozConversionPreRounded = fracOz / (24d * 3d * 2d);
+            double ozConversion = Math.Round(ozConversionPreRounded, 2);
             //Get whats left from remainder
             string measurement;
             int remainder = fracOz % conversionFactor;
@@ -392,7 +394,7 @@ namespace MasterMealWA.Server.Services
                     howMany = fracOz / conversionFactor;
                     if (unitString != "Ounces")
                     {
-                        measurement = howMany + " " + unitString + "(" + ozConversion + " oz.)";
+                        measurement = howMany + " " + unitString + " (" + ozConversion + " oz.)";
                     }
                     else
                     {
@@ -409,7 +411,7 @@ namespace MasterMealWA.Server.Services
                     {
                         if (unitString != "Ounces")
                         {
-                            measurement = fraction + " " + unitString + "(" + ozConversion + " oz.)";
+                            measurement = fraction + " " + unitString + " (" + ozConversion + " oz.)";
                         }
                         else
                         {
@@ -421,7 +423,7 @@ namespace MasterMealWA.Server.Services
 
                         if (unitString != "Ounces")
                         {
-                            measurement = howMany + " " + fraction + " " + unitString + "(" + ozConversion + " oz.)";
+                            measurement = howMany + " " + fraction + " " + unitString + " (" + ozConversion + " oz.)";
                         }
                         else
                         {
@@ -441,7 +443,7 @@ namespace MasterMealWA.Server.Services
                 }
                 if (unitString != "Ounces")
                 {
-                    measurement = howMany + " " + unitString + "(" + ozConversion + " oz.)";
+                    measurement = howMany + " " + unitString + " (" + ozConversion + " oz.)";
                 }
                 else
                 {
