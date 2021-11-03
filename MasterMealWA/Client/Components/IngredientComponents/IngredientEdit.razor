@@ -41,18 +41,6 @@
     public Ingredient ingredient { get; set; }
     [Parameter]
     public List<IngredientType> types { get; set; }
-    protected override async Task OnInitializedAsync()
-    {
-        try
-        {
-
-            types = await _api.GetAsync<List<IngredientType>>("/api/ingredientTypes");
-        }
-        catch (Exception e)
-        {
-            _snackbar.Add($"Error getting ingredient types {e.Message}", Severity.Error);
-        }
-    }
     public void Cancel()
     {
         MudDialog.Cancel();

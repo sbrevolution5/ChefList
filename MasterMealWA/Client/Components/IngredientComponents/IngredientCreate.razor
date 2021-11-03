@@ -44,18 +44,9 @@
     private Ingredient ingredient { get; set; } = new();
     [Parameter]
     public List<IngredientType> types { get; set; }
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         ingredient.TypeId = 1;
-        try
-        {
-
-            types = await _api.GetAsync<List<IngredientType>>("/api/ingredientTypes");
-        }
-        catch (Exception e)
-        {
-            _snackbar.Add($"Error getting ingredient types {e.Message}", Severity.Error);
-        }
     }
     public void Cancel()
     {
