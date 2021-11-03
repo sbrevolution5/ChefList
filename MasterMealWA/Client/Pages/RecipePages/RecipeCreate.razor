@@ -264,7 +264,11 @@
 
             res += ingredient.MassMeasurementUnit.ToString();
         }
-        res += ingredient.Ingredient.Name.ToString();
+        if (ingredient.IngredientId > 0)
+        {
+            var ingredientName = Ingredients.Where(i => i.Id == ingredient.IngredientId).FirstOrDefault().Name;
+            res += ingredientName;
+        }
         return res;
     }
     public async Task CreateRecipeAsync()
