@@ -62,7 +62,7 @@ else
             try
             {
 
-                meals = await _api.GetAsync<List<Meal>>("/api/recipes/myrecipes");
+                meals = await _api.GetAsync<List<Meal>>("/api/meals");
             }
             catch (Exception e)
             {
