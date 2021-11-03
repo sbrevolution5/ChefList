@@ -111,18 +111,23 @@
                     <MudExpansionPanels>
                         @foreach (var ingredient in recipe.Ingredients)
                         {
-                            <MudExpansionPanel xs="12">
+                            <MudExpansionPanel IsInitiallyExpanded="true">
+                                <TitleContent>
+                                    <MudText>@MakeIngredientString(ingredient)</MudText>
+                                </TitleContent>
+                                <ChildContent>
 
-                                <MudCard Elevation="2">
-                                    <MudCardContent>
+                                    <MudCard Elevation="3">
+                                        <MudCardContent>
 
-                                        <QIngredientCreate qingredient="@ingredient" ingredientList="Ingredients" />
-                                    </MudCardContent>
-                                    <MudCardActions>
+                                            <QIngredientCreate qingredient="@ingredient" ingredientList="Ingredients" />
+                                        </MudCardContent>
+                                        <MudCardActions>
 
-                                        <MudButton Color="Color.Error" Variant="Variant.Filled" @onclick="(()=>recipe.Ingredients.Remove(ingredient))">Remove</MudButton>
-                                    </MudCardActions>
-                                </MudCard>
+                                            <MudButton Color="Color.Error" Variant="Variant.Filled" @onclick="(()=>recipe.Ingredients.Remove(ingredient))">Remove</MudButton>
+                                        </MudCardActions>
+                                    </MudCard>
+                                </ChildContent>
                             </MudExpansionPanel>
                         }
                     </MudExpansionPanels>
@@ -243,6 +248,24 @@
         }
         return Color.Tertiary;
 
+    }
+    public string MakeIngredientString(QIngredient ingredient)
+    {
+        var res = "";
+        res += ingredient.NumberOfUnits.ToString();
+        res += ingredient.Fraction.ToString();
+        if (ingredient.MeasurementType == MeasurementType.Volume)
+        {
+
+            res += ingredient.VolumeMeasurementUnit.ToString();
+        }
+        else if (ingredient.MeasurementType == MeasurementType.Mass)
+        {
+
+            res += ingredient.MassMeasurementUnit.ToString();
+        }
+        res += ingredient.Ingredient.Name.ToString();
+        return res;
     }
     public async Task CreateRecipeAsync()
     {
