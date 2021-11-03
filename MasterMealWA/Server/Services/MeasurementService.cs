@@ -159,7 +159,8 @@ namespace MasterMealWA.Server.Services
             VolumeMeasurementUnit unit;
             int conversionFactor;
             string unitString;
-            float ozConversion = (float)fracTSP / (24f * 3f * 2f);
+            double ozConversionPreRounded = fracTSP / (24d * 3d * 2d);
+            double ozConversion = Math.Round(ozConversionPreRounded, 2);
             if (fracTSP >= 4 * 2 * 2 * 8 * 2 * 3 * 24)
             {
                 unitString = "Gallon";
