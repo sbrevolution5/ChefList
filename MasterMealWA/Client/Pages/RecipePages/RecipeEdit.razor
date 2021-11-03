@@ -210,6 +210,7 @@ else
     public DBImage image { get; set; }
     public List<RecipeTag> Tags { get; set; }
     public List<Ingredient> Ingredients { get; set; }
+    public List<IngredientType> Types { get; set; }
     public List<QIngredient> RemovedIngredients { get; set; } = new();
     public List<QSupply> RemovedSupplies { get; set; } = new();
     public List<Step> RemovedSteps { get; set; } = new();
@@ -229,6 +230,7 @@ else
         }
         image = recipe.Image;
         imageString = _imageReader.ReadImageData(image.ImageData, image.ContentType);
+        Types = await _api.GetAsync<List<IngredientType>>("api/ingredienttypes");
         Tags = await _api.GetAsync<List<RecipeTag>>("api/recipeTags");
         Ingredients = await _api.GetAsync<List<Ingredient>>("api/ingredients");
         supplyList = await _api.GetAsync<List<Supply>>("api/Supplies");
@@ -354,8 +356,8 @@ else
     }
     public async Task NewIngredient()
     {
-        var dialog = _dialogService.Show<IngredientCreate>
-    ("New Ingredient");
+        var parameters = new DialogParameters { ["types"] = Types };
+        var dialog = _dialogService.Show<IngredientCreate>("New Ingredient",parameters);
         var result = await dialog.Result;
         if (!result.Cancelled)
         {

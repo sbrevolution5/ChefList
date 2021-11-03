@@ -42,19 +42,11 @@
     [CascadingParameter]
     MudDialogInstance MudDialog { get; set; }
     private Ingredient ingredient { get; set; } = new();
-    private List<IngredientType> types { get; set; }
-    protected override async Task OnInitializedAsync()
+    [Parameter]
+    public List<IngredientType> types { get; set; }
+    protected override void OnInitialized()
     {
         ingredient.TypeId = 1;
-        try
-        {
-
-            types = await _api.GetAsync<List<IngredientType>>("/api/ingredientTypes");
-        }
-        catch (Exception e)
-        {
-            _snackbar.Add($"Error getting ingredient types {e.Message}", Severity.Error);
-        }
     }
     public void Cancel()
     {
