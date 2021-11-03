@@ -196,6 +196,7 @@
     public Recipe recipe { get; set; } = new();
     public List<RecipeTag> Tags { get; set; }
     public List<Ingredient> Ingredients { get; set; }
+    public List<IngredientType> Types { get; set; }
     public List<Supply> supplyList { get; set; }
     private MultipartFormDataContent imageFormContent { get; set; }
     private MudChip[] recipeTags { get; set; }
@@ -212,6 +213,7 @@
         recipe.CookingTime = 30;
         Tags = await _api.GetAsync<List<RecipeTag>>("api/recipeTags");
         Ingredients = await _api.GetAsync<List<Ingredient>>("api/ingredients");
+        Types = await _api.GetAsync<List<IngredientType>>("api/ingredienttypes");
         supplyList = await _api.GetAsync<List<Supply>>("api/Supplies");
         ImgId = 1;
         image = await _api.GetAsync<DBImage>("api/dbimages/1");
@@ -287,7 +289,8 @@
     }
     public async Task NewIngredient()
     {
-        var dialog = _dialogService.Show<IngredientCreate>("New Ingredient");
+        var parameters = new DialogParameters { ["types"] = Types };
+        var dialog = _dialogService.Show<IngredientCreate>("New Ingredient",parameters);
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
