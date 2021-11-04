@@ -32,6 +32,7 @@ namespace MasterMealWA.Client
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IImageReader, ImageReader>();
             builder.Services.AddScoped<IFilterService, FilterService>();
+            builder.Services.AddScoped<IRerenderService, RerenderService>();
             builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("MasterMealWA.ServerAPI"));
             builder.Services.AddMudServices();
             builder.Services.AddApiAuthorization().AddAccountClaimsPrincipalFactory<CustomUserFactory>();

@@ -1,4 +1,7 @@
-﻿@using MasterMealWA.Client.Extensions
+﻿@using MasterMealWA.Client.Services
+@using MasterMealWA.Client.Extensions
+
+@inject IRerenderService _rerenderService;
 <EditForm Model="qingredient">
 
     <MudForm>
