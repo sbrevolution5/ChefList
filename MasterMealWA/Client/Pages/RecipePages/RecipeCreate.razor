@@ -120,7 +120,7 @@
                                     <MudCard Elevation="3">
                                         <MudCardContent>
 
-                                            <QIngredientCreate qingredient="@ingredient" ingredientList="Ingredients" />
+                                            <QIngredientCreate qingredient="@ingredient" ingredientList="Ingredients"/>
                                         </MudCardContent>
                                         <MudCardActions>
 
@@ -252,17 +252,20 @@
     public string MakeIngredientString(QIngredient ingredient)
     {
         var res = "";
-        res += ingredient.NumberOfUnits.ToString();
-        res += ingredient.Fraction.ToString();
+        res += ingredient.NumberOfUnits.ToString() + " ";
+        if (ingredient.Fraction != Fraction.NoFraction)
+        {
+            res += ingredient.Fraction.ToString() + " ";
+        }
         if (ingredient.MeasurementType == MeasurementType.Volume)
         {
 
-            res += ingredient.VolumeMeasurementUnit.ToString();
+            res += ingredient.VolumeMeasurementUnit.ToString() + " ";
         }
         else if (ingredient.MeasurementType == MeasurementType.Mass)
         {
 
-            res += ingredient.MassMeasurementUnit.ToString();
+            res += ingredient.MassMeasurementUnit.ToString() + " ";
         }
         if (ingredient.IngredientId > 0)
         {
