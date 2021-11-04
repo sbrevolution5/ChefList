@@ -4,6 +4,15 @@
     <DialogContent>
         <MudDatePicker Label="Start Date" HelperText="The first date you are shopping for" @bind-Date="startDate"></MudDatePicker>
         <MudDatePicker Label="End Date" HelperText="The last date you are shopping for." @bind-Date="endDate"></MudDatePicker>
+        <MudList>
+            @foreach (var item in userMeals.Where(m=>m.Date>=startDate&&m.Date <=endDate))
+            {
+
+            <MudListItem>
+                @item.Recipe.Name;
+            </MudListItem>
+            }
+        </MudList>
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel" Variant="Variant.Filled" Color="Color.Dark">Cancel</MudButton>
