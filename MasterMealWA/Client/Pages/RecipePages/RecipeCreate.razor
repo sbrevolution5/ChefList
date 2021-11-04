@@ -252,7 +252,7 @@
     public string MakeIngredientString(QIngredient ingredient)
     {
         var res = "";
-        res += ingredient.NumberOfUnits.ToString() + " ";
+        res += ingredient.QuantityNumber.ToString() + " ";
         if (ingredient.Fraction != Fraction.NoFraction)
         {
             res += ingredient.Fraction.ToString() + " ";
