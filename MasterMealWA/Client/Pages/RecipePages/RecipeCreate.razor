@@ -1,4 +1,5 @@
 ﻿@page "/recipes/create"
+@using MasterMealWA.Client.Extensions
 @inject HttpClient Http
 @inject IApiService _api
 @inject IUserService _userService
@@ -259,7 +260,7 @@
         }
         if (ingredient.Fraction != Fraction.NoFraction)
         {
-            res += ingredient.Fraction.ToString() + " ";
+            res += ingredient.Fraction.GetDescription() + " ";
         }
         if (ingredient.MeasurementType == MeasurementType.Volume)
         {
