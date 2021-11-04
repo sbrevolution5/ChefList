@@ -1,4 +1,5 @@
 ﻿@page "/recipes/edit/{Id}"
+@using MasterMealWA.Client.Extensions
 @inject HttpClient Http
 @inject IApiService _api
 @inject NavigationManager nav
@@ -113,30 +114,31 @@ else
                 <MudCard>
                     <MudCardHeader>Ingredients</MudCardHeader>
                     <MudCardContent>
-                        <MudGrid>
+                        <MudExpansionPanels>
                             @foreach (var ingredient in recipe.Ingredients)
                             {
-                                <MudItem xs="12">
+                                <MudExpansionPanel IsInitiallyExpanded="true">
+                                    <TitleContent>
+                                        <MudText>@MakeIngredientString(ingredient)</MudText>
+                                    </TitleContent>
+                                    <ChildContent>
+                                        <MudCard Elevation="2">
+                                            <MudCardContent>
 
-                                    <MudCard Elevation="2">
-                                        <MudCardContent>
+                                                <QIngredientCreate qingredient="@ingredient" ingredientList="Ingredients" ComponentDataUpdated="ComponentUpdated" />
+                                            </MudCardContent>
+                                            <MudCardActions>
 
-                                            <QIngredientCreate qingredient="@ingredient" ingredientList="Ingredients" />
-                                        </MudCardContent>
-                                        <MudCardActions>
-
-                                            <MudButton Color="Color.Error" Variant="Variant.Filled" @onclick="@(()=>RemoveIngredient(ingredient))">Remove</MudButton>
-                                        </MudCardActions>
-                                    </MudCard>
-                                </MudItem>
+                                                <MudButton Color="Color.Error" Variant="Variant.Filled" @onclick="@(()=>RemoveIngredient(ingredient))">Remove</MudButton>
+                                            </MudCardActions>
+                                        </MudCard>
+                                    </ChildContent>
+                                </MudExpansionPanel>
                             }
-                        <MudItem>
+                        </MudExpansionPanels>
 
-                            <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Ingredients.Add(new())" />
-                            <MudFab OnClick="NewIngredient" Color="Color.Success" Icon="@Icons.Material.Filled.FiberNew" Label="Add ingredient not in list" />
-
-                        </MudItem>
-                        </MudGrid>
+                        <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Ingredients.Add(new())" />
+                        <MudFab OnClick="NewIngredient" Color="Color.Success" Icon="@Icons.Material.Filled.FiberNew" Label="Add ingredient not in list" />
                     </MudCardContent>
                 </MudCard>
                 <MudCard>
@@ -159,12 +161,12 @@ else
                                     </MudCard>
                                 </MudItem>
                             }
-                        <MudItem>
+                            <MudItem>
 
-                            <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Supplies.Add(new())" />
-                            <MudFab OnClick="NewSupply" Color="Color.Success" Icon="@Icons.Material.Filled.FiberNew" Label="Add supply not in list"></MudFab>
+                                <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Supplies.Add(new())" />
+                                <MudFab OnClick="NewSupply" Color="Color.Success" Icon="@Icons.Material.Filled.FiberNew" Label="Add supply not in list"></MudFab>
 
-                        </MudItem>
+                            </MudItem>
                         </MudGrid>
                     </MudCardContent>
                 </MudCard>
@@ -234,6 +236,35 @@ else
         Tags = await _api.GetAsync<List<RecipeTag>>("api/recipeTags");
         Ingredients = await _api.GetAsync<List<Ingredient>>("api/ingredients");
         supplyList = await _api.GetAsync<List<Supply>>("api/Supplies");
+    }
+    public string MakeIngredientString(QIngredient ingredient)
+    {
+        var res = "";
+        if (ingredient.QuantityNumber > 0)
+        {
+
+            res += ingredient.QuantityNumber.ToString() + " ";
+        }
+        if (ingredient.Fraction != Fraction.NoFraction)
+        {
+            res += ingredient.Fraction.GetDescription() + " ";
+        }
+        if (ingredient.MeasurementType == MeasurementType.Volume)
+        {
+
+            res += ingredient.VolumeMeasurementUnit.ToString() + " ";
+        }
+        else if (ingredient.MeasurementType == MeasurementType.Mass)
+        {
+
+            res += ingredient.MassMeasurementUnit.ToString() + " ";
+        }
+        if (ingredient.IngredientId > 0)
+        {
+            var ingredientName = Ingredients.Where(i => i.Id == ingredient.IngredientId).FirstOrDefault().Name;
+            res += ingredientName;
+        }
+        return res;
     }
     public void IncreaseStep(Step s)
     {
@@ -357,7 +388,7 @@ else
     public async Task NewIngredient()
     {
         var parameters = new DialogParameters { ["types"] = Types };
-        var dialog = _dialogService.Show<IngredientCreate>("New Ingredient",parameters);
+        var dialog = _dialogService.Show<IngredientCreate>("New Ingredient", parameters);
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
@@ -433,5 +464,9 @@ else
                 }
             }
         }
+    }
+    void ComponentUpdated(string args)
+    {
+        StateHasChanged();
     }
 }
