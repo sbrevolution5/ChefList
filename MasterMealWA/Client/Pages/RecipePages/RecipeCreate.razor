@@ -107,7 +107,7 @@
         <MudItem xs="12" sm="6" md="4">
 
             <MudCard>
-                <MudCardHeader>Ingredients</MudCardHeader>
+                <MudCardHeader><MudBadge Content="recipe.Ingredients.Count" Color="Color.Primary" Bordered="true">Ingredients </MudBadge></MudCardHeader>
                 <MudCardContent>
                     <MudExpansionPanels>
                         @foreach (var ingredient in recipe.Ingredients)
