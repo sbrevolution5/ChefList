@@ -141,7 +141,7 @@
                 </MudCardContent>
             </MudCard>
             <MudCard>
-                <MudCardHeader>Supplies</MudCardHeader>
+                <MudCardHeader><MudBadge Content="recipe.Supplies.Count" Color="Color.Primary" Bordered="true">Supplies </MudBadge></MudCardHeader>
                 <MudCardContent>
                     <MudGrid>
                         @foreach (var supply in recipe.Supplies)
@@ -170,7 +170,7 @@
         </MudItem>
         <MudItem xs="12" sm="6" md="4">
             <MudCard>
-                <MudCardHeader>Steps</MudCardHeader>
+                <MudCardHeader><MudBadge Content="recipe.Steps.Count" Color="Color.Primary" Bordered="true">Steps</MudBadge></MudCardHeader>
                 <MudCardContent>
                     <MudGrid>
                         @foreach (var step in recipe.Steps.OrderBy(s => s.StepNumber))
