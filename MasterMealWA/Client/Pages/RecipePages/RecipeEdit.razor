@@ -1,4 +1,5 @@
 ﻿@page "/recipes/edit/{Id}"
+@using MasterMealWA.Client.Extensions
 @inject HttpClient Http
 @inject IApiService _api
 @inject NavigationManager nav
@@ -21,7 +22,7 @@ else
 
             <MudItem xs="12">
 
-                <MudText Typo="Typo.h3">Recipe Create</MudText>
+                <MudText Typo="Typo.h3">Edit Recipe</MudText>
                 <MudButton ButtonType="ButtonType.Submit" FullWidth="true" Variant="Variant.Filled" Color="Color.Success" Class="ml-auto">Save Recipe</MudButton>
 
             </MudItem>
@@ -111,67 +112,66 @@ else
             <MudItem xs="12" sm="6" md="4">
 
                 <MudCard>
-                    <MudCardHeader>Ingredients</MudCardHeader>
+                    <MudCardHeader><MudBadge Content="recipe.Ingredients.Count" Color="Color.Primary" Bordered="true">Ingredients </MudBadge></MudCardHeader>
                     <MudCardContent>
-                        <MudGrid>
+                        <MudExpansionPanels>
                             @foreach (var ingredient in recipe.Ingredients)
                             {
-                                <MudItem xs="12">
+                                <MudExpansionPanel IsInitiallyExpanded="true">
+                                    <TitleContent>
+                                        <MudText>@MakeIngredientString(ingredient)</MudText>
+                                    </TitleContent>
+                                    <ChildContent>
+                                        <MudDivider Class="dividerDark m-1" />
+                                        <MudCard Elevation="2">
+                                            <MudCardContent>
 
-                                    <MudCard Elevation="2">
-                                        <MudCardContent>
+                                                <QIngredientCreate qingredient="@ingredient" ingredientList="Ingredients" ComponentDataUpdated="ComponentUpdated" />
+                                            </MudCardContent>
+                                            <MudCardActions>
 
-                                            <QIngredientCreate qingredient="@ingredient" ingredientList="Ingredients" />
-                                        </MudCardContent>
-                                        <MudCardActions>
-
-                                            <MudButton Color="Color.Error" Variant="Variant.Filled" @onclick="@(()=>RemoveIngredient(ingredient))">Remove</MudButton>
-                                        </MudCardActions>
-                                    </MudCard>
-                                </MudItem>
+                                                <MudButton Color="Color.Error" Variant="Variant.Filled" @onclick="@(()=>RemoveIngredient(ingredient))">Remove</MudButton>
+                                            </MudCardActions>
+                                        </MudCard>
+                                    </ChildContent>
+                                </MudExpansionPanel>
                             }
-                        <MudItem>
+                        </MudExpansionPanels>
 
-                            <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Ingredients.Add(new())" />
-                            <MudFab OnClick="NewIngredient" Color="Color.Success" Icon="@Icons.Material.Filled.FiberNew" Label="Add ingredient not in list" />
-
-                        </MudItem>
-                        </MudGrid>
+                        <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Ingredients.Add(new())" />
+                        <MudFab OnClick="NewIngredient" Color="Color.Success" Icon="@Icons.Material.Filled.FiberNew" Label="Add ingredient not in list" />
                     </MudCardContent>
                 </MudCard>
                 <MudCard>
-                    <MudCardHeader>Supplies</MudCardHeader>
+                    <MudCardHeader><MudBadge Content="recipe.Supplies.Count" Color="Color.Primary" Bordered="true">Supplies </MudBadge></MudCardHeader>
                     <MudCardContent>
                         <MudGrid>
                             @foreach (var supply in recipe.Supplies)
                             {
                                 <MudItem xs="12">
 
-                                    <MudCard Elevation="2">
-                                        <MudCardContent>
+                                    
 
                                             <SupplyPicker supply="supply" supplyList="supplyList"></SupplyPicker>
-                                        </MudCardContent>
-                                        <MudCardActions>
+                                        
 
                                             <MudButton Color="Color.Error" Variant="Variant.Filled" @onclick="@(()=>RemoveSupply(supply))">Remove</MudButton>
-                                        </MudCardActions>
-                                    </MudCard>
+                                       
                                 </MudItem>
                             }
-                        <MudItem>
+                            <MudItem>
 
-                            <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Supplies.Add(new())" />
-                            <MudFab OnClick="NewSupply" Color="Color.Success" Icon="@Icons.Material.Filled.FiberNew" Label="Add supply not in list"></MudFab>
+                                <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Supplies.Add(new())" />
+                                <MudFab OnClick="NewSupply" Color="Color.Success" Icon="@Icons.Material.Filled.FiberNew" Label="Add supply not in list"></MudFab>
 
-                        </MudItem>
+                            </MudItem>
                         </MudGrid>
                     </MudCardContent>
                 </MudCard>
             </MudItem>
             <MudItem xs="12" sm="6" md="4">
                 <MudCard>
-                    <MudCardHeader>Steps</MudCardHeader>
+                    <MudCardHeader><MudBadge Content="recipe.Steps.Count" Color="Color.Primary" Bordered="true">Steps</MudBadge></MudCardHeader>
                     <MudCardContent>
                         <MudGrid>
 
@@ -234,6 +234,39 @@ else
         Tags = await _api.GetAsync<List<RecipeTag>>("api/recipeTags");
         Ingredients = await _api.GetAsync<List<Ingredient>>("api/ingredients");
         supplyList = await _api.GetAsync<List<Supply>>("api/Supplies");
+    }
+    public string MakeIngredientString(QIngredient ingredient)
+    {
+        var res = "";
+        if (ingredient.QuantityNumber > 0)
+        {
+
+            res += ingredient.QuantityNumber.ToString() + " ";
+        }
+        if (ingredient.Fraction != Fraction.NoFraction)
+        {
+            res += ingredient.Fraction.GetDescription() + " ";
+        }
+        if (ingredient.MeasurementType == MeasurementType.Volume)
+        {
+
+            res += ingredient.VolumeMeasurementUnit.ToString() + " ";
+        }
+        else if (ingredient.MeasurementType == MeasurementType.Mass)
+        {
+
+            res += ingredient.MassMeasurementUnit.ToString() + " ";
+        }
+        if (ingredient.IngredientId > 0)
+        {
+            var ingredientName = Ingredients.Where(i => i.Id == ingredient.IngredientId).FirstOrDefault().Name;
+            res += ingredientName;
+        }
+        if (res=="")
+        {
+            return "New Ingredient";
+        }
+        return res;
     }
     public void IncreaseStep(Step s)
     {
@@ -357,7 +390,7 @@ else
     public async Task NewIngredient()
     {
         var parameters = new DialogParameters { ["types"] = Types };
-        var dialog = _dialogService.Show<IngredientCreate>("New Ingredient",parameters);
+        var dialog = _dialogService.Show<IngredientCreate>("New Ingredient", parameters);
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
@@ -433,5 +466,9 @@ else
                 }
             }
         }
+    }
+    void ComponentUpdated(string args)
+    {
+        StateHasChanged();
     }
 }

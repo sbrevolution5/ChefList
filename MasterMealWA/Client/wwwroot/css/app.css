@@ -53,5 +53,6 @@ a, .btn-link {
     pointer-events: none;
 }
 .dividerDark {
-    background-color: #424242ff;
+    background-color: #707070ff;
+    height: 2px;
 }
