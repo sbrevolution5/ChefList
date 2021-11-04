@@ -117,17 +117,8 @@
                                     <MudText>@MakeIngredientString(ingredient)</MudText>
                                 </TitleContent>
                                 <ChildContent>
-
-                                    <MudCard Elevation="3">
-                                        <MudCardContent>
-
                                             <QIngredientCreate qingredient="@ingredient" ingredientList="Ingredients" ComponentDataUpdated="ComponentUpdated"/>
-                                        </MudCardContent>
-                                        <MudCardActions>
-
                                             <MudButton Color="Color.Error" Variant="Variant.Filled" @onclick="(()=>recipe.Ingredients.Remove(ingredient))">Remove</MudButton>
-                                        </MudCardActions>
-                                    </MudCard>
                                 </ChildContent>
                             </MudExpansionPanel>
                         }
