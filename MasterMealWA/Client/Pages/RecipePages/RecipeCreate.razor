@@ -121,7 +121,7 @@
                                     <MudCard Elevation="3">
                                         <MudCardContent>
 
-                                            <QIngredientCreate qingredient="@ingredient" ingredientList="Ingredients" />
+                                            <QIngredientCreate qingredient="@ingredient" ingredientList="Ingredients" ComponentDataUpdated="ComponentUpdated"/>
                                         </MudCardContent>
                                         <MudCardActions>
 
@@ -420,5 +420,9 @@
                 }
             }
         }
+    }
+    void ComponentUpdated(string args)
+    {
+        StateHasChanged();
     }
 }

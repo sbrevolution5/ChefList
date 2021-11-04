@@ -6,10 +6,10 @@
 
             <MudItem xs="3">
 
-                <MudNumericField Label="Number" T="int" @bind-Value="qingredient.QuantityNumber"></MudNumericField>
+                <MudNumericField Label="Number" T="int" Value="qingredient.QuantityNumber" ValueChanged="(i)=>QNumChanged(i)"></MudNumericField>
             </MudItem>
             <MudItem xs="3">
-                <MudSelect Label="Fraction" T="Fraction" @bind-Value="qingredient.Fraction">
+                <MudSelect Label="Fraction" T="Fraction" @onchange="ValueChanged" @bind-Value="qingredient.Fraction">
                     @foreach (Fraction frac in Enum.GetValues(typeof(Fraction)))
                     {
                         <MudSelectItem Value="@frac">@frac.GetDescription()</MudSelectItem>
@@ -21,7 +21,7 @@
 
                 @if (qingredient.MeasurementType == MeasurementType.Volume)
                 {
-                    <MudSelect Label="Volume Measurement" T="VolumeMeasurementUnit?" @bind-Value="qingredient.VolumeMeasurementUnit">
+                    <MudSelect Label="Volume Measurement" T="VolumeMeasurementUnit?" @onchange="ValueChanged" @bind-Value="qingredient.VolumeMeasurementUnit" >
                         @foreach (VolumeMeasurementUnit? measure in Enum.GetValues(typeof(VolumeMeasurementUnit)))
                         {
                             <MudSelectItem Value="@measure">@measure</MudSelectItem>
@@ -30,7 +30,7 @@
                 }
                 else if (qingredient.MeasurementType == MeasurementType.Mass)
                 {
-                    <MudSelect Label="Mass Measurement" T="MassMeasurementUnit?" @bind-Value="qingredient.MassMeasurementUnit">
+                    <MudSelect Label="Mass Measurement" T="MassMeasurementUnit?" @onchange="ValueChanged" @bind-Value="qingredient.MassMeasurementUnit">
                         @foreach (MassMeasurementUnit? measure in Enum.GetValues(typeof(MassMeasurementUnit)))
                         {
                             <MudSelectItem Value="@measure">@measure</MudSelectItem>
@@ -60,6 +60,13 @@
     public List<Ingredient> ingredientList { get; set; }
     [Parameter]
     public QIngredient qingredient { get; set; }
+    [Parameter]
+    public EventCallback<string> ComponentDataUpdated { get; set; }
+
+    async Task ValueChanged()
+    {
+        await ComponentDataUpdated.InvokeAsync("");
+    }
     public MeasurementType measurementType { get; set; }
     private async Task<IEnumerable<Ingredient>> Search(string v)
     {
@@ -70,15 +77,20 @@
         }
         return ingredientList.Where(i => i.Name.ToLower().Contains(v.ToLower()));
     }
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         if (qingredient.IngredientId != 0)
         {
 
-            MeasureChange(qingredient.Ingredient);
+            await MeasureChange(qingredient.Ingredient);
         }
     }
-    public void MeasureChange(Ingredient ing)
+    public async Task QNumChanged(int i)
+    {
+        qingredient.QuantityNumber = i;
+        await ValueChanged();
+    }
+    public async Task MeasureChange(Ingredient ing)
     {
         qingredient.IngredientId = ing.Id;
         qingredient.Ingredient = ing;
@@ -92,6 +104,7 @@
         {
             qingredient.MassMeasurementUnit = MassMeasurementUnit.pound;
         }
+        await ValueChanged();
         return;
     }
 }
