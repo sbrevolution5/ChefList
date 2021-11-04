@@ -2,14 +2,15 @@
 @inject IApiService _api
 @inject IDialogService _dialogService
 @inject ISnackbar _snackbar
+@inject NavigationManager nav
 @attribute [Authorize]
 <MudText Typo="Typo.h1">Meals</MudText>
 <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.CalendarToday" aria-label="add" OnClick="AddMeal" />
 @if (meals is null)
 {
-<div class="d-flex align-center justify-center">
-    <Loader />
-</div>
+    <div class="d-flex align-center justify-center">
+        <Loader />
+    </div>
 
 }
 else
@@ -31,6 +32,7 @@ else
                         <MudText>@meal.Date.ToShortDateString()</MudText>
                         <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="()=>EditMeal(meal)" Variant="Variant.Filled" Color="Color.Warning"></MudIconButton>
                         <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="()=>DeleteMeal(meal)" Variant="Variant.Filled" Color="Color.Error"></MudIconButton>
+                        <MudIconButton Icon="@Icons.Material.Filled.List" OnClick="()=>NewList(meal.Date)" Variant="Variant.Filled" Color="Color.Primary"></MudIconButton>
                     </MudPaper>
                 </ItemContent>
             </MudTimelineItem>
@@ -68,6 +70,16 @@ else
             {
                 _snackbar.Add($"Error getting meals {e.Message}", Severity.Error);
             }
+        }
+    }
+    public async Task NewList(DateTime EndDate)
+    {
+        var parameters = new DialogParameters { ["DefaultEndDate"] = EndDate };
+        var dialog = _dialogService.Show<ListCreate>("New List", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            nav.NavigateTo("/shoppinglists/");
         }
     }
     public async Task EditMeal(Meal meal)

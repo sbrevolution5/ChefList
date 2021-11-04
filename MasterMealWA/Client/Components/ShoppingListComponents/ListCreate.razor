@@ -35,12 +35,18 @@
 @code {
     [CascadingParameter]
     public MudDialogInstance MudDialog { get; set; }
+    [Parameter]
+    public DateTime? DefaultEndDate { get; set; }
     public List<Meal> userMeals { get; set; }
     public ShoppingList list { get; set; } = new();
     public DateTime? startDate { get; set; } = DateTime.Today;
     public DateTime? endDate { get; set; } = DateTime.Today.AddDays(7);
     protected override async Task OnInitializedAsync()
     {
+        if (DefaultEndDate.HasValue)
+        {
+            endDate = DefaultEndDate;
+        }
         userMeals = await _api.GetAsync<List<Meal>>("/api/meals");
         await base.OnInitializedAsync();
     }
