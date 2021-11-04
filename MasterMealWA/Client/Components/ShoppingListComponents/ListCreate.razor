@@ -4,6 +4,28 @@
     <DialogContent>
         <MudDatePicker Label="Start Date" HelperText="The first date you are shopping for" @bind-Date="startDate"></MudDatePicker>
         <MudDatePicker Label="End Date" HelperText="The last date you are shopping for." @bind-Date="endDate"></MudDatePicker>
+        @if (userMeals is not null)
+        {
+            <MudText>Meals for this date range:</MudText>
+
+            <MudList>
+                @if (!userMeals.Where(m => m.Date >= startDate && m.Date <= endDate).Any())
+                {
+                    <MudText>The dates you selected contain no meals</MudText>
+                }
+                @foreach (var item in userMeals.Where(m => m.Date >= startDate && m.Date <= endDate))
+                {
+
+                    <MudListItem>
+                        @item.Recipe.Name on @item.Date.ToShortDateString()
+                    </MudListItem>
+                }
+            </MudList>
+        }
+        else
+        {
+            <Loader></Loader>
+        }
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel" Variant="Variant.Filled" Color="Color.Dark">Cancel</MudButton>
@@ -13,9 +35,15 @@
 @code {
     [CascadingParameter]
     public MudDialogInstance MudDialog { get; set; }
+    public List<Meal> userMeals { get; set; }
     public ShoppingList list { get; set; } = new();
     public DateTime? startDate { get; set; } = DateTime.Today;
     public DateTime? endDate { get; set; } = DateTime.Today.AddDays(7);
+    protected override async Task OnInitializedAsync()
+    {
+        userMeals = await _api.GetAsync<List<Meal>>("/api/meals");
+        await base.OnInitializedAsync();
+    }
     public void Cancel()
     {
         MudDialog.Cancel();
