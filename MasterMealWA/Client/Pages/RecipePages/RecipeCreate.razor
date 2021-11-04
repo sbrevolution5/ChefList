@@ -120,7 +120,7 @@
                                     <MudCard Elevation="3">
                                         <MudCardContent>
 
-                                            <QIngredientCreate qingredient="@ingredient" ingredientList="Ingredients"/>
+                                            <QIngredientCreate qingredient="@ingredient" ingredientList="Ingredients" />
                                         </MudCardContent>
                                         <MudCardActions>
 
@@ -252,7 +252,11 @@
     public string MakeIngredientString(QIngredient ingredient)
     {
         var res = "";
-        res += ingredient.QuantityNumber.ToString() + " ";
+        if (ingredient.QuantityNumber <= 0)
+        {
+
+            res += ingredient.QuantityNumber.ToString() + " ";
+        }
         if (ingredient.Fraction != Fraction.NoFraction)
         {
             res += ingredient.Fraction.ToString() + " ";
