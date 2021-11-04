@@ -13,10 +13,16 @@
 @code {
     [CascadingParameter]
     public MudDialogInstance MudDialog { get; set; }
+    public List<Meal> userMeals { get; set; }
     public ShoppingList list { get; set; } = new();
     public DateTime? startDate { get; set; } = DateTime.Today;
     public DateTime? endDate { get; set; } = DateTime.Today.AddDays(7);
-    public void Cancel()
+        protected override async Task OnInitializedAsync()
+        {
+            userMeals = await _api.GetAsync<List<Meal>>("/api/meals");
+            await base.OnInitializedAsync();
+        }
+        public void Cancel()
     {
         MudDialog.Cancel();
     }
