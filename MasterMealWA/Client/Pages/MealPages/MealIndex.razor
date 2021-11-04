@@ -32,6 +32,7 @@ else
                         <MudText>@meal.Date.ToShortDateString()</MudText>
                         <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="()=>EditMeal(meal)" Variant="Variant.Filled" Color="Color.Warning"></MudIconButton>
                         <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="()=>DeleteMeal(meal)" Variant="Variant.Filled" Color="Color.Error"></MudIconButton>
+                        <MudIconButton Icon="@Icons.Material.Filled.List" OnClick="()=>NewList(meal.Date)" Variant="Variant.Filled" Color="Color.Primary"></MudIconButton>
                     </MudPaper>
                 </ItemContent>
             </MudTimelineItem>
