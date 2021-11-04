@@ -1,4 +1,5 @@
 ﻿@page "/recipes/create"
+@using MasterMealWA.Client.Extensions
 @inject HttpClient Http
 @inject IApiService _api
 @inject IUserService _userService
@@ -13,7 +14,7 @@
 
         <MudItem xs="12">
 
-            <MudText Typo="Typo.h3">Recipe Create</MudText>
+            <MudText Typo="Typo.h3">Create Recipe</MudText>
             <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" FullWidth="true" Color="Color.Success" Class="ml-auto">Save Recipe</MudButton>
         </MudItem>
         <MudItem xs="12" sm="6" md="4">
@@ -106,36 +107,41 @@
         <MudItem xs="12" sm="6" md="4">
 
             <MudCard>
-                <MudCardHeader>Ingredients</MudCardHeader>
+                <MudCardHeader><MudBadge Content="recipe.Ingredients.Count" Color="Color.Primary" Bordered="true">Ingredients </MudBadge></MudCardHeader>
                 <MudCardContent>
-                    <MudGrid>
+                    <MudExpansionPanels>
                         @foreach (var ingredient in recipe.Ingredients)
                         {
-                            <MudItem xs="12">
-
-                                <MudCard Elevation="2">
-                                    <MudCardContent>
-
-                                        <QIngredientCreate qingredient="@ingredient" ingredientList="Ingredients" />
-                                    </MudCardContent>
-                                    <MudCardActions>
-
-                                        <MudButton Color="Color.Error" Variant="Variant.Filled" @onclick="(()=>recipe.Ingredients.Remove(ingredient))">Remove</MudButton>
-                                    </MudCardActions>
-                                </MudCard>
-                            </MudItem>
+                            <MudExpansionPanel IsInitiallyExpanded="true">
+                                <TitleContent>
+                                    <div style="display:flex; align-items:center;">
+                                        <MudText>@MakeIngredientString(ingredient)</MudText>
+                                        @if (recipe.Ingredients.Where(i => i.IngredientId == ingredient.IngredientId).Count() != 1)
+                                        {
+                                            <MudTooltip Text="Duplicate Ingredient in Recipe">
+                                                <MudIconButton Icon="@Icons.Material.Filled.Warning" Color="Color.Warning" />
+                                            </MudTooltip>
+                                        }
+                                    </div>
+                                </TitleContent>
+                                <ChildContent>
+                                    <MudDivider Class="dividerDark m-1" />
+                                    <QIngredientCreate qingredient="@ingredient" ingredientList="Ingredients" ComponentDataUpdated="ComponentUpdated" />
+                                    <MudButton Color="Color.Error" Variant="Variant.Filled" @onclick="(()=>recipe.Ingredients.Remove(ingredient))">Remove</MudButton>
+                                </ChildContent>
+                            </MudExpansionPanel>
                         }
-                        <MudItem>
+                    </MudExpansionPanels>
+                    <MudItem>
 
-                            <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Ingredients.Add(new())" />
-                            <MudFab OnClick="NewIngredient" Color="Color.Success" Icon="@Icons.Material.Filled.FiberNew" Label="Add ingredient not in list"></MudFab>
-                        </MudItem>
+                        <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" aria-label="add" @onclick="()=>recipe.Ingredients.Add(new())" />
+                        <MudFab OnClick="NewIngredient" Color="Color.Success" Icon="@Icons.Material.Filled.FiberNew" Label="Add ingredient not in list"></MudFab>
+                    </MudItem>
 
-                    </MudGrid>
                 </MudCardContent>
             </MudCard>
             <MudCard>
-                <MudCardHeader>Supplies</MudCardHeader>
+                <MudCardHeader><MudBadge Content="recipe.Supplies.Count" Color="Color.Primary" Bordered="true">Supplies </MudBadge></MudCardHeader>
                 <MudCardContent>
                     <MudGrid>
                         @foreach (var supply in recipe.Supplies)
@@ -164,7 +170,7 @@
         </MudItem>
         <MudItem xs="12" sm="6" md="4">
             <MudCard>
-                <MudCardHeader>Steps</MudCardHeader>
+                <MudCardHeader><MudBadge Content="recipe.Steps.Count" Color="Color.Primary" Bordered="true">Steps</MudBadge></MudCardHeader>
                 <MudCardContent>
                     <MudGrid>
                         @foreach (var step in recipe.Steps.OrderBy(s => s.StepNumber))
@@ -196,6 +202,7 @@
     public Recipe recipe { get; set; } = new();
     public List<RecipeTag> Tags { get; set; }
     public List<Ingredient> Ingredients { get; set; }
+    public List<IngredientType> Types { get; set; }
     public List<Supply> supplyList { get; set; }
     private MultipartFormDataContent imageFormContent { get; set; }
     private MudChip[] recipeTags { get; set; }
@@ -212,6 +219,7 @@
         recipe.CookingTime = 30;
         Tags = await _api.GetAsync<List<RecipeTag>>("api/recipeTags");
         Ingredients = await _api.GetAsync<List<Ingredient>>("api/ingredients");
+        Types = await _api.GetAsync<List<IngredientType>>("api/ingredienttypes");
         supplyList = await _api.GetAsync<List<Supply>>("api/Supplies");
         ImgId = 1;
         image = await _api.GetAsync<DBImage>("api/dbimages/1");
@@ -241,6 +249,39 @@
         }
         return Color.Tertiary;
 
+    }
+    public string MakeIngredientString(QIngredient ingredient)
+    {
+        var res = "";
+        if (ingredient.QuantityNumber > 0)
+        {
+
+            res += ingredient.QuantityNumber.ToString() + " ";
+        }
+        if (ingredient.Fraction != Fraction.NoFraction)
+        {
+            res += ingredient.Fraction.GetDescription() + " ";
+        }
+        if (ingredient.MeasurementType == MeasurementType.Volume)
+        {
+
+            res += ingredient.VolumeMeasurementUnit.ToString() + " ";
+        }
+        else if (ingredient.MeasurementType == MeasurementType.Mass)
+        {
+
+            res += ingredient.MassMeasurementUnit.ToString() + " ";
+        }
+        if (ingredient.IngredientId > 0)
+        {
+            var ingredientName = Ingredients.Where(i => i.Id == ingredient.IngredientId).FirstOrDefault().Name;
+            res += ingredientName;
+        }
+        if (res == "")
+        {
+            return "New Ingredient";
+        }
+        return res;
     }
     public async Task CreateRecipeAsync()
     {
@@ -287,7 +328,8 @@
     }
     public async Task NewIngredient()
     {
-        var dialog = _dialogService.Show<IngredientCreate>("New Ingredient");
+        var parameters = new DialogParameters { ["types"] = Types };
+        var dialog = _dialogService.Show<IngredientCreate>("New Ingredient", parameters);
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
@@ -382,5 +424,9 @@
                 }
             }
         }
+    }
+    void ComponentUpdated(string args)
+    {
+        StateHasChanged();
     }
 }

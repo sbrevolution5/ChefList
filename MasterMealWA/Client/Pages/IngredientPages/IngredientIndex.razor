@@ -87,11 +87,14 @@ else
     public List<Ingredient> SortedIngredients { get; set; }
     public List<Recipe> Recipes { get; set; }
     public Dictionary<int, int> CountDict { get; set; } = new();
+    public List<IngredientType> Types { get; set; }
     public int sortInt { get; set; } = 0;
     protected override async Task OnInitializedAsync()
     {
         Recipes = await _api.GetAsync<List<Recipe>>("api/recipes/ingredients");
         Ingredients = await _api.GetAsync<List<Ingredient>>("api/ingredients");
+        Types = await _api.GetAsync<List<IngredientType>>("api/ingredienttypes");
+
         foreach (var ing in Ingredients)
         {
             CountDict.Add(ing.Id, Recipes.SelectMany(r => r.Ingredients).Where(i => i.IngredientId == ing.Id).Count());
@@ -101,7 +104,8 @@ else
     }
     public async Task NewIngredient()
     {
-        var dialog = _dialogService.Show<IngredientCreate>("New Ingredient");
+        var parameters = new DialogParameters {["types"] = Types };
+        var dialog = _dialogService.Show<IngredientCreate>("New Ingredient",parameters);
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
@@ -111,7 +115,7 @@ else
     }
     public async Task EditIngredient(Ingredient ingredient)
     {
-        var parameters = new DialogParameters { ["Ingredient"] = ingredient };
+        var parameters = new DialogParameters { ["Ingredient"] = ingredient,["types"] = Types};
         var dialog = _dialogService.Show<IngredientEdit>("Edit Ingredient", parameters);
         var result = await dialog.Result;
         if (!result.Cancelled)
