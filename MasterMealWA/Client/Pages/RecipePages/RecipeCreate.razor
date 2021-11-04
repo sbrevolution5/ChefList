@@ -116,9 +116,12 @@
                                 <TitleContent>
                                     <div style="display:flex; align-items:center;">
                                         <MudText>@MakeIngredientString(ingredient)</MudText>
-                                        <MudTooltip Text="Duplicate Ingredient in Recipe">
-                                            <MudIconButton Icon="@Icons.Material.Filled.Warning" Color="Color.Warning" />
-                                        </MudTooltip>
+                                        @if (recipe.Ingredients.Where(i => i.IngredientId == ingredient.IngredientId).Count() != 1)
+                                        {
+                                            <MudTooltip Text="Duplicate Ingredient in Recipe">
+                                                <MudIconButton Icon="@Icons.Material.Filled.Warning" Color="Color.Warning" />
+                                            </MudTooltip>
+                                        }
                                     </div>
                                 </TitleContent>
                                 <ChildContent>
