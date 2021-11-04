@@ -117,8 +117,9 @@
                                     <MudText>@MakeIngredientString(ingredient)</MudText>
                                 </TitleContent>
                                 <ChildContent>
-                                            <QIngredientCreate qingredient="@ingredient" ingredientList="Ingredients" ComponentDataUpdated="ComponentUpdated"/>
-                                            <MudButton Color="Color.Error" Variant="Variant.Filled" @onclick="(()=>recipe.Ingredients.Remove(ingredient))">Remove</MudButton>
+                                    <MudDivider Class="dividerDark m-1"/>
+                                    <QIngredientCreate qingredient="@ingredient" ingredientList="Ingredients" ComponentDataUpdated="ComponentUpdated" />
+                                    <MudButton Color="Color.Error" Variant="Variant.Filled" @onclick="(()=>recipe.Ingredients.Remove(ingredient))">Remove</MudButton>
                                 </ChildContent>
                             </MudExpansionPanel>
                         }
@@ -267,6 +268,10 @@
         {
             var ingredientName = Ingredients.Where(i => i.Id == ingredient.IngredientId).FirstOrDefault().Name;
             res += ingredientName;
+        }
+        if (res == "")
+        {
+            return "New Ingredient";
         }
         return res;
     }

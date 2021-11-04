@@ -122,6 +122,7 @@ else
                                         <MudText>@MakeIngredientString(ingredient)</MudText>
                                     </TitleContent>
                                     <ChildContent>
+                                        <MudDivider Class="dividerDark m-1" />
                                         <MudCard Elevation="2">
                                             <MudCardContent>
 
@@ -260,6 +261,10 @@ else
         {
             var ingredientName = Ingredients.Where(i => i.Id == ingredient.IngredientId).FirstOrDefault().Name;
             res += ingredientName;
+        }
+        if (res=="")
+        {
+            return "New Ingredient";
         }
         return res;
     }
