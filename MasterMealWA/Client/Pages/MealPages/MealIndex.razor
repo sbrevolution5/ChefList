@@ -74,7 +74,7 @@ else
     }
     public async Task NewList(DateTime EndDate)
     {
-        var parameters = new DialogParameters { ["EndDate"] = EndDate };
+        var parameters = new DialogParameters { ["DefaultEndDate"] = EndDate };
         var dialog = _dialogService.Show<ListCreate>("New List", parameters);
         var result = await dialog.Result;
         if (!result.Cancelled)
