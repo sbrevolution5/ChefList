@@ -4,15 +4,28 @@
     <DialogContent>
         <MudDatePicker Label="Start Date" HelperText="The first date you are shopping for" @bind-Date="startDate"></MudDatePicker>
         <MudDatePicker Label="End Date" HelperText="The last date you are shopping for." @bind-Date="endDate"></MudDatePicker>
-        <MudList>
-            @foreach (var item in userMeals.Where(m=>m.Date>=startDate&&m.Date <=endDate))
-            {
+        @if (userMeals is not null)
+        {
+            <MudText>Meals for this daterange:</MudText>
 
-            <MudListItem>
-                @item.Recipe.Name;
-            </MudListItem>
-            }
-        </MudList>
+            <MudList>
+                @if (!userMeals.Where(m => m.Date >= startDate && m.Date <= endDate).Any())
+                {
+                    <MudText>The dates you selected contain no meals</MudText>
+                }
+                @foreach (var item in userMeals.Where(m => m.Date >= startDate && m.Date <= endDate))
+                {
+
+                    <MudListItem>
+                        @item.Recipe.Name on @item.Date.ToShortDateString()
+                    </MudListItem>
+                }
+            </MudList>
+        }
+        else
+        {
+            <Loader></Loader>
+        }
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel" Variant="Variant.Filled" Color="Color.Dark">Cancel</MudButton>
@@ -26,12 +39,12 @@
     public ShoppingList list { get; set; } = new();
     public DateTime? startDate { get; set; } = DateTime.Today;
     public DateTime? endDate { get; set; } = DateTime.Today.AddDays(7);
-        protected override async Task OnInitializedAsync()
-        {
-            userMeals = await _api.GetAsync<List<Meal>>("/api/meals");
-            await base.OnInitializedAsync();
-        }
-        public void Cancel()
+    protected override async Task OnInitializedAsync()
+    {
+        userMeals = await _api.GetAsync<List<Meal>>("/api/meals");
+        await base.OnInitializedAsync();
+    }
+    public void Cancel()
     {
         MudDialog.Cancel();
     }
