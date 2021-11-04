@@ -119,7 +119,12 @@ else
                             {
                                 <MudExpansionPanel IsInitiallyExpanded="true">
                                     <TitleContent>
-                                        <MudText>@MakeIngredientString(ingredient)</MudText>
+                                        <div style="display:flex; align-items:center;">
+                                            <MudText>@MakeIngredientString(ingredient)</MudText>
+                                            <MudTooltip Text="Duplicate Ingredient in Recipe">
+                                                <MudIconButton Icon="@Icons.Material.Filled.Warning" Color="Color.Warning" />
+                                            </MudTooltip>
+                                        </div>
                                     </TitleContent>
                                     <ChildContent>
                                         <MudDivider Class="dividerDark m-1" />

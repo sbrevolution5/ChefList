@@ -114,10 +114,15 @@
                         {
                             <MudExpansionPanel IsInitiallyExpanded="true">
                                 <TitleContent>
-                                    <MudText>@MakeIngredientString(ingredient)</MudText>
+                                    <div style="display:flex; align-items:center;">
+                                        <MudText>@MakeIngredientString(ingredient)</MudText>
+                                        <MudTooltip Text="Duplicate Ingredient in Recipe">
+                                            <MudIconButton Icon="@Icons.Material.Filled.Warning" Color="Color.Warning" />
+                                        </MudTooltip>
+                                    </div>
                                 </TitleContent>
                                 <ChildContent>
-                                    <MudDivider Class="dividerDark m-1"/>
+                                    <MudDivider Class="dividerDark m-1" />
                                     <QIngredientCreate qingredient="@ingredient" ingredientList="Ingredients" ComponentDataUpdated="ComponentUpdated" />
                                     <MudButton Color="Color.Error" Variant="Variant.Filled" @onclick="(()=>recipe.Ingredients.Remove(ingredient))">Remove</MudButton>
                                 </ChildContent>
