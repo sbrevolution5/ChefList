@@ -6,7 +6,7 @@
         <MudDatePicker Label="End Date" HelperText="The last date you are shopping for." @bind-Date="endDate"></MudDatePicker>
         @if (userMeals is not null)
         {
-            <MudText>Meals for this daterange:</MudText>
+            <MudText>Meals for this date range:</MudText>
 
             <MudList>
                 @if (!userMeals.Where(m => m.Date >= startDate && m.Date <= endDate).Any())
