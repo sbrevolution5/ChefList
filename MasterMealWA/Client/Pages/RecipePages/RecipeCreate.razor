@@ -253,7 +253,7 @@
     public string MakeIngredientString(QIngredient ingredient)
     {
         var res = "";
-        if (ingredient.QuantityNumber <= 0)
+        if (ingredient.QuantityNumber > 0)
         {
 
             res += ingredient.QuantityNumber.ToString() + " ";
